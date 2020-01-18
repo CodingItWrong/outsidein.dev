@@ -1,0 +1,8 @@
+{
+  "name": "agilefrontenddev",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:CodingItWrong/agilefrontenddev.git",
+  "author": "Josh Justice <me@joshjustice.com>",
+  "license": "MIT"
+}
