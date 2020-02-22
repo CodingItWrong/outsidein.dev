@@ -1,0 +1,44 @@
+---
+title: 0 - Intro
+---
+
+# 0 - Intro
+
+Here's the stack of libraries we'll use for our React application:
+
+* Build Tooling: create-react-app
+
+For a production application you might want a more flexible build tool, like Parcel or a custom Webpack config. This tutorial doesn't get into build configuration, though, so create-React-app will work fine, and should be familiar to many readers.
+
+* State Management: Redux
+
+Redux has been criticized for being fairly verbose and indirect. I wouldn't necessarily reach for it first on personal
+
+* State Management Asynchrony: Redux-Thunk
+* HTTP Client: Axios
+
+Axios provides a nice simple interface for making web service requests. The browser's built-in fetch() function is close, but still has some repetitive parts. Plus, our E2E Testing tool can't stub backend requests when fetch() is used.
+
+* UI Components: Material UI
+
+Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion, you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with Material UI, a popular React implementation of Google's Material Design.
+
+* Test Runner: Jest
+
+Jest has become an extremely popular test runner in many JavaScript circles, but especially React circles. It includes everything you need out of the box, including mocking functionality.
+
+* Component Tests: React Testing Library
+
+RTL will help us write component tests. Unlike other options, it executes useEffect hooks, which allows us to test the full functionality of our components. It's also designed around testing the interface instead of the implementation, which will help us write tests that are resistant to change.
+
+* E2E Tests: Cypress
+
+Cypress is an end-to-end testing tool that was written with Test-Driven Development in mind. Because it runs in the same browser context as your frontend app it has insight into the event loop and network requests, reducing flake and allowing easy request stubbing.
+
+* CI: GitHub Actions
+
+GitHub is extremely popular for source control, and now it has a CI service built in as well. There are other great CI options too, but the integration means that all we need to do is add an Actions config file and we're set to run our tests on every pull request.
+
+* Deployment: Netlify
+
+For deploying frontend applications there's no service simpler than Netlify. Choose your repo, enter a build command, and your app will be built and deployed. We won't use it in this tutorial, but it's easy to add a custom domain to your app as well, with an automatically-provisioned SSL certificate.
