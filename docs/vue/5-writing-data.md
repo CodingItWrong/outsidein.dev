@@ -351,7 +351,7 @@ Save the file and the test passes.
 
 We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store module. The restaurants module needs a `create` action that will make the appropriate call to the API, then insert the resulting record into the store. Let's write that test now. Below the "load action" group, add a "create action" group, and write a test to confirm the API is called:
 
-```
+```js
   describe('create action', () => {
     const newRestaurantName = 'Sushi Place';
 
