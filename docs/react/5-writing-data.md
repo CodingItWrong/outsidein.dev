@@ -431,8 +431,6 @@ Our restaurant name is passed in as the first argument of the action, so we can 
  };
 ```
 
-STOPPED HERE
-
 Save the file and the test passes. Now we need to specify one more thing that happens when the `create` action is dispatched: the returned restaurant from the API, including the ID that the API gives the record, is appended to the restaurant list in the state. To write that test, we're going to need to add a little to the setup as well:
 
 ```diff
