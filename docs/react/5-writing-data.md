@@ -1263,9 +1263,8 @@ Now we have just one more test to make: that the restaurant name is not cleared 
 
 ```js
     it('does not clear the name', () => {
-      expect(
-        wrapper.find("[data-testid='newRestaurantNameField']").element.value,
-      ).toEqual(restaurantName);
+      const {getByPlaceholderText} = context;
+      expect(getByPlaceholderText('Name').value).toEqual(restaurantName);
     });
 ```
 

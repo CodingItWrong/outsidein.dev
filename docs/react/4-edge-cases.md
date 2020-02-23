@@ -558,7 +558,8 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
      });
 
      it('does not display the loading indicator while not loading', () => {
-       expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
+       const {queryByTestId} = context;
+       expect(queryByTestId('loading-indicator')).toBeNull();
      });
 
 +    it('does not display the error message', () => {
