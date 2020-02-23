@@ -910,19 +910,46 @@ Time to add some logic around this error. We'll add state to indicate whether it
 +  const [validationError, setValidationError] = useState(false);
 
    const handleSubmit = e => {
-     e.preventDefault();
-+
-+    if (!name) {
-+      setValidationError(true);
-+    }
-+
-     createRestaurant(name).then(() => {
 ...
    return (
      <form onSubmit={handleSubmit}>
 -      <Alert severity="error">Name is required</Alert>
 +      {validationError && <Alert severity="error">Name is required</Alert>}
        <TextField
+```
+
+Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown--that's all. The simplest logic to pass this test is to always show the validation error after saving:
+
+```diff
+   const handleSubmit = e => {
+     e.preventDefault();
++    setValidationError(true);
+     createRestaurant(name).then(() => {
+```
+
+Save the file and all tests pass.
+
+It may feel obvious to you that this is not the correct final logic, so this should drive us to consider what test we are missing. What should behave differently? Well, when we submit a form with a name filled in, the validation error should not appear. Let's add that test to the "when filled in" `describe` block:
+
+```js
+it('does not display a validation error', () => {
+  const {queryByText} = context;
+  expect(queryByText(requiredError)).toBeNull();
+});
+```
+
+We can pass this test by adding a conditional around setting the `validationError` flag:
+
+```diff
+   const handleSubmit = e => {
+     e.preventDefault();
+-    setValidationError(true);
++
++    if (!name) {
++      setValidationError(true);
++    }
++
+     createRestaurant(name).then(() => {
 ```
 
 Save the file and all tests pass.

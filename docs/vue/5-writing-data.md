@@ -806,11 +806,13 @@ Time to add some logic around this error. We'll add a data property to indicate 
 +      validationError: false,
      };
    },
-...
+```
+
+Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown--that's all. The simplest logic to pass this test is to always show the validation error after saving:
+
+```
      handleSave() {
-+      if (!this.name) {
-+        this.validationError = true;
-+      }
++      this.validationError = true;
 +
        this.createRestaurant(this.name).then(() => {
          this.name = '';
@@ -819,6 +821,26 @@ Time to add some logic around this error. We'll add a data property to indicate 
 ```
 
 Save the file and all tests pass.
+
+It may feel obvious to you that this is not the correct final logic, so this should drive us to consider what test we are missing. What should behave differently? Well, when we submit a form with a name filled in, the validation error should not appear. Let's add that test to the "when filled in" `describe` block:
+
+```js
+it('does not display a validation error', () => {
+  expect(
+    wrapper.find("[data-testid='newRestaurantNameError']").element,
+  ).not.toBeDefined();
+});
+```
+
+We can pass this test by adding a conditional around setting the `validationError` flag:
+
+```diff
+ handleSave() {
+-  this.validationError = true;
++  if (!this.name) {
++    this.validationError = true;
++  }
+```
 
 Now, is there any other time we would want to hide or show the validation error? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
 
