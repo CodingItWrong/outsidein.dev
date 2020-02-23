@@ -810,7 +810,7 @@ Time to add some logic around this error. We'll add a data property to indicate 
 
 Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown--that's all. The simplest logic to pass this test is to always show the validation error after saving:
 
-```
+```diff
      handleSave() {
 +      this.validationError = true;
 +
@@ -841,6 +841,8 @@ We can pass this test by adding a conditional around setting the `validationErro
 +    this.validationError = true;
 +  }
 ```
+
+Save and all tests pass.
 
 Now, is there any other time we would want to hide or show the validation error? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
 
