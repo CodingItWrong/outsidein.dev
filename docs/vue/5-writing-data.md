@@ -6,7 +6,7 @@ title: 5 - Writing Data
 
 Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
-Create a file `cypress/integration/managing-restaurants.spec.js` and add the following:
+Create a file `tests/e2e/specs/managing-restaurants.spec.js` and add the following:
 
 ```js
 describe('Managing Restaurants', () => {
