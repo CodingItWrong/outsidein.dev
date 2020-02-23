@@ -197,9 +197,9 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
 
     beforeEach(() => {
       wrapper
-        .find("[data-testid='newRestaurantNameField']")
+        .find('[data-testid="newRestaurantNameField"]')
         .setValue(restaurantName);
-      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
     });
 
     it('dispatches the create action', () => {
@@ -220,13 +220,13 @@ Save the file and we get a failing test, as we expect:
 ```sh
   ● NewRestaurantForm › when filled in › dispatches the create action
 
-    [vue-test-utils]: find did not return [data-testid='newRestaurantNameField'], cannot call setValue() on empty Wrapper
+    [vue-test-utils]: find did not return [data-testid="newRestaurantNameField"], cannot call setValue() on empty Wrapper
 
       36 |       wrapper
-      37 |         .find("[data-testid='newRestaurantNameField']")
+      37 |         .find('[data-testid="newRestaurantNameField"]')
     > 38 |         .setValue(restaurantName);
          |          ^
-      39 |       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      39 |       wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
 ```
 
 To fix this error, let's add the `data-testid` attribute to the existing text field:
@@ -248,11 +248,11 @@ The next error we get is:
 ```sh
   ● NewRestaurantForm › when filled in › dispatches the create action
 
-    [vue-test-utils]: find did not return [data-testid='newRestaurantForm'], cannot call trigger() on empty Wrapper
+    [vue-test-utils]: find did not return [data-testid="newRestaurantForm"], cannot call trigger() on empty Wrapper
 
-      37 |         .find("[data-testid='newRestaurantNameField']")
+      37 |         .find('[data-testid="newRestaurantNameField"]')
       38 |         .setValue(restaurantName);
-    > 39 |       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+    > 39 |       wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
 ```
 
 So we need to add a `data-testid` to the form as well:
@@ -275,7 +275,7 @@ The next failure we get is:
 
     Number of calls: 0
 
-      39 |       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      39 |       wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
       40 |
     > 41 |       expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
          |                                                ^
@@ -673,7 +673,7 @@ First, let's implement the form clearing out the text field after saving. In `Ne
 +
 +    it('clears the name', () => {
 +      expect(
-+        wrapper.find("[data-testid='newRestaurantNameField']").element.value,
++        wrapper.find('[data-testid="newRestaurantNameField"]').element.value,
 +      ).toEqual('');
 +    });
    });
@@ -690,7 +690,7 @@ Save the test, and we get a test failure confirming that the text field is not y
     Received: "Sushi Place"
 
       50 |       expect(
-      51 |         wrapper.find("[data-testid='newRestaurantNameField']").element.value,
+      51 |         wrapper.find('[data-testid="newRestaurantNameField"]').element.value,
     > 52 |       ).toEqual('');
          |         ^
 ```
@@ -715,13 +715,13 @@ Now let's implement the validation error. Create a new `describe` block for this
 ```js
   describe('when empty', () => {
     beforeEach(() => {
-      wrapper.find("[data-testid='newRestaurantNameField']").setValue('');
-      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      wrapper.find('[data-testid="newRestaurantNameField"]').setValue('');
+      wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
     });
 
     it('displays a validation error', () => {
       expect(
-        wrapper.find("[data-testid='newRestaurantNameError']").text(),
+        wrapper.find('[data-testid="newRestaurantNameError"]').text(),
       ).toContain('Name is required');
     });
   });
@@ -734,11 +734,11 @@ Save the file and the test fails, because the error message is not found:
 ```sh
   ● NewRestaurantForm › when empty › displays a validation error
 
-    [vue-test-utils]: find did not return [data-testid='newRestaurantNameError'], cannot call text() on empty Wrapper
+    [vue-test-utils]: find did not return [data-testid="newRestaurantNameError"], cannot call text() on empty Wrapper
 
       62 |     it('displays a validation error', () => {
       63 |       expect(
-    > 64 |         wrapper.find("[data-testid='newRestaurantNameError']").text(),
+    > 64 |         wrapper.find('[data-testid="newRestaurantNameError"]').text(),
          |                                                                ^
       65 |       ).toContain('Name is required');
 ```
@@ -760,7 +760,7 @@ The tests pass. Now how can we write a test to drive out hiding that error messa
   describe('initially', () => {
     it('does not display a validation error', () => {
       expect(
-        wrapper.find("[data-testid='newRestaurantNameError']").element,
+        wrapper.find('[data-testid="newRestaurantNameError"]').element,
       ).not.toBeDefined();
     });
   });
@@ -778,7 +778,7 @@ The test fails because we are always showing the error right now:
       </div></div></div>
 
       34 |       expect(
-      35 |         wrapper.find("[data-testid='newRestaurantNameError']").element,
+      35 |         wrapper.find('[data-testid="newRestaurantNameError"]').element,
     > 36 |       ).not.toBeDefined();
          |             ^
 ```
@@ -827,7 +827,7 @@ It may feel obvious to you that this is not the correct final logic, so this sho
 ```js
 it('does not display a validation error', () => {
   expect(
-    wrapper.find("[data-testid='newRestaurantNameError']").element,
+    wrapper.find('[data-testid="newRestaurantNameError"]').element,
   ).not.toBeDefined();
 });
 ```
@@ -851,17 +851,17 @@ Now, is there any other time we would want to hide or show the validation error?
     const restaurantName = 'Sushi Place';
 
     beforeEach(() => {
-      wrapper.find("[data-testid='newRestaurantNameField']").setValue('');
-      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      wrapper.find('[data-testid="newRestaurantNameField"]').setValue('');
+      wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
       wrapper
-        .find("[data-testid='newRestaurantNameField']")
+        .find('[data-testid="newRestaurantNameField"]')
         .setValue(restaurantName);
-      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
     });
 
     it('clears the validation error', () => {
       expect(
-        wrapper.find("[data-testid='newRestaurantNameError']").element,
+        wrapper.find('[data-testid="newRestaurantNameError"]').element,
       ).not.toBeDefined();
     });
   });
@@ -881,7 +881,7 @@ Save the test file and our new test fails:
       </div></div></div>
 
       90 |       expect(
-      91 |         wrapper.find("[data-testid='newRestaurantNameError']").element,
+      91 |         wrapper.find('[data-testid="newRestaurantNameError"]').element,
     > 92 |       ).not.toBeDefined();
          |             ^
 ```
@@ -925,9 +925,9 @@ We can fix this error by moving the call to `this.createRestaurant()` inside the
      handleSave() {
        if (this.name) {
          this.validationError = false;
- +       this.createRestaurant(this.name).then(() => {
- +         this.name = '';
- +       });
++        this.createRestaurant(this.name).then(() => {
++          this.name = '';
++        });
        } else {
          this.validationError = true;
        }
@@ -950,13 +950,13 @@ Our third exception case is when the web service call fails. We want to display 
       restaurantsModule.actions.create.mockRejectedValue();
 
       wrapper
-        .find("[data-testid='newRestaurantNameField']")
+        .find('[data-testid="newRestaurantNameField"]')
         .setValue(restaurantName);
-      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
     });
 
     it('displays a server error', () => {
-      expect(wrapper.find("[data-testid='serverError']").text()).toContain(
+      expect(wrapper.find('[data-testid="serverError"]').text()).toContain(
         'The restaurant could not be saved. Please try again.',
       );
     });
@@ -986,11 +986,11 @@ Save and the promise warning goes away, leaving us with just the expectation fai
 ```sh
   ● NewRestaurantForm › when empty › displays a server error
 
-    [vue-test-utils]: find did not return [data-testid='newRestaurantNameError'], cannot call text() on empty Wrapper
+    [vue-test-utils]: find did not return [data-testid="newRestaurantNameError"], cannot call text() on empty Wrapper
 
       70 |     it('displays a server error', () => {
       71 |       expect(
-    > 72 |         wrapper.find("[data-testid='newRestaurantNameError']").text(),
+    > 72 |         wrapper.find('[data-testid="newRestaurantNameError"]').text(),
          |                                                                ^
       73 |       ).toContain('Name is required');
       74 |     });
@@ -1012,7 +1012,7 @@ Save and the test passes. Now, when do we want that message to *not* show? For o
 ```js
     it('does not display a server error', () => {
       expect(
-        wrapper.find("[data-testid='serverError']").element,
+        wrapper.find('[data-testid="serverError"]').element,
       ).not.toBeDefined();
     });
 ```
@@ -1029,7 +1029,7 @@ Save and the test fails:
       </div></div></div>
 
       40 |       expect(
-      41 |         wrapper.find("[data-testid='serverError']").element,
+      41 |         wrapper.find('[data-testid="serverError"]').element,
     > 42 |       ).not.toBeDefined();
          |             ^
 ```
@@ -1069,7 +1069,7 @@ Let's also write a test to confirm that the server is not shown after the server
 ```js
     it('does not display a server error', () => {
       expect(
-        wrapper.find("[data-testid='serverError']").element,
+        wrapper.find('[data-testid="serverError"]').element,
       ).not.toBeDefined();
     });
 ```
@@ -1088,15 +1088,15 @@ We also want to hide the server error message each time we retry saving the form
         .mockResolvedValueOnce();
 
       wrapper
-        .find("[data-testid='newRestaurantNameField']")
+        .find('[data-testid="newRestaurantNameField"]')
         .setValue('Sushi Place');
-      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
-      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+      wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
+      wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
     });
 
     it('clears the error message', () => {
       expect(
-        wrapper.find("[data-testid='serverError']").element,
+        wrapper.find('[data-testid="serverError"]').element,
       ).not.toBeDefined();
     });
   });
@@ -1125,11 +1125,11 @@ Then add it to your test:
          .mockResolvedValueOnce();
 
        wrapper
-         .find("[data-testid='newRestaurantNameField']")
+         .find('[data-testid="newRestaurantNameField"]')
          .setValue('Sushi Place');
-       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+       wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
 +      await flushPromises();
-       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+       wrapper.find('[data-testid="newRestaurantForm"]').trigger('submit');
     });
 ```
 
@@ -1149,7 +1149,7 @@ dark">$error</i><div class="v-alert__content">
       </div></div></div>
 
       147 |       expect(
-      148 |         wrapper.find("[data-testid='serverError']").element,
+      148 |         wrapper.find('[data-testid="serverError"]').element,
     > 149 |       ).not.toBeDefined();
           |             ^
 ```
@@ -1172,7 +1172,7 @@ Now we have just one more test to make: that the restaurant name is not cleared 
 ```js
     it('does not clear the name', () => {
       expect(
-        wrapper.find("[data-testid='newRestaurantNameField']").element.value,
+        wrapper.find('[data-testid="newRestaurantNameField"]').element.value,
       ).toEqual(restaurantName);
     });
 ```
