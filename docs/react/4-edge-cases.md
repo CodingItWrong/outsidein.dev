@@ -354,11 +354,16 @@ Finally, we move the code that sets up the `api`, the `store`, and dispatches th
 +        const api = {
 +          loadRestaurants: () => Promise.resolve(records),
 +        };
-+        store = new Vuex.Store({
-+          modules: {
-+            restaurants: restaurants(api),
-+          },
-+        });
++
++        const initialState = {
++          records: [],
++        };
++
++        store = createStore(
++          restaurantsReducer,
++          initialState,
++          applyMiddleware(thunk.withExtraArgument(api)),
++        );
 +
 +        await store.dispatch('restaurants/load');
 +      });
@@ -367,15 +372,20 @@ Finally, we move the code that sets up the `api`, the `store`, and dispatches th
 -        const api = {
 -          loadRestaurants: () => Promise.resolve(records),
 -        };
--        store = new Vuex.Store({
--          modules: {
--            restaurants: restaurants(api),
--          },
--        });
 -
--        await store.dispatch('restaurants/load');
+-        const initialState = {
+-          records: [],
+-        };
 -
-         expect(store.state.restaurants.records).toEqual(records);
+-        store = createStore(
+-          restaurantsReducer,
+-          initialState,
+-          applyMiddleware(thunk.withExtraArgument(api)),
+-        );
+-
+-        await store.dispatch(loadRestaurants());
+-
+         expect(store.getState().records).toEqual(records);
        });
 ```
 
@@ -388,8 +398,8 @@ Now we can simplify our async code. Since the `beforeEach` function only has one
           loadRestaurants: () => Promise.resolve(records),
         };
 ...
--        await store.dispatch('restaurants/load');
-+        return store.dispatch('restaurants/load');
+-        await store.dispatch(loadRestaurants());
++        return store.dispatch(loadRestaurants());
        });
 ```
 
