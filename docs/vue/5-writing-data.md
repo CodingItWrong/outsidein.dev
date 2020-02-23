@@ -118,6 +118,10 @@ THINK ABOUT IF TEST NEEDS TO DRIVE CONDITION
  import RestaurantList from '@/components/RestaurantList';
 
  export default {
+   name: 'RestaurantScreen',
+-  components: {RestaurantList},
++  components: {NewRestaurantForm, RestaurantList},
+ };
 ```
 
 Rerun the E2E tests and they should get past finding and typing into the Name input. The next error is:
@@ -169,7 +173,7 @@ describe('NewRestaurantForm', () => {
     restaurantsModule = {
       namespaced: true,
       actions: {
-        create: jest.fn(),
+        create: jest.fn().mockName('create'),
       },
     };
     const store = new Vuex.Store({
@@ -191,12 +195,14 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
   describe('when filled in', () => {
     const restaurantName = 'Sushi Place';
 
-    it('dispatches the create action', () => {
+    beforeEach(() => {
       wrapper
         .find("[data-testid='newRestaurantNameField']")
         .setValue(restaurantName);
       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
+    });
 
+    it('dispatches the create action', () => {
       expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
         expect.anything(),
         restaurantName,
@@ -263,7 +269,7 @@ The next failure we get is:
 ```sh
   ● NewRestaurantForm › when filled in › dispatches the create action
 
-    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    expect(create).toHaveBeenCalledWith(...expected)
 
     Expected: Anything, "Sushi Place"
 
@@ -312,7 +318,7 @@ Save the file and the test failure has changed:
 ```sh
   ● NewRestaurantForm › when filled in › dispatches the create action
 
-    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    expect(create).toHaveBeenCalledWith(...expected)
 
     Expected: Anything, "Sushi Place"
     Received: {"commit": [Function anonymous], "dispatch": [Function anonymous], "getters": {}, "rootGetters": {}, "rootState": {"restaurants": {}}, "state": {}}, undefined
@@ -551,7 +557,7 @@ The store only contains the restaurant it was initialized with, not the new one 
 
 With that, our store should be working. Let's check the E2E test to see if it's progressed.
 
-Rerun the test, and the API call isn't made. This is because the button in NewRestaurantForm isn't a submit button, so it's not submitting the form. Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with Vue Test Utils. That's what we have E2E tests for! To fix this, make the button a submit button:
+Rerun the test, and the API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form. Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with Vue Test Utils. That's what we have E2E tests for! To fix this, make the button a submit button:
 
 ```diff
        data-testid="newRestaurantNameField"
@@ -655,33 +661,7 @@ Now let's look into those edge cases:
 * If the form is submitted with an empty restaurant name, it should show a validation error, and not submit to the server
 * If the save fails an error message should be shown, and the restaurant name should not be cleared
 
-First, let's implement the form clearing out the text field after saving. In `NewRestaurantForm.spec.js`, in the "when filled in" group, let's refactor out the setup:
-
-```diff
-   describe('when filled in', () => {
-     const restaurantName = 'Sushi Place';
-
-+    beforeEach(() => {
-+      wrapper
-+        .find("[data-testid='newRestaurantNameField']")
-+        .setValue(restaurantName);
-+      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
-+    });
-+
-     it('dispatches the create action', () => {
--      wrapper
--        .find("[data-testid='newRestaurantNameField']")
--        .setValue(restaurantName);
--      wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
-       expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
-         expect.anything(),
-         restaurantName,
-       );
-     });
-  });
-```
-
-Save and confirm the tests still pass. Then add a new test:
+First, let's implement the form clearing out the text field after saving. In `NewRestaurantForm.spec.js`, add a new test:
 
 ```diff
      it('dispatches the create action', () => {
@@ -739,7 +719,7 @@ Now let's implement the validation error. Create a new `describe` block for this
       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
     });
 
-    it('displays an error message', () => {
+    it('displays a validation error', () => {
       expect(
         wrapper.find("[data-testid='newRestaurantNameError']").text(),
       ).toContain('Name is required');
@@ -752,11 +732,11 @@ We don't actually need the line that sets the value of the text field to the emp
 Save the file and the test fails, because the error message is not found:
 
 ```sh
-  ● NewRestaurantForm › when empty › displays an error message
+  ● NewRestaurantForm › when empty › displays a validation error
 
     [vue-test-utils]: find did not return [data-testid='newRestaurantNameError'], cannot call text() on empty Wrapper
 
-      62 |     it('displays an error message', () => {
+      62 |     it('displays a validation error', () => {
       63 |       expect(
     > 64 |         wrapper.find("[data-testid='newRestaurantNameError']").text(),
          |                                                                ^
@@ -840,7 +820,7 @@ Time to add some logic around this error. We'll add a data property to indicate 
 
 Save the file and all tests pass.
 
-Now, is there any other time we would want to hide or show the error message? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
+Now, is there any other time we would want to hide or show the validation error? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
 
 ```js
   describe('when correcting a validation error', () => {
@@ -855,7 +835,7 @@ Now, is there any other time we would want to hide or show the error message? We
       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
     });
 
-    it('clears the error message', () => {
+    it('clears the validation error', () => {
       expect(
         wrapper.find("[data-testid='newRestaurantNameError']").element,
       ).not.toBeDefined();
@@ -868,7 +848,7 @@ Note that we repeat both sets of `beforeEach` steps from the other groups, submi
 Save the test file and our new test fails:
 
 ```sh
-  ● NewRestaurantForm › when correcting a validation error › clears the error message
+  ● NewRestaurantForm › when correcting a validation error › clears the validation error
 
     expect(received).not.toBeDefined()
 
@@ -938,7 +918,7 @@ Save the file and the test passes.
 
 Our third exception case is when the web service call fails. We want to display an error message. Since this is a new situation, let's set this up as yet another new `describe` block:
 
-```
+```js
   describe('when the store action rejects', () => {
     const restaurantName = 'Sushi Place';
 
@@ -951,7 +931,7 @@ Our third exception case is when the web service call fails. We want to display 
       wrapper.find("[data-testid='newRestaurantForm']").trigger('submit');
     });
 
-    it('displays an error message', () => {
+    it('displays a server error', () => {
       expect(wrapper.find("[data-testid='serverError']").text()).toContain(
         'The restaurant could not be saved. Please try again.',
       );
@@ -980,11 +960,11 @@ Save the file and the expectation fails, but we also get an UnhandledPromiseReje
 Save and the promise warning goes away, leaving us with just the expectation failure:
 
 ```sh
-  ● NewRestaurantForm › when empty › displays an error message
+  ● NewRestaurantForm › when empty › displays a server error
 
     [vue-test-utils]: find did not return [data-testid='newRestaurantNameError'], cannot call text() on empty Wrapper
 
-      70 |     it('displays an error message', () => {
+      70 |     it('displays a server error', () => {
       71 |       expect(
     > 72 |         wrapper.find("[data-testid='newRestaurantNameError']").text(),
          |                                                                ^
@@ -1074,7 +1054,7 @@ CAMEL CASE VS KEBAB CASE IN TEST IDS
 
 Save and the test passes. This is another instance where the test doesn't drive new behavior, but it's helpful for extra assurance that the code is behaving the way we expect.
 
-We also want to hide the server error message each time we retry saving the form. This is a new situation, so let's creat a new `describe` block for it:
+We also want to hide the server error message each time we retry saving the form. This is a new situation, so let's create a new `describe` block for it:
 
 ```js
   describe('when retrying after a server error', () => {
