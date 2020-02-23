@@ -560,13 +560,12 @@ Now our component and store should be set. Wire up the action to the form compon
 Rerun the E2E test, and the API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form. Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with React Testing Library. That's what we have E2E tests for! To fix this, make the button a submit button:
 
 ```diff
-       data-testid="newRestaurantNameField"
-     />
--    <v-btn color="teal" class="white--text">
-+    <v-btn type="submit" color="teal" class="white--text">
-       Save Restaurant
-     </v-btn>
-   </form>
+         variant="filled"
+         />
+-      <Button variant="contained" color="primary">
++      <Button variant="contained" color="primary" type="submit">
+         Save Restaurant
+       </Button>
 ```
 
 Now when we rerun the E2E test, we get a surprising addition in the test output. After the click:
