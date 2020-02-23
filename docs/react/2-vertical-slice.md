@@ -390,7 +390,7 @@ Now we can remove the duplicated code from the individual tests:
 
 Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
-We've now specified the behavior of our `RestaurantList` component, but we haven't yet built the store module. You also might notice that our tests don't indicate the relationship between dispatching the `load` action and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship; it just knows about an action and some state items. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `load` action, the restaurants are retrieved from the API and saved in the state.
+We've now specified the behavior of our `RestaurantList` component, but we haven't yet built out the store. You also might notice that our tests don't indicate the relationship between dispatching the `load` action and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship; it just knows about an action and some state items. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `load` action, the restaurants are retrieved from the API and saved in the state.
 
 We’ll organize our Redux store into a child reducer for restaurants, with associated actions. Let's create a test for that child reducer. Under `src`, create a `store` folder, then a `__tests__` folder inside that. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
@@ -419,10 +419,10 @@ We will need some records to be returned by our mocked API:
 As we said earlier, our app will consist of three layers:
 
 - The UI components
-- The Redux reducer
+- The Redux store
 - The API client
 
-So we won't make an HTTP request directly in our Vuex module. Instead, we'll delegate to an API object that we pass in. Let's design the interface of that object now:
+So we won't make an HTTP request directly in our Redux store. Instead, we'll delegate to an API object that we pass in. Let's design the interface of that object now:
 
 ```diff
      it('stores the restaurants', async () => {
