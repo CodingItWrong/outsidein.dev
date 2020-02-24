@@ -20,6 +20,7 @@ Before we start our work, we want a way to track it. Let's use Trello.
 ## Setting Up Development Environment
 Here are the tools we'll need to install:
 
+- Git
 - Node
 - Yarn
 - Vue CLI
@@ -127,7 +128,7 @@ When Vue CLI creates our project, it initializes a git repo and adds our code to
 
 ```sh
 $ git remote add https://github.com/your-user-name/your-repo-name.git
-$ git push -u origin master
+$ git push --set-upstream origin master
 ```
 
 In many development approaches, the next thing we would do would be to start building application functionality. We might go ahead and release. Later we might decide to try to add testing and continuous integration.
@@ -148,7 +149,7 @@ Let’s set this up in a pull request to the mirror the usual approach you’ll 
 $ git checkout -b ci
 ```
 
-In your project, create a `.github/workflows` folder and add the following file:
+In your project, create a `.github/workflows` folder, create a `test.yml` file, and add the following contents:
 
 ```yml
 name: Test
@@ -157,7 +158,7 @@ on: [push]
 jobs:
   unit-test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v1
       - name: Install Dependencies
@@ -187,8 +188,6 @@ $ git checkout master
 $ git pull
 ```
 
-On your GitHub repo’s page, click the Actions tab. Watch as your action runs. (Consider doing it as a pull request instead?)
-
 With this, we can mark off our next task in Trello:
 
 - [x] Set Up Tests On CI
@@ -202,7 +201,7 @@ There are many ways to deploy frontend apps. One easy one is services like Netli
 
 Create a Netlify account from [Netlify’s Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
-Once you’re signed in, click "New site from Git”. Click the “GitHub” button. A list of all your repos will appear. Search for your repo and click it. Leave “Branch to deploy” as `master`. Under “Basic build settings”, for the “Build command”, enter `yarn build` just like we ran locally. Then enter `list` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them. That’s all we need to configure, so click “Deploy site”.
+Once you’re signed in, click "New site from Git”. Click the “GitHub” button. A list of all your repos will appear. Search for your repo and click it. Leave “Branch to deploy” as `master`. Under “Basic build settings”, for the “Build command”, enter `yarn build` just like we ran locally. Then enter `dist` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them. That’s all we need to configure, so click “Deploy site”.
 
 You will be sent to the Overview page for your new site. In yellow you’ll see “Site deploy in progress”. Click that text and you’ll be taken to the Deploys page. In a list at the bottom you’ll see “Production: master@HEAD Building”—click that. You’ll see a console log of output as the site is being built. Eventually you’ll see:
 
@@ -226,14 +225,14 @@ With this, we can mark off our next task in Trello:
 ## Filling In the Readme
 Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Vue CLI created for us by default. It’s a nice minimal readme that lists the NPM scripts available, without a lot of filler text. If these commands weren’t in here, I would recommend that we add them: how to install, run, build, and test.
 
-Let’s add a description of the project and link to production:
+Let’s add a description of the project and link to production, filling in your Netlify domain:
 
 ```diff
  # opinion-ate
 +
 +An app for tracking reviews of dishes at different restaurants.
 +
-+Production: https://opinion-ate-vue.netlify.com/
++Production: https://your-netlify-domain.netlify.com/
 
  ## Project setup
 ```
