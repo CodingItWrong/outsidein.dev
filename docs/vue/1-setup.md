@@ -43,6 +43,10 @@ Install it:
 $ npm install -g @vue/cli
 ```
 
+### VS Code
+
+You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. Visual Studio Code is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly, autocompletion, syntax highlighting, and autoformatting in `.vue` files.
+
 With this, we can mark off our first task in Trello:
 
 - [x] Set Up Development Environment
