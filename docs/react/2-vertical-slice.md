@@ -29,7 +29,7 @@ Make the following changes to `src/index.js`:
 -serviceWorker.unregister();
 ```
 
-And replace the contents of `App.js` with the following minimal content:
+Replace the contents of `App.js` with the following minimal content:
 
 ```jsx
 import React from 'react';
@@ -81,7 +81,8 @@ Next, we visit the root of our app at `/`. We confirm that the page contains bot
 
 After we’ve created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be “red”) at first because we haven’t yet implemented the functionality.
 
-To run our test, run the app with `yarn start` and leave it running, then, in another terminal, run `yarn cypress`. After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
+To run our test, run the app with `yarn start` and leave it running, then, in another terminal, run `yarn cypress`.
+After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
 
 It's time for us to write the code to make this pass. Let's think about how we want to structure our code. We're going to have three layers:
 
@@ -105,7 +106,9 @@ With outside-in testing, we build the outside first, which in this case is our u
  export default App;
 ```
 
-Next, let's actually create the `RestaurantScreen` component we used here. In `src`, create a `components` folder, then inside it create a `RestaurantScreen.js` file. For the moment let's add just enough content to make it a valid component. Add the following:
+Next, let's actually create the `RestaurantScreen` component we used here.
+In `src`, create a `components` folder, then inside it create a `RestaurantScreen.js` file.
+For the moment let's add just enough content to make it a valid component. Add the following:
 
 ```jsx
 import React from 'react';
@@ -121,7 +124,9 @@ export default RestaurantScreen;
 
 If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren't any closer to passing the text. What do we do next?
 
-Well, what do we want to do on this screen? For this story, we want to display a restaurant list. But we also have an upcoming story where we want to add new restaurants. Those are two different responsibilities we want this screen to have. So let's create child components for each. For now, we'll just create the restaurant list. Create a `RestaurantList.js` file in `src/components` and again add the minimal content:
+Well, what do we want to do on this screen? For this story, we want to display a restaurant list. But we also have an upcoming story where we want to add new restaurants. Those are two different responsibilities we want this screen to have. So let's create child components for each. For now, we'll just create the restaurant list.
+
+Create a `RestaurantList.js` file in `src/components` and again add the minimal content:
 
 ```js
 import React from 'react';
@@ -156,7 +161,8 @@ Now we finally have `RestaurantList` where we'll put our UI for this story. So f
 
 Instead of adding the behavior directly, let’s **step down from the “outside” level of end-to-end tests to an “inside” component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
 
-Now, in `src/components`, create a `__tests__` folder, then create a file `RestaurantList.spec.js`. Now, we'll write a test for the first bit of functionality we need, to load the restaurants. We'll start with the structure of the test suite:
+Now, in `src/components`, create a `__tests__` folder, then inside that create a file `RestaurantList.spec.js`.
+Now, we'll write a test for the first bit of functionality we need, to load the restaurants. We'll start with the structure of the test suite:
 
 ```js
 describe('RestaurantList', () => {
@@ -230,7 +236,7 @@ d();
       13 | });
 ```
 
-Our test says we expected the `loadRestaurants` function to have been called at least once, but it wasn't called. This makes sense: we haven't hooked up the mount functionality yet. Now that our test is red, it's time to make it green.
+Our test says we expected the `loadRestaurants()` function to have been called at least once, but it wasn't called. This makes sense: we haven't hooked up the mount functionality yet. Now that our test is red, it's time to make it green.
 
 To call a function once when our component mounts, we'll use an effect. First, let's adjust the `RestaurantList` function to use a block:
 
@@ -259,7 +265,7 @@ Now, we run the `loadRestaurants` prop in a `useEffect`:
 
 The dependency array we pass to `useEffect` consists only of `loadRestaurants`, so the effect will run once each time `loadRestaurants` changes. In our test (and in our real application) it will never change, so the effect just runs once when the component mounts.
 
-Save the test and it passes.
+Save the file and, sure enough, our test is green. We've passed our first unit test!
 
 This gives us one of the behaviors we want our `RestaurantList` to have: loading the restaurants when it is mounted. Now it's time to write a test for the second behavior: displaying the restaurants. Let's add another `it()` block inside the `describe()`, with the following contents:
 
@@ -287,7 +293,7 @@ Notice that we **run one expectation per test in component tests.** Having separ
 
 You may recall that this isn’t what we did in the end-to-end test, though. Generally you should **make _multiple_ assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
 
-Now, instead of running an expectation that `load` was called, we use the `wrapper` to check what is rendered out:
+Now, instead of running an expectation that `load` was called, we use the destructured `queryByText` function to check what is rendered out:
 
 ```diff
      const {queryByText} = render(
@@ -363,7 +369,7 @@ We're `map`ping over the `restaurants`, but in our first test we didn't pass in 
 
 Save and now both tests are passing. We've now successfully defined both behaviors of our `RestaurantList`!
 
-Now we should check for opportunities for refactoring again. There's a lot of duplication in our two tests. Now that we see which parts are shared, let's extract that duplication. First, let's set up some shared data:
+In the TDD cycle, **whenever the tests go green, look for opportunities to refactor.** There's a lot of duplication in our two tests. Now that we see which parts are shared, let's extract that duplication. First, let's set up some shared data:
 
 ```diff
  describe('RestaurantList', () => {
@@ -427,7 +433,8 @@ Now we can remove the duplicated code from the individual tests:
 
 Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
-We've now specified the behavior of our `RestaurantList` component, but we haven't yet built out the store. You also might notice that our tests don't indicate the relationship between dispatching the `load` action and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship; it just knows about an action and some state items. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `load` action, the restaurants are retrieved from the API and saved in the state.
+We've now specified the behavior of our `RestaurantList` component, but we haven't yet built out the store.
+You also might notice that our tests don't indicate the relationship between dispatching the `load` action and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship; it just knows about an action and some state items. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `load` action, the restaurants are retrieved from the API and saved in the state.
 
 We’ll organize our Redux store into a child reducer for restaurants, with associated actions. Let's create a test for that child reducer. Under `src`, create a `store` folder, then a `__tests__` folder inside that. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
@@ -459,7 +466,8 @@ As we said earlier, our app will consist of three layers:
 - The Redux store
 - The API client
 
-So we won't make an HTTP request directly in our Redux store. Instead, we'll delegate to an API object that we pass in. Let's design the interface of that object now:
+So we won't make an HTTP request directly in our Redux store.
+Instead, we'll delegate to an API object that we pass in. Let's design the interface of that object now:
 
 ```diff
      it('stores the restaurants', async () => {
@@ -515,8 +523,6 @@ Unlike in the full application, we will only pass in the restaurant reducer. The
 ```
 
 You may not be familiar with the `.withExtraArgument()` method for `redux-thunk`. It allows you to pass an additional argument at setup time that will be available to all thunk functions. This allows us to inject our API. We could also use Jest's module mocking to do this, but this makes the dependency a bit more explicit.
-
-ADD THUNK EARLIER
 
 Now that our store is set, we can dispatch the load action, then check the state of the store afterward:
 
@@ -751,9 +757,9 @@ export default api;
 
 First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We'll provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
 
-Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: "don't mock what you don't own." There are a few reasons for this. First, if you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test. Also, some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
+Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** There are a few reasons for this. First, if you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test. Also, some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
 
-So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: wrap the third-party code with your *own* interface that you do control. In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
+So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
 With all that said, we're ready to wire up our store module and API to see if it all works. Create a `reducers.js` file in `src/store`, and set up a root reducer:
 
