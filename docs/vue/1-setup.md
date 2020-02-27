@@ -96,6 +96,29 @@ Let's try it out. Run `yarn serve`. You’ll see something like the following:
 
 Open the `Local` URL in the browser and you should see a page welcoming you to your Vue.js app.
 
+Next, let's tweak the autoformatting setup. Prettier doesn't have a lot of configuration options, but you can adjust a little.
+
+And a `.prettierrc.js` file at the root of your project and add the following:
+
+```js
+module.exports = {
+  bracketSpacing: false,
+  singleQuote: true,
+  trailingComma: 'all',
+};
+```
+
+Now, set up ESLint integration with your editor by installing the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+
+To confirm it works, open `src/App.vue`. You should see yellow underlines at a few different places:
+
+- Double quotes should be replaced with single quotes
+- Inside object literals, every property on its own line should have a comma after it, even the last one
+
+Save the file, and these changes should be made for you automatically.
+
+We can update all our files to be formatted this way by running `yarn lint --fix`.
+
 Next, let’s confirm our tests work. Open `tests/unit/example.spec.js`. Note that it’s testing the `HelloWorld` component. Now run `yarn test:unit`. You should see the following:
 
 ```
