@@ -68,7 +68,7 @@ Then you'll be given followup questions for some of these. Choose:
 
 * `Pick a linter / formatter config`: choose `ESLint + Prettier`. Prettier automatically formats your code when you save the file. Code consistency is a big help for productivity and catching bugs.
 * `Pick a unit testing solution:` choose `Jest`. Jest has a lot of features built in.
-* `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. Cypress is built from the ground up for rich frontend applications. The tradeoff, as Vue CLI mentions, is that Cypress currently runs only in Chrome. If you feel the need to test cross-browser, I would recommend adding some light WebDriver testing *im addition to* thorough Cypress tests.
+* `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. Cypress is built from the ground up for rich frontend applications. The tradeoff, as Vue CLI mentions, is that Cypress 3.x runs only in Chrome. But Cypress 4 has added support for testing in Firefox and MS Edge as well! Vue CLI should be updated to use Cypress 4 soon.
 
 Vue CLI will start the installation process, and when it completes, your application will be created and ready to use.
 
