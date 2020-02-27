@@ -877,9 +877,48 @@ With all that said, we're ready to wire up our store module and API to see if it
  });
 ```
 
-Go back into the Chrome instance that's running our Cypress test, or re-open it if it's closed. Rerun the test. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page.
+Go back into the Chrome instance that's running our Cypress test, or re-open it if it's closed.
+Rerun the test. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
 
-Now let's see our app working against the real backend. In our Vue app's directory, run the app with `yarn serve`:
+Now let's see our app working against the real backend. What backend is that? We've set up a Node.js API you can run locally; that way you can edit data without authentication or stepping on other users' data.
+
+Go to the [`codingitwrong/agilefrontend-api` project](https://github.com/CodingItWrong/agilefrontend-api) on GitHub. Clone the project, or just download and expand the zip file.
+
+In the `agilefrontend-api` directory, run the following commands:
+
+```sh
+$ yarn setup
+$ yarn start
+```
+
+This will set up a SQLite database with some test data, and start the API server. You'll see:
+
+```sh
+yarn run v1.22.0
+$ node server.js
+info: serving app on http://127.0.0.1:3333
+```
+
+You can confirm it's working by going to `http://localhost:3333/restaurants` in a browser: you should see the following JSON data (formatted differently depending on your browser and extensions):
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Pasta Place",
+    "created_at": "2020-02-27 07:43:58",
+    "updated_at": "2020-02-27 07:43:58"
+  },
+  {
+    "id": 2,
+    "name": "Salad Place",
+    "created_at": "2020-02-27 07:43:58",
+    "updated_at": "2020-02-27 07:43:58"
+  }
+]
+```
+
+Now we're set to run our app. In our Vue app's directory, run the app with `yarn serve`:
 
 ```sh
 $ yarn serve
@@ -901,15 +940,6 @@ $ vue-cli-service serve
 
 (Your port number may be different if you started the app before the Cypress tests, or if they are not running.)
 
-Next, go into the `api` directory and run `yarn start`. You'll see:
-
-```sh
-$ yarn start
-yarn run v1.22.0
-$ node server.js
-info: serving app on http://127.0.0.1:3333
-```
-
-Now open the URL of your Vue app. You should see the following default records that are created (ENTER HERE)
+Now open the URL of your Vue app. You should see the default "Pasta Place" and "Salad Place" records.
 
 We successfully implemented our first feature with outside-in Test-Driven Development! Now let's push it up to the origin and open a pull request.
