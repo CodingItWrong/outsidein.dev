@@ -2,8 +2,6 @@
 title: 1 - Setup
 ---
 
-PRETTIER
-
 # 1 - Setup
 
 ## Planning Our Work
