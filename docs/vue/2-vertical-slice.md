@@ -4,6 +4,29 @@ title: 2 - Vertical Slice
 
 # 2 - Vertical Slice
 
+We're ready to start our first feature. To get a clean start, let's delete out the sample content Vue CLI created with our app. Delete the following files and folders
+
+- `src/assets/`
+- `src/components/HelloWorld.vue`
+- `tests/e2e/specs/test.js`
+- `tests/unit/example.spec.js`
+
+Replace the contents of `src/App.vue` with the following minimal content:
+
+```html
+<template>
+  <div id="app">
+    Hello, world.
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+};
+</script>
+```
+
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** Our first feature will be to display a list of restaurants from the server.
 
 Create a file `tests/e2e/specs/listing-restaurants.spec.js` and add the following:
@@ -50,23 +73,24 @@ It's time for us to write the code to make this pass. Let's think about how we w
 - A Vuex module that stores our data and lets us interact with it.
 - An API client that allows us to make requests to the backend.
 
-With outside-in testing, we build the outside first, which in this case is our user interface components. And a common principle is to **write the code you wish you had.** What does that mean in our case? Well, when we created our app, we were given an `<App />` component. Do we want to put our user interface directly in there? No, it's best to save the `<App />` component for app-wide concerns such as a title bar that we'll add soon. Instead, it would be great if we had a `<RestaurantScreen />` component that would contain everything specific to our restaurants. We wish we had it, so let's replace the default `App.js` file with the following:
+With outside-in testing, we build the outside first, which in this case is our user interface components. And a common principle is to **write the code you wish you had.** What does that mean in our case? Well, when we created our app, we were given an `<App />` component. Do we want to put our user interface directly in there? No, it's best to save the `<App />` component for app-wide concerns such as a title bar that we'll add soon. Instead, it would be great if we had a `<RestaurantScreen />` component that would contain everything specific to our restaurants. We wish we had it, so let's add it to `App.js`:
 
-```html
-<template>
-  <div id="app">
-    <RestaurantScreen />
-  </div>
-</template>
+```diff
+ <template>
+   <div id="app">
+-    Hello, world.
++    <RestaurantScreen />
+   </div>
+ </template>
 
-<script>
-import RestaurantScreen from '@/components/RestaurantScreen';
-
-export default {
-  name: 'App',
-  components: {RestaurantScreen},
-};
-</script>
+ <script>
++import RestaurantScreen from '@/components/RestaurantScreen';
++
+ export default {
+   name: 'App',
++  components: {RestaurantScreen},
+ };
+ </script>
 ```
 
 Next, let's actually create the `RestaurantScreen` component we used here. In `src`, create a `components` folder, then inside it create a `RestaurantScreen.vue` file. For the moment let's add just enough content to make it a valid component. Add the following:
@@ -127,8 +151,6 @@ Now we finally have `RestaurantList` where we'll put our UI for this story. So f
 - Display the restaurants once they're returned
 
 Instead of adding the behavior directly, let’s **step down from the “outside” level of end-to-end tests to an “inside” component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
-
-DELETE OTHER SAMPLE FILES?
 
 In `tests/unit`, create a `components` folder, then inside that create a file `RestaurantList.spec.js`. Now, we'll write a test for the first bit of functionality we need, to load the restaurants. We'll start with the structure of the test suite:
 
