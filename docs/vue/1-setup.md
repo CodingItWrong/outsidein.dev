@@ -58,7 +58,7 @@ You’ll be asked for a preset; choose “Manually select features”.
 
 You'll be prompted with a list of features to choose. Use the spacebar to select:
 
-- Babel
+* Babel
 * Vuex
 * Linter / Formatter
 * Unit Testing
