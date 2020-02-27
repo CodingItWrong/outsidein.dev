@@ -4,7 +4,7 @@ title: 2 - Vertical Slice
 
 # 2 - Vertical Slice
 
-Our first feature will be to display a list of restaurants from the server.
+When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** Our first feature will be to display a list of restaurants from the server.
 
 Create a file `tests/e2e/specs/listing-restaurants.spec.js` and add the following:
 
@@ -40,6 +40,8 @@ Then, we call `cy.route()` to stub a specific backend request. When the app send
 
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
+After we’ve created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be “red”) at first because we haven’t yet implemented the functionality.
+
 To run our test, run `yarn test:e2e`. After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
 
 It's time for us to write the code to make this pass. Let's think about how we want to structure our code. We're going to have three layers:
@@ -48,27 +50,7 @@ It's time for us to write the code to make this pass. Let's think about how we w
 - A Vuex module that stores our data and lets us interact with it.
 - An API client that allows us to make requests to the backend.
 
-With outside-in testing, we build the outside first, which in this case is our user interface components.
-
-When we created our app, we were given an `<App />` component. Do we want to put our user interface directly in there? No, it's best to save the `<App />` component for app-wide concerns such as a title bar that we'll add soon. So first, let's create a `<RestaurantScreen />` that will contain everything specific to our restaurants.
-
-In `src`, create a `components` folder, then inside it create a `RestaurantScreen.vue` file. For the moment let's add just enough content to make it a valid component. Add the following:
-
-```html
-<template>
-  <div>
-    <h1>Restaurants</h1>
-  </div>
-</template>
-
-<script>
-export default {
-  name: 'RestaurantScreen',
-};
-</script>
-```
-
-Then, in `App.vue`, add this component:
+With outside-in testing, we build the outside first, which in this case is our user interface components. And a common principle is to **write the code you wish you had.** What does that mean in our case? Well, when we created our app, we were given an `<App />` component. Do we want to put our user interface directly in there? No, it's best to save the `<App />` component for app-wide concerns such as a title bar that we'll add soon. Instead, it would be great if we had a `<RestaurantScreen />` component that would contain everything specific to our restaurants. We wish we hadd it, so let's go ahead and add it to `App.vue`:
 
 ```diff
  <template>
@@ -88,7 +70,21 @@ Then, in `App.vue`, add this component:
  </script>
 ```
 
-We import the `RestaurantScreen` component so `App` has access to it, then we render that component in the template.
+Next, let's actually create the `RestaurantScreen` component we used here. In `src`, create a `components` folder, then inside it create a `RestaurantScreen.vue` file. For the moment let's add just enough content to make it a valid component. Add the following:
+
+```html
+<template>
+  <div>
+    <h1>Restaurants</h1>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'RestaurantScreen',
+};
+</script>
+```
 
 If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren't any closer to passing the text. What do we do next?
 
@@ -126,12 +122,12 @@ Then render that component in `RestaurantScreen`:
  </script>
 ```
 
-Now we finally have `RestaurantList` where we'll put our UI for this story. So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. But `RestaurantList` will do more. It needs to :
+Now we finally have `RestaurantList` where we'll put our UI for this story. So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. But `RestaurantList` will do more. It needs to:
 
 - Request for the restaurants to be loaded
 - Display the restaurants once they're returned
 
-Instead of just writing that functionality right away, we want to step down from our E2E test to write a unit test for our component to specify this functionality. This unit test will be helpful in a future story as we add more edge cases to this component.
+Instead of adding the behavior directly, let’s **step down from the “outside” level of end-to-end tests to an “inside” component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
 
 In `tests/unit`, create a `components` folder, then inside that create a file `RestaurantList.spec.js`. Now, we'll write a test for the first bit of functionality we need, to load the restaurants. We'll start with the structure of the test suite:
 
@@ -315,6 +311,10 @@ So far it's pretty similar to our previous test. There are just a few difference
 - We define a `records` variable that contains an array of two restaurant objects.
 - We pass a `state` property to our restaurants module, which is an object that contains a `records` property. Because the property name is the same as the name of the `records` variable we defined, we just include `records` in the object. Property shorthand means that a `records` property will be defined with the value being the value of our `records` variable.
 - We assign the return value of `mount()` to a variable, `wrapper`, because we'll need it in a moment.
+
+Notice that we **run one expectation per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails.
+
+You may recall that this isn’t what we did in the end-to-end test, though. Generally you should **make _multiple_ assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
 
 Now, instead of running an expectation that `load` was called, we use the `wrapper` to check what is rendered out:
 
