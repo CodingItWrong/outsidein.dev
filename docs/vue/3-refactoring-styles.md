@@ -25,7 +25,8 @@ Press `a` to run all the tests. They should pass. Keep the unit test process run
 
 In another terminal, run `yarn test:e2e`. Click `listing-restaurants.spec.js` and make sure it passes.
 
-Now that we know all our tests pass, we're ready to update the look-and-feel of the app. We're going to use Vuetify, a popular Vue component library that follows Google's Material design.
+Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
+We're going to use Vuetify, a popular Vue component library that follows Google's Material design.
 
 Install Vuetify with the Vue CLI:
 
@@ -41,7 +42,11 @@ When the process finishes, Vuetify is set and ready to go. But if you stop and r
 $ git checkout -- src/App.vue
 ```
 
-This will restore `App.vue` to the state we had it in before. Now we're ready to adjust it yourselves. We're going to keep the `<RestaurantScreen />` component but wrap it with different Vuetify components:
+This will restore `App.vue` to the state we had it in before.
+
+Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
+
+In `App.vue`, keep the `<RestaurantScreen />` component but wrap it with different Vuetify components:
 
 ```diff
  <template>
@@ -63,7 +68,7 @@ This will restore `App.vue` to the state we had it in before. Now we're ready to
 
 Notice that Vuetify components all start with a `v-` prefix. We also don't have to import them into our file, as we do with our custom components. The assumption is that Vuetify components will be used *a lot* throughout your app, so this avoids having to do lots of imports.
 
-Rerun the E2E test. They still pass, but notice we have a nice green toolbar, and there's some padding on the left and right on the content area.
+Rerun the E2E test. They still pass, but notice we have a nice teal toolbar, and there's some padding on the left and right on the content area.
 
 Here's what these Vuetify components do to achieve this look:
 

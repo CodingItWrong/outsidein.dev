@@ -90,7 +90,8 @@ Rerun the E2E test and the New Restaurant button is found, and we get to a new e
 
 > CypressError: Timed out retrying: Expected to find element: '[placeholder="Name"]', but never found it.
 
-We need a "Name" text input. That should live on the New Restaurant Form, so it's time to create that component. Create the file `src/components/NewRestaurantForm.js`, and add the following:
+We need a "Name" text input. That should live on the New Restaurant Form, so it's time to create that component.
+Create the file `src/components/NewRestaurantForm.js`, and add the following:
 
 ```js
 import React from 'react';
@@ -198,11 +199,10 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
   });
 ```
 
-WHY DOES SUBMITTING THE BUTTON WORK? CLICK BUTTON OR SUBMIT FORM
+We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click a submit button.
+Note that like in the Cypress test we find elements by their placeholder and title text. UPDATE TO CLICK BUTTON OR SUBMIT FORM
 
-We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click a submit button. Note that like in the Cypress test we find elements by their placeholder and title text. Also note that we find the form and trigger a submit event on it, rather than finding the submit button and triggering a click event on it. CONFIRM THE BUTTON DOESN"T WORK, AND FIND OUT WHY.
-
-In `RestaurantList` we didn't pass any additional data with our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as an argument to the action function, so we need to use the `.toHaveBeenCalledWith()` matcher (CHECK THIS TERM). We pass one argument to it, confirming that the correct `restaurantName` is passed through.
+In `RestaurantList` we didn't pass any additional data with our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as an argument to the action function, so we need to use the `.toHaveBeenCalledWith()` matcher. We pass one argument to it, confirming that the correct `restaurantName` is passed through.
 
 Save the file and we get a failing test, as we expect:
 
@@ -297,10 +297,10 @@ Finally, now that the entered text is stored in `name`, we'll pass that as the a
 
 Save the file and the test passes.
 
-We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store module. The restaurants module needs a `create` action that will make the appropriate call to the API, then insert the resulting record into the store. Let's write that test now. Below the "load action" group, add a "create action" group, and write a test to confirm the API is called:
+We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store module. The restaurants module needs a `create` action that will make the appropriate call to the API, then insert the resulting record into the store. Let's write that test now. Below the "load action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
 
 ```js
-  describe('create action', () => {
+  describe('createRestaurant action', () => {
     const newRestaurantName = 'Sushi Place';
 
     let api;
@@ -340,10 +340,10 @@ We also need to import `createRestaurant`:
  describe('restaurants', () => {
 ```
 
-The test fails because the API method was not called:
+Save the file, and the test fails because the API method was not called:
 
 ```sh
-  ● restaurants › create action › saves the restaurant to the server
+  ● restaurants › createRestaurant action › saves the restaurant to the server
 
     expect(createRestaurant).toHaveBeenCalledWith(...expected)
 
@@ -364,7 +364,8 @@ We also get an error that the function doesn't exist:
       141 |     });
 ```
 
-Let's fix that error first. Export an empty function from `actions.js`:
+Let's fix that error first.
+Export an empty function from `actions.js`:
 
 ```diff
  const recordLoadingError = () => ({type: RECORD_LOADING_ERROR});
@@ -375,7 +376,7 @@ Let's fix that error first. Export an empty function from `actions.js`:
 We get the error again that its return value isn't a valid thing to dispatch:
 
 ```sh
-  ● restaurants › create action › saves the restaurant to the server
+  ● restaurants › createRestaurant action › saves the restaurant to the server
 
     Actions must be plain objects. Use custom middleware for async actions.
 
@@ -392,7 +393,8 @@ So let's have it return a function:
 +export const createRestaurant = () => () => {};
 ```
 
-This fixes the error, so now we just get the expectation failure that `api.createRestaurant` wasn't called. Update the `createRestaurant` thunk to call it:
+This fixes the error, so now we just get the expectation failure that `api.createRestaurant` wasn't called.
+Update the `createRestaurant` thunk to call it:
 
 ```diff
 -export const createRestaurant = () => () => {};
@@ -404,7 +406,7 @@ This fixes the error, so now we just get the expectation failure that `api.creat
 This changes the test failure. Now the method is called, but not with the right arguments:
 
 ```sh
-● restaurants › create action › saves the restaurant to the server
+● restaurants › createRestaurant action › saves the restaurant to the server
 
     expect(createRestaurant).toHaveBeenCalledWith(...expected)
 
@@ -434,7 +436,7 @@ Our restaurant name is passed in as the first argument of the action, so we can 
 Save the file and the test passes. Now we need to specify one more thing that happens when the `create` action is dispatched: the returned restaurant from the API, including the ID that the API gives the record, is appended to the restaurant list in the state. To write that test, we're going to need to add a little to the setup as well:
 
 ```diff
-   describe('create action', () => {
+   describe('createRestaurant action', () => {
      const newRestaurantName = 'Sushi Place';
 +    const existingRestaurant = {id: 1, name: 'Pizza Place'};
 +    const responseRestaurant = {id: 2, name: newRestaurantName};
@@ -473,7 +475,7 @@ Now we're ready to specify that the returned restaurant is added to the store:
 We ensure that the existing restaurant is still in the store, and the restaurant record returned from the server is added after it. Save the file and the test fails:
 
 ```sh
-  ● restaurants › create action › stores the returned restaurant in the store
+  ● restaurants › createRestaurant action › stores the returned restaurant in the store
 
     expect(received).toEqual(expected) // deep equality
 
@@ -557,7 +559,9 @@ Now our component and store should be set. Wire up the action to the form compon
 +export default connect(mapStateToProps, mapDispatchToProps)(NewRestaurantForm);
 ```
 
-Rerun the E2E test, and the API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form. Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with React Testing Library. That's what we have E2E tests for! To fix this, make the button a submit button:
+With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form.
+Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with React Testing Library. (UPDATE IF SUBMIT CHANGES)
+That's what we have E2E tests for! To fix this, make the button a submit button:
 
 ```diff
          variant="filled"
@@ -575,7 +579,9 @@ Now when we rerun the E2E test, we get a surprising addition in the test output.
 - (NEW URL) http://localhost:3000/?
 - (XHR STUB) GET 200 /restaurants
 
-This sounds like the page is being reloaded, and it is. This is because by default HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress. To prevent this from happening, we need to call the `preventDefault()` method on the event sent to the `onSubmit` event. We can do this by extracting a handler function:
+This sounds like the page is being reloaded, and it is. This is because by default HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
+
+To prevent this page reload from happening, we need to call the `preventDefault()` method on the event sent to the `onSubmit` event. We can do this by extracting a handler function:
 
 ```diff
  export const NewRestaurantForm = ({createRestaurant}) => {
@@ -615,10 +621,6 @@ Now we get another console error:
 TypeError: Cannot read property 'then' of undefined
 ```
 
-DON"T GET THIS IN REACT: But we also get a test failure after a few seconds:
-
-> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
-
 We still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API:
 
 ```diff
@@ -649,8 +651,6 @@ Cypress confirms we're sending the `POST` request to the server correctly, and w
 > CypressError: Timed out retrying: Expected to find content: 'Sushi Place' but never did.
 
 We aren't displaying the restaurant on the page. This is because we aren't yet returning it properly from the resolved value. The Axios promise resolves to the Axios response object, but we want to return a promise that resolves to the record. We can do this by getting the response body:
-
-LOOK INTO WHY WE DIDN"T DO THIS BEFORE
 
 ```diff
    createRestaurant(name) {
@@ -698,7 +698,8 @@ Save the test, and we get a test failure confirming that the text field is not y
          |                                                  ^
 ```
 
-Where in the component should we clear the text field? Well, we have another story that the name should _not_ be cleared if the web service call fails. If that's the case, then we should not clear the text field until the store action resolves successfully. Make this change in `NewRestaurantForm.js`:
+Where in the component should we clear the text field? Well, we have another story that the name should _not_ be cleared if the web service call fails. If that's the case, then we should not clear the text field until the store action resolves successfully.
+Make this change in `NewRestaurantForm.js`:
 
 ```diff
      handleSave() {
@@ -827,7 +828,7 @@ Now let's implement the validation error. Create a new `describe` block for this
 
 We don't actually need the line that sets the value of the text field to the empty string, because right now it starts out empty. But explicitly adding that line make the intention of the test more clear. And that way, if we did decide in the future to start the form out with default text, we would be sure this test scenario still worked. It's a judgment call whether to add it or not.
 
-Save the file and the test fails, because the error message is not found:
+Save the file and the test fails, because the validation error is not found:
 
 ```sh
   ● NewRestaurantForm › when empty › displays a validation error
@@ -842,7 +843,7 @@ Save the file and the test fails, because the error message is not found:
          |                                                   ^
 ```
 
-Let's fix this error in the simplest way possible by adding the error message unconditionally:
+Let's fix this error in the simplest way possible by adding the validation error unconditionally:
 
 ```diff
  import Button from '@material-ui/core/Button';
@@ -855,9 +856,9 @@ Let's fix this error in the simplest way possible by adding the error message un
        <TextField
 ```
 
-The tests pass. Now how can we write a test to drive out hiding that error message in other circumstances? Well, we can check that it's not shown when the form is initially mounted.
+The tests pass. Now how can we write a test to drive out hiding that validation error in other circumstances? Well, we can check that it's not shown when the form is initially mounted.
 
-In preparation, let's move the error message text we're searching for to a constant directly under our top-level `describe`:
+In preparation, let's move the validation error text we're searching for to a constant directly under our top-level `describe`:
 
 ```diff
  describe('NewRestaurantForm', () => {
@@ -901,7 +902,8 @@ The test fails because we are always showing the error right now:
          |                                          ^
 ```
 
-Time to add some logic around this error. We'll add state to indicate whether it should be shown:
+Time to add some logic around this error.
+We'll add state to indicate whether it should be shown:
 
 ```diff
  export const NewRestaurantForm = ({createRestaurant}) => {
@@ -953,7 +955,7 @@ We can pass this test by adding a conditional around setting the `validationErro
 
 Save the file and all tests pass.
 
-Now, is there any other time we would want to hide or show the error message? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
+Now, is there any other time we would want to hide or show the validation error? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
 
 ```js
   describe('when correcting a validation error', () => {
@@ -969,7 +971,7 @@ Now, is there any other time we would want to hide or show the error message? We
       return act(flushPromises);
     });
 
-    it('clears the error message', () => {
+    it('clears the validation error', () => {
       const {queryByText} = context;
       expect(queryByText(requiredError)).toBeNull();
     });
@@ -981,14 +983,13 @@ Note that we repeat both sets of `beforeEach` steps from the other groups, submi
 Save the test file and our new test fails:
 
 ```sh
-  ● NewRestaurantForm › when correcting a validation error › clears the error messag
-e
+  ● NewRestaurantForm › when correcting a validation error › clears the validation error
 
     expect(received).toBeNull()
 
     Received: <div class="MuiAlert-message">Name is required</div>
 
-      80 |     it('clears the error message', () => {
+      80 |     it('clears the validation error', () => {
 
       81 |       const {queryByText} = context;
     > 82 |       expect(queryByText(requiredError)).toBeNull();
@@ -998,11 +999,10 @@ e
 We can fix this by clearing the `validationError` flag upon a successful submission:
 
 ```diff
-     handleSave() {
-       if (!this.name) {
-         this.validationError = true;
+       if (!name) {
+         setValidationError(true);
 +      } else {
-+        this.validationError = false;
++        setValidationError(false);
        }
 ```
 
@@ -1011,10 +1011,10 @@ Note that we aren't waiting for the web service to return to clear it out, the w
 Save and the tests pass. Now that we have an `each` branch to that conditional, let's invert the boolean to make it easier to read. Refactor it to:
 
 ```js
-      if (this.name) {
-        this.validationError = false;
+      if (name) {
+        setValidationError(false);
       } else {
-        this.validationError = true;
+        setValidationError(true);
       }
 ```
 
@@ -1028,7 +1028,7 @@ Now we can handle the other expectation for when we submit an empty form: it sho
     });
 ```
 
-We can fix this error by moving the call to `this.createRestaurant()` inside the true branch of the conditional:
+We can fix this error by moving the call to `createRestaurant()` inside the true branch of the conditional:
 
 ```diff
      if (name) {
@@ -1048,7 +1048,9 @@ We can fix this error by moving the call to `this.createRestaurant()` inside the
 
 Save the file and the test passes.
 
-Our third exception case is when the web service call fails. We want to display an error message. We'll want to check for the message in a few different places, so let's set it up as a constant in the uppermost `describe` block:
+Our third exception case is when the web service call fails. We want to display a validation error.
+
+We'll want to check for the message in a few different places, so let's set it up as a constant in the uppermost `describe` block:
 
 ```diff
  describe('NewRestaurantForm', () => {
@@ -1143,6 +1145,8 @@ Save and the test passes. Now, when do we want that message to *not* show? For o
       expect(queryByText(serverError)).toBeNull();
     });
 ```
+
+Save and the test fails.
 
 We'll add another bit of state to track whether the error should show, starting hidden, and shown if the store action rejects:
 

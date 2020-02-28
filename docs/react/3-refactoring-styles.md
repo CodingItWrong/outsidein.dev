@@ -25,7 +25,8 @@ Press `a` to run all the tests. They should pass. Keep the unit test process run
 
 In another terminal, run `yarn start`, and in a third, run `yarn cypress`. Click `listing-restaurants.spec.js` and make sure it passes.
 
-Now that we know all our tests pass, we're ready to update the look-and-feel of the app. We're going to use Material-UI, a popular React component library that follows Google's Material design.
+Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
+We're going to use Material-UI, a popular React component library that follows Google's Material design.
 
 Install Material-UI and some related packages:
 
@@ -35,9 +36,10 @@ $ yarn add @material-ui/core @material-ui/icons @material-ui/lab
 
 The `icons` package provides icons, as you might expect, and the `lab` package provides an error alert component we’ll use.
 
-Now we're ready to use Material-UI components in our app.
+Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
 
-We're going to keep the `<RestaurantScreen />` component but wrap it with different Material-UI components:
+
+In `App.js`, keep the `<RestaurantScreen />` component but wrap it with different Material-UI components:
 
 ```diff
  import React from 'react';
@@ -81,7 +83,7 @@ We're going to keep the `<RestaurantScreen />` component but wrap it with differ
  );
 ```
 
-Rerun the E2E test. They still pass, but notice we have a nice green toolbar, and there's some padding on the left and right on the content area.
+Rerun the E2E test. They still pass, but notice we have a nice teal toolbar, and there's some padding on the left and right on the content area.
 
 Here's what these Material-UI components do to achieve this look:
 
@@ -151,4 +153,6 @@ Here's what the components do:
 - `ListItem` is the wrapping component for the list item
 - `ListItemText` is the primary title in the list item
 
-Our E2E and unit tests still pass. We've successfully styled our app relying on the tests to confirm all the functionality still works.
+Our E2E and unit tests still pass.
+
+We've successfully styled our app relying on the tests to confirm all the functionality still works.

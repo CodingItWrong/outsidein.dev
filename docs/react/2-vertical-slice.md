@@ -440,14 +440,14 @@ We’ll organize our Redux store into a child reducer for restaurants, with asso
 
 ```js
 describe('restaurants', () => {
-  describe('load action', () => {
+  describe('loadRestaurants action', () => {
     it('stores the restaurants', async () => {
     });
   });
 });
 ```
 
-We create a `describe` block for our load action, which right now just has one test: that it stores the restaurants. Note that the test function is `async`, to allow for our stubbed network request. Now let's fill that test out.
+We create a `describe` block for our `loadRestaurants` action, which right now just has one test: that it stores the restaurants. Note that the test function is `async`, to allow for our stubbed network request. Now let's fill that test out.
 
 We will need some records to be returned by our mocked API:
 

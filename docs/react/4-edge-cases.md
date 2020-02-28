@@ -15,7 +15,8 @@ First, the loading indicator. Although we aren't writing an E2E test, we can sti
 
 Right now in `RestaurantList.spec.js` we are mounting our component in a `beforeEach` block. This has worked so far, but now we need to set up the props slightly differently for different tests. We want a test where a loading flag is set.
 
-To do this, let's refactor our tests for more flexibility. First, let's extract all the contents of the `beforeEach` into a new function, called `mountWithProps`:
+To do this, let's refactor our tests for more flexibility.
+First, let's extract all the contents of the `beforeEach` into a new function, called `mountWithProps`:
 
 ```diff
    let context;
@@ -96,7 +97,7 @@ Here’s what’s going on:
 - Whatever the final value of the `loadRestaurants` property is, we set that in a variable so it can be accessed in the tests.
 - We `render` the component, passing it all the props.
 
-Now we're ready to write our new test for when the store is in a loading state. Let's pass in a new property for whether the restaurants are loading:
+Now we're ready to write our new test for when the store is in a loading state. Let's pass in a new prop for whether the restaurants are loading:
 
 ```js
   it('displays the loading indicator while loading', () => {
@@ -110,7 +111,8 @@ Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Ou
 
 In good TDD style, our test fails, because the element isn't present.
 
-Sticking with the approach of making the smallest possible change to make the test pass, let's just add the loading indicator to show *all* the time. Material-UI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js` with the correct test ID:
+Sticking with the approach of making the smallest possible change to make the test pass, let's just add the loading indicator to show *all* the time.
+Material-UI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js` with the correct test ID:
 
 ```diff
  import {loadRestaurants} from '../store/restaurants/actions';
@@ -180,26 +182,28 @@ describe('when loading succeeds', () => {
 });
 ```
 
-UPDATE TEST NAMES
-
 Save and confirm the tests still pass.
 
-Now, we pass `loading: false` to the store, but conceptually that's the default state of the store. Let's set up `mountWithStore` to pass that as default state:
+Now, we pass `loading: false` to the store, but conceptually that's the default state of the store. Let's set up `mountWithProps` to pass that as a default prop:
 
 ```diff
--  const mountWithStore = (state = {records}) => {
-+  const mountWithStore = (state = {records, loading: false}) => {
+     const props = {
+       loadRestaurants: jest.fn().mockName('loadRestaurants'),
++      loading: false,
+       restaurants,
+       ...propOverrides,
+     };
 ```
 
-Now we don't need to pass a state override in the test of the loading indicator hiding:
+Now we don't need to pass a prop override in the test of the loading indicator hiding:
 
 ```diff
      it('does not display the loading indicator while not loading', () => {
--      mountWithStore({loading: false});
-+      mountWithStore();
+-      mountWithProps({loading: false});
++      mountWithProps();
 ```
 
-Now our two "when loading succeeds" tests have the same call to `mountWithStore()`. It's small, so we could leave it in the individual tests. But we could also pull it out to a `beforeEach`. Let's do that now:
+Now our two "when loading succeeds" tests have the same call to `mountWithProps()`. It's small, so we could leave it in the individual tests. But we could also pull it out to a `beforeEach`. Let's do that now:
 
 ```diff
    describe('when loading succeeds', () => {
@@ -220,9 +224,12 @@ Now our two "when loading succeeds" tests have the same call to `mountWithStore(
 
 Save and the tests should pass.
 
-Note that we have one more test that calls `mountWithProps()` with no argument: the test that it "loads restaurants on mount." Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
+Note that we have one more test that calls `mountWithProps()` with no argument: the test that it "loads restaurants on mount."
+Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
 
-Now we need to drive out the loading flag in the store itself. Open `src/store/__tests__/restaurants.spec.js`. We'll have the same separation of tests during loading, so let's proactively group our existing "stores the restaurants" test in a describe:
+Now we need to drive out the loading flag in the store itself.
+Open `src/store/__tests__/restaurants.spec.js`.
+We'll have the same separation of tests during loading, so let's proactively group our existing "stores the restaurants" test in a describe:
 
 ```js
 describe('when loading succeeds', () => {
@@ -242,7 +249,7 @@ describe('while loading', () => {
 Inside that describe block, add the test:
 
 ```js
-      it('sets a loading flag', async () => {
+      it('sets a loading flag', () => {
         const api = {
           loadRestaurants: () => new Promise(() => {}),
         };
@@ -255,7 +262,7 @@ Inside that describe block, add the test:
           applyMiddleware(thunk.withExtraArgument(api)),
         );
 
-        await store.dispatch(loadRestaurants());
+        store.dispatch(loadRestaurants());
 
         expect(store.getState().loading).toEqual(true);
       });
@@ -267,8 +274,6 @@ Here's what's going on:
 - We set up a store with the restaurants reducer with that API.
 - We dispatch the loadRestaurants action. This time we don't need to `await` it.
 - We check the state of the `loading` flag to confirm that it's `true` after we initiate a load.
-
-CHECK IF AWAITING IS EVER NECESSARY
 
 Our test fails, as we expect:
 
@@ -436,9 +441,9 @@ Our test fails, as we expect, and now we need to actually clear the loading flag
 
 Save the file and our test passes.
 
-NOTE ABOUT ONE EXPECTATION PER ASSERTION
-
-Is our implementation complete? Well, the `loading` flag starts as `true`. Right now we dispatch the `loadRestaurants` action as soon as our app starts, so that's *almost* true. But it makes more sense for the `loadRestaurants` action to actually start the loading. So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
+Is our implementation complete? Well, the `loading` flag starts as `true`.
+Right now we dispatch the `loadRestaurants` action as soon as our app starts, so that's *almost* true. But it makes more sense for the `loadRestaurants` action to actually start the loading.
+So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
 
 ```js
   describe('initially', () => {
@@ -508,7 +513,7 @@ Our unit tests are passing, and all we need to do now is hook up the `loading` s
  });
 ```
 
-Run the app with `yarn serve`, then load it in the browser. Our local API is set up with a hard-coded one second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
+With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our local API is set up with a hard-coded one second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
 
 Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the data is eventually shown.
 
@@ -532,9 +537,11 @@ Start with the test for the component. We are describing a new situation, when l
   });
 ```
 
-We decide we want to indicate the error state with a flag named `loadError`, so we set it up as a prop set to `true`. We check for a new loading error element on the page. Our test fails to start.
+We decide we want to indicate the error state with a flag named `loadError`, so we set it up as a prop set to `true`.
+We check for a new loading error element on the page. Our test fails because the element is not found.
 
-Fix it the simplest way possible by hard-coding the error message to show. Material-UI’s `lab` package has an `Alert` component that will work well:
+Fix it the simplest way possible by hard-coding the error message to show.
+Material-UI’s `lab` package has an `Alert` component that will work well:
 
 ```diff
  import ListItemText from '@material-ui/core/ListItemText';
@@ -570,7 +577,7 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
      it('displays the restaurants', () => {
 ```
 
-Make this test pass by making the display of the error alert conditional on the `loadError` store property that we set up in our test:
+Make this test pass by making the display of the error alert conditional on the `loadError` prop that we set up in our test:
 
 ```diff
 -export const RestaurantList = ({loadRestaurants, restaurants, loading}) => {
@@ -591,8 +598,6 @@ Make this test pass by making the display of the error alert conditional on the 
 ```
 
 Now both tests pass. Our component is working; on to the store.
-
-STOPPED HERE
 
 In `restaurants.spec.js`, create a new `describe` block after "when loading succeeds" for the error scenario. Let's go ahead and do the setup in a `beforeEach` block, assuming we will need to have other expectations too:
 
@@ -777,9 +782,9 @@ And in `reducers.js`:
 +};
 ```
 
-Save the files and the test should pass.
+Save the file and all tests should pass.
 
-We also want to make sure that if the restaurant is loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > when loading" group, so extract the setup from the "sets the loading flag" test:
+We also want to make sure that if the restaurant is loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > while loading" group, so extract the setup from the "sets the loading flag" test:
 
 ```diff
      describe('while loading', () => {
@@ -844,7 +849,8 @@ Now we're finally ready to set up our expectation that the `loadError` should be
       });
 ```
 
-Save the file and the new test should fail. Fix it by updating the `loadError` reducer to return `false` upon the `START_LOADING` action:
+Save the file and the new test should fail.
+Fix it by updating the `loadError` reducer to return `false` upon the `START_LOADING` action:
 
 ```diff
  const loadError = (state = false, action) => {

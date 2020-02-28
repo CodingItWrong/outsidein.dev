@@ -84,7 +84,8 @@ Rerun the E2E test and the New Restaurant button is found, and we get to a new e
 
 > CypressError: Timed out retrying: Expected to find element: '[placeholder="Name"]', but never found it.
 
-We need a "Name" text input. That should live on the New Restaurant Form, so it's time to create that component. Create the file `src/components/NewRestaurantForm.vue`, and add the following:
+We need a "Name" text input. That should live on the New Restaurant Form, so it's time to create that component.
+Create the file `src/components/NewRestaurantForm.vue`, and add the following:
 
 ```html
 <template>
@@ -211,9 +212,10 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
   });
 ```
 
-We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click a submit button. Note that while in the Cypress test we found elements by their placeholder and title text, with Vue Test Utils it's easier to find elements by a `data-testid` attribute, so we use that instead. Also note that we find the form and trigger a submit event on it, rather than finding the submit button and triggering a click event on it. CONFIRM THE BUTTON DOESN"T WORK, AND FIND OUT WHY.
+We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click a submit button.
+Note that while in the Cypress test we found elements by their placeholder and title text, with Vue Test Utils it's easier to find elements by a `data-testid` attribute, so we use that instead. Also note that we find the form and trigger a submit event on it, rather than finding the submit button and triggering a click event on it.
 
-In `RestaurantList` we didn't pass a payload to our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as the payload of the action, so we need to use the `.toHaveBeenCalledWith()` matcher (CHECK THIS TERM). The first argument is one provided by Vuex that includes a `commit` function and others, so since it's not provided by us there's no reason for us to set an expectation on it. So instead we pass `expect.anything()`, to tell Jest that any value there is fine. It's the second argument, where the payload is passed, that we want to confirm that the correct `restaurantName` is passed through.
+In `RestaurantList` we didn't pass a payload to our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as the payload of the action, so we need to use the `.toHaveBeenCalledWith()` matcher. The first argument is one provided by Vuex that includes a `commit` function and others, so since it's not provided by us there's no reason for us to set an expectation on it. So instead we pass `expect.anything()`, to tell Jest that any value there is fine. It's the second argument, where the payload is passed, that we want to confirm that the correct `restaurantName` is passed through.
 
 Save the file and we get a failing test, as we expect:
 
@@ -384,7 +386,7 @@ We'll circle back to test-drive edge case functionality to the form later, but f
 
 We'll need to add a second expectation shortly so we go ahead and set up the test in a `beforeEach`.
 
-The test fails because the API method was not called:
+Save the file, and the test fails because the API method was not called:
 
 ```sh
   ● restaurants › create action › saves the restaurant to the server
@@ -403,7 +405,8 @@ We also get a console error that the action doesn't exist:
     [vuex] unknown action type: restaurants/create
 ```
 
-Let's fix that error first. Add an empty action to the store module:
+Let's fix that error first.
+Add an empty action to the store module:
 
 ```diff
    actions: {
@@ -414,7 +417,8 @@ Let's fix that error first. Add an empty action to the store module:
    },
 ```
 
-This fixes the console error, so now we just have the failing test that the API method wasn't called. Let's fix that by calling it:
+This fixes the error, so now we just get the expectation failure that `api.createRestaurant` wasn't called.
+Update the `create` action to call it:
 
 ```diff
    actions: {
@@ -489,8 +493,6 @@ Save the file and the test passes. Now we need to specify one more thing that ha
      });
 ```
 
-CHECK THAT DISPATCH RETURNS A PROMISE—seems like our implementation does not. Do I need to change anything?
-
 This ensures the API call promise resolves, and provides a restaurant record for it. We also add a different restaurant to the pre-existing list of restaurants in the store. Save the file and the tests should still pass.
 
 Now we're ready to specify that the returned restaurant is added to the store:
@@ -555,9 +557,9 @@ The store only contains the restaurant it was initialized with, not the new one 
    },
 ```
 
-With that, our store should be working. Let's check the E2E test to see if it's progressed.
-
-Rerun the test, and the API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form. Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with Vue Test Utils. That's what we have E2E tests for! To fix this, make the button a submit button:
+With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form.
+Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with Vue Test Utils. (UPDATE IF SUBMIT CHANGES)
+That's what we have E2E tests for! To fix this, make the button a submit button:
 
 ```diff
        data-testid="new-restaurant-name-field"
@@ -576,7 +578,9 @@ Now when we rerun the E2E test, we get a surprising addition in the test output.
 - (NEW URL) http://localhost:8081/?
 - (XHR STUB) GET 200 /restaurants
 
-This sounds like the page is being reloaded, and it is. This is because by default HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress. To prevent this from happening, Vue provides a `.prevent` modifier we can add to the action name in the tag to prevent the default browser behavior (analogous to `event.preventDefault()`). Add this:
+This sounds like the page is being reloaded, and it is. This is because by default HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
+
+To prevent this page reload from happening, Vue provides a `.prevent` modifier we can add to the action name in the tag to prevent the default browser behavior (analogous to `event.preventDefault()`). Add this:
 
 ```diff
  <template>
@@ -643,8 +647,6 @@ Cypress confirms we're sending the `POST` request to the server correctly, and w
 
 We aren't displaying the restaurant on the page. This is because we aren't yet returning it properly from the resolved value. The Axios promise resolves to the Axios response object, but we want to return a promise that resolves to the record. We can do this by getting the response body:
 
-LOOK INTO WHY WE DIDN"T DO THIS BEFORE
-
 ```diff
    createRestaurant(name) {
 -    return client.post('/restaurants', {name});
@@ -695,7 +697,8 @@ Save the test, and we get a test failure confirming that the text field is not y
          |         ^
 ```
 
-Where in the component should we clear the text field? Well, we have another story that the name should _not_ be cleared if the web service call fails. If that's the case, then we should not clear the text field until the store action resolves successfully. Make this change in `NewRestaurantForm.vue`:
+Where in the component should we clear the text field? Well, we have another story that the name should _not_ be cleared if the web service call fails. If that's the case, then we should not clear the text field until the store action resolves successfully.
+Make this change in `NewRestaurantForm.vue`:
 
 ```diff
      handleSave() {
@@ -708,7 +711,7 @@ Where in the component should we clear the text field? Well, we have another sto
 
 Save the file and the test should pass. That was an easy one!
 
-AGAIN, CHECK ASYNC FOR ACTIONS.
+REACT GIVES A THEN ERROR HERE; WHY DOESN"T VUE?
 
 Now let's implement the validation error. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
@@ -729,7 +732,7 @@ Now let's implement the validation error. Create a new `describe` block for this
 
 We don't actually need the line that sets the value of the text field to the empty string, because right now it starts out empty. But explicitly adding that line make the intention of the test more clear. And that way, if we did decide in the future to start the form out with default text, we would be sure this test scenario still worked. It's a judgment call whether to add it or not.
 
-Save the file and the test fails, because the error message is not found:
+Save the file and the test fails, because the validation error is not found:
 
 ```sh
   ● NewRestaurantForm › when empty › displays a validation error
@@ -743,7 +746,7 @@ Save the file and the test fails, because the error message is not found:
       65 |       ).toContain('Name is required');
 ```
 
-Let's fix this error in the simplest way possible by adding the error message unconditionally:
+Let's fix this error in the simplest way possible by adding the validation error unconditionally:
 
 ```diff
        data-testid="new-restaurant-name-field"
@@ -754,7 +757,9 @@ Let's fix this error in the simplest way possible by adding the error message un
      <v-btn type="submit" color="teal" class="white--text">
 ```
 
-The tests pass. Now how can we write a test to drive out hiding that error message in other circumstances? Well, we can check that it's not shown when the form is initially mounted. Add a new `describe` above the "when filled in" one:
+The tests pass. Now how can we write a test to drive out hiding that validation error in other circumstances? Well, we can check that it's not shown when the form is initially mounted.
+
+Add a new `describe` above the "when filled in" one:
 
 ```js
   describe('initially', () => {
@@ -783,7 +788,8 @@ The test fails because we are always showing the error right now:
          |             ^
 ```
 
-Time to add some logic around this error. We'll add a data property to indicate whether it should be shown:
+Time to add some logic around this error.
+We'll add a data property to indicate whether it should be shown:
 
 ```diff
        data-testid="new-restaurant-name-field"
@@ -842,7 +848,7 @@ We can pass this test by adding a conditional around setting the `validationErro
 +  }
 ```
 
-Save and all tests pass.
+Save the file and all tests pass.
 
 Now, is there any other time we would want to hide or show the validation error? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
 
@@ -940,7 +946,9 @@ We can fix this error by moving the call to `this.createRestaurant()` inside the
 
 Save the file and the test passes.
 
-Our third exception case is when the web service call fails. We want to display an error message. Since this is a new situation, let's set this up as yet another new `describe` block:
+Our third exception case is when the web service call fails. We want to display a validation error.
+
+Since this is a new situation, let's set this up as yet another new `describe` block:
 
 ```js
   describe('when the store action rejects', () => {
@@ -1074,8 +1082,6 @@ Let's also write a test to confirm that the server is not shown after the server
     });
 ```
 
-CAMEL CASE VS KEBAB CASE IN TEST IDS
-
 Save and the test passes. This is another instance where the test doesn't drive new behavior, but it's helpful for extra assurance that the code is behaving the way we expect.
 
 We also want to hide the server error message each time we retry saving the form. This is a new situation, so let's create a new `describe` block for it:
@@ -1094,7 +1100,7 @@ We also want to hide the server error message each time we retry saving the form
       wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
     });
 
-    it('clears the error message', () => {
+    it('clears the server error', () => {
       expect(
         wrapper.find('[data-testid="new-restaurant-server-error"]').element,
       ).not.toBeDefined();
@@ -1138,7 +1144,7 @@ Note that we need to make the `beforeEach` function `async`, so we can `await` t
 Save the file and you'll get the expected test failure:
 
 ```sh
-  ● NewRestaurantForm › when retrying after a server error › clears the error message
+  ● NewRestaurantForm › when retrying after a server error › clears the server error
 
     expect(received).not.toBeDefined()
 

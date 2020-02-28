@@ -15,7 +15,8 @@ First, the loading indicator. Although we aren't writing an E2E test, we can sti
 
 Right now in `RestaurantList.spec.js` we are setting up our store in a `beforeEach` block. This has worked so far, but now we need to set up the store slightly differently for different tests. We want a test where a loading flag is set on the restaurants store.
 
-To do this, let's refactor our tests for more flexibility. First, let's extract all the contents of the `beforeEach` into a new function, called `mountWithStore`:
+To do this, let's refactor our tests for more flexibility.
+First, let's extract all the contents of the `beforeEach` into a new function, called `mountWithStore`:
 
 ```diff
 +  const mountWithStore = () => {
@@ -105,7 +106,8 @@ Note that instead of calling `wrapper.findAll()` here, we call `wrapper.contains
 
 In good TDD style, our test fails, because the element isn't present.
 
-Sticking with the approach of making the smallest possible change to make the test pass, let's just add the loading indicator to show *all* the time. Vuetify has a `v-progress-circular` spinner that will work great. Add it to `RestaurantList.vue` with the correct test ID:
+Sticking with the approach of making the smallest possible change to make the test pass, let's just add the loading indicator to show *all* the time.
+Vuetify has a `v-progress-circular` spinner that will work great. Add it to `RestaurantList.vue` with the correct test ID:
 
 ```diff
    <div>
@@ -194,13 +196,18 @@ Now our two "when loading succeeds" tests have the same call to `mountWithStore(
 
 Save and the tests should pass.
 
-Note that we have one more test that calls `mountWithStore()` with no argument: the test that it "loads restaurants on mount." Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
+Note that we have one more test that calls `mountWithStore()` with no argument: the test that it "loads restaurants on mount."
+Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
 
-Now we need to drive out the loading flag in the store itself. Open `tests/unit/store/restaurants.spec.js`. We'll have the same separation of tests during loading, so let's proactively group our existing "stores the restaurants" test in a describe:
+Now we need to drive out the loading flag in the store itself.
+Open `tests/unit/store/restaurants.spec.js`.
+We'll have the same separation of tests during loading, so let's proactively group our existing "stores the restaurants" test in a describe:
 
 ```js
 describe('when loading succeeds', () => {
+  it('stores the restaurants', async () => {
 //...
+  });
 });
 ```
 
@@ -214,7 +221,7 @@ describe('while loading', () => {
 Inside that describe block, add the test:
 
 ```js
-      it('sets the loading flag', () => {
+      it('sets a loading flag', () => {
         const api = {
           loadRestaurants: () => new Promise(() => {}),
         };
@@ -238,7 +245,7 @@ Here's what's going on:
 Our test fails, as we expect:
 
 ```sh
-  ● restaurants › load action › while loading › sets the loading flag
+  ● restaurants › load action › while loading › sets a loading flag
 
     expect(received).toEqual(expected) // deep equality
 
@@ -372,9 +379,9 @@ Our test fails, as we expect, and now we need to actually clear the loading flag
 
 Save the file and our test passes.
 
-NOTE ABOUT ONE EXPECTATION PER ASSERTION
-
-Is our implementation complete? Well, the `loading` flag starts as `true`. Right now we dispatch the `load` action as soon as our app starts, so that's *almost* true. But it makes more sense for the `load` action to actually start the loading. So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
+Is our implementation complete? Well, the `loading` flag starts as `true`.
+Right now we dispatch the `load` action as soon as our app starts, so that's *almost* true. But it makes more sense for the `load` action to actually start the loading.
+So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
 
 ```js
   describe('initially', () => {
@@ -444,9 +451,11 @@ Start with the test for the component. We are describing a new situation, when l
   });
 ```
 
-We decide we want to indicate the error state with a flag named `loadError`, so we initialize the store with that flag set to `true`. We check for a new loading error element on the page. Our test fails to start.
+We decide we want to indicate the error state with a flag named `loadError`, so we initialize the store with that flag set to `true`.
+We check for a new loading error element on the page. Our test fails because the element is not found.
 
-Fix it the simplest way possible by hard-coding the error message to show. Vuetify has a `v-alert` component that will work well:
+Fix it the simplest way possible by hard-coding the error message to show.
+Vuetify has a `v-alert` component that will work well:
 
 ```diff
    <div>
@@ -664,9 +673,9 @@ The test fails. Make it pass while keeping the other tests passing, by setting t
      storeRecords(state, records) {
 ```
 
-Save the file and the tests should pass.
+Save the file and all tests should pass.
 
-We also want to make sure that if the restaurant is loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > when loading" group, so extract the setup from the "sets the loading flag" test:
+We also want to make sure that if the restaurant is loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > while loading" group, so extract the setup from the "sets the loading flag" test:
 
 ```diff
      describe('while loading', () => {
@@ -684,7 +693,7 @@ We also want to make sure that if the restaurant is loaded again later, the erro
 +        store.dispatch('restaurants/load');
 +      });
 +
-       it('sets the loading flag', () => {
+       it('sets a loading flag', () => {
 -        const api = {
 -          loadRestaurants: () => new Promise(() => {}),
 -        };
@@ -730,7 +739,7 @@ Then, update the call to `restaurants()` in our `beforeEach` block to set `loadE
 
 Save and the tests should still pass.
 
-Now we're finally ready to set up our expectation that the `loadError` should be reset to `false` after starting a load operation. Add the following test after the "sets the loading flag" test:
+Now we're finally ready to set up our expectation that the `loadError` should be reset to `false` after starting a load operation. Add the following test after the "sets a loading flag" test:
 
 ```js
       it('clears the error flag', () => {
@@ -738,7 +747,8 @@ Now we're finally ready to set up our expectation that the `loadError` should be
       });
 ```
 
-Save the file and the new test should fail. Fix it by clearing `loadError` in the `startLoading` mutation:
+Save the file and the new test should fail.
+Fix it by clearing `loadError` in the `startLoading` mutation:
 
 ```diff
      startLoading(state) {
@@ -771,4 +781,6 @@ To make it pass, just set the `loading` state in `recordLoadingError`:
      },
 ```
 
-With this, our tests pass. We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box. Start the API server again, then reload the page. You should see the loading spinner, then our results.
+With this, our tests pass.
+
+We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box. Start the API server again, then reload the page. You should see the loading spinner, then our results.
