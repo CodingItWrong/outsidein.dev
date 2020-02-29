@@ -164,6 +164,8 @@ import NewRestaurantForm from '@/components/NewRestaurantForm.vue';
 Vue.use(Vuetify);
 
 describe('NewRestaurantForm', () => {
+  const restaurantName = 'Sushi Place';
+
   const localVue = createLocalVue();
   localVue.use(Vuex);
 
@@ -206,8 +208,6 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
 
 ```js
   describe('when filled in', () => {
-    const restaurantName = 'Sushi Place';
-
     beforeEach(() => {
       wrapper
         .find('[data-testid="new-restaurant-name-field"]')
@@ -869,8 +869,6 @@ Now, is there any other time we would want to hide or show the validation error?
 
 ```js
   describe('when correcting a validation error', () => {
-    const restaurantName = 'Sushi Place';
-
     beforeEach(() => {
       wrapper.find('[data-testid="new-restaurant-name-field"]').setValue('');
       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
@@ -967,8 +965,6 @@ Since this is a new situation, let's set this up as yet another new `describe` b
 
 ```js
   describe('when the store action rejects', () => {
-    const restaurantName = 'Sushi Place';
-
     beforeEach(() => {
       restaurantsModule.actions.create.mockRejectedValue();
 
