@@ -185,12 +185,12 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
 ```js
   describe('when filled in', () => {
     beforeEach(() => {
-      const {getByPlaceholderText, getByText} = context;
+      const {getByPlaceholderText, getByTestId} = context;
 
       fireEvent.change(getByPlaceholderText('Name'), {
         target: {value: restaurantName},
       });
-      fireEvent.submit(getByText('Save Restaurant'));
+      fireEvent.click(getByTestId('new-restaurant-submit-button'));
     });
 
     it('calls createRestaurant with the name', () => {
@@ -199,12 +199,37 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
   });
 ```
 
-We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click a submit button.
-Note that like in the Cypress test we find elements by their placeholder and title text. UPDATE TO CLICK BUTTON OR SUBMIT FORM
+We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click the submit button.
+
+Note that instead of finding the submit button by text, we find it by test ID. If we have a plain HTML `<button>` element, we can retrieve it either by text or test ID. But using Material-UI's `<Button>` component, using `getByTestId` will retrieve the underlying `<button>`, but using `getByText` will retrieve a `<span>` element instead. Clicking the `<span>` does not seem to result in submitting the form. So in this case, we use the test ID to make sure we retrieve the button.
 
 In `RestaurantList` we didn't pass any additional data with our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as an argument to the action function, so we need to use the `.toHaveBeenCalledWith()` matcher. We pass one argument to it, confirming that the correct `restaurantName` is passed through.
 
 Save the file and we get a failing test, as we expect:
+
+```sh
+● NewRestaurantForm › when filled in › does not display a server error
+
+  Unable to find an element by: [data-testid="new-restaurant-submit-button"]
+```
+
+Add the test ID to the button to find it:
+
+```diff
+     <form>
+       <TextField placeholder="Name" fullWidth variant="filled" />
+-      <Button variant="contained" color="primary">
++      <Button
++        variant="contained"
++        color="primary"
++        data-testid="new-restaurant-submit-button"
++      >
+         Save Restaurant
+       </Button>
+     </form>
+```
+
+Now we get an assertion failure:
 
 ```sh
   ● NewRestaurantForm › when filled in › calls createRestaurant with the name
@@ -222,7 +247,23 @@ Save the file and we get a failing test, as we expect:
          |                                ^
 ```
 
-The test failure reports the function wasn't called at all. To write just enough production code to get past the current test failure, let's just call the function without any arguments:
+The test failure reports the action wasn't called at all. This is because our button isn't currently hooked up to anything. The typical way to set this up in HTML forms is to make the button a `submit` button, so it submits the form:
+
+```diff
+     <form>
+       <TextField placeholder="Name" fullWidth variant="filled" />
+       <Button
++        type="submit"
+         variant="contained"
+         color="primary"
+         data-testid="new-restaurant-submit-button"
+       >
+         Save Restaurant
+       </Button>
+     </form>
+```
+
+Now, write just enough production code to get past the current test failure, let's just call the action without any arguments:
 
 ```diff
  import Button from '@material-ui/core/Button';
@@ -236,6 +277,30 @@ The test failure reports the function wasn't called at all. To write just enough
 ```
 
 We set up an `onSubmit` prop for the form tag, passing an arrow function that calls `createRestaurant`. We don't just pass the `createRestaurant` function directly because that would result in passing the browser event object to `createRestaurant`, what we don't want. This way there are no arguments.
+
+Save the file and now we get this test error:
+
+```sh
+Error: Not implemented: HTMLFormElement.prototype.submit
+    at module.exports (/Users/josh/apps/agilefrontend/vue/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+```
+
+This is because the HTML form is attempting to submit using the default browser mechanism. By default, HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
+
+To prevent this page reload from happening, we need to call the `preventDefault()` method on the event sent to the `onSubmit` event. We can do this by extracting a handler function:
+
+```diff
+ export const NewRestaurantForm = ({createRestaurant}) => {
++  const handleSubmit = e => {
++    e.preventDefault();
++    createRestaurant();
++  };
++
+   return (
+-    <form onSubmit={() => createRestaurant(name)}>
++    <form onSubmit={handleSubmit}>
+       <TextField placeholder="Name" fullWidth variant="filled" />
+```
 
 Save the file and the test failure has changed:
 
@@ -274,7 +339,7 @@ Then, we'll make `TextField` a controlled component, reading its value from the 
 
 ```diff
    return (
-     <form onSubmit={() => createRestaurant()}>
+     <form onSubmit={handleSubmit}>
 -      <TextField placeholder="Name" fullWidth variant="filled" />
 +      <TextField
 +        value={name}
@@ -283,16 +348,18 @@ Then, we'll make `TextField` a controlled component, reading its value from the 
 +        fullWidth
 +        variant="filled"
 +      />
-       <Button variant="contained" color="primary">
+       <Button
 ```
 
 Finally, now that the entered text is stored in `name`, we'll pass that as the argument to `createRestaurant()`:
 
 ```diff
-   return (
--    <form onSubmit={() => createRestaurant()}>
-+    <form onSubmit={() => createRestaurant(name)}>
-       <TextField
+ export const NewRestaurantForm = ({createRestaurant}) => {
+   const handleSubmit = e => {
+     e.preventDefault();
+-    createRestaurant();
++    createRestaurant(name);
+   };
 ```
 
 Save the file and the test passes.
@@ -559,46 +626,7 @@ Now our component and store should be set. Wire up the action to the form compon
 +export default connect(mapStateToProps, mapDispatchToProps)(NewRestaurantForm);
 ```
 
-With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form.
-Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with React Testing Library. (UPDATE IF SUBMIT CHANGES)
-That's what we have E2E tests for! To fix this, make the button a submit button:
-
-```diff
-         variant="filled"
-         />
--      <Button variant="contained" color="primary">
-+      <Button variant="contained" color="primary" type="submit">
-         Save Restaurant
-       </Button>
-```
-
-Now when we rerun the E2E test, we get a surprising addition in the test output. After the click:
-
-- (FORM SUB) --submitting form--
-- (PAGE LOAD) --page loaded--
-- (NEW URL) http://localhost:3000/?
-- (XHR STUB) GET 200 /restaurants
-
-This sounds like the page is being reloaded, and it is. This is because by default HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
-
-To prevent this page reload from happening, we need to call the `preventDefault()` method on the event sent to the `onSubmit` event. We can do this by extracting a handler function:
-
-```diff
- export const NewRestaurantForm = ({createRestaurant}) => {
-   const [name, setName] = useState('');
-
-+  const handleSubmit = e => {
-+    e.preventDefault();
-+    createRestaurant(name);
-+  };
-+
-   return (
--    <form onSubmit={() => createRestaurant(name)}>
-+    <form onSubmit={handleSubmit}>
-       <TextField
-```
-
-Rerun the E2E test, and check the console:
+With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The console says:
 
 ```sh
 TypeError: api.createRestaurant is not a function
@@ -761,7 +789,7 @@ Then add it to your test:
 +import flushPromises from 'flush-promises';
  import {NewRestaurantForm} from '../NewRestaurantForm';
 ...
-       fireEvent.submit(getByText('Save Restaurant'));
+       fireEvent.click(getByTestId('new-restaurant-submit-button'));
 +
 +      return act(flushPromises);
      });
@@ -797,13 +825,13 @@ Then we can replace our existing call:
 -        target: {value: restaurantName},
 -      });
 +      fillIn(getByPlaceholderText('Name'), restaurantName);
-       fireEvent.submit(getByText('Save Restaurant'));
+       fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
        return act(flushPromises);
      });
 ```
 
-This reads a lot more nicely: "fill in the field with placeholder "Name", with restaurantName". By contrast, `fireEvent.submit()` reads pretty simply as-is; we don't need to make a helper for it.
+This reads a lot more nicely: "fill in the field with placeholder "Name", with restaurantName". By contrast, `fireEvent.click()` reads pretty simply as-is; we don't need to make a helper for it.
 
 Now let's implement the validation error. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
@@ -814,7 +842,7 @@ Now let's implement the validation error. Create a new `describe` block for this
 
       const {getByPlaceholderText, getByText} = context;
       fillIn(getByPlaceholderText('Name'), '');
-      fireEvent.submit(getByText('Save Restaurant'));
+      fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
       return act(flushPromises);
     });
@@ -964,9 +992,9 @@ Now, is there any other time we would want to hide or show the validation error?
 
       const {getByPlaceholderText, getByText} = context;
       fillIn(getByPlaceholderText('Name'), '');
-      fireEvent.submit(getByText('Save Restaurant'));
+      fireEvent.click(getByTestId('new-restaurant-submit-button'));
       fillIn(getByPlaceholderText('Name'), restaurantName);
-      fireEvent.submit(getByText('Save Restaurant'));
+      fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
       return act(flushPromises);
     });
@@ -1070,7 +1098,7 @@ Since this is a new situation, let's set this up as yet another new `describe` b
       const {getByPlaceholderText, getByText} = context;
 
       fillIn(getByPlaceholderText('Name'), restaurantName);
-      fireEvent.submit(getByText('Save Restaurant'));
+      fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
       return act(flushPromises);
     });
@@ -1203,8 +1231,8 @@ We also want to hide the server error message each time we retry saving the form
 
       const {getByPlaceholderText, getByText} = context;
       fillIn(getByPlaceholderText('Name'), restaurantName);
-      fireEvent.submit(getByText('Save Restaurant'));
-      fireEvent.submit(getByText('Save Restaurant'));
+      fireEvent.click(getByTestId('new-restaurant-submit-button'));
+      fireEvent.click(getByTestId('new-restaurant-submit-button'));
       return act(flushPromises);
     });
 
@@ -1226,10 +1254,10 @@ We'll actually run into a problem clicking the submit button twice in a row, tho
 
        const {getByPlaceholderText, getByText} = context;
        fillIn(getByPlaceholderText('Name'), restaurantName);
-       fireEvent.submit(getByText('Save Restaurant'));
+       fireEvent.click(getByTestId('new-restaurant-submit-button'));
 +      await act(flushPromises);
 +
-       fireEvent.submit(getByText('Save Restaurant'));
+       fireEvent.click(getByTestId('new-restaurant-submit-button'));
        return act(flushPromises);
     });
 ```
