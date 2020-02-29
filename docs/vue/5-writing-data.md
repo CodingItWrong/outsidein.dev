@@ -183,12 +183,24 @@ describe('NewRestaurantForm', () => {
       },
     });
 
-    wrapper = mount(NewRestaurantForm, {localVue, store});
+    wrapper = mount(NewRestaurantForm, {
+      localVue,
+      store,
+      attachToDocument: true,
+    });
+  });
+
+  afterEach(() => {
+    wrapper.destroy();
   });
 });
 ```
 
-Note that we set up the mock restaurant module with just one action, `create` — this is the one we're going to ensure is called.
+A few notes:
+
+- We set up the mock restaurant module with just one action, `create` — this is the one we're going to ensure is called.
+- We pass an extra option to `mount()` that was not needed for our list test: `attachToDocument: true`. This actually loads the component into the DOM. The reason we need this for this test is so the submit button can trigger the form submission.
+- Because we're attaching the component to the document, we need to call `wrapper.destroy()` afterward to remove the elements from the document again.
 
 Next, let's try to proactively organize our test file. Since we're taking the approach of having one expectation per test, it's likely that we will ultimately have multiple expectations for different situations. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
 
@@ -200,7 +212,9 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
       wrapper
         .find('[data-testid="new-restaurant-name-field"]')
         .setValue(restaurantName);
-      wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      wrapper
+        .find('[data-testid="new-restaurant-submit-button"]')
+        .trigger('click');
     });
 
     it('dispatches the create action', () => {
@@ -212,8 +226,8 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
   });
 ```
 
-We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click a submit button.
-Note that while in the Cypress test we found elements by their placeholder and title text, with Vue Test Utils it's easier to find elements by a `data-testid` attribute, so we use that instead. Also note that we find the form and trigger a submit event on it, rather than finding the submit button and triggering a click event on it.
+We describe the situation when the form is filled in. We enter a restaurant name into a text field, then submit the form.
+Note that while in the Cypress test we found elements by their placeholder and title text, with Vue Test Utils it's easier to find elements by a `data-testid` attribute, so we use that instead.
 
 In `RestaurantList` we didn't pass a payload to our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as the payload of the action, so we need to use the `.toHaveBeenCalledWith()` matcher. The first argument is one provided by Vuex that includes a `commit` function and others, so since it's not provided by us there's no reason for us to set an expectation on it. So instead we pass `expect.anything()`, to tell Jest that any value there is fine. It's the second argument, where the payload is passed, that we want to confirm that the correct `restaurantName` is passed through.
 
@@ -228,7 +242,7 @@ Save the file and we get a failing test, as we expect:
       37 |         .find('[data-testid="new-restaurant-name-field"]')
     > 38 |         .setValue(restaurantName);
          |          ^
-      39 |       wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      39 |       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
 ```
 
 To fix this error, let's add the `data-testid` attribute to the existing text field:
@@ -248,22 +262,20 @@ To fix this error, let's add the `data-testid` attribute to the existing text fi
 The next error we get is:
 
 ```sh
-  ● NewRestaurantForm › when filled in › dispatches the create action
+● NewRestaurantForm › when filled in › dispatches the create action
 
-    [vue-test-utils]: find did not return [data-testid="new-restaurant-form"], cannot call trigger() on empty Wrapper
-
-      37 |         .find('[data-testid="new-restaurant-name-field"]')
-      38 |         .setValue(restaurantName);
-    > 39 |       wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+  [vue-test-utils]: find did not return [data-testid='new-restaurant-submit-button'], cannot call trigger() on empty Wrapper
 ```
 
-So we need to add a `data-testid` to the form as well:
+We fix this by adding that test ID as well:
 
 ```diff
- <template>
--  <form>
-+  <form data-testid="new-restaurant-form">
-     <v-text-field
+   />
+-  <v-btn color="teal" class="white--text">
++  <v-btn color="teal" class="white--text" data-testid="new-restaurant-submit-button">
+     Save Restaurant
+   </v-btn>
+ </form>
 ```
 
 The next failure we get is:
@@ -277,7 +289,7 @@ The next failure we get is:
 
     Number of calls: 0
 
-      39 |       wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      39 |       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
       40 |
     > 41 |       expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
          |                                                ^
@@ -286,12 +298,29 @@ The next failure we get is:
       44 |       );
 ```
 
-The test failure reports the action wasn't called at all. To write just enough production code to get past the current test failure, let's just call the action without any arguments:
+The test failure reports the action wasn't called at all. This is because our button isn't currently hooked up to anything. The typical way to set this up in HTML forms is to make the button a `submit` button, so it submits the form:
+
+```diff
+   />
+-  <v-btn color="teal" class="white--text" data-testid="new-restaurant-submit-button">
++  <v-btn
++    type="submit"
++    color="teal"
++    class="white--text"
++    data-testid="newRestaurantSubmitButton"
++  >
++    Save Restaurant
++  </v-btn>
+</form>
+
+```
+
+Now, write just enough production code to get past the current test failure, let's just call the action without any arguments:
 
 ```diff
  <template>
--  <form data-testid="new-restaurant-form">
-+  <form @submit="handleSave" data-testid="new-restaurant-form">
+-  <form>
++  <form @submit="handleSave">
      <v-text-field
 ...
  <script>
@@ -315,6 +344,24 @@ We map the `restaurants/create` action into the component, naming it `createRest
 
 Why didn't we just have the `submit` event call `createRestaurant` directly? We could, but it's a good idea to wrap Vuex actions with component-specific methods. This creates a semantic difference between the event as the component understands it ("handle save") and what is implemented in the store ("create restaurant"). Also, usually there will end up being some component-specific logic as well, and the component method gives you a place to run that. If you want to take the smaller step in your own code and tie the event directly to the Vuex action, though, that works too.
 
+Save the file and now we get this test error:
+
+```sh
+Error: Not implemented: HTMLFormElement.prototype.submit
+    at module.exports (/Users/josh/apps/agilefrontend/vue/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+```
+
+This is because the HTML form is attempting to submit using the default browser mechanism. By default, HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
+
+To prevent this page reload from happening, Vue provides a `.prevent` modifier we can add to the action name in the tag to prevent the default browser behavior (analogous to `event.preventDefault()`). Add this:
+
+```diff
+ <template>
+-  <form @submit="handleSave">
++  <form @submit.prevent="handleSave">
+     <v-text-field
+```
+
 Save the file and the test failure has changed:
 
 ```sh
@@ -326,7 +373,7 @@ Save the file and the test failure has changed:
     Received: {"commit": [Function anonymous], "dispatch": [Function anonymous], "getters": {}, "rootGetters": {}, "rootState": {"restaurants": {}}, "state": {}}, undefined
 ```
 
-The function didn't receive the arguments it expected. It's a bit hard to find the second argument because the contents of the first argument Vuex provide are spelled out. But it's the `undefined`. To pass the restaurant name, first we're going to need to bind the form field's value to a data property:
+Now we're getting to the end of our test, and the function is called, but it didn't receive the arguments it expected. It's a bit hard to find the second argument because the contents of the first argument Vuex provide are spelled out. But it's the `undefined`. To pass the restaurant name, first we're going to need to bind the form field's value to a data property:
 
 ```diff
      <v-text-field
@@ -557,39 +604,7 @@ The store only contains the restaurant it was initialized with, not the new one 
    },
 ```
 
-With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The API call isn't made. This is because the button in `NewRestaurantForm` isn't a submit button, so it's not submitting the form.
-Our test confirmed what submitting the form did, but it didn't confirm what clicking the button did, due to limitations with Vue Test Utils. (UPDATE IF SUBMIT CHANGES)
-That's what we have E2E tests for! To fix this, make the button a submit button:
-
-```diff
-       data-testid="new-restaurant-name-field"
-     />
--    <v-btn color="teal" class="white--text">
-+    <v-btn type="submit" color="teal" class="white--text">
-       Save Restaurant
-     </v-btn>
-   </form>
-```
-
-Now when we rerun the E2E test, we get a surprising addition in the test output. After the click:
-
-- (FORM SUB) --submitting form--
-- (PAGE LOAD) --page loaded--
-- (NEW URL) http://localhost:8081/?
-- (XHR STUB) GET 200 /restaurants
-
-This sounds like the page is being reloaded, and it is. This is because by default HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
-
-To prevent this page reload from happening, Vue provides a `.prevent` modifier we can add to the action name in the tag to prevent the default browser behavior (analogous to `event.preventDefault()`). Add this:
-
-```diff
- <template>
--  <form @submit="handleSave" data-testid="new-restaurant-form">
-+  <form @submit.prevent="handleSave" data-testid="new-restaurant-form">
-     <v-text-field
-```
-
-Rerun the E2E test, and check the console:
+With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The console says:
 
 ```sh
 TypeError: t.createRestaurant is not a function
@@ -719,7 +734,7 @@ Now let's implement the validation error. Create a new `describe` block for this
   describe('when empty', () => {
     beforeEach(() => {
       wrapper.find('[data-testid="new-restaurant-name-field"]').setValue('');
-      wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
     });
 
     it('displays a validation error', () => {
@@ -754,7 +769,7 @@ Let's fix this error in the simplest way possible by adding the validation error
 +    <v-alert type="error" data-testid="new-restaurant-name-error">
 +      Name is required.
 +    </v-alert>
-     <v-btn type="submit" color="teal" class="white--text">
+     <v-btn
 ```
 
 The tests pass. Now how can we write a test to drive out hiding that validation error in other circumstances? Well, we can check that it's not shown when the form is initially mounted.
@@ -804,7 +819,7 @@ We'll add a data property to indicate whether it should be shown:
 +    >
 +      Name is required.
 +    </v-alert>
-     <v-btn type="submit" color="teal" class="white--text">
+     <v-btn
 ...
    data() {
      return {
@@ -858,11 +873,11 @@ Now, is there any other time we would want to hide or show the validation error?
 
     beforeEach(() => {
       wrapper.find('[data-testid="new-restaurant-name-field"]').setValue('');
-      wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
       wrapper
         .find('[data-testid="new-restaurant-name-field"]')
         .setValue(restaurantName);
-      wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
     });
 
     it('clears the validation error', () => {
@@ -960,7 +975,7 @@ Since this is a new situation, let's set this up as yet another new `describe` b
       wrapper
         .find('[data-testid="new-restaurant-name-field"]')
         .setValue(restaurantName);
-      wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
     });
 
     it('displays a server error', () => {
@@ -1096,8 +1111,8 @@ We also want to hide the server error message each time we retry saving the form
       wrapper
         .find('[data-testid="new-restaurant-name-field"]')
         .setValue('Sushi Place');
-      wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
-      wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
+      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
     });
 
     it('clears the server error', () => {
@@ -1133,9 +1148,9 @@ Then add it to your test:
        wrapper
          .find('[data-testid="new-restaurant-name-field"]')
          .setValue('Sushi Place');
-       wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
 +      await flushPromises();
-       wrapper.find('[data-testid="new-restaurant-form"]').trigger('submit');
+       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
     });
 ```
 
