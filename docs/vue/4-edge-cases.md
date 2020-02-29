@@ -24,7 +24,7 @@ First, let's extract all the contents of the `beforeEach` into a new function, c
 +      namespaced: true,
 +      state: {records},
 +      actions: {
-+        load: jest.fn(),
++        load: jest.fn().mockName('load'),
 +      },
 +    };
 +    const store = new Vuex.Store({
@@ -43,7 +43,7 @@ First, let's extract all the contents of the `beforeEach` into a new function, c
 -      namespaced: true,
 -      state: {records},
 -      actions: {
--        load: jest.fn(),
+-        load: jest.fn().mockName('load'),
 -      },
 -    };
 -    const store = new Vuex.Store({
@@ -89,7 +89,7 @@ diff
 -      state: {records},
 +      state,
        actions: {
-         load: jest.fn(),
+         load: jest.fn().mockName('load'),
        },
 ```
 

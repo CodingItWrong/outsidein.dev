@@ -499,7 +499,7 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +      namespaced: true,
 +      state: {records},
 +      actions: {
-+        load: jest.fn(),
++        load: jest.fn().mockName('load'),
 +      },
 +    };
 +    const store = new Vuex.Store({
