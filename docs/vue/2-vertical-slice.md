@@ -252,7 +252,7 @@ Finally, we're ready to run an expectation to confirm that the component loads r
    });
 ```
 
-Now we're ready to run our unit test. Run `yarn test:unit --watch` and leave it running for the remainder of this section. Jest will run our unit test, and we'll get the following error:
+Now we're ready to run our unit test. Run `yarn test:unit --watch`. The `--watch` flag means the test runner stays open, watching for changes to our files to rerun the tests. Leave it running for the remainder of this section. Jest will run our unit test, and we'll get the following error:
 
 ```sh
  FAIL  tests/unit/components/RestaurantList.spec.js
