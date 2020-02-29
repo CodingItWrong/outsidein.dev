@@ -1063,7 +1063,7 @@ We'll add another flag to the data to track whether the error should show, start
        data-testid="new-restaurant-name-field"
      />
 -    <v-alert type="error" data-testid="new-restaurant-server-error">
-+    <v-alert v-if="saveError" type="error" data-testid="new-restaurant-server-error">
++    <v-alert v-if="serverError" type="error" data-testid="new-restaurant-server-error">
        The restaurant could not be saved. Please try again.
      </v-alert>
 ...
@@ -1071,7 +1071,7 @@ We'll add another flag to the data to track whether the error should show, start
      return {
        name: '',
        validationError: false,
-+      saveError: false,
++      serverError: false,
      };
    },
 ...
@@ -1081,7 +1081,7 @@ We'll add another flag to the data to track whether the error should show, start
            })
 -          .catch(() => {});
 +          .catch(() => {
-+            this.saveError = true;
++            this.serverError = true;
 +          });
 ```
 
@@ -1175,13 +1175,13 @@ dark">$error</i><div class="v-alert__content">
           |             ^
 ```
 
-We can make this test pass by just clearing the `saveError` flag when attempting to save:
+We can make this test pass by just clearing the `serverError` flag when attempting to save:
 
 ```diff
      handleSave() {
        if (this.name) {
          this.validationError = false;
-+        this.saveError = false;
++        this.serverError = false;
 +
          this.createRestaurant(this.name)
 ```
