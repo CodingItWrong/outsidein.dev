@@ -4,6 +4,8 @@ title: 3 - Refactoring Styles
 
 # 3 - Refactoring Styles
 
+In this chapter we'll see one example of the kind of refactoring you can do when you have the thorough test coverage that TDD provides: restyling your application. We'll update our application from using plain unstyled HTML elements to using styled elements provided by a component library. TDD allows us to separate the process of getting the application working from the process of making it look good.
+
 Our next story in Trello is:
 
 - [ ] Style app with Material Design

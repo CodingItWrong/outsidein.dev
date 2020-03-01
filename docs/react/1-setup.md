@@ -4,6 +4,18 @@ title: 1 - Setup
 
 # 1 - Setup
 
+In this first chapter, we'll set up our project and process. This won't involve writing any app-specific functionality. Instead, what we'll:
+
+- Make a list of our stories to work on
+- Get our development machine dependencies installed
+- Get React installed and running
+- Get linting and autoformatting working
+- Get E2E and component tests running
+- Get our tests running on CI
+- Get our application automatically deploying to a hosting service
+
+That's a lot, but we want to get it in place before we write our first line of production code to ensure we have support in place for our agile process. And it won't take too long because we'll use powerful tools to help us get there. Once that's all in place, we'll be ready to start implementing our application's features.
+
 ## Planning Our Work
 Before we start our work, we want a way to track it. Let's use Trello.
 
