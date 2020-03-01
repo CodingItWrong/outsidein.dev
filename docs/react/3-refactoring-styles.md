@@ -4,7 +4,11 @@ title: 3 - Refactoring Styles
 
 # 3 - Refactoring Styles
 
-Our next story is to style our app. And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design. But one of the benefits of the thorough test suite that TDD provides is that you can make changes to the look and feel of your app with confidence that the functionality still works.
+Our next story in Trello is:
+
+- [ ] Style app with Material Design
+
+And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design. But one of the benefits of the thorough test suite that TDD provides is that you can make changes to the look and feel of your app with confidence that the functionality still works.
 
 First, let's confirm our tests are passing. Run `yarn test`. You may get the message:
 
@@ -155,4 +159,6 @@ Here's what the components do:
 
 Our E2E and unit tests still pass.
 
-We've successfully styled our app relying on the tests to confirm all the functionality still works.
+We've successfully styled our app relying on the tests to confirm all the functionality still works. Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+
+- [x] Style app with Material Design

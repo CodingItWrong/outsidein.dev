@@ -4,7 +4,11 @@ title: 2 - Vertical Slice
 
 # 2 - Vertical Slice
 
-We're ready to start our first feature. To get a clean start, let's delete out the sample content `create-react-app` created with our app. Delete the following files and folders
+Our next story in Trello is:
+
+- [ ] List restaurants
+
+To get a clean start, let's delete out the sample content `create-react-app` created with our app. Delete the following files and folders
 
 - `src/App.css`
 - `src/App.test.js`
@@ -878,4 +882,6 @@ You can confirm it's working by going to `http://localhost:3333/restaurants` in 
 Now go to your React app at `http://localhost:3000`.
 You should see the default "Pasta Place" and "Salad Place" records.
 
-We successfully implemented our first feature with outside-in Test-Driven Development! Now let's push it up to the origin and open a pull request.
+We successfully implemented our first feature with outside-in Test-Driven Development! Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+
+- [x] List restaurants

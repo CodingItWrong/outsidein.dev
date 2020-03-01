@@ -4,7 +4,11 @@ title: 5 - Writing Data
 
 # 5 - Writing Data
 
-Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
+Our next story in Trello is:
+
+- [ ] Add restaurants
+
+This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
 Create a file `tests/e2e/specs/managing-restaurants.spec.js` and add the following:
 
@@ -1201,3 +1205,7 @@ That was a lot of edge cases, but we've added a lot of robustness to our form!
 Imagine if we had tried to handle all of these cases in E2E tests. We either would have had a lot of slow tests, or else one long test that ran through an extremely long sequence. Instead, our E2E tests cover our main functionality, and our unit tests cover all the edge cases thoroughly.
 
 REFACTOR FOR LAYOUT
+
+Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+
+- [x] Add restaurants

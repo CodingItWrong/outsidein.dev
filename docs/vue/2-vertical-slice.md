@@ -4,7 +4,11 @@ title: 2 - Vertical Slice
 
 # 2 - Vertical Slice
 
-We're ready to start our first feature. To get a clean start, let's delete out the sample content Vue CLI created with our app. Delete the following files and folders
+Our next story in Trello is:
+
+- [ ] List restaurants
+
+To get a clean start, let's delete out the sample content Vue CLI created with our app. Delete the following files and folders
 
 - `src/assets/`
 - `src/components/HelloWorld.vue`
@@ -942,4 +946,6 @@ $ vue-cli-service serve
 
 Now open the URL of your Vue app. You should see the default "Pasta Place" and "Salad Place" records.
 
-We successfully implemented our first feature with outside-in Test-Driven Development! Now let's push it up to the origin and open a pull request.
+We successfully implemented our first feature with outside-in Test-Driven Development! Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+
+- [x] List restaurants

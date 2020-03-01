@@ -4,6 +4,10 @@ title: 5 - Writing Data
 
 # 5 - Writing Data
 
+Our next story in Trello is:
+
+- [ ] Add restaurants
+
 Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
 Create a file `cypress/integration/managing-restaurants.spec.js` and add the following:
@@ -1329,3 +1333,7 @@ We can fix this by just returning:
 Rerun the E2E test and it passes.
 
 REFACTOR FOR LAYOUT
+
+Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+
+- [x] Add restaurants
