@@ -57,7 +57,47 @@ In `public/index.html`, find the `<title>` tag and see that the page has the def
  </head>
 ```
 
-When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** Our first feature will be to display a list of restaurants from the server.
+For this tutorial, our backend web service has already been built. Let's get it set up and see how we can load our restaurant data from it. We've set up a Node.js API you can run locally; that way you can edit data without authentication or stepping on other users' data.
+
+Go to the [`codingitwrong/agilefrontend-api` project](https://github.com/CodingItWrong/agilefrontend-api) on GitHub. Clone the project, or just download and expand the zip file.
+
+In the `agilefrontend-api` directory, run the following commands:
+
+```sh
+$ yarn setup
+$ yarn start
+```
+
+This will set up a SQLite database with some test data, and start the API server. You'll see:
+
+```sh
+yarn run v1.22.0
+$ node server.js
+info: serving app on http://127.0.0.1:3333
+```
+
+Go to `http://localhost:3333/restaurants` in a browser: you should see the following JSON data (formatted differently depending on your browser and extensions, and of course the dates will differ):
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Pasta Place",
+    "created_at": "2020-02-27 07:43:58",
+    "updated_at": "2020-02-27 07:43:58"
+  },
+  {
+    "id": 2,
+    "name": "Salad Place",
+    "created_at": "2020-02-27 07:43:58",
+    "updated_at": "2020-02-27 07:43:58"
+  }
+]
+```
+
+So this is the web service endpoint our story will need to connect to. Now, to build the frontend.
+
+When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.**
 
 Create a file `cypress/integration/listing-restaurants.spec.js` and add the following:
 
@@ -89,7 +129,7 @@ First, we create variables with a few restaurant names, because we'll use them s
 
 Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a 404 Not Found status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
 
-Then, we call `cy.route()` to stub a specific backend request. When the app sends a `GET` request to `http://localhost:3333/restaurants`, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call.
+Then, we call `cy.route()` to stub a specific backend request; in this case, the `http://localhost:3333/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` and `updated_at` fields, because our app won't be using them.
 
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
@@ -851,43 +891,7 @@ Now that Redux is wired up, we also need to connect the `RestaurantList` compone
 Go back into the Chrome instance that's running our Cypress test, or re-open it if it's closed.
 Rerun the test. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
 
-Now let's see our app working against the real backend. What backend is that? We've set up a Node.js API you can run locally; that way you can edit data without authentication or stepping on other users' data.
-
-Go to the [`codingitwrong/agilefrontend-api` project](https://github.com/CodingItWrong/agilefrontend-api) on GitHub. Clone the project, or just download and expand the zip file.
-
-In the `agilefrontend-api` directory, run the following commands:
-
-```sh
-$ yarn setup
-$ yarn start
-```
-
-This will set up a SQLite database with some test data, and start the API server. You'll see:
-
-```sh
-yarn run v1.22.0
-$ node server.js
-info: serving app on http://127.0.0.1:3333
-```
-
-You can confirm it's working by going to `http://localhost:3333/restaurants` in a browser: you should see the following JSON data (formatted differently depending on your browser and extensions):
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Pasta Place",
-    "created_at": "2020-02-27 07:43:58",
-    "updated_at": "2020-02-27 07:43:58"
-  },
-  {
-    "id": 2,
-    "name": "Salad Place",
-    "created_at": "2020-02-27 07:43:58",
-    "updated_at": "2020-02-27 07:43:58"
-  }
-]
-```
+Now let's see our app working against the real backend. Start the API by running `yarn start` in its folder.
 
 Now go to your React app at `http://localhost:3000`.
 You should see the default "Pasta Place" and "Salad Place" records.
