@@ -31,6 +31,15 @@ export default {
 </script>
 ```
 
+In `public/index.html`, find the `<title>` tag. The `<%= htmlWebpackPlugin.options.title %>` content dynamically fills in the name we specified when we created the app, `opinion-ate`. Let's replace that with a hard-coded title capitalized to match our brand. Update it:
+
+```diff
+   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+-  <title><%= htmlWebpackPlugin.options.title %></title>
++  <title>Opinion Ate</title>
+ </head>
+```
+
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** Our first feature will be to display a list of restaurants from the server.
 
 Create a file `tests/e2e/specs/listing-restaurants.spec.js` and add the following:

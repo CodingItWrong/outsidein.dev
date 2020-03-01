@@ -47,6 +47,16 @@ const App = () => (
 export default App;
 ```
 
+In `public/index.html`, find the `<title>` tag and see that the page has the default title "React App". Update it:
+
+```diff
+   Learn how to configure a non-root public URL by running `npm run build`.
+   -->
+-  <title>React App</title>
++  <title>Opinion Ate</title>
+ </head>
+```
+
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.** Our first feature will be to display a list of restaurants from the server.
 
 Create a file `cypress/integration/listing-restaurants.spec.js` and add the following:
