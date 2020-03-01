@@ -1332,7 +1332,67 @@ We can fix this by just returning:
 
 Rerun the E2E test and it passes.
 
-REFACTOR FOR LAYOUT
+Now that all our tests are passing for the feature, let's think about refactoring.
+We used Material-UI components to make our form elements look good, but we didn't give any attention to the layout--we just put them one after another.
+In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
+
+Material-UI offers a `Box` component that can be used for layout and spacing. Let's wrap the `TextField` and `Button` in a `Box`:
+
+```diff
+ import Alert from '@material-ui/lab/Alert';
++import Box from '@material-ui/core/Box';
+ import {createRestaurant} from '../store/restaurants/actions';
+...
+   {validationError && <Alert severity="error">Name is required</Alert>}
++  <Box display="flex">
+     <TextField
+       value={name}
+       onChange={e => setName(e.target.value)}
+       placeholder="Name"
+       fullWidth
+       variant="filled"
+     />
+     <Button
+       type="submit"
+       variant="contained"
+       color="primary"
+       data-testid="new-restaurant-submit-button"
+     >
++  </Box>
+ </form>
+```
+
+This applies flexbox layout to the `Box`, organizing its contents in a row by default. This helps, but there is no spacing between the text input and button. To add that margin is actually a little trickier in Material-UI; here's how we do it:
+
+```diff
+ import Box from '@material-ui/core/Box';
++import {makeStyles} from '@material-ui/core/styles';
+ import {createRestaurant} from '../store/restaurants/actions';
+
++const useStyles = makeStyles(theme => ({
++  root: {
++    '& > *': {
++      margin: theme.spacing(1),
++    },
++  },
++}));
+
+ export const NewRestaurantForm = ({createRestaurant}) => {
+   const [name, setName] = useState('');
+   const [validationError, setValidationError] = useState(false);
+   const [serverError, setServerError] = useState(false);
++  const classes = useStyles();
+
+   const handleSubmit = e => {
+...
+ {validationError && <Alert severity="error">Name is required</Alert>}
++<Box display="flex" className={classes.root}>
+   <TextField
+```
+
+`makeStyles()` allows creating and applying CSS styles to an element. The style we specify is that for every element (`*`) directly under (`>`) the element the style is applied to (`&`), add a margin of the smallest spacing increment the theme provides (`margin: theme.spacing(1)`). This creates a set of styles we named `root`. `makeStyles()` returns a hook function, that we can then call inside the component to get some `classes`. We apply the `root` class we created to the `Box` component. Reload the page, and you'll see some nice spacing in between the elements.
+
+Most importantly, rerun the E2E tests and confirm that our app still works.
 
 Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 

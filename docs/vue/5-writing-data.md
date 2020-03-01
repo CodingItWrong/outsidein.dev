@@ -1204,7 +1204,64 @@ That was a lot of edge cases, but we've added a lot of robustness to our form!
 
 Imagine if we had tried to handle all of these cases in E2E tests. We either would have had a lot of slow tests, or else one long test that ran through an extremely long sequence. Instead, our E2E tests cover our main functionality, and our unit tests cover all the edge cases thoroughly.
 
-REFACTOR FOR LAYOUT
+Now that all our tests are passing for the feature, let's think about refactoring.
+We used Vuetify components to make our form elements look good, but we didn't give any attention to the layout--we just put them one after another.
+In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
+
+
+Vuetify offers a [grid system](https://vuetifyjs.com/en/components/grids) that is useful for layout situations like this. Let's apply it to our form.
+
+```diff
+   <v-alert
+     v-if="validationError"
+     type="error"
+     data-testid="newRestaurantNameError"
+   >
+     Name is required.
+   </v-alert>
++  <v-row>
++    <v-col cols="9">
+       <v-text-field
+         placeholder="Name"
+         filled
+         type="text"
+         v-model="name"
+         data-testid="newRestaurantNameField"
+       />
++    </v-col>
++    <v-col cols="3">
+       <v-btn
+         type="submit"
+         color="teal"
+         class="white--text"
+         data-testid="newRestaurantSubmitButton"
+       >
+         Save Restaurant
+       </v-btn>
++    </v-col>
++  </v-row>
+</form>
+```
+
+We wrap the two form elements in a `v-row`, which will lay them out horizontally. We put each in `v-col` column. The `cols` attribute specifies how many units out of 12 the column should take up. We specify our text field should take up 9 of 12 spaces, or three quarters of the width. The button should take up 3 of 12 spaces, or one quarter.
+
+Pull up your app and see how it looks. The elements are next to each other, but if your window is wide enough, the save button doesn't take up the full width of its containing area. To fix this, specify the button should be a block:
+
+```diff
+ <v-btn
+   type="submit"
+   color="teal"
+   class="white--text"
++  block="true"
+   data-testid="newRestaurantSubmitButton"
+ >
+   Save Restaurant
+ </v-btn>
+```
+
+Check again, and the button fills up its containing area. The form looks pretty good now!
+
+Most importantly, rerun the E2E tests and confirm that our app still works.
 
 Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
