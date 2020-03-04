@@ -25,10 +25,10 @@ Before we start our work, we want a way to track it. Let's use Trello.
 * Set Up Tests On CI
 * Set Up Automatic Deployment
 * Fill In Readme
-* Allow users to create a restaurant
-* Apply basic styling to the app
-* Save restaurants to the server
-* Allow users to log in
+* List Restaurants
+* Style App with Material Design
+* Show Loading and Error States
+* Add Restaurants
 
 ## Setting Up Development Environment
 Here are the tools we'll need to install:

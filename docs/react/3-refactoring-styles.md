@@ -8,7 +8,7 @@ In this chapter we'll see one example of the kind of refactoring you can do when
 
 Our next story in Trello is:
 
-- [ ] Style app with Material Design
+- [ ] Style App with Material Design
 
 And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design. But one of the benefits of the thorough test suite that TDD provides is that you can make changes to the look and feel of your app with confidence that the functionality still works.
 
@@ -165,4 +165,4 @@ We've successfully styled our app relying on the tests to confirm all the functi
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
-- [x] Style app with Material Design
+- [x] Style App with Material Design

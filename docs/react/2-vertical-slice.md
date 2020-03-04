@@ -8,7 +8,7 @@ In this chapter, we'll build our first application feature. We'll follow the pra
 
 Our next story in Trello is:
 
-- [ ] List restaurants
+- [ ] List Restaurants
 
 We'll do all our work from this feature on a branch. Create a new one:
 
@@ -936,4 +936,4 @@ We successfully implemented our first feature with outside-in Test-Driven Develo
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
-- [x] List restaurants
+- [x] List Restaurants
