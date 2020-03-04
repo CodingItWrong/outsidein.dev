@@ -21,7 +21,7 @@ Before we start our work, we want a way to track it. Let's use Trello.
 
 * Set Up Development Environment
 * Create App
-* Set up autoformatting
+* Set up Autoformatting
 * Set Up Tests On CI
 * Set Up Automatic Deployment
 * Fill In Readme
@@ -79,6 +79,10 @@ You can now view opinion-ate in the browser.
 Note that the development build is not optimized.
 To create a production build, use yarn build.
 ```
+
+With this, we can mark off our next task in Trello:
+
+- [x] Create App
 
 Next, let's set up linting and autoformatting. `create-react-app` includes a built-in ESLint config to check your code for issues while it runs. But we can set up a separate ESLint config that our editor can see, so it can warn us about issues right away and autoformat files upon save.
 
@@ -138,6 +142,17 @@ Now, set up ESLint integration with your editor. For example:
 - VS Code: [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
 After enabling this integration, open `App.test.js`. Notice warnings on line 2 and 6 inside the curly brackets: Prettier is suggesting removing the spaces inside the curlies. If you've enabled autoformatting on save, which I recommend, when you save the file those spaces will be removed automatically.
+
+Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. `create-react-app` initializes our app with a git repo, so we can just add the changes:
+
+```sh
+$ git add .
+$ git commit -m "Set up linting and autoformatting"
+```
+
+With this, we can mark off our next task in Trello:
+
+- [x] Set up autoformatting
 
 Next, let’s confirm our tests work. Open `src/App.test.js`. Note that it’s testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press a to run all tests.
 
@@ -207,9 +222,12 @@ This test will load up the root of our app and confirm it can see the text "Lear
 
 Now, back in the Cypress window, you should see the list updated to only contain our `smoke.spec.js` test. Click on it. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is our “Smoke Test” and a series of steps, which should pass. On the right is our app.
 
-With this, we can mark off our next task in Trello:
+Add the Cypress tests to git:
 
-- [x] Create App
+```sh
+$ git add .
+$ git commit -m "Set up Cypress E2E tests"
+```
 
 ## Continuous Integration
 When `create-react-app` creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
@@ -336,6 +354,8 @@ Also, if someone uses `npm` instead of `yarn` they won’t get the right depende
 
  This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ```
+
+Commit these README changes to git.
 
 With this, we can mark off our next task in Trello:
 

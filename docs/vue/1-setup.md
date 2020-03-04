@@ -21,6 +21,7 @@ Before we start our work, we want a way to track it. Let's use Trello.
 
 * Set Up Development Environment
 * Create App
+* Set up Autoformatting
 * Set Up Tests On CI
 * Set Up Automatic Deployment
 * Fill In Readme
@@ -112,6 +113,10 @@ Let's try it out. Run `yarn serve`. You’ll see something like the following:
 
 Open the `Local` URL in the browser and you should see a page welcoming you to your Vue.js app.
 
+With this, we can mark off our next task in Trello:
+
+- [x] Create App
+
 Next, let's tweak the autoformatting setup. Prettier doesn't have a lot of configuration options, but you can adjust a little.
 
 And a `.prettierrc.js` file at the root of your project and add the following:
@@ -135,6 +140,17 @@ Save the file, and these changes should be made for you automatically.
 
 We can update all our files to be formatted this way by running `yarn lint --fix`.
 
+Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. `create-react-app` initializes our app with a git repo, so we can just add the changes:
+
+```sh
+$ git add .
+$ git commit -m "Set up linting and autoformatting"
+```
+
+With this, we can mark off our next task in Trello:
+
+- [x] Set up autoformatting
+
 Next, let’s confirm our tests work. Open `tests/unit/example.spec.js`. Note that it’s testing the `HelloWorld` component. Now run `yarn test:unit`. You should see the following:
 
 ```
@@ -157,10 +173,6 @@ Now we’ll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that 
 You’ll see a list of Integration Tests with just one item: `test.js`. Click on it. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is “My First Test” and a series of steps, which should pass. On the right is our app.
 
 There’s one more mode we can run our Cypress tests in: headless mode. Run `yarn test:e2e --headless`. You’ll see tests run in the console and say in the end that they passed. This runs our whole test suite without a GUI, and will be useful in a moment.
-
-With this, we can mark off our next task in Trello:
-
-- [x] Create App
 
 ## Continuous Integration
 When Vue CLI creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
@@ -283,6 +295,8 @@ Also, if someone uses `npm` instead of `yarn` they won’t get the right depende
 +Dependencies are locked with a `yarn.lock` file, so please use `yarn` and not `npm` for installing them.
 +
 ```
+
+Commit these README changes to git.
 
 With this, we can mark off our next task in Trello:
 
