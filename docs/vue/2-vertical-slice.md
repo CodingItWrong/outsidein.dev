@@ -995,6 +995,8 @@ $ vue-cli-service serve
 
 Now open the URL of your Vue app. You should see the default "Pasta Place" and "Salad Place" records.
 
-We successfully implemented our first feature with outside-in Test-Driven Development! Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+We successfully implemented our first feature with outside-in Test-Driven Development!
+
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] List restaurants

@@ -1396,6 +1396,6 @@ This applies flexbox layout to the `Box`, organizing its contents in a row by de
 
 Most importantly, rerun the E2E tests and confirm that our app still works.
 
-Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] Add restaurants

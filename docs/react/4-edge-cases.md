@@ -909,3 +909,5 @@ With this, our tests pass. Our code has error state functionality added, and now
 ```
 
 We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box. Start the API server again, then reload the page. You should see the loading spinner, then our results.
+
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request.

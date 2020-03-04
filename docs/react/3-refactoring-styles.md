@@ -161,6 +161,8 @@ Here's what the components do:
 
 Our E2E and unit tests still pass.
 
-We've successfully styled our app relying on the tests to confirm all the functionality still works. Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+We've successfully styled our app relying on the tests to confirm all the functionality still works.
+
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] Style app with Material Design

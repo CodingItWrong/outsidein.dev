@@ -165,6 +165,8 @@ The Vuetify installer configured Vue to use Vuetify, but we need to do the same 
 
 Save the file and when the unit tests rerun the warnings should be gone.
 
-We've successfully styled our app relying on the tests to confirm all the functionality still works. Now let's push it up to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
+We've successfully styled our app relying on the tests to confirm all the functionality still works.
+
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] Style app with Material Design
