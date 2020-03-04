@@ -10,6 +10,12 @@ Our next story in Trello is:
 
 - [ ] List restaurants
 
+We'll do all our work from this feature on a branch. Create a new one:
+
+```sh
+$ git checkout -b list-restaurants
+```
+
 To get a clean start, let's delete out the sample content `create-react-app` created with our app. Delete the following files and folders
 
 - `src/App.css`
@@ -57,6 +63,13 @@ In `public/index.html`, find the `<title>` tag and see that the page has the def
 -  <title>React App</title>
 +  <title>Opinion Ate</title>
  </head>
+```
+
+Commit these changes to git:
+
+```sh
+$ git add .
+$ git commit -m "Delete sample content"
 ```
 
 For this tutorial, our backend web service has already been built. Let's get it set up and see how we can load our restaurant data from it. We've set up a Node.js API you can run locally; that way you can edit data without authentication or stepping on other users' data.
@@ -140,6 +153,13 @@ After we’ve created our test, the next step in TDD is to **run the test and wa
 To run our test, run the app with `yarn start` and leave it running, then, in another terminal, run `yarn cypress`.
 After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
 
+Let's go ahead and commit this E2E test. Although it won't pass until the end of the branch, committing it now allows us to have focused commits going forward.
+
+```sh
+$ git add .
+$ git commit -m "Specify app should list restaurants"
+```
+
 It's time for us to write the code to make this pass. Let's think about how we want to structure our code. We're going to have three layers:
 
 - Components that display the user interface.
@@ -217,7 +237,14 @@ Now we finally have `RestaurantList` where we'll put our UI for this story. So f
 
 Instead of adding the behavior directly, let’s **step down from the “outside” level of end-to-end tests to an “inside” component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
 
-Now, in `src/components`, create a `__tests__` folder, then inside that create a file `RestaurantList.spec.js`.
+Before we step down to a unit test, though, let's commit the changes we have. They're a nice, small unit of work: we've added the structure of components that we'll add the behavior to next.
+
+```sh
+$ git add .
+$ git commit -m "Add RestaurantScreen and RestaurantList"
+```
+
+Now, to write the unit test. In `src/components`, create a `__tests__` folder, then inside that create a file `RestaurantList.spec.js`.
 Now, we'll write a test for the first bit of functionality we need, to load the restaurants. We'll start with the structure of the test suite:
 
 ```js
@@ -321,7 +348,12 @@ Now, we run the `loadRestaurants` prop in a `useEffect`:
 
 The dependency array we pass to `useEffect` consists only of `loadRestaurants`, so the effect will run once each time `loadRestaurants` changes. In our test (and in our real application) it will never change, so the effect just runs once when the component mounts.
 
-Save the file and, sure enough, our test is green. We've passed our first unit test!
+Save the file and, sure enough, our test is green. We've passed our first unit test! Let's commit the unit test and production code that makes it pass in one commit:
+
+```sh
+$ git add .
+$ git commit -m "Load restaurants upon mounting RestaurantList"
+```
 
 This gives us one of the behaviors we want our `RestaurantList` to have: loading the restaurants when it is mounted. Now it's time to write a test for the second behavior: displaying the restaurants. Let's add another `it()` block inside the `describe()`, with the following contents:
 
@@ -424,6 +456,8 @@ We're `map`ping over the `restaurants`, but in our first test we didn't pass in 
 ```
 
 Save and now both tests are passing. We've now successfully defined both behaviors of our `RestaurantList`!
+
+Go ahead and commit your changes again. From here on out, we won't remind you to make small commits as we go, but I'd encourage you to do so.
 
 In the TDD cycle, **whenever the tests go green, look for opportunities to refactor.** There's a lot of duplication in our two tests. Now that we see which parts are shared, let's extract that duplication. First, let's set up some shared data:
 
