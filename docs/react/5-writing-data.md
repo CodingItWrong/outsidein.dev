@@ -1224,9 +1224,33 @@ We also want to hide the server error message each time we retry saving the form
   });
 ```
 
-SHOW PROBLEM FIRST?
+Save the file and you'll get the expected test failure:
 
-We'll actually run into a problem clicking the submit button twice in a row, though. We want to wait for the first web request to return, _then_ send the second one.
+```sh
+  ● NewRestaurantForm › when retrying after a server error › clears the server error
+
+    expect(received).toBeNull()
+
+    Received: <div class="MuiAlert-message">The restaurant could not be saved. Pleas
+e try again.</div>
+
+      133 |     it('clears the server error', () => {
+      134 |       const {queryByText} = context;
+    > 135 |       expect(queryByText(serverError)).toBeNull();
+          |                                        ^
+```
+
+We should be able to make this test pass by just clearing the `serverError` flag when attempting to save:
+
+```diff
+     if (name) {
+       setValidationError(false);
+ +     setServerError(false);
+       createRestaurant(name)
+```
+
+Save the file, but surprisingly, the test failure doesn't change! Why is that? It took me a little digging to find out, but it turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.
+
 We can fix this by waiting for promises to flush after the first click, as well as after the second:
 
 ```diff
@@ -1245,31 +1269,6 @@ We can fix this by waiting for promises to flush after the first click, as well 
 ```
 
 Note that we need to make the `beforeEach` function `async`, so we can `await` the call to `flushPromises()`. This ensures the results of the first click will complete before we start the second.
-
-Save the file and you'll get the expected test failure:
-
-```sh
-  ● NewRestaurantForm › when retrying after a server error › clears the server error
-
-    expect(received).toBeNull()
-
-    Received: <div class="MuiAlert-message">The restaurant could not be saved. Pleas
-e try again.</div>
-
-      133 |     it('clears the server error', () => {
-      134 |       const {queryByText} = context;
-    > 135 |       expect(queryByText(serverError)).toBeNull();
-          |                                        ^
-```
-
-We can make this test pass by just clearing the `serverError` flag when attempting to save:
-
-```diff
-     if (name) {
-       setValidationError(false);
- +     setServerError(false);
-       createRestaurant(name)
-```
 
 Save and the test should pass.
 
