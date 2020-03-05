@@ -10,7 +10,7 @@ Our next story in Trello is:
 
 - [ ] Add Restaurants
 
-This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
+Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
 Create a file `tests/e2e/specs/managing-restaurants.spec.js` and add the following:
 
@@ -39,10 +39,8 @@ describe('Managing Restaurants', () => {
 
     cy.visit('/');
 
-    cy.contains('New Restaurant').click();
-
-    cy.get('[placeholder="Name"]').type(restaurantName);
-    cy.contains('Save Restaurant').click();
+    cy.get('[placeholder="Add Restaurant"]').type(restaurantName);
+    cy.contains('Add').click();
 
     cy.wait('@addRestaurant')
       .its('requestBody')
@@ -61,9 +59,8 @@ We also stub a POST request, which is the request we'll use to create a restaura
 
 We visit the home page, and this time we do some interaction with the page:
 
-- We find an element containing the text "New Restaurant" and click it
-- We find an element with a placeholder of "Name" (so, presumably a text input), and we type a restaurant name into it.
-- We find an element "Save Restaurant" and click it.
+- We find an element with a placeholder of "Add Restaurant" (so, presumably a text input), and we type a restaurant name into it.
+- We find an element "Add" and click it.
 
 Next, we call `cy.wait()`. This waits for an HTTP request to be sent. We pass the name of the request we want to wait for, prepending an `@` to it. Specifically, we wait for our `addRestaurant` request to complete. Then we check that the restaurant name is correctly sent in the body of the request. It's not enough to stub out the request: we need to confirm our app is sending the *right* data to the server too.
 
@@ -71,32 +68,15 @@ Finally, we confirm that the restaurant name is shown on the page, showing that 
 
 Start Cypress with `yarn test:e2e`, then choose the managing restaurants test. It fails, showing the first bit of functionality we need to implement:
 
-> CypressError: Timed out retrying: Expected to find content: 'New Restaurant' but never did.
+> CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
 
-The test fails trying to find a button titled "New Restaurant" to click. Where should this button live? We are intending that that button shows the Add Restaurant form. Since that form only has one element, we don't need to put it in a modal; we can just display it on the card above the list of restaurants.
-
-What component should the "New Restaurant" button be in? We discussed earlier that RestaurantScreen would hold both the restaurant list and new restaurant form. It makes sense that RestaurantScreen would also hold the New Restaurant button, and would hide or show a NewRestaurantForm component when clicked.
-
-Because of this, let's add the New Restaurant button to `RestaurantScreen`. Vuetify has a `v-btn` component for displaying buttons.
-
-```diff
-     <v-card-text>
-+      <v-btn>New Restaurant</v-btn>
-       <RestaurantList />
-     </v-card-text>
-```
-
-Rerun the E2E test and the New Restaurant button is found, and we get to a new error:
-
-> CypressError: Timed out retrying: Expected to find element: '[placeholder="Name"]', but never found it.
-
-We need a "Name" text input. That should live on the New Restaurant Form, so it's time to create that component.
+We need an "Add Restaurant" text input. What component should it be in? We discussed earlier that RestaurantScreen would hold both the restaurant list and new restaurant form. The text input should live on the New Restaurant Form, so it's time to create that component.
 Create the file `src/components/NewRestaurantForm.vue`, and add the following:
 
 ```html
 <template>
   <form>
-    <v-text-field placeholder="Name" filled type="text" />
+    <v-text-field placeholder="Add Restaurant" filled type="text" />
   </form>
 </template>
 
@@ -109,9 +89,7 @@ export default {
 
 Note the use of Vuetify's `v-text-field` component.
 
-The simplest way to get this to appear in the `RestaurantScreen` is to show it unconditionally. The E2E test doesn't say clicking the "New Restaurant" button is *needed* to show the form:
-
-THINK ABOUT IF TEST NEEDS TO DRIVE CONDITION
+Next, add the form to the `NewRestaurantScreen` component:
 
 ```diff
      <v-card-text>
@@ -131,17 +109,17 @@ THINK ABOUT IF TEST NEEDS TO DRIVE CONDITION
  };
 ```
 
-Rerun the E2E tests and they should get past finding and typing into the Name input. The next error is:
+Rerun the E2E tests and they should get past finding and typing into the Add Restaurant input. The next error is:
 
-> CypressError: Timed out retrying: Expected to find content: 'Save Restaurant' but never did.
+> CypressError: Timed out retrying: Expected to find content: 'Add' but never did.
 
 To fix this error, we add a button to `NewRestaurantForm` but don't wire it up to anything yet:
 
 ```diff
    <form>
-     <v-text-field placeholder="Name" filled type="text" />
+     <v-text-field placeholder="Add Restaurant" filled type="text" />
 +    <v-btn color="teal" class="white--text">
-+      Save Restaurant
++      Add
 +    </v-btn>
    </form>
 ```
@@ -255,9 +233,9 @@ To fix this error, let's add the `data-testid` attribute to the existing text fi
 
 ```diff
     <form>
--     <v-text-field placeholder="Name" filled type="text" />
+-     <v-text-field placeholder="Add Restaurant" filled type="text" />
 +     <v-text-field
-+      placeholder="Name"
++      placeholder="Add Restaurant"
 +      filled
 +      type="text"
 +      data-testid="new-restaurant-name-field"
@@ -279,7 +257,7 @@ We fix this by adding that test ID as well:
    />
 -  <v-btn color="teal" class="white--text">
 +  <v-btn color="teal" class="white--text" data-testid="new-restaurant-submit-button">
-     Save Restaurant
+     Add
    </v-btn>
  </form>
 ```
@@ -313,9 +291,9 @@ The test failure reports the action wasn't called at all. This is because our bu
 +    type="submit"
 +    color="teal"
 +    class="white--text"
-+    data-testid="newRestaurantSubmitButton"
++    data-testid="new-restaurant-submit-button"
 +  >
-+    Save Restaurant
++    Add
 +  </v-btn>
 </form>
 
@@ -383,7 +361,7 @@ Now we're getting to the end of our test, and the function is called, but it did
 
 ```diff
      <v-text-field
-       placeholder="Name"
+       placeholder="Add Restaurant"
        filled
        type="text"
 +      v-model="name"
@@ -1127,7 +1105,8 @@ We also want to hide the server error message each time we retry saving the form
 
 SHOW PROBLEM FIRST?
 
-We'll actually run into a problem clicking the submit button twice in a row, though. We want to wait for the first web request to return, _then_ send the second one. There are a few ways to do this in Vue tests; one simple one is to use the `flush-promises` npm package. Add it to your project:
+We'll actually run into a problem clicking the submit button twice in a row, though. We want to wait for the first web request to return, _then_ send the second one.
+There are a few ways to do this in Vue tests; one simple one is to use the `flush-promises` npm package. Add it to your project:
 
 ```sh
 $ yarn add --dev flush-promises
@@ -1224,7 +1203,7 @@ Vuetify offers a [grid system](https://vuetifyjs.com/en/components/grids) that i
 +  <v-row>
 +    <v-col cols="9">
        <v-text-field
-         placeholder="Name"
+         placeholder="Add Restaurant"
          filled
          type="text"
          v-model="name"
@@ -1236,9 +1215,9 @@ Vuetify offers a [grid system](https://vuetifyjs.com/en/components/grids) that i
          type="submit"
          color="teal"
          class="white--text"
-         data-testid="newRestaurantSubmitButton"
+         data-testid="new-restaurant-submit-button"
        >
-         Save Restaurant
+         Add
        </v-btn>
 +    </v-col>
 +  </v-row>
@@ -1255,9 +1234,9 @@ Pull up your app and see how it looks. The elements are next to each other, but 
    color="teal"
    class="white--text"
 +  block="true"
-   data-testid="newRestaurantSubmitButton"
+   data-testid="new-restaurant-submit-button"
  >
-   Save Restaurant
+   Add
  </v-btn>
 ```
 

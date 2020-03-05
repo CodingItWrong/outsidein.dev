@@ -39,10 +39,8 @@ describe('Managing Restaurants', () => {
 
     cy.visit('/');
 
-    cy.contains('New Restaurant').click();
-
-    cy.get('[placeholder="Name"]').type(restaurantName);
-    cy.contains('Save Restaurant').click();
+    cy.get('[placeholder="Add Restaurant"]').type(restaurantName);
+    cy.contains('Add').click();
 
     cy.wait('@addRestaurant')
       .its('requestBody')
@@ -61,9 +59,8 @@ We also stub a POST request, which is the request we'll use to create a restaura
 
 We visit the home page, and this time we do some interaction with the page:
 
-- We find an element containing the text "New Restaurant" and click it
-- We find an element with a placeholder of "Name" (so, presumably a text input), and we type a restaurant name into it.
-- We find an element "Save Restaurant" and click it.
+- We find an element with a placeholder of "Add Restaurant" (so, presumably a text input), and we type a restaurant name into it.
+- We find an element "Add" and click it.
 
 Next, we call `cy.wait()`. This waits for an HTTP request to be sent. We pass the name of the request we want to wait for, prepending an `@` to it. Specifically, we wait for our `addRestaurant` request to complete. Then we check that the restaurant name is correctly sent in the body of the request. It's not enough to stub out the request: we need to confirm our app is sending the *right* data to the server too.
 
@@ -71,32 +68,9 @@ Finally, we confirm that the restaurant name is shown on the page, showing that 
 
 Start Cypress with `yarn test:e2e`, then choose the managing restaurants test. It fails, showing the first bit of functionality we need to implement:
 
-> CypressError: Timed out retrying: Expected to find content: 'New Restaurant' but never did.
+> CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
 
-The test fails trying to find a button titled "New Restaurant" to click. Where should this button live? We are intending that that button shows the Add Restaurant form. Since that form only has one element, we don't need to put it in a modal; we can just display it on the card above the list of restaurants.
-
-What component should the "New Restaurant" button be in? We discussed earlier that RestaurantScreen would hold both the restaurant list and new restaurant form. It makes sense that RestaurantScreen would also hold the New Restaurant button, and would hide or show a NewRestaurantForm component when clicked.
-
-Because of this, let's add the New Restaurant button to `RestaurantScreen`. Material-UI has a `Button` component for displaying buttons.
-
-```diff
- import CardContent from '@material-ui/core/CardContent';
- import Typography from '@material-ui/core/Typography';
-+import Button from '@material-ui/core/Button';
- import RestaurantList from './RestaurantList';
-...
-     <CardContent>
-       <Typography variant="h5">Restaurants</Typography>
-+      <Button variant="contained">New Restaurant</Button>
-       <RestaurantList />
-     </CardContent>
-```
-
-Rerun the E2E test and the New Restaurant button is found, and we get to a new error:
-
-> CypressError: Timed out retrying: Expected to find element: '[placeholder="Name"]', but never found it.
-
-We need a "Name" text input. That should live on the New Restaurant Form, so it's time to create that component.
+We need an "Add Restaurant" text input. What component should it be in? We discussed earlier that RestaurantScreen would hold both the restaurant list and new restaurant form. The text input should live on the New Restaurant Form, so it's time to create that component.
 Create the file `src/components/NewRestaurantForm.js`, and add the following:
 
 ```js
@@ -106,7 +80,7 @@ import TextField from '@material-ui/core/TextField';
 export const NewRestaurantForm = () => {
   return (
     <form>
-      <TextField placeholder="Name" fullWidth variant="filled" />
+      <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
     </form>
   );
 };
@@ -116,9 +90,7 @@ export default NewRestaurantForm;
 
 Note the use of Material-UI's `TextField` component. Also note that we're using the block form of the arrow function. We will need other statements in there besides the returned JSX.
 
-The simplest way to get this to appear in the `RestaurantScreen` is to show it unconditionally. The E2E test doesn't say clicking the "New Restaurant" button is *needed* to show the form:
-
-THINK ABOUT IF TEST NEEDS TO DRIVE CONDITION
+Next, add the form to the `NewRestaurantScreen` component:
 
 ```diff
  import RestaurantList from './RestaurantList';
@@ -128,14 +100,13 @@ THINK ABOUT IF TEST NEEDS TO DRIVE CONDITION
    <Card>
      <CardContent>
        <Typography variant="h5">Restaurants</Typography>
-       <Button variant="contained">New Restaurant</Button>
 +      <NewRestaurantForm />
        <RestaurantList />
 ```
 
-Rerun the E2E tests and they should get past finding and typing into the Name input. The next error is:
+Rerun the E2E tests and they should get past finding and typing into the Add Restaurant input. The next error is:
 
-> CypressError: Timed out retrying: Expected to find content: 'Save Restaurant' but never did.
+> CypressError: Timed out retrying: Expected to find content: 'Add' but never did.
 
 To fix this error, we add a button to `NewRestaurantForm` but don't wire it up to anything yet:
 
@@ -146,9 +117,9 @@ To fix this error, we add a button to `NewRestaurantForm` but don't wire it up t
  export const NewRestaurantForm = () => {
    return (
      <form>
-       <TextField placeholder="Name" fullWidth variant="filled" />
+       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
 +      <Button variant="contained" color="primary">
-+        Save Restaurant
++        Add
 +      </Button>
      </form>
    );
@@ -193,7 +164,7 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
     beforeEach(() => {
       const {getByPlaceholderText, getByTestId} = context;
 
-      fireEvent.change(getByPlaceholderText('Name'), {
+      fireEvent.change(getByPlaceholderText('Add Restaurant'), {
         target: {value: restaurantName},
       });
       fireEvent.click(getByTestId('new-restaurant-submit-button'));
@@ -223,14 +194,14 @@ Add the test ID to the button to find it:
 
 ```diff
      <form>
-       <TextField placeholder="Name" fullWidth variant="filled" />
+       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
 -      <Button variant="contained" color="primary">
 +      <Button
 +        variant="contained"
 +        color="primary"
 +        data-testid="new-restaurant-submit-button"
 +      >
-         Save Restaurant
+         Add
        </Button>
      </form>
 ```
@@ -257,14 +228,14 @@ The test failure reports the action wasn't called at all. This is because our bu
 
 ```diff
      <form>
-       <TextField placeholder="Name" fullWidth variant="filled" />
+       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
        <Button
 +        type="submit"
          variant="contained"
          color="primary"
          data-testid="new-restaurant-submit-button"
        >
-         Save Restaurant
+         Add
        </Button>
      </form>
 ```
@@ -279,7 +250,7 @@ Now, write just enough production code to get past the current test failure, let
    return (
 -    <form>
 +    <form onSubmit={() => createRestaurant()}>
-       <TextField placeholder="Name" fullWidth variant="filled" />
+       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
 ```
 
 We set up an `onSubmit` prop for the form tag, passing an arrow function that calls `createRestaurant`. We don't just pass the `createRestaurant` function directly because that would result in passing the browser event object to `createRestaurant`, what we don't want. This way there are no arguments.
@@ -305,7 +276,7 @@ To prevent this page reload from happening, we need to call the `preventDefault(
    return (
 -    <form onSubmit={() => createRestaurant(name)}>
 +    <form onSubmit={handleSubmit}>
-       <TextField placeholder="Name" fullWidth variant="filled" />
+       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
 ```
 
 Save the file and the test failure has changed:
@@ -346,11 +317,11 @@ Then, we'll make `TextField` a controlled component, reading its value from the 
 ```diff
    return (
      <form onSubmit={handleSubmit}>
--      <TextField placeholder="Name" fullWidth variant="filled" />
+-      <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
 +      <TextField
 +        value={name}
 +        onChange={e => setName(e.target.value)}
-+        placeholder="Name"
++        placeholder="Add Restaurant"
 +        fullWidth
 +        variant="filled"
 +      />
@@ -655,6 +626,10 @@ Now we get another console error:
 TypeError: Cannot read property 'then' of undefined
 ```
 
+But we also get a test failure after a few seconds:
+
+> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
+
 We still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API:
 
 ```diff
@@ -711,7 +686,7 @@ First, let's implement the form clearing out the text field after saving. In `Ne
 +
 +    it('clears the name', () => {
 +      const {getByPlaceholderText} = context;
-+      expect(getByPlaceholderText('Name').value).toEqual('');
++      expect(getByPlaceholderText('Add Restaurant').value).toEqual('');
 +    });
    });
 ```
@@ -728,7 +703,7 @@ Save the test, and we get a test failure confirming that the text field is not y
 
       30 |     it('clears the name', () => {
       31 |       const {getByPlaceholderText} = context;
-    > 32 |       expect(getByPlaceholderText('Name').value).toEqual('');
+    > 32 |       expect(getByPlaceholderText('Add Restaurant').value).toEqual('');
          |                                                  ^
 ```
 
@@ -808,7 +783,7 @@ Save the file and our test finally passes cleanly!
 Before we proceed, let's think about some refactoring. Look at the following statement from our test:
 
 ```js
-fireEvent.change(getByPlaceholderText('Name'), {
+fireEvent.change(getByPlaceholderText('Add Restaurant'), {
 	target: {value: restaurantName},
 });
 ```
@@ -827,10 +802,10 @@ Then we can replace our existing call:
 
        const {getByPlaceholderText, getByText} = context;
 
--      fireEvent.change(getByPlaceholderText('Name'), {
+-      fireEvent.change(getByPlaceholderText('Add Restaurant'), {
 -        target: {value: restaurantName},
 -      });
-+      fillIn(getByPlaceholderText('Name'), restaurantName);
++      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
        fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
        return act(flushPromises);
@@ -847,7 +822,7 @@ Now let's implement the validation error. Create a new `describe` block for this
       createRestaurant.mockResolvedValue();
 
       const {getByPlaceholderText, getByText} = context;
-      fillIn(getByPlaceholderText('Name'), '');
+      fillIn(getByPlaceholderText('Add Restaurant'), '');
       fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
       return act(flushPromises);
@@ -997,9 +972,9 @@ Now, is there any other time we would want to hide or show the validation error?
       createRestaurant.mockResolvedValue();
 
       const {getByPlaceholderText, getByText} = context;
-      fillIn(getByPlaceholderText('Name'), '');
+      fillIn(getByPlaceholderText('Add Restaurant'), '');
       fireEvent.click(getByTestId('new-restaurant-submit-button'));
-      fillIn(getByPlaceholderText('Name'), restaurantName);
+      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
       fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
       return act(flushPromises);
@@ -1103,7 +1078,7 @@ Since this is a new situation, let's set this up as yet another new `describe` b
 
       const {getByPlaceholderText, getByText} = context;
 
-      fillIn(getByPlaceholderText('Name'), restaurantName);
+      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
       fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
       return act(flushPromises);
@@ -1236,7 +1211,7 @@ We also want to hide the server error message each time we retry saving the form
       createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
       const {getByPlaceholderText, getByText} = context;
-      fillIn(getByPlaceholderText('Name'), restaurantName);
+      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
       fireEvent.click(getByTestId('new-restaurant-submit-button'));
       fireEvent.click(getByTestId('new-restaurant-submit-button'));
       return act(flushPromises);
@@ -1251,7 +1226,8 @@ We also want to hide the server error message each time we retry saving the form
 
 SHOW PROBLEM FIRST?
 
-We'll actually run into a problem clicking the submit button twice in a row, though. We want to wait for the first web request to return, _then_ send the second one. We can fix this by waiting for promises to flush after the first click, as well as after the second:
+We'll actually run into a problem clicking the submit button twice in a row, though. We want to wait for the first web request to return, _then_ send the second one.
+We can fix this by waiting for promises to flush after the first click, as well as after the second:
 
 ```diff
 -    beforeEach(() => {
@@ -1259,7 +1235,7 @@ We'll actually run into a problem clicking the submit button twice in a row, tho
        createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
        const {getByPlaceholderText, getByText} = context;
-       fillIn(getByPlaceholderText('Name'), restaurantName);
+       fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
        fireEvent.click(getByTestId('new-restaurant-submit-button'));
 +      await act(flushPromises);
 +
@@ -1286,7 +1262,7 @@ e try again.</div>
           |                                        ^
 ```
 
-We can make this test pass by just clearing the `serverError` when attempting to save:
+We can make this test pass by just clearing the `serverError` flag when attempting to save:
 
 ```diff
      if (name) {
@@ -1302,7 +1278,7 @@ Now we have just one more test to make: that the restaurant name is not cleared 
 ```js
     it('does not clear the name', () => {
       const {getByPlaceholderText} = context;
-      expect(getByPlaceholderText('Name').value).toEqual(restaurantName);
+      expect(getByPlaceholderText('Add Restaurant').value).toEqual(restaurantName);
     });
 ```
 
@@ -1350,7 +1326,7 @@ Material-UI offers a `Box` component that can be used for layout and spacing. Le
      <TextField
        value={name}
        onChange={e => setName(e.target.value)}
-       placeholder="Name"
+       placeholder="Add Restaurant"
        fullWidth
        variant="filled"
      />
@@ -1360,6 +1336,8 @@ Material-UI offers a `Box` component that can be used for layout and spacing. Le
        color="primary"
        data-testid="new-restaurant-submit-button"
      >
+       Add
+     </Button>
 +  </Box>
  </form>
 ```
