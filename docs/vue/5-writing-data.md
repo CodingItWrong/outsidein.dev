@@ -1232,7 +1232,7 @@ Pull up your app and see how it looks. The elements are next to each other, but 
    type="submit"
    color="teal"
    class="white--text"
-+  block="true"
++  block
    data-testid="new-restaurant-submit-button"
  >
    Add
