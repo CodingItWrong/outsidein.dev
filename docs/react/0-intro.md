@@ -6,9 +6,9 @@ title: 0 - Intro
 
 Here's the stack of libraries we'll use for our React application:
 
-* Build Tooling: [create-react-app][create-react-app]
+* Build Tooling: [Create React App][create-react-app]
 
-For a production application you might want a more flexible build tool, like Parcel or a custom Webpack config. This tutorial doesn't get into build configuration, though, so create-React-app will work fine, and should be familiar to many readers.
+For a production application you might want a more flexible build tool, like Parcel or a custom Webpack config. This tutorial doesn't get into build configuration, though, so Create React App will work fine, and should be familiar to many readers.
 
 * State Management: [Redux][redux]
 

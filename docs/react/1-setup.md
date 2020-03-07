@@ -39,7 +39,7 @@ Here are the tools we'll need to install:
 - An editor
 
 ### Node
-We'll be using `create-react-app` as our build tool. Like most frontend build tools, it runs on top of Node.js, so you’ll need node installed locally.
+We'll be using Create React App as our build tool. Like most frontend build tools, it runs on top of Node.js, so you’ll need node installed locally.
 
 ### Yarn
 Yarn is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
@@ -57,14 +57,14 @@ Create a new React app:
 $ npx create-react-app opinion-ate
 ```
 
-`create-react-app` will start the installation process, and when it completes, your application will be created and ready to use.
+Create React App will start the installation process, and when it completes, your application will be created and ready to use.
 
 Open your `package.json` and note the commands we have available:
 
 - `start` to run the app locally
 - `build` to create a release build of the app
 - `test` to run unit tests, including React component tests
-- `eject` for if we ever want to move away from `create-react-app`
+- `eject` for if we ever want to move away from Create React App
 
 Let's try it out. Run `yarn start`. Your app should automatically open in your default browser, with a spinning React logo. In the console you'll see something like the following:
 
@@ -84,7 +84,7 @@ With this, we can mark off our next task in Trello:
 
 - [x] Create App
 
-Next, let's set up linting and autoformatting. `create-react-app` includes a built-in ESLint config to check your code for issues while it runs. But we can set up a separate ESLint config that our editor can see, so it can warn us about issues right away and autoformat files upon save.
+Next, let's set up linting and autoformatting. Create React App includes a built-in ESLint config to check your code for issues while it runs. But we can set up a separate ESLint config that our editor can see, so it can warn us about issues right away and autoformat files upon save.
 
 Add this rather lengthy list of packages:
 
@@ -143,7 +143,7 @@ Now, set up ESLint integration with your editor. For example:
 
 After enabling this integration, open `App.test.js`. Notice warnings on line 2 and 6 inside the curly brackets: Prettier is suggesting removing the spaces inside the curlies. If you've enabled autoformatting on save, which I recommend, when you save the file those spaces will be removed automatically.
 
-Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. `create-react-app` initializes our app with a git repo, so we can just add the changes:
+Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. Create React App initializes our app with a git repo, so we can just add the changes:
 
 ```sh
 $ git add .
@@ -230,7 +230,7 @@ $ git commit -m "Set up Cypress E2E tests"
 ```
 
 ## Continuous Integration
-When `create-react-app` creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
+When Create React App creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
 
 ```sh
 $ git remote add https://github.com/your-user-name/your-repo-name.git
@@ -310,7 +310,7 @@ There are many ways to deploy frontend apps. One easy one is services like Netli
 
 Create a Netlify account from [Netlify’s Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
-Once you’re signed in, click "New site from Git”. Click the “GitHub” button. A list of all your repos will appear. Search for your repo and click it. Leave “Branch to deploy” as `master`. Under “Basic build settings”, you should see “Build command” pre-populated to `yarn build`, and `build/` for the "Publish directory". Netlify has automatically detected that we're using `create-react-app` and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them. That’s all we need to configure, so click “Deploy site”.
+Once you’re signed in, click "New site from Git”. Click the “GitHub” button. A list of all your repos will appear. Search for your repo and click it. Leave “Branch to deploy” as `master`. Under “Basic build settings”, you should see “Build command” pre-populated to `yarn build`, and `build/` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them. That’s all we need to configure, so click “Deploy site”.
 
 You will be sent to the Overview page for your new site. In yellow you’ll see “Site deploy in progress”. Click that text and you’ll be taken to the Deploys page. In a list at the bottom you’ll see “Production: master@HEAD Building”—click that. You’ll see a console log of output as the site is being built. Eventually you’ll see:
 
@@ -325,14 +325,14 @@ Click “< Deploys" to go back to the Deploys tab. At the top in green you’ll 
 
 Now let’s rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then “Site settings” button. Under General > Site details > Site information, click “Change site name”. Enter anything you like and click Save. At the top of this screen, under “Settings for”, your site URL appears in gray. Click on it to confirm your new domain works.
 
-We're now set to run our app's tests on CI and deploy to production. We had a little setup to do, but the defaults provided by `create-react-app`, GitHub Actions, and Netlify went a long way toward simplifying the process.
+We're now set to run our app's tests on CI and deploy to production. We had a little setup to do, but the defaults provided by Create React App, GitHub Actions, and Netlify went a long way toward simplifying the process.
 
 With this, we can mark off our next task in Trello:
 
 - [x] Set Up Automatic Deployment
 
 ## Filling In the Readme
-Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what `create-react-app` created for us by default. It’s a fairly minimal readme that lists the NPM scripts available, as well as links to learn more about `create-react-app`. If these commands weren’t in here, I would recommend that we add them: how to run, build, and test.
+Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Create React App created for us by default. It’s a fairly minimal readme that lists the NPM scripts available, as well as links to learn more about Create React App. If these commands weren’t in here, I would recommend that we add them: how to run, build, and test.
 
 Let’s add a description of the project and link to production, filling in your Netlify domain:
 

@@ -18,7 +18,7 @@ We'll do all our work from this feature on a branch. Create a new one:
 $ git checkout -b list-restaurants
 ```
 
-To get a clean start, let's delete out the sample content `create-react-app` created with our app. Delete the following files and folders
+To get a clean start, let's delete out the sample content Create React App created with our app. Delete the following files and folders
 
 - `src/App.css`
 - `src/App.test.js`
