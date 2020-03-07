@@ -259,7 +259,7 @@ Save the file and now we get this test error:
 
 ```sh
 Error: Not implemented: HTMLFormElement.prototype.submit
-    at module.exports (/Users/josh/apps/agilefrontend/vue/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at module.exports (/Users/josh/apps/agilefrontend/react/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
 ```
 
 This is because the HTML form is attempting to submit using the default browser mechanism. By default, HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
