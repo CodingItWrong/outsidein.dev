@@ -8,7 +8,7 @@ In this first chapter, we'll set up our project and process. This won't involve 
 
 - Make a list of our stories to work on
 - Get our development machine dependencies installed
-- Get React installed and running
+- Get Vue installed and running
 - Get linting and autoformatting working
 - Get E2E and component tests running
 - Get our tests running on CI
@@ -140,7 +140,7 @@ Save the file, and these changes should be made for you automatically.
 
 We can update all our files to be formatted this way by running `yarn lint --fix`.
 
-Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. `create-react-app` initializes our app with a git repo, so we can just add the changes:
+Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. Vue CLI initializes our app with a git repo, so we can just add the changes:
 
 ```sh
 $ git add .
