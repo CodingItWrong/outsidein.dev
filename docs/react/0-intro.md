@@ -12,13 +12,15 @@ For a production application you might want a more flexible build tool, like Par
 
 * State Management: [Redux][redux]
 
-Redux has been criticized for being fairly verbose and indirect. I wouldn't necessarily reach for it first on personal
+Redux has been criticized for being fairly verbose and indirect. I wouldn't necessarily reach for it first on personal projects. But it's familiar to a lot of React developers, and provides structure and a way to visualize the data in your app. Also, it works well to demonstrate how to test your data layer.
 
 * State Management Asynchrony: [Redux-Thunk][redux-thunk]
 
+Redux-Thunk is the recommended way to add asynchrony to a Redux data layer.
+
 * HTTP Client: [Axios][axios]
 
-Axios provides a nice simple interface for making web service requests. The browser's built-in fetch() function is close, but still has some repetitive parts. Plus, our E2E Testing tool can't stub backend requests when fetch() is used.
+Axios provides a nice simple interface for making web service requests. The browser's built-in `fetch()` function is close, but still has some repetitive parts. Plus, our E2E Testing tool can't stub backend requests when `fetch()` is used.
 
 * UI Components: [Material-UI][material-ui]
 
@@ -30,7 +32,7 @@ Jest has become an extremely popular test runner in many JavaScript circles, but
 
 * Component Tests: [React Testing Library][react-testing-library]
 
-RTL will help us write component tests. Unlike other options, it executes useEffect hooks, which allows us to test the full functionality of our components. It's also designed around testing the interface instead of the implementation, which will help us write tests that are resistant to change.
+RTL will help us write component tests. Unlike other component testing libraries, RTL executes `useEffect()` hooks, so we'll be able to test the full functionality of our components. It's also designed around testing the interface instead of the implementation, which will help us write tests that are resistant to change.
 
 * E2E Tests: [Cypress][cypress]
 
@@ -42,7 +44,7 @@ GitHub is extremely popular for source control, and now it has a CI service buil
 
 * Deployment: [Netlify][netlify]
 
-For deploying frontend applications there's no service simpler than Netlify. Choose your repo, enter a build command, and your app will be built and deployed. We won't use it in this tutorial, but it's easy to add a custom domain to your app as well, with an automatically-provisioned SSL certificate.
+For deploying frontend applications there's no service simpler than Netlify. Choose your repo, enter a build command, and your app will be built and deployed. We won't use the following feature in this tutorial, but it's easy to add a custom domain to your app as well, with an automatically-provisioned SSL certificate.
 
 [axios]: https://github.com/axios/axios
 [create-react-app]: https://create-react-app.dev/

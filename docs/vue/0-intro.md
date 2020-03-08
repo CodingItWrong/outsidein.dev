@@ -40,7 +40,7 @@ GitHub is extremely popular for source control, and now it has a CI service buil
 
 * Deployment: [Netlify][netlify]
 
-For deploying frontend applications there's no service simpler than Netlify. Choose your repo, enter a build command, and your app will be built and deployed. We won't use it in this tutorial, but it's easy to add a custom domain to your app as well, with an automatically-provisioned SSL certificate.
+For deploying frontend applications there's no service simpler than Netlify. Choose your repo, enter a build command, and your app will be built and deployed. We won't use the following feature in this tutorial, but it's easy to add a custom domain to your app as well, with an automatically-provisioned SSL certificate.
 
 [axios]: https://github.com/axios/axios
 [cypress]: https://www.cypress.io/
