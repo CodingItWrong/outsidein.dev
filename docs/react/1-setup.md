@@ -70,7 +70,11 @@ Open your `package.json` and note the commands we have available:
 - `test` to run unit tests, including React component tests
 - `eject` for if we ever want to move away from Create React App
 
-Let's try it out. Run `yarn start`. Your app should automatically open in your default browser, with a spinning React logo. In the console you'll see something like the following:
+Let's try it out. Run `yarn start`. Your app should automatically open in your default browser, with a spinning React logo.
+
+![React app intro screen](./images/1-1-hello-react.png)
+
+In the console you'll see something like the following:
 
 ```
 Compiled successfully!
@@ -170,6 +174,8 @@ Tests:       1 passed, 1 total
 Snapshots:   0 total
 Time:        1.816s
 Ran all test suites.
+
+Watch Usage: Press w to show more.
 ```
 
 Press ctrl-C to leave the test runner.
@@ -180,14 +186,14 @@ Now we need to install Cypress for end-to-end tests. Run:
 $ yarn add --dev cypress
 ```
 
-When it comples, in your `package.json`, add a new script:
+When it completes, in your `package.json`, add a new script:
 
 ```diff
  "scripts": {
    "start": "react-scripts start",
    "build": "react-scripts build",
    "test": "react-scripts test",
-+  "cypress": "cypress open"
++  "cypress": "cypress open",
    "eject": "react-scripts eject"
  }
 ```
@@ -223,7 +229,13 @@ describe('Smoke Test', () => {
 
 This test will load up the root of our app and confirm it can see the text "Learn React" on it.
 
-Now, back in the Cypress window, you should see the list updated to only contain our `smoke.spec.js` test. Click on it. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is our “Smoke Test” and a series of steps, which should pass. On the right is our app.
+Now, back in the Cypress window, you should see the list updated to only contain our `smoke.spec.js` test.
+
+![Cypress window with smoke test](./images/1-2-cypress-smoke-test.png)
+
+Click on it. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is our “Smoke Test” and a series of steps, which should pass. On the right is our app.
+
+![Cypress window with smoke test](./images/1-3-cypress-smoke-test-run.png)
 
 Add the Cypress tests to git:
 
@@ -236,7 +248,7 @@ $ git commit -m "Set up Cypress E2E tests"
 When Create React App creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
 
 ```sh
-$ git remote add https://github.com/your-user-name/your-repo-name.git
+$ git remote add origin https://github.com/your-user-name/your-repo-name.git
 $ git push --set-upstream origin master
 ```
 
@@ -247,7 +259,7 @@ We’re going to go the opposite route in this guide. We’re going to set up CI
 There are a number of great CI services, including:
 
 * [Travis CI](https://travis-ci.com/)
-* [CircleCI](https://circleci.com/)(
+* [CircleCI](https://circleci.com/)
 * [GitHub Actions](https://github.com/features/actions)
 
 We're going to go with GitHub Actions due to the fact that it's already set up in your GitHub repo.
@@ -291,7 +303,19 @@ $ git push -u origin ci
 
 GitHub will give you a URL to create a pull request. Open it in the browser, and click “Create pull request”.
 
-Notice the yellow “Some checks haven't completed yet” warning, with “Test/Test” under it. That’s our GitHub Action running. Click the “Details” link next to it. You’ll see your unit and E2E tests running. When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you’ll see a green “All checks have passed”. Go ahead and click “Merge pull request”, then “Confirm merge”.
+Notice the yellow “Some checks haven't completed yet” warning, with “Test/Test” under it. That’s our GitHub Action running.
+
+![PR screen with tests running](./images/1-4-pr-screen-with-tests-running.png)
+
+Click the “Details” link next to it. You’ll see your unit and E2E tests running.
+
+![Actions screen with tests running](./images/1-5-actions-screen-with-test-running.png)
+
+When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you’ll see a green “All checks have passed”.
+
+![PR screen with tests passed](./images/1-6-pr-screen-with-tests-passed.png)
+
+Go ahead and click “Merge pull request”, then “Confirm merge”.
 
 In your local project, switch back to `master` and pull down the latest changes that we merged in from the branch:
 
@@ -307,7 +331,7 @@ With this, we can mark off our next task in Trello:
 ## Deployment
 Next we're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
 
-First let's see how a production build works locally. Run `yarn build`. The files are written to a `build` folder in your project. Open it and see the HTML file and JS files. Due to the way the file paths work, you can’t just open the HTML file in the browser, but they’ll work when deployed to a server.
+First let's see how a production build works locally. Run `yarn build`. The files are written to a `build` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can’t just open the HTML file in the browser, but they’ll work when deployed to a server.
 
 There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users.
 
@@ -324,7 +348,7 @@ You will be sent to the Overview page for your new site. In yellow you’ll see 
 
 (Your timestamps will be different depending on how unreasonably early you wake up.)
 
-Click “< Deploys" to go back to the Deploys tab. At the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. For example, mine is https://xenodochial-aryabhata-5985da.netlify.com — click this link. You should get the Learn React page.
+Click “< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. For example, mine is https://xenodochial-aryabhata-5985da.netlify.com — click this link. You should get the Learn React page.
 
 Now let’s rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then “Site settings” button. Under General > Site details > Site information, click “Change site name”. Enter anything you like and click Save. At the top of this screen, under “Settings for”, your site URL appears in gray. Click on it to confirm your new domain works.
 
@@ -340,11 +364,12 @@ Writing down helpful information to help future developers (including yourself) 
 Let’s add a description of the project and link to production, filling in your Netlify domain:
 
 ```diff
- # opinion-ate
++# opinion-ate
 +
 +An app for tracking reviews of dishes at different restaurants.
 +
 +Production: https://your-netlify-domain.netlify.com/
++
  This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ```
 
