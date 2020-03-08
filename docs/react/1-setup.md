@@ -94,7 +94,6 @@ Add this rather lengthy list of packages:
 
 ```sh
 $ yarn add --dev eslint \
-                 babel-eslint \
                  eslint-config-prettier \
                  eslint-plugin-cypress \
                  eslint-plugin-import \
