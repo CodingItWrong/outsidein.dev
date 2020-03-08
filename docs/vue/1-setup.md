@@ -40,15 +40,15 @@ Here are the tools we'll need to install:
 - Recommended editor: VS Code with Vetur extension
 
 ### Node
-Like most frontend build tools, Vue CLI runs on top of Node.js, so you’ll need node installed locally.
+Like most frontend build tools, Vue CLI runs on top of [Node.js](https://nodejs.org/en/), so you’ll need node installed locally.
 
 ### Yarn
-Yarn is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
+[Yarn](https://yarnpkg.com/) is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
 
 If you’d prefer to use `npm`, you can still follow this guide, you’ll just need to replace any `yarn` commands with the equivalent `npm` commands.
 
 ### Vue CLI
-The Vue CLI is a robust tooling layer that allows you to create, run, and build Vue single-page applications. Rather than having to set up your own configuration of a bundler like Webpack, Vue CLI abstracts over it and gives you the settings most applications need.
+[Vue CLI](https://cli.vuejs.org/) is a robust tooling layer that allows you to create, run, and build Vue single-page applications. Rather than having to set up your own configuration of a bundler like Webpack, Vue CLI abstracts over it and gives you the settings most applications need.
 
 Install it:
 
@@ -58,7 +58,7 @@ $ npm install -g @vue/cli
 
 ### VS Code
 
-You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. Visual Studio Code is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly, autocompletion, syntax highlighting, and autoformatting in `.vue` files.
+You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly, autocompletion, syntax highlighting, and autoformatting in `.vue` files.
 
 With this, we can mark off our first task in Trello:
 

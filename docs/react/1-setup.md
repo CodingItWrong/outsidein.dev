@@ -39,12 +39,16 @@ Here are the tools we'll need to install:
 - An editor
 
 ### Node
-We'll be using Create React App as our build tool. Like most frontend build tools, it runs on top of Node.js, so you’ll need node installed locally.
+We'll be using Create React App as our build tool. Like most frontend build tools, it runs on top of [Node.js](https://nodejs.org/en/), so you’ll need node installed locally.
 
 ### Yarn
-Yarn is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
+[Yarn](https://yarnpkg.com/) is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
 
 If you’d prefer to use `npm`, you can still follow this guide, you’ll just need to replace any `yarn` commands with the equivalent `npm` commands.
+
+## An Editor
+
+There are a number of different editors that are good for React development; two popular free ones are [Visual Studio Code](https://code.visualstudio.com/) and [Atom](https://atom.io/).
 
 With this, we can mark off our first task in Trello:
 
