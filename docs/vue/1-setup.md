@@ -4,7 +4,7 @@ title: 1 - Setup
 
 # 1 - Setup
 
-In this first chapter, we'll set up our project and process. This won't involve writing any app-specific functionality. Instead, what we'll:
+In this first chapter, we'll set up our project and process. This won't involve writing any app-specific functionality. Instead, what we'll do is:
 
 - Make a list of our stories to work on
 - Get our development machine dependencies installed
