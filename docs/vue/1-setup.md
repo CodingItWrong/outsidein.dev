@@ -178,7 +178,7 @@ There’s one more mode we can run our Cypress tests in: headless mode. Run `yar
 When Vue CLI creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
 
 ```sh
-$ git remote add https://github.com/your-user-name/your-repo-name.git
+$ git remote add origin https://github.com/your-user-name/your-repo-name.git
 $ git push --set-upstream origin master
 ```
 
@@ -189,7 +189,7 @@ We’re going to go the opposite route in this guide. We’re going to set up CI
 There are a number of great CI services, including:
 
 * [Travis CI](https://travis-ci.com/)
-* [CircleCI](https://circleci.com/)(
+* [CircleCI](https://circleci.com/)
 * [GitHub Actions](https://github.com/features/actions)
 
 We're going to go with GitHub Actions due to the fact that it's already set up in your GitHub repo.
@@ -246,7 +246,7 @@ With this, we can mark off our next task in Trello:
 ## Deployment
 Next we're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
 
-First let's see how a production build works locally. Run `yarn build`. The files are written to a `dist` folder in your project. Open it and see the HTML file and JS files. Due to the way the file paths work, you can’t just open the HTML file in the browser, but they’ll work when deployed to a server.
+First let's see how a production build works locally. Run `yarn build`. The files are written to a `dist` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can’t just open the HTML file in the browser, but they’ll work when deployed to a server.
 
 There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users.
 
@@ -263,7 +263,7 @@ You will be sent to the Overview page for your new site. In yellow you’ll see 
 
 (Your timestamps will be different depending on how unreasonably early you wake up.)
 
-Click “< Deploys" to go back to the Deploys tab. At the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. For example, mine is https://xenodochial-aryabhata-5985da.netlify.com — click this link. You should get the Welcome to Your Vue.js App page.
+Click “< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. For example, mine is https://xenodochial-aryabhata-5985da.netlify.com — click this link. You should get the Learn React page.
 
 Now let’s rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then “Site settings” button. Under General > Site details > Site information, click “Change site name”. Enter anything you like and click Save. At the top of this screen, under “Settings for”, your site URL appears in gray. Click on it to confirm your new domain works.
 
