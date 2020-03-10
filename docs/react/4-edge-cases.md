@@ -477,7 +477,7 @@ Our test fails, as we expect. Let's change the initial `loading` flag:
    switch (action.type) {
 ```
 
-Now our test of the initial state passes, but our test for while loading fails. Previously the way that the app ensured the `loading` flag was set while loading was the fact that it was *initially* set. Now that it's initially cleared, we need to *change* the value when `load` is called. We can do this by adding a new action that is dispatched immediately in the `loadRestaurants` thunk, before the API is called:
+Now our test of the initial state passes, but our test for while loading fails. Previously the way that the app ensured the `loading` flag was set while loading was the fact that it was *initially* set. Now that it's initially cleared, we need to *change* the value when `loadRestaurants` is called. We can do this by adding a new action that is dispatched immediately in the `loadRestaurants` thunk, before the API is called:
 
 ```diff
 +export const START_LOADING = 'START_LOADING';
