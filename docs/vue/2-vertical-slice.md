@@ -4,7 +4,7 @@ title: 2 - Vertical Slice
 
 # 2 - Vertical Slice
 
-In this chapter, we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
+In this chapter, we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple inner red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
 
 Our next story in Trello is:
 
@@ -64,6 +64,7 @@ Go to the [`codingitwrong/agilefrontend-api` project](https://github.com/CodingI
 In the `agilefrontend-api` directory, run the following commands:
 
 ```sh
+$ yarn install
 $ yarn setup
 $ yarn start
 ```
@@ -76,7 +77,7 @@ $ node server.js
 info: serving app on http://127.0.0.1:3333
 ```
 
-Go to `http://localhost:3333/restaurants` in a browser: you should see the following JSON data (formatted differently depending on your browser and extensions, and of course the dates will differ):
+Go to `http://localhost:3333/restaurants` in a browser. You should see the following JSON data (formatted differently depending on your browser and extensions, and of course the dates will differ):
 
 ```json
 [
@@ -99,7 +100,7 @@ So this is the web service endpoint our story will need to connect to. Now, to b
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.**
 
-Create a file `tests/e2e/specs/listing-restaurants.spec.js` and add the following:
+Remove the file `tests/e2e/specs/smoke.spec.js`; we won't need it anymore. In its place, create `tests/e2e/specs/listing-restaurants.spec.js` and add the following:
 
 ```js
 describe('Listing Restaurants', () => {
@@ -127,7 +128,7 @@ describe('Listing Restaurants', () => {
 
 First, we create variables with a few restaurant names, because we'll use them several times.
 
-Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a 404 Not Found status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
+Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a `404 Not Found` status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
 
 Then, we call `cy.route()` to stub a specific backend request; in this case, the `http://localhost:3333/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` and `updated_at` fields, because our app won't be using them.
 
@@ -264,7 +265,7 @@ Because we are writing a unit test, we don't want to connect our component to ou
   });
 ```
 
-We use `jest.fn()` to create a Jest mock function, which will allow us to check that the load action was called. We chain a call to `.mockName()` onto it to make our error messages more readable.
+We use `jest.fn()` to create a Jest mock function, which will allow us to check that the load action was called. We chain a call to `.mockName()` onto it to give our function a name; this will make our error messages more readable.
 
 We also add a `namespaced: true` property because that's typical for store modules. We might have separate modules for users, dishes, etc. and the namespace allows keeping them organized.
 
@@ -393,7 +394,7 @@ Save the component and Jest will rerun our test, but it will fail in the same wa
 
 We define a `mounted()` lifecycle hook (NAME?) to run when the component is first mounted. In it, we call the `this.loadRestaurants()` method on our component, which was mapped to the `restaurants/load` action.
 
-Save the file and, sure enough, our test is green. We've passed our first unit test! Let's commit the unit test and production code that makes it pass in one commit:
+Save the file and Jest will automatically rerun our unit test. Sure enough, our test is green. We've passed our first unit test! Let's commit the unit test and production code that makes it pass in one commit:
 
 ```sh
 $ git add .
@@ -432,10 +433,6 @@ So far it's pretty similar to our previous test. There are just a few difference
 - We pass a `state` property to our restaurants module, which is an object that contains a `records` property. Because the property name is the same as the name of the `records` variable we defined, we just include `records` in the object. Property shorthand means that a `records` property will be defined with the value being the value of our `records` variable.
 - We assign the return value of `mount()` to a variable, `wrapper`, because we'll need it in a moment.
 
-Notice that we **run one expectation per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails.
-
-You may recall that this isn’t what we did in the end-to-end test, though. Generally you should **make _multiple_ assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
-
 Now, instead of running an expectation that `load` was called, we use the `wrapper` to check what is rendered out:
 
 ```diff
@@ -456,6 +453,10 @@ This is little verbose, so let's see what's going on:
 - We call `.text()` to get the text contents of the element.
 - We assign the result of all of that to the variable `firstRestaurantName`.
 - We check that the value of `firstRestaurantName` is "Sushi Place".
+
+Why did we split this unit test out from the first one? There is a common unit testing principle to **check one behavior per test in component tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
+
+You may recall that this isn’t what we did in the end-to-end test, though. Generally you should **check _multiple_ behaviors per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
 
 When we save the file, our test runs, and it's red, as we expect. We get the following error:
 
@@ -603,7 +604,7 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +  });
 ```
 
-Although both of our tests don't need the records state or the wrapper, it's okay to set them up for both tests. This sets up a component in a good default state, so each test can stay focused on what it wants to assert.
+Although not *all* of these variables are needed for *both* tests, it's okay to set them up for both. This sets up a component in a good default state, so each test can stay focused on what it wants to assert.
 
 Now we can remove the duplicated code from the individual tests:
 
@@ -921,7 +922,9 @@ We'll use the popular `axios` library to make our HTTP requests. Add it to your 
 $ yarn add axios
 ```
 
-> One reason to use `axios` is that Cypress's network request mocking doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+::: warning
+One reason to use `axios` is that Cypress's network request mocking doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+:::
 
 Now create an `api.js` file under `src`, and provide the following implementation:
 
@@ -941,9 +944,12 @@ const api = {
 export default api;
 ```
 
-First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We'll provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
+First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
 
-Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** There are a few reasons for this. First, if you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test. Also, some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
+Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** There are a few reasons for this:
+
+- If you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test.
+- Some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
 
 So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
