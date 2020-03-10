@@ -4,7 +4,7 @@ title: 2 - Vertical Slice
 
 # 2 - Vertical Slice
 
-In this chapter, we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
+In this chapter, we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple inner red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
 
 Our next story in Trello is:
 
@@ -81,6 +81,7 @@ Go to the [`codingitwrong/agilefrontend-api` project](https://github.com/CodingI
 In the `agilefrontend-api` directory, run the following commands:
 
 ```sh
+$ yarn install
 $ yarn setup
 $ yarn start
 ```
@@ -93,7 +94,7 @@ $ node server.js
 info: serving app on http://127.0.0.1:3333
 ```
 
-Go to `http://localhost:3333/restaurants` in a browser: you should see the following JSON data (formatted differently depending on your browser and extensions, and of course the dates will differ):
+Go to `http://localhost:3333/restaurants` in a browser. You should see the following JSON data (formatted differently depending on your browser and extensions, and of course the dates will differ):
 
 ```json
 [
@@ -116,7 +117,7 @@ So this is the web service endpoint our story will need to connect to. Now, to b
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.**
 
-Create a file `cypress/integration/listing-restaurants.spec.js` and add the following:
+Remove the file `cypress/integration/smoke.spec.js`; we won't need it anymore. In its place, create `cypress/integration/listing-restaurants.spec.js` and add the following:
 
 ```js
 describe('Listing Restaurants', () => {
@@ -144,7 +145,7 @@ describe('Listing Restaurants', () => {
 
 First, we create variables with a few restaurant names, because we'll use them several times.
 
-Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a 404 Not Found status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
+Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a `404 Not Found` status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
 
 Then, we call `cy.route()` to stub a specific backend request; in this case, the `http://localhost:3333/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` and `updated_at` fields, because our app won't be using them.
 
@@ -154,6 +155,8 @@ After we’ve created our test, the next step in TDD is to **run the test and wa
 
 To run our test, run the app with `yarn start` and leave it running, then, in another terminal, run `yarn cypress`.
 After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
+
+![Cypress test failing](./images/2-1-cypress-red.png)
 
 Let's go ahead and commit this E2E test. Although it won't pass until the end of the branch, committing it now allows us to have focused commits going forward.
 
@@ -204,19 +207,7 @@ If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren
 
 Well, what do we want to do on this screen? For this story, we want to display a restaurant list. But we also have an upcoming story where we want to add new restaurants. Those are two different responsibilities we want this screen to have. So let's create child components for each. For now, we'll just create the restaurant list.
 
-Create a `RestaurantList.js` file in `src/components` and again add the minimal content:
-
-```js
-import React from 'react';
-
-export const RestaurantList = () => <div>RestaurantList</div>;
-
-export default RestaurantList;
-```
-
-We do both a named and default export, because later our default export will be the `RestaurantList` connected to Redux, but we will also want the unconnected component for testing.
-
-Then render that component in `RestaurantScreen`:
+Let's start by writing the code we wish we had again. In `RestaurantScreen.js`:
 
 ```diff
  import React from 'react';
@@ -231,6 +222,18 @@ Then render that component in `RestaurantScreen`:
 
  export default RestaurantScreen;
 ```
+
+Now let's implement that component. Create a `RestaurantList.js` file in `src/components` and again add the minimal content:
+
+```js
+import React from 'react';
+
+export const RestaurantList = () => <div>RestaurantList</div>;
+
+export default RestaurantList;
+```
+
+We do both a named and default export, because later our default export will be the `RestaurantList` connected to Redux, but we will also want the unconnected component for testing.
 
 Now we finally have `RestaurantList` where we'll put our UI for this story. So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. But `RestaurantList` will do more. It needs to:
 
@@ -256,15 +259,15 @@ describe('RestaurantList', () => {
 });
 ```
 
-Because we are writing a unit test, we don't want to connect our component to our real Redux store. Instead, we want to create mock dispatch functions that are passed in the way Redux actions will be; then we can run expectations on those mock functions. Our component will ask our store to load the restaurants, so that means we need a `loadRestaurants` function:
+Because we are writing a unit test, we don't want to connect our component to our real Redux store. Instead, we want to create mock functions that are passed in the way Redux dispatch functions will be; then we can run expectations on those mock functions. Our component will ask our store to load the restaurants, so that means we need a `loadRestaurants` function:
 
 ```diff
    it('loads restaurants on mount', () => {
 +    const loadRestaurants = jest.fn().mockName('loadRestaurants');
-  });
+   });
 ```
 
-We use `jest.fn()` to create a Jest mock function, which will allow us to check that the load action was called. We chain a call to `.mockName()` onto it to make our error messages more readable.
+We use `jest.fn()` to create a Jest mock function, which will allow us to check that the `loadRestaurants` action was called. We chain a call to `.mockName()` onto it to give our function a name; this will make our error messages more readable.
 
 Now, we're ready to render our component:
 
@@ -282,7 +285,7 @@ Now, we're ready to render our component:
 });
 ```
 
-We import the `RestaurantList` component, making sure to use the named import because that will continue to be the unconnected component. Then we use React Testing Library's `render()` function to render it. We pass a few the `loadRestaurants` function as a prop.
+We import the `RestaurantList` component, making sure to use the named import because that will continue to be the unconnected component. Then we use React Testing Library's `render()` function to render it. We pass the `loadRestaurants` function as a prop.
 
 Finally, we're ready to run an expectation to confirm that the component loads restaurants on mount. We just check that our mock function was called:
 
@@ -350,7 +353,7 @@ Now, we run the `loadRestaurants` prop in a `useEffect`:
 
 The dependency array we pass to `useEffect` consists only of `loadRestaurants`, so the effect will run once each time `loadRestaurants` changes. In our test (and in our real application) it will never change, so the effect just runs once when the component mounts.
 
-Save the file and, sure enough, our test is green. We've passed our first unit test! Let's commit the unit test and production code that makes it pass in one commit:
+Save the file and Jest will automatically rerun our unit test. Sure enough, our test is green. We've passed our first unit test! Let's commit the unit test and production code that makes it pass in one commit:
 
 ```sh
 $ git add .
@@ -377,13 +380,9 @@ So far it's pretty similar to our previous test. There are just a few difference
 
 - Instead of a Jest mock function, we set up a `noop` function that does nothing ("no operation").
 - We define a `restaurants ` variable that contains an array of two restaurant objects.
-- We destructure the property `findByText` from the return value of `render()`, because we'll need it in a moment.
+- We destructure the property `queryByText` from the return value of `render()`, because we'll need it in a moment.
 
-Notice that we **run one expectation per test in component tests.** Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails.
-
-You may recall that this isn’t what we did in the end-to-end test, though. Generally you should **make _multiple_ assertions per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
-
-Now, instead of running an expectation that `load` was called, we use the destructured `queryByText` function to check what is rendered out:
+Now, instead of running an expectation that `loadRestaurants` was called, we use the destructured `queryByText` function to check what is rendered out:
 
 ```diff
      const {queryByText} = render(
@@ -396,6 +395,10 @@ Now, instead of running an expectation that `load` was called, we use the destru
 ```
 
 `queryByText` finds an element containing the passed-in text. We pass in the name of each of the two restaurants. If found, `queryByText` returns a reference to the element; if not found, it returns `null`. So, to confirm they are found, we check that return result is *not* null.
+
+Why did we split this unit test out from the first one? There is a common unit testing principle to **check one behavior per test in component tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
+
+You may recall that this isn’t what we did in the end-to-end test, though. Generally you should **check _multiple_ behaviors per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
 
 When we save the file, our test runs, and it's red, as we expect. We get the following error:
 
@@ -435,7 +438,13 @@ So no element with the text "Sushi Place" is found. At this point, we could hard
 When we save the file, our test of the output passes, but now our first test fails:
 
 ```sh
-Error: Uncaught [TypeError: Cannot read property 'map' of undefined]
+● RestaurantList › loads restaurants on mount
+
+  TypeError: Cannot read property 'map' of undefined
+
+     8 |   return (
+     9 |     <ul>
+  > 10 |       {restaurants.map(restaurant => (
 ```
 
 We're `map`ping over the `restaurants`, but in our first test we didn't pass in a `restaurants` prop. Let's update the test to pass in an empty array, since that test doesn't care about the restaurants:
@@ -473,7 +482,7 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +  let context;
 +
 +  beforeEach(() => {
-+    loadRestaurants = jest.fn().mockName('loadRestaurants’);
++    loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
 +    context = render(
 +      <RestaurantList
@@ -486,7 +495,7 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
   it('loads restaurants on mount', () => {
 ```
 
-Although both of our tests don't need the records state, the mock function, or the context, it's okay to set them up for both tests. This sets up a component in a good default state, so each test can stay focused on what it wants to assert.
+Although not *all* of these variables are needed for *both* tests, it's okay to set them up for both. This sets up a component in a good default state, so each test can stay focused on what it wants to assert.
 
 Now we can remove the duplicated code from the individual tests:
 
@@ -526,9 +535,9 @@ Now we can remove the duplicated code from the individual tests:
 Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
 We've now specified the behavior of our `RestaurantList` component, but we haven't yet built out the store.
-You also might notice that our tests don't indicate the relationship between dispatching the `load` action and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship; it just knows about an action and some state items. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `load` action, the restaurants are retrieved from the API and saved in the state.
+You also might notice that our tests don't indicate the relationship between calling the `loadRestaurants` function and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship, it just knows about two props: a function and an array. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `loadRestaurants` action, the restaurants are retrieved from the API and saved in the state.
 
-We’ll organize our Redux store into a child reducer for restaurants, with associated actions. Let's create a test for that child reducer. Under `src`, create a `store` folder, then a `__tests__` folder inside that. Inside it, create a `restaurants.spec.js` file. Add the following structure:
+We’ll organize our Redux code into a child reducer for restaurants, with associated actions. Let's create a test for that child reducer. Under `src`, create a `store` folder, then a `__tests__` folder inside that. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
 ```js
 describe('restaurants', () => {
@@ -602,6 +611,12 @@ Note that we don’t actually need `react-redux` yet because we are testing the 
 Unlike in the full application, we will only pass in the restaurant reducer. The full application may have other reducers, but we are keeping our test narrowed to just the restaurant reducer.
 
 ```diff
++import {createStore, applyMiddleware} from 'redux';
++import thunk from 'redux-thunk';
++import restaurantsReducer from '../restaurants/reducers';
++
+ describe('restaurants', () => {
+...
        const initialState = {
          records: [],
        };
@@ -616,9 +631,14 @@ Unlike in the full application, we will only pass in the restaurant reducer. The
 
 You may not be familiar with the `.withExtraArgument()` method for `redux-thunk`. It allows you to pass an additional argument at setup time that will be available to all thunk functions. This allows us to inject our API. We could also use Jest's module mocking to do this, but this makes the dependency a bit more explicit.
 
-Now that our store is set, we can dispatch the load action, then check the state of the store afterward:
+Now that our store is set, we can dispatch the `loadRestaurants` action, then check the state of the store afterward:
 
 ```diff
+ import restaurantsReducer from '../restaurants/reducers';
++import {loadRestaurants} from '../restaurants/actions';
+
+ describe('restaurants', () => {
+...
          applyMiddleware(thunk.withExtraArgument(api)),
        );
 +
@@ -649,7 +669,7 @@ The tests will automatically rerun, and we get an error that `src/store/restaura
 The next error we get is:
 
 ```sh
- ● restaurants › load action › stores the restaurants
+ ● restaurants › loadRestaurants action › stores the restaurants
 
     Expected the reducer to be a function.
 
@@ -671,7 +691,7 @@ export default () => {};
 Next we get this error:
 
 ```sh
- ● restaurants › load action › stores the restaurants
+ ● restaurants › loadRestaurants action › stores the restaurants
 
     TypeError: (0 , _actions.loadRestaurants) is not a function
 
@@ -690,7 +710,7 @@ export const loadRestaurants = () => {};
 Here’s our next error:
 
 ```sh
- ● restaurants › load action › stores the restaurants
+ ● restaurants › loadRestaurants action › stores the restaurants
 
     Actions must be plain objects. Use custom middleware for async actions.
 
@@ -710,7 +730,7 @@ This error message is a bit misleading. When not doing TDD, you might see this i
 Our next error is this:
 
 ```sh
- ● restaurants › load action › stores the restaurants
+ ● restaurants › loadRestaurants action › stores the restaurants
 
     TypeError: Cannot read property 'records' of undefined
 
@@ -729,7 +749,7 @@ export default () => ({});
 Now our test completes and we get a test failure:
 
 ```sh
- ● restaurants › load action › stores the restaurants
+ ● restaurants › loadRestaurants action › stores the restaurants
 
     expect(received).toEqual(expected) // deep equality
 
@@ -778,7 +798,7 @@ The test now shows the empty array as the received value:
 
 Now we're ready to implement our `loadRestaurants` thunk to retrieve the records from the `api` and dispatch an action to store them.
 
-First, update the `loadActions` thunk:
+First, update the `loadRestaurants` function in `actions.js`:
 
 ```diff
 -export const loadRestaurants = () => () => {};
@@ -788,9 +808,9 @@ First, update the `loadActions` thunk:
 +  api.loadRestaurants().then(records => dispatch(storeRestaurants(records)));
 +};
 +
-+const storeRestaurants = restaurants => ({
++const storeRestaurants = records => ({
 +  type: STORE_RESTAURANTS,
-+  restaurants,
++  records,
 +});
 ```
 
@@ -817,7 +837,7 @@ Save the file and the test failure is the same, because our reducer doesn’t st
  });
 ```
 
-With this, our test passes. Note that our test doesn't know about the `records` reducer or the `STORE_RESTAURANTS` action; it treats them as implementation details. Our test interacts with the store the same way our production code does: dispatches a thunk, then reads a state item.
+With this, our test passes. Note that our test doesn't know about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an async action, then reads a state item.
 
 Our component and store are built; now we just need to build our API. You may be surprised to hear that we aren't going to unit test it at all. Let's look at the implementation, then we'll discuss why.
 
@@ -827,7 +847,9 @@ We'll use the popular `axios` library to make our HTTP requests. Add it to your 
 $ yarn add axios
 ```
 
-> One reason to use `axios` is that Cypress's network request mocking doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+::: warning
+One reason to use `axios` is that Cypress's network request mocking doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+:::
 
 Now create an `api.js` file under `src`, and provide the following implementation:
 
@@ -847,9 +869,12 @@ const api = {
 export default api;
 ```
 
-First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We'll provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
+First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
 
-Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** There are a few reasons for this. First, if you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test. Also, some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
+Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** There are a few reasons for this:
+
+- If you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test.
+- Some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
 
 So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
@@ -896,12 +921,11 @@ Then wire it up in `src/App.js`:
  import RestaurantScreen from './components/RestaurantScreen';
 
  const App = () => (
-   <div>
--    <RestaurantScreen />
-+    <Provider store={store}>
-+      <RestaurantScreen />
-+    </Provider>
-   </div>
+-  <div>
++  <Provider store={store}>
+     <RestaurantScreen />
+-  </div>
++  </Provider>
  );
 ```
 
@@ -928,6 +952,8 @@ Now that Redux is wired up, we also need to connect the `RestaurantList` compone
 
 Go back into the Chrome instance that's running our Cypress test, or re-open it if it's closed.
 Rerun the test. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
+
+![Cypress test passing](./images/2-2-cypress-green.png)
 
 Now let's see our app working against the real backend. Start the API by running `yarn start` in its folder.
 
