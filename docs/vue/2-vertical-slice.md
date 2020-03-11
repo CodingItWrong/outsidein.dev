@@ -18,7 +18,7 @@ We'll do all our work from this feature on a branch. Create a new one:
 $ git checkout -b list-restaurants
 ```
 
-To get a clean start, let's delete out the sample content Vue CLI created with our app. Delete the following files and folders
+To get a clean start, let's delete out the sample content Vue CLI created with our app. Delete the following files and folders:
 
 - `src/assets/`
 - `src/components/HelloWorld.vue`
@@ -100,7 +100,7 @@ So this is the web service endpoint our story will need to connect to. Now, to b
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.**
 
-Remove the file `tests/e2e/specs/smoke.spec.js`; we won't need it anymore. In its place, create `tests/e2e/specs/listing-restaurants.spec.js` and add the following:
+In the `tests/e2e/specs` folder, create a `listing-restaurants.spec.js` file and add the following:
 
 ```js
 describe('Listing Restaurants', () => {
@@ -139,6 +139,8 @@ After we’ve created our test, the next step in TDD is to **run the test and wa
 To run our test, run `yarn test:e2e`.
 After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
 
+![Cypress test failing](./images/2-1-cypress-red.png)
+
 Let's go ahead and commit this E2E test. Although it won't pass until the end of the branch, committing it now allows us to have focused commits going forward.
 
 ```sh
@@ -173,7 +175,7 @@ With outside-in testing, we build the outside first, which in this case is our u
 ```
 
 Next, let's actually create the `RestaurantScreen` component we used here.
-In `src`, create a `components` folder, then inside it create a `RestaurantScreen.vue` file.
+In `src/components/`, create a `RestaurantScreen.vue` file.
 For the moment let's add just enough content to make it a valid component. Add the following:
 
 ```html
@@ -252,7 +254,7 @@ describe('RestaurantList', () => {
 });
 ```
 
-Because we are writing a unit test, we don't want to connect our component to our real Vuex store module. Instead, we want to create a stubbed store module that specifies the interface we want our store module to have, and lets us run expectations on it. Our component will ask our store module to load the restaurants, so that means we need a `load` action in the store module:
+Because we are writing a unit test, we don't want to connect our component to our real Vuex store module. Instead, we want to create a mocked store module that specifies the interface we want our store module to have, and lets us run expectations on it. Our component will ask our store module to load the restaurants, so that means we need a `load` action in the store module:
 
 ```diff
    it('loads restaurants on mount', () => {
@@ -269,7 +271,7 @@ We use `jest.fn()` to create a Jest mock function, which will allow us to check 
 
 We also add a `namespaced: true` property because that's typical for store modules. We might have separate modules for users, dishes, etc. and the namespace allows keeping them organized.
 
-Now we need to set up a real Vuex store with our module:
+Now we need to set up a real Vuex store with our mocked module:
 
 ```diff
 +import Vuex from 'vuex';
@@ -320,8 +322,8 @@ Now, we're ready to mount our component:
      });
 +
 +    mount(RestaurantList, {localVue, store});
-  });
-});
+   });
+ });
 ```
 
 We import the `RestaurantList` component, then use Vue Test Utils' `mount()` function to mount it. We pass a few options to it: the local Vue instance it should use, and the Vuex store it should use.
@@ -373,7 +375,7 @@ To dispatch a Vuex action from a component, first, we use Vuex's `mapActions` fu
 +    loadRestaurants: 'restaurants/load',
 +  }),
  };
-</script>
+ </script>
 ```
 
 We say that we want to take the action `restaurants/load` and expose it to our component with the name `loadRestaurants`. Note that our action name has the namespace of the `restaurants` module, then the action name `load` that we gave it.
@@ -392,7 +394,7 @@ Save the component and Jest will rerun our test, but it will fail in the same wa
  };
 ```
 
-We define a `mounted()` lifecycle hook (NAME?) to run when the component is first mounted. In it, we call the `this.loadRestaurants()` method on our component, which was mapped to the `restaurants/load` action.
+We define a `mounted()` lifecycle hook to run when the component is first mounted. In it, we call the `this.loadRestaurants()` method on our component, which was mapped to the `restaurants/load` action.
 
 Save the file and Jest will automatically rerun our unit test. Sure enough, our test is green. We've passed our first unit test! Let's commit the unit test and production code that makes it pass in one commit:
 
@@ -450,8 +452,7 @@ This is little verbose, so let's see what's going on:
 
 - We call `wrapper.findAll()` to find all the elements matching a CSS selector. The selector we use is `[data-testid='restaurant']`. Test IDs are a helpful way to pull up elements in your tests.
 - There should be two different restaurants displayed, so we get the element of the first one (index zero) by calling `.at(0)`.
-- We call `.text()` to get the text contents of the element.
-- We assign the result of all of that to the variable `firstRestaurantName`.
+- We call `.text()` to get the text contents of the element, and assign it to the variable `firstRestaurantName`.
 - We check that the value of `firstRestaurantName` is "Sushi Place".
 
 Why did we split this unit test out from the first one? There is a common unit testing principle to **check one behavior per test in component tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.

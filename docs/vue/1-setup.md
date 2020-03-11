@@ -73,7 +73,7 @@ $ vue create opinion-ate
 
 You’ll be asked for a preset; choose “Manually select features”.
 
-You'll be prompted with a list of features to choose. Use the spacebar to select:
+You'll be prompted with a list of features to choose. Use the arrow keys and spacebar to select:
 
 * Babel
 * Vuex
@@ -81,15 +81,17 @@ You'll be prompted with a list of features to choose. Use the spacebar to select
 * Unit Testing
 * E2E Testing
 
-Then you'll be given followup questions for some of these. Choose:
+When you're done, press Return. You'll be given followup questions for some of these. Choose:
 
-* `Pick a linter / formatter config`: choose `ESLint + Prettier`. Prettier automatically formats your code when you save the file. Code consistency is a big help for productivity and catching bugs.
+* `Pick a linter / formatter config`: choose `ESLint + Prettier`, then `Lint on save`. Prettier automatically formats your code when you save the file. Code consistency is a big help for productivity and catching bugs.
 * `Pick a unit testing solution:` choose `Jest`. Jest has a lot of features built in.
 * `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. Cypress is built from the ground up for rich frontend applications. The tradeoff, as Vue CLI mentions, is that Cypress 3.x runs only in Chrome. But Cypress 4 has added support for testing in Firefox and MS Edge as well! Vue CLI should be updated to use Cypress 4 soon.
+* `Where do you prefer placing config for Babel, ESLint, etc.?` I choose `In dedicated config files`, but it doesn't make a difference for this tutorial.
+* `Save this as a preset for future projects?` You can enter `N`, we shouldn't need it again.
 
 Vue CLI will start the installation process, and when it completes, your application will be created and ready to use.
 
-Open your `package.json` and note the commands we have available:
+Open your `package.json` and note the scripts we have available:
 
 - `serve` to run the app locally
 - `build` to create a release build of the app
@@ -112,6 +114,8 @@ Let's try it out. Run `yarn serve`. You’ll see something like the following:
 ```
 
 Open the `Local` URL in the browser and you should see a page welcoming you to your Vue.js app.
+
+![Vue app intro screen](./images/1-1-hello-vue.png)
 
 With this, we can mark off our next task in Trello:
 
@@ -168,9 +172,13 @@ Ran all test suites.
 ✨  Done in 4.50s.
 ```
 
-Now we’ll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that we are loading the app and confirming we can see a welcome message. Now run `yarn test:e2e`. You’ll see the Cypress application launch. You’ll see a message that to help you get started Cypress created some example tests, but that’s actually not correct—when Vue CLI sets up Cypress, it sets up a single Vue-related example test instead. Scroll down and click the “OK, got it!” button to dismiss the alert.
+Now we’ll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that we are loading the app and confirming we can see a welcome message. Now run `yarn test:e2e`. You’ll see the Cypress application launch. Its window will show a list of Integration Tests with just one item: `test.js`.
 
-You’ll see a list of Integration Tests with just one item: `test.js`. Click on it. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is “My First Test” and a series of steps, which should pass. On the right is our app.
+![Cypress window with smoke test](./images/1-2-cypress-smoke-test.png)
+
+Click on `test.js`. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is “My First Test” and a series of steps, which should pass. On the right is our app.
+
+![Cypress window with smoke test](./images/1-3-cypress-smoke-test-run.png)
 
 There’s one more mode we can run our Cypress tests in: headless mode. Run `yarn test:e2e --headless`. You’ll see tests run in the console and say in the end that they passed. This runs our whole test suite without a GUI, and will be useful in a moment.
 
@@ -230,7 +238,19 @@ $ git push -u origin ci
 
 GitHub will give you a URL to create a pull request. Open it in the browser, and click “Create pull request”.
 
-Notice the yellow “Some checks haven't completed yet” warning, with “Test/Test” under it. That’s our GitHub Action running. Click the “Details” link next to it. You’ll see your unit and E2E tests running. When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you’ll see a green “All checks have passed”. Go ahead and click “Merge pull request”, then “Confirm merge”.
+Notice the yellow “Some checks haven't completed yet” warning, with “Test/Test” under it. That’s our GitHub Action running.
+
+![PR screen with tests running](./images/1-4-pr-screen-with-tests-running.png)
+
+Click the “Details” link next to it. You’ll see our unit and E2E tests running.
+
+![Actions screen with tests running](./images/1-5-actions-screen-with-test-running.png)
+
+When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you’ll see a green “All checks have passed”.
+
+![PR screen with tests passed](./images/1-6-pr-screen-with-tests-passed.png)
+
+Go ahead and click “Merge pull request”, then “Confirm merge”, then "Delete branch".
 
 In your local project, switch back to `master` and pull down the latest changes that we merged in from the branch:
 
@@ -263,7 +283,7 @@ You will be sent to the Overview page for your new site. In yellow you’ll see 
 
 (Your timestamps will be different depending on how unreasonably early you wake up.)
 
-Click “< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. For example, mine is https://xenodochial-aryabhata-5985da.netlify.com — click this link. You should get the Learn React page.
+Click “< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. (For example, mine is `https://xenodochial-aryabhata-5985da.netlify.com`.) Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
 
 Now let’s rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then “Site settings” button. Under General > Site details > Site information, click “Change site name”. Enter anything you like and click Save. At the top of this screen, under “Settings for”, your site URL appears in gray. Click on it to confirm your new domain works.
 
