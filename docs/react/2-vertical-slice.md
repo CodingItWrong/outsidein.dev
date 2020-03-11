@@ -18,8 +18,9 @@ We'll do all our work from this feature on a branch. Create a new one:
 $ git checkout -b list-restaurants
 ```
 
-To get a clean start, let's delete out the sample content Create React App created with our app. Delete the following files and folders
+To get a clean start, let's delete out the sample content Create React App created with our app. Delete the following files and folders:
 
+- `cypress/integration/smoke.spec.js`
 - `src/App.css`
 - `src/App.test.js`
 - `src/index.css`
@@ -117,7 +118,7 @@ So this is the web service endpoint our story will need to connect to. Now, to b
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.**
 
-Remove the file `cypress/integration/smoke.spec.js`; we won't need it anymore. In its place, create `cypress/integration/listing-restaurants.spec.js` and add the following:
+In the `cypress/integration` folder, create a `listing-restaurants.spec.js` file and add the following:
 
 ```js
 describe('Listing Restaurants', () => {

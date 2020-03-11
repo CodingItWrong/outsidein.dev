@@ -63,7 +63,7 @@ $ npx create-react-app opinion-ate
 
 Create React App will start the installation process, and when it completes, your application will be created and ready to use.
 
-Open your `package.json` and note the commands we have available:
+Open your `package.json` and note the scripts we have available:
 
 - `start` to run the app locally
 - `build` to create a release build of the app
@@ -233,7 +233,7 @@ Now, back in the Cypress window, you should see the list updated to only contain
 
 ![Cypress window with smoke test](./images/1-2-cypress-smoke-test.png)
 
-Click on it. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is our “Smoke Test” and a series of steps, which should pass. On the right is our app.
+Click on `smoke.spec.js`. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is our “Smoke Test” and a series of steps, which should pass. On the right is our app.
 
 ![Cypress window with smoke test](./images/1-3-cypress-smoke-test-run.png)
 
@@ -307,7 +307,7 @@ Notice the yellow “Some checks haven't completed yet” warning, with “Test/
 
 ![PR screen with tests running](./images/1-4-pr-screen-with-tests-running.png)
 
-Click the “Details” link next to it. You’ll see your unit and E2E tests running.
+Click the “Details” link next to it. You’ll see our unit and E2E tests running.
 
 ![Actions screen with tests running](./images/1-5-actions-screen-with-test-running.png)
 
@@ -315,7 +315,7 @@ When they pass, the action will be marked as passed. If you go back to the Conve
 
 ![PR screen with tests passed](./images/1-6-pr-screen-with-tests-passed.png)
 
-Go ahead and click “Merge pull request”, then “Confirm merge”.
+Go ahead and click “Merge pull request”, then “Confirm merge”, then "Delete branch".
 
 In your local project, switch back to `master` and pull down the latest changes that we merged in from the branch:
 
@@ -348,7 +348,7 @@ You will be sent to the Overview page for your new site. In yellow you’ll see 
 
 (Your timestamps will be different depending on how unreasonably early you wake up.)
 
-Click “< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. For example, mine is https://xenodochial-aryabhata-5985da.netlify.com — click this link. You should get the Learn React page.
+Click “< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. (For example, mine is `https://xenodochial-aryabhata-5985da.netlify.com`.) Click the green link in your browser. You should get the Learn React page.
 
 Now let’s rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then “Site settings” button. Under General > Site details > Site information, click “Change site name”. Enter anything you like and click Save. At the top of this screen, under “Settings for”, your site URL appears in gray. Click on it to confirm your new domain works.
 
