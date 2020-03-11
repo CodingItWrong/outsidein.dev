@@ -534,10 +534,163 @@ Now we can remove the duplicated code from the individual tests:
 
 Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
-We've now specified the behavior of our `RestaurantList` component, but we haven't yet built out the store.
-You also might notice that our tests don't indicate the relationship between calling the `loadRestaurants` function and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship, it just knows about two props: a function and an array. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `loadRestaurants` action, the restaurants are retrieved from the API and saved in the state.
+We've now specified the behavior of our `RestaurantList` component, and our unit test is complete. The next step in outside-in TDD is to **step back up to the end-to-end test and see our next failure.** Rerun the test in Chrome and we see:
 
-We’ll organize our Redux code into a child reducer for restaurants, with associated actions. Let's create a test for that child reducer. Under `src`, create a `store` folder, then a `__tests__` folder inside that. Inside it, create a `restaurants.spec.js` file. Add the following structure:
+```sh
+Uncaught Uncaught TypeError: Cannot read property 'map' of undefined
+```
+
+![Cypress failing because map is undefined](./images/2-2-map-undefined.png)
+
+This should make sense from what we just built: we called the `map` function on the `restaurants` array, but in our application code we aren't yet passing a `restaurants` array. How do we want our component to get that array? We want it to be provided by the Redux store. It's time to write the code we wish we had, and hook our restaurant list up to Redux.
+
+Add `redux` and `react-redux` dependencies. We'll go ahead and add `redux-devtools-extension` too:
+
+```sh
+$ yarn add redux react-redux redux-devtools-extension
+```
+
+Next, connect the `RestaurantList` component to the appropriate state. This is what will ultimately fix our Cypress error:
+
+```diff
+ import React, {useEffect} from 'react';
++import {connect} from 'react-redux';
+
+ export const RestaurantList = ({loadRestaurants, restaurants}) => {
+...
+ };
+
++const mapStateToProps = state => ({
++  restaurants: state.restaurants.records,
++});
++
+-export default RestaurantList;
++export default connect(mapStateToProps)(RestaurantList);
+```
+
+If you've used Redux before you know we have more setup steps to do. But let's rerun the E2E test to let it drive us to do so. The error we get is:
+
+```sh
+Uncaught Uncaught Error: Could not find "store" in the context of "Connect(RestaurantList)". Either wrap the root component in a <Provider>, or pass a custom React context provider to <Provider> and the corresponding React context consumer to Connect(RestaurantList) in connect options.
+```
+
+![Cypress error that there is no provided store](./images/2-3-redux-not-hooked-up.png)
+
+This error is because we haven't hooked up our application to a Redux store. Let's do that now:
+
+```diff
+ import React from 'react';
++import {Provider} from 'react-redux';
++import store from './store';
+ import RestaurantScreen from './components/RestaurantScreen';
+
+ const App = () => (
+-  <div>
++  <Provider store={store}>
+     <RestaurantScreen />
+-  </div>
++  </Provider>
+ );
+```
+
+We'll need to define that store as well. Under `src/`, create a `store` folder, then an `index.js` inside it. Add the following contents:
+
+```js
+import {createStore} from 'redux';
+import {devToolsEnhancer} from 'redux-devtools-extension';
+import rootReducer from './reducers';
+
+const store = createStore(
+  rootReducer,
+  devToolsEnhancer(),
+);
+
+export default store;
+```
+
+Now we'll need a root reducer. Create a `src/store/reducers.js` file. Add the following contents:
+
+```js
+import {combineReducers} from 'redux';
+import restaurants from './restaurants/reducers';
+
+export default combineReducers({restaurants});
+```
+
+Right now it’s a bit unnecessary that we're combining a _single_ reducer into a larger one, but this sets our app up for other reducers for the future.
+
+Now we need to create that restaurant reducer. Create a `src/store/restaurants` folder, then a `reducers.js` file inside it. Add the following contents:
+
+```js
+import {combineReducers} from 'redux';
+
+const records = () => [];
+
+export default combineReducers({
+  records,
+});
+```
+
+We go ahead and use `combineReducers` since we will ultimately have multiple restaurant reducers, for values like loading and error flags. For now, we just need the one `records` reducer to fix the E2E test error. We have it return a hard-coded empty array.
+
+This should fix our E2E test error, so rerun the Cypress test. Now we get a new error:
+
+```sh
+Uncaught Uncaught TypeError: loadRestaurants is not a function
+```
+
+![Cypress failure that loadRestaurants is not a function](./images/2-4-redux-action-not-defined.png)
+
+How do we want the `loadRestaurants` function to be provided to the component? We want it to be an asynchronous Redux action. To make that work, it's time to add `redux-thunk`:
+
+```sh
+$ yarn add redux-thunk
+```
+
+Hook it up in `src/store/index.js`:
+
+```diff
+ import {createStore} from 'redux';
++import thunk from 'redux-thunk';
+ import {devToolsEnhancer} from 'redux-devtools-extension';
+ import rootReducer from './reducers';
+
+-const store = createStore(rootReducer, devToolsEnhancer());
++const store = createStore(
++  rootReducer,
++  compose(applyMiddleware(thunk), devToolsEnhancer()),
++);
+
+ export default store;
+```
+
+In `RestaurantList.js`, map the action into the component:
+
+```diff
+ import {connect} from 'react-redux';
++import {loadRestaurants} from '../store/restaurants/actions';
+
+ export const RestaurantList = ({loadRestaurants, restaurants}) => {
+...
+ const mapStateToProps = state => ({
+   restaurants: state.restaurants.records,
+ });
+
++const mapDispatchToProps = {loadRestaurants};
++
+-export default connect(mapStateToProps)(RestaurantList);
++export default connect(mapStateToProps, mapDispatchToProps)(RestaurantList);
+```
+
+Next, we need to add that actions module. In `src/store/restaurants`, create `actions.js`. We want to write the minimal code to fix the current E2E test error, so let's just export a `loadRestaurants` thunk that does nothing:
+
+```js
+export const loadRestaurants = () => () => {};
+```
+
+Rerun the E2E test. We now no longer get any application code errors; instead, we are back to the failure that the text "Sushi Place" is never shown. But we've made progress. Our component is now dispatching the `loadRestaurants` async action, and reading the `restaurants` from the store; our async action just isn't loading those records from the API yet. That's logic we need to implement, and that means it's time to step back down to a unit test, this time for our Redux store.
+
+Under `src/store/`, create a `__tests__` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
 ```js
 describe('restaurants', () => {
@@ -600,15 +753,7 @@ Start with the initial state of the reducer:
      });
 ```
 
-Now we’ll create the store itself. It's time to add the `redux` and `redux-thunk` packages:
-
-```sh
-$ yarn add redux redux-thunk
-```
-
-Note that we don’t actually need `react-redux` yet because we are testing the store in isolation. We’ll add it a bit later, but for now we’ll leave it out to help illustrate that we don't have that dependency yet.
-
-Unlike in the full application, we will only pass in the restaurant reducer. The full application may have other reducers, but we are keeping our test narrowed to just the restaurant reducer.
+Now we’ll create the store itself. Unlike in the full application, we will only pass in the restaurant reducer. The full application may have other reducers, but we are keeping our test narrowed to just the restaurant reducer.
 
 ```diff
 +import {createStore, applyMiddleware} from 'redux';
@@ -629,7 +774,7 @@ Unlike in the full application, we will only pass in the restaurant reducer. The
      });
 ```
 
-You may not be familiar with the `.withExtraArgument()` method for `redux-thunk`. It allows you to pass an additional argument at setup time that will be available to all thunk functions. This allows us to inject our API. We could also use Jest's module mocking to do this, but this makes the dependency a bit more explicit.
+We didn't use the `.withExtraArgument()` method for `redux-thunk` earlier. It allows you to pass an additional argument at setup time that will be available to all thunk functions. This allows us to inject our API. We could also use Jest's module mocking to do this, but this makes the dependency a bit more explicit.
 
 Now that our store is set, we can dispatch the `loadRestaurants` action, then check the state of the store afterward:
 
@@ -648,134 +793,7 @@ Now that our store is set, we can dispatch the `loadRestaurants` action, then ch
      });
 ```
 
-When the test runs, you should see the error:
-
-```sh
- FAIL  src/store/__tests__/restaurants.spec.js
-  ● Test suite failed to run
-
-    Cannot find module '../restaurants/reducers' from 'restaurants.spec.js'
-
-      1 | import {createStore, applyMiddleware} from 'redux';
-      2 | import thunk from 'redux-thunk';
-    > 3 | import restaurantsReducer from '../restaurants/reducers';
-        | ^
-```
-
-The restaurant reducer module we're importing wasn't found. To do just enough to fix the current error, let's create an empty file at `src/store/restaurants/reducers.js`.
-
-The tests will automatically rerun, and we get an error that `src/store/restaurants/actions.js` is also missing. Add that file as an empty file as well.
-
-The next error we get is:
-
-```sh
- ● restaurants › loadRestaurants action › stores the restaurants
-
-    Expected the reducer to be a function.
-
-      20 |       };
-      21 |
-    > 22 |       const store = createStore(
-         |                     ^
-      23 |         restaurantsReducer,
-      24 |         initialState,
-      25 |         applyMiddleware(thunk.withExtraArgument(api)),
-```
-
-So `restaurantsReducer`, the default export from the reducers module, needs to be a function. Let’s make it an empty function:
-
-```js
-export default () => {};
-```
-
-Next we get this error:
-
-```sh
- ● restaurants › loadRestaurants action › stores the restaurants
-
-    TypeError: (0 , _actions.loadRestaurants) is not a function
-
-      26 |       );
-      27 |
-    > 28 |       await store.dispatch(loadRestaurants());
-         |                            ^
-```
-
-Add a named export `loadRestaurants` to `actions.js` that is an empty function as well:
-
-```js
-export const loadRestaurants = () => {};
-```
-
-Here’s our next error:
-
-```sh
- ● restaurants › loadRestaurants action › stores the restaurants
-
-    Actions must be plain objects. Use custom middleware for async actions.
-
-      26 |       );
-      27 |
-    > 28 |       await store.dispatch(loadRestaurants());
-         |                   ^
-```
-
-This error message is a bit misleading. When not doing TDD, you might see this if you have a thunk, but you haven’t yet set up `redux-thunk`. In this case, though, it just means Redux is receiving _something_ that isn't an action object. In our case, the return value of `loadRestaurants()` is undefined, and that's not a valid action. The fix is to set up `loadRestaurants()` as a real thunk, returning another function. We'll leave that function empty too, though:
-
-```diff
--export const loadRestaurants = () => {};
-+export const loadRestaurants = () => () => {};
-```
-
-Our next error is this:
-
-```sh
- ● restaurants › loadRestaurants action › stores the restaurants
-
-    TypeError: Cannot read property 'records' of undefined
-
-      28 |       await store.dispatch(loadRestaurants());
-      29 |
-    > 30 |       expect(store.getState().records).toEqual(records);
-         |              ^
-```
-
-The store state is undefined. This is because our reducer is an empty function, so it returns undefined as well. Let’s set it to always return an empty object:
-
-```diff
-export default () => ({});
-```
-
-Now our test completes and we get a test failure:
-
-```sh
- ● restaurants › loadRestaurants action › stores the restaurants
-
-    expect(received).toEqual(expected) // deep equality
-
-    Expected: [{"id": 1, "name": "Sushi Place"}, {"id": 2, "name": "Pizza Place"}]
-    Received: undefined
-
-      28 |       await store.dispatch(loadRestaurants());
-      29 |
-    > 30 |       expect(store.getState().records).toEqual(records);
-         |                                        ^
-```
-
-The `records` state property is undefined, because our module’s reducer just returns an empty object. To begin to fix this, let’s create a `records` reducer, then have the default export be a combined reducer:
-
-```diff
--export default () => ({});
-+import {combineReducers} from 'redux';
-+
-+const records = () => [];
-+
-+export default combineReducers({
-+  records,
-+});
-```
-
-The test now shows the empty array as the received value:
+The test fails, showing an empty array as the received value:
 
 ```sh
     expect(received).toEqual(expected) // deep equality
@@ -839,6 +857,16 @@ Save the file and the test failure is the same, because our reducer doesn’t st
 
 With this, our test passes. Note that our test doesn't know about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an async action, then reads a state item.
 
+Now that our unit test is passing, it's time to step back up to the E2E test. It fails with a new error:
+
+```sh
+Uncaught Uncaught TypeError: Cannot read property 'loadRestaurants' of undefined
+```
+
+Scroll down in the application window and you'll see that it's actually the `api.loadRestaurants()` method call that's undefined:
+
+![Cypress failure showing loadRestaurants property on undefined](./images/2-5-api-load-restaurants-undefined.png)
+
 Our component and store are built; now we just need to build our API. You may be surprised to hear that we aren't going to unit test it at all. Let's look at the implementation, then we'll discuss why.
 
 We'll use the popular `axios` library to make our HTTP requests. Add it to your project:
@@ -878,82 +906,22 @@ Now, why aren't we unit testing this API? We could set it up to pass in a fake A
 
 So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
-With all that said, we're ready to wire up our store module and API to see if it all works. Create a `reducers.js` file in `src/store`, and set up a root reducer:
-
-```js
-import {combineReducers} from 'redux';
-import restaurants from './restaurants/reducers';
-
-export default combineReducers({restaurants});
-```
-
-Right now it’s a bit unnecessary that we're combining a _single_ reducer into a larger one, but this sets our app up for other reducers for the future.
-
-We’re ready for `react-redux` and `redux-devtools-extension` now:
-
-```sh
-$ yarn add react-redux redux-devtools-extension
-```
-
-Next, create a `src/store/index.js` file to create the store itself:
-
-```js
-import {createStore, applyMiddleware, compose} from 'redux';
-import {devToolsEnhancer} from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
-import api from '../api';
-
-const store = createStore(
-  rootReducer,
-  compose(applyMiddleware(thunk.withExtraArgument(api)), devToolsEnhancer()),
-);
-
-export default store;
-```
-
-Then wire it up in `src/App.js`:
+With all that said, we're ready to wire up our API to our store to see if it all works. Update `src/store/index.js`:
 
 ```diff
- import React from 'react';
-+import {Provider} from 'react-redux';
-+import store from './store';
- import RestaurantScreen from './components/RestaurantScreen';
+ import rootReducer from './reducers';
++import api from '../api';
 
- const App = () => (
--  <div>
-+  <Provider store={store}>
-     <RestaurantScreen />
--  </div>
-+  </Provider>
+ const store = createStore(
+   rootReducer,
+-  compose(applyMiddleware(thunk), devToolsEnhancer()),
++  compose(applyMiddleware(thunk.withExtraArgument(api)), devToolsEnhancer()),
  );
 ```
 
-Now that Redux is wired up, we also need to connect the `RestaurantList` component to the appropriate state and actions:
+Rerun the E2E test one more time. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
 
-```diff
- import React, {useEffect} from 'react';
-+import {connect} from 'react-redux';
-+import {loadRestaurants} from '../store/restaurants/actions';
-
- export const RestaurantList = ({loadRestaurants, restaurants}) => {
-...
- };
-
-+const mapStateToProps = state => ({
-+  restaurants: state.restaurants.records,
-+});
-+
-+const mapDispatchToProps = {loadRestaurants};
-+
--export default RestaurantList;
-+export default connect(mapStateToProps, mapDispatchToProps)(RestaurantList);
-```
-
-Go back into the Chrome instance that's running our Cypress test, or re-open it if it's closed.
-Rerun the test. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
-
-![Cypress test passing](./images/2-2-cypress-green.png)
+![Cypress test passing](./images/2-6-cypress-green.png)
 
 Now let's see our app working against the real backend. Start the API by running `yarn start` in its folder.
 
