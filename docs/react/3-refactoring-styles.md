@@ -38,6 +38,12 @@ In another terminal, run `yarn start`, and in a third, run `yarn cypress`. Click
 Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
 We're going to use Material-UI, a popular React component library that follows Google's Material design.
 
+Create a new branch for this story:
+
+```sh
+$ git co -b material-design
+```
+
 Install Material-UI and some related packages:
 
 ```sh
