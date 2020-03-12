@@ -10,7 +10,11 @@ Our next story in Trello is:
 
 - [ ] Style App with Material Design
 
-And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design. But one of the benefits of the thorough test suite that TDD provides is that you can make changes to the look and feel of your app with confidence that the functionality still works.
+And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design:
+
+![App with little visual design](./images/2-5-app-with-real-api.png)
+
+But one of the benefits of the thorough test suite that TDD provides is that you can make changes to the look and feel of your app with confidence that the functionality still works.
 
 First, let's confirm our tests are passing. Run `yarn test:unit --watch`. You may get the message:
 
@@ -34,7 +38,13 @@ In another terminal, run `yarn test:e2e`. Click `listing-restaurants.spec.js` an
 Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
 We're going to use Vuetify, a popular Vue component library that follows Google's Material design.
 
-Install Vuetify with the Vue CLI:
+Create a new branch for this story:
+
+```sh
+$ git co -b material-design
+```
+
+Next, install Vuetify with the Vue CLI:
 
 ```sh
 $ vue add vuetify
@@ -42,13 +52,21 @@ $ vue add vuetify
 
 You'll be prompted to choose a preset: choose `Default (recommended)`.
 
-When the process finishes, Vuetify is set and ready to go. But if you stop and restart `yarn test:e2e`, or just run your app, you'll notice you see something different: a "Welcome to Vuetify" screen. And your E2E test will no longer pass. This welcome screen is helpful for instructions and to get an example of Vuetify components in action. But in our case this tutorial will walk you through it. To get back to our functioning app, run:
+When the installation finishes, Vuetify is set and ready to go. But if you stop and restart `yarn test:e2e` or your app, you'll notice you see something different: a "Welcome to Vuetify" screen.
 
-```
+![Welcome to Vuetify screen](./images/3-1-welcome-to-vuetify.png)
+
+And your E2E test will no longer pass. This welcome screen is helpful for instructions and to get an example of Vuetify components in action. But in our case this tutorial will walk you through it. To get back to our functioning app, run:
+
+```sh
 $ git checkout -- src/App.vue
 ```
 
-This will restore `App.vue` to the state we had it in before.
+This will restore `App.vue` to the state we had it in before. There are a few other files the installer added that we won't need either; remove them:
+
+```sh
+$ rm -r src/assets src/components/HelloWorld.vue
+```
 
 Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
 
@@ -74,7 +92,9 @@ In `App.vue`, keep the `<RestaurantScreen />` component but wrap it with differe
 
 Notice that Vuetify components all start with a `v-` prefix. We also don't have to import them into our file, as we do with our custom components. The assumption is that Vuetify components will be used *a lot* throughout your app, so this avoids having to do lots of imports.
 
-Rerun the E2E test. They still pass, but notice we have a nice teal toolbar, and there's some padding on the left and right on the content area.
+Rerun the E2E test. They still pass, and notice we now have a nice teal toolbar, and there's some padding on the left and right on the content area.
+
+![App styled with Vuetify](./images/3-2-app-styles.png)
 
 Here's what these Vuetify components do to achieve this look:
 
@@ -101,7 +121,11 @@ Next let's style `RestaurantScreen`. A common UI element in Material Design is a
  </template>
 ```
 
-Reload the E2E test and notice there's a box around the content now. Here's what the components do:
+Reload the E2E test and notice there's a box around the content now.
+
+![Card styled with Vuetify](./images/3-3-card-styles.png)
+
+Here's what the components do:
 
 - `v-card` is the wrapper for the card and provides the outline
 - `v-card-title` styles title text correctly for a card
@@ -132,9 +156,14 @@ Finally, let's style the list of the restaurants. Material Design has a list con
  </template>
 ```
 
-Note that we change the wrapping element from a `ul` to a `div`, because its contents are no longer `li` tags. Here's what the components do:
+Note that we change the wrapping element from a `ul` to a `div`, because its contents are no longer `li` tags.
+Rerun the E2E test to see the changes:
 
-- `v-list-item` is the wrapping component for the list item
+![Card styled with Vuetify](./images/3-4-list-styles.png)
+
+Here's what the components do:
+
+- `v-list-item` is the wrapping component for the list item.
 - `v-list-item-content` is for the main content of the list item. If you check the [Vuetify Lists docs](https://vuetifyjs.com/en/components/lists) you'll see that list items can also have icons, avatars, and actions. The `content` is the main text area of a list item.
 - `v-list-item-title` is the primary title in the content area.
 

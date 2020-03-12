@@ -10,7 +10,11 @@ Our next story in Trello is:
 
 - [ ] Style App with Material Design
 
-And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design. But one of the benefits of the thorough test suite that TDD provides is that you can make changes to the look and feel of your app with confidence that the functionality still works.
+And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design:
+
+![App with little visual design](./images/2-7-app-with-real-api.png)
+
+But one of the benefits of the thorough test suite that TDD provides is that you can make changes to the look and feel of your app with confidence that the functionality still works.
 
 First, let's confirm our tests are passing. Run `yarn test`. You may get the message:
 
@@ -56,7 +60,6 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 +import AppBar from '@material-ui/core/AppBar';
 +import Toolbar from '@material-ui/core/Toolbar';
 +import Typography from '@material-ui/core/Typography';
-
 +import Container from '@material-ui/core/Container';
 +import teal from '@material-ui/core/colors/teal';
  import store from './store';
@@ -76,7 +79,6 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 +      <Toolbar>
 +        <Typography variant="h6">Opinion Ate</Typography>
 +      </Toolbar>
-
 +    </AppBar>
      <Provider store={store}>
 -      <RestaurantScreen />
@@ -89,12 +91,14 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
  );
 ```
 
-Rerun the E2E test. They still pass, but notice we have a nice teal toolbar, and there's some padding on the left and right on the content area.
+Rerun the E2E test. They still pass, and notice we now have a nice teal toolbar, and there's some padding on the left and right on the content area.
+
+![App styled with Material-UI](./images/3-1-app-styles.png)
 
 Here's what these Material-UI components do to achieve this look:
 
 - `ThemeProvider` is the root Material-UI component that lets it set up some things that affect your whole app, including taking the `theme`, which sets the `primary` color of the app.
-- `AppBar` is the top title bar.
+- `AppBar` and `Toolbar` together provide the top title bar.
 - `Typography` provides proper styling for the text at certain spots in the app, including in the toolbar. Material-UI components relate to one another like this, so it's always best to check the docs for full examples of what components to nest inside one another.
 - `Container` centers your content horizontally to provide some padding, as well as keeping the content from getting too wide in really wide browser windows.
 
@@ -121,7 +125,11 @@ Next let's style `RestaurantScreen`. A common UI element in Material Design is a
  );
 ```
 
-Reload the E2E test and notice there's a box around the content now. Here's what the components do:
+Reload the E2E test and notice there's a box around the content now.
+
+![Card styled with Material-UI](./images/3-2-card-styles.png)
+
+Here's what the components do:
 
 - `Card` is the wrapper for the card and provides the outline
 - `CardContent` provides appropriate padding around the content area of a card
@@ -130,17 +138,17 @@ Reload the E2E test and notice there's a box around the content now. Here's what
 Finally, let's style the list of the restaurants. Material Design has a list concept that will look nice:
 
 ```diff
- import {loadRestaurants} from '../store/restaurants/actions';
+ import React, {useEffect} from 'react';
+ import {connect} from 'react-redux';
 +import List from '@material-ui/core/List';
 +import ListItem from '@material-ui/core/ListItem';
-
 +import ListItemText from '@material-ui/core/ListItemText';
+ import {loadRestaurants} from '../store/restaurants/actions';
 
  export const RestaurantList = ({loadRestaurants, restaurants}) => {
 ...
    return (
 -    <ul>
-
 +    <List>
        {restaurants.map(restaurant => (
 -        <li key={restaurant.id}>{restaurant.name}</li>
@@ -153,14 +161,17 @@ Finally, let's style the list of the restaurants. Material Design has a list con
    );
 ```
 
+Rerun the E2E test to see the changes:
+
+![Card styled with Material-UI](./images/3-3-list-styles.png)
+
 Here's what the components do:
 
-- `List` wraps a list and provides appropriate outer styling
-- `ListItem` is the wrapping component for the list item
-- `ListItemText` is the primary title in the list item
+- `List` wraps a list and provides appropriate outer styling.
+- `ListItem` is the wrapping component for the list item.
+- `ListItemText` is the primary title in the list item.
 
 Our E2E and unit tests still pass.
-
 We've successfully styled our app relying on the tests to confirm all the functionality still works.
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
