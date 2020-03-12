@@ -856,7 +856,8 @@ Save the file and the test failure is the same, because our reducer doesn’t st
  });
 ```
 
-With this, our test passes. Note that our test doesn't know about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an async action, then reads a state item.
+With this, our test passes.
+Note that our test doesn't know about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an async action, then reads a state item.
 
 Now that our unit test is passing, it's time to step back up to the E2E test. It fails with a new error:
 
