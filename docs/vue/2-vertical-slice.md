@@ -267,7 +267,7 @@ Because we are writing a unit test, we don't want to connect our component to ou
   });
 ```
 
-We use `jest.fn()` to create a Jest mock function, which will allow us to check that the load action was called. We chain a call to `.mockName()` onto it to give our function a name; this will make our error messages more readable.
+We use `jest.fn()` to create a Jest mock function, which will allow us to check that the `load` action was called. We chain a call to `.mockName()` onto it to give our function a name; this will make our error messages more readable.
 
 We also add a `namespaced: true` property because that's typical for store modules. We might have separate modules for users, dishes, etc. and the namespace allows keeping them organized.
 
@@ -658,10 +658,75 @@ Now we can remove the duplicated code from the individual tests:
 
 Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
-We've now specified the behavior of our `RestaurantList` component, but we haven't yet built the store module.
-You also might notice that our tests don't indicate the relationship between dispatching the `load` action and getting back the restaurants to display. That's because the `RestaurantList` doesn't know about that relationship; it just knows about an action and some state items. To get our store module working that way, let's write a unit test for it to specify that when we dispatch the `load` action, the restaurants are retrieved from the API and saved in the state.
+We've now specified the behavior of our `RestaurantList` component, and our unit test is complete. The next step in outside-in TDD is to **step back up to the end-to-end test and see our next failure.** Rerun the test in Chrome and we see the same Cypress failure, but also this error in the console:
 
-Let's create a test for our store module. Under `tests/unit`, create a `store` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
+```
+TypeError: Cannot read property 'records' of undefined
+    at a.restaurants (RestaurantList.vue:25)
+```
+
+![Cypress failing because restaurants is undefined](./images/2-2-restaurants-undefined.png)
+
+The line number guides us to:
+
+```js
+computed: mapState({
+  restaurants: state => state.restaurants.records,
+}),
+```
+
+So what's going wrong is that `state.restaurants` is undefined, so we can't access a `.records` property on it. It's time to write the code we wish we had, and hook our restaurant list up to Vuex.
+
+Open `src/store/index.js` to see the Vuex config that Vue CLI created for us:
+
+```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+  state: {},
+  mutations: {},
+  actions: {},
+  modules: {},
+});
+```
+
+In our component test we decided that we would nest our data inside a `restaurants` store module, so let's use that here:
+
+```diff
+ import Vue from 'vue';
+ import Vuex from 'vuex';
++import restaurants from './restaurants';
+
+ Vue.use(Vuex);
+
+ export default new Vuex.Store({
+-  state: {},
+-  mutations: {},
+-  actions: {},
+-  modules: {},
++  modules: {restaurants},
+ });
+```
+
+Now, let's implement just enough of that module to get past this E2E test error. Create a `src/store/restaurants.js` file and add the following contents:
+
+```js
+const restaurants = {
+  namespaced: true,
+  state: {
+    records: [],
+  },
+};
+
+export default restaurants;
+```
+
+Rerun the E2E test. We now no longer get any application code errors; instead, we are back to the failure that the text "Sushi Place" is never shown. But we've made progress. Our component is now dispatching the `restaurants/load` action, and reading the `restaurants` from the store; our action just doesn't exist yet, to load those records from the API. That's logic we need to implement, and that means it's time to step back down to a unit test, this time for our Redux store.
+
+Under `tests/unit/`, create a `store` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
 ```js
 import Vuex from 'vuex';
@@ -716,7 +781,22 @@ Instead, we'll delegate to an API object that we pass in. Let's design the inter
 
 Giving the `api` object a descriptive `loadRestaurants()` methods seems good. We are stubbing out the API here in the test, so we'll just implement that method to return a Promise that resolves to our hard-coded records.
 
-Now, to set up our `restaurants` store module. Just like in our component test, we'll use a real Vuex.Store instance to test that it all works together. For ease of testing, we can set up our `restaurants.js` file to export a function that takes in the `api`, and returns the store module:
+Now, to set up our `restaurants` store module. Just like in our component test, we'll use a real `Vuex.Store` instance to test that it all works together. For ease of testing, we can change our `restaurants.js` file to export a function that takes in the `api`, and returns the store module object. Make the following changes in `restaurants.js`:
+
+```diff
+-const restaurants = {
++const restaurants = api => ({
+  namespaced: true,
+  state: {
+    records: [],
+  },
+-};
++});
+
+export default restaurants;
+```
+
+Now use it in your test like so:
 
 ```diff
  import Vuex from 'vuex';
@@ -736,7 +816,7 @@ Now, to set up our `restaurants` store module. Just like in our component test, 
      });
 ```
 
-Now that our store is set, we can dispatch the load action, then check the state of the store afterward:
+Now that our store is set, we can dispatch the `load` action, then check the state of the store afterward:
 
 ```diff
        const store = new Vuex.Store({
@@ -755,68 +835,6 @@ When the test runs, you should see the error:
 
 ```sh
  FAIL  tests/unit/store/restaurants.spec.js
-  ● Test suite failed to run
-
-    Configuration error:
-
-    Could not locate module @/store/restaurants mapped as:
-    /Users/josh/apps/agilefrontend/vue/src/store/restaurants.
-```
-
-The `restaurants` module we're importing wasn't found. To do just enough to fix the current error, let's create an empty file at `src/store/restaurants.js`.
-
-The tests will automatically rerun, and we get a different error:
-
-```sh
- FAIL  tests/unit/store/restaurants.spec.js
-  ● restaurants › load action › stores the restaurants
-
-    TypeError: (0 , _restaurants.default) is not a function
-
-      19 |       const store = new Vuex.Store({
-      20 |         modules: {
-    > 21 |           restaurants: restaurants(api),
-         |                        ^
-      22 |         },
-      23 |       });
-```
-
-So we aren't actually exporting a function from `restaurants.js`. Let's do that:
-
-```js
-const restaurants = () => {};
-
-export default restaurants;
-```
-
-The new error:
-
-```sh
- FAIL  tests/unit/store/restaurants.spec.js
-  ● restaurants › load action › stores the restaurants
-
-    TypeError: Cannot read property 'getters' of undefined
-
-      17 |         loadRestaurants: () => Promise.resolve(records),
-      18 |       };
-    > 19 |       const store = new Vuex.Store({
-         |                     ^
-      20 |         modules: {
-      21 |           restaurants: restaurants(api),
-      22 |         },
-```
-
-Vuex is expecting an object to be passed in as the module, but it's getting undefined instead. Let's update our `restaurants` function to return an empty object.
-
-```diff
--const restaurants = () => {};
-+const restaurants = () => ({});
-```
-
-The new error:
-
-```sh
- FAIL  tests/unit/store/restaurants.spec.js
   ● Console
 
     console.error node_modules/vuex/dist/vuex.common.js:422
@@ -826,67 +844,45 @@ The new error:
 So we need to create the action:
 
 ```diff
--const restaurants = () => ({});
-+const restaurants = () => ({
-+  namespaced: true,
+ const restaurants = api => ({
+   namespaced: true,
+   state: {
+     records: [],
+   },
 +  actions: {
 +    load() {},
 +  },
-+});
-```
-
-Note that we need the `namespaced` property here or else the `load` action is not nested under the prefix `restaurants/`.
-
-Now, instead of a configuration error, we get an expectation failure:
-
-```sh
- FAIL  tests/unit/store/restaurants.spec.js
-  ● restaurants › load action › stores the restaurants
-
-    expect(received).toEqual(expected) // deep equality
-
-    Expected: [{"id": 1, "name": "Sushi Place"}, {"id": 2, "name": "Pizza Place"}]
-    Received: undefined
-
-      25 |       await store.dispatch('restaurants/load');
-      26 |
-    > 27 |       expect(store.state.restaurants.records).toEqual(records);
-         |                                               ^
-```
-
-The `restaurants.records` state item is undefined, because we haven't put it there at all. This won't make the expectation pass, but let's set `records` to a default value of an empty array to confirm that our test sees it correctly:
-
-```diff
- const restaurants = () => ({
-   namespaced: true,
-+  state: {
-+    records: [],
-+  },
-   actions: {
-     load() {},
-   },
  });
+
+ export default restaurants;
 ```
 
-The test now shows the empty array as the received value:
+Now the configuration error is gone, and we only get an expectation failure:
 
 ```sh
-    expect(received).toEqual(expected) // deep equality
+FAIL  tests/unit/store/restaurants.spec.js
+ ● restaurants › load action › stores the restaurants
 
-    - Expected
-    + Received
+   expect(received).toEqual(expected) // deep equality
 
-    - Array [
-    -   Object {
-    -     "id": 1,
-    -     "name": "Sushi Place",
-    -   },
-    -   Object {
-    -     "id": 2,
-    -     "name": "Pizza Place",
-    -   },
-    - ]
-    + Array []
+   - Expected
+   + Received
+
+   - Array [
+   -   Object {
+   -     "id": 1,
+   -     "name": "Sushi Place",
+   -   },
+   -   Object {
+   -     "id": 2,
+   -     "name": "Pizza Place",
+   -   },
+   - ]
+   + Array []
+
+     25 |       await store.dispatch('restaurants/load');
+     26 |
+   > 27 |       expect(store.state.restaurants.records).toEqual(records);
 ```
 
 Now we're ready to implement our `load` action to retrieve the records from the `api` and store them using a mutation:
@@ -913,7 +909,27 @@ Now we're ready to implement our `load` action to retrieve the records from the 
 });
 ```
 
-With this, our test passes. Note that our test doesn't know about the `storeRecords` mutation; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an action, then reads a state item.
+With this, our test passes.
+Note that our test doesn't know about the `storeRecords` mutation; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an action, then reads a state item.
+
+Now that our unit test is passing, it's time to step back up to the E2E test. It's still failing on "Sushi Place" not displaying on the page. Surprisingly, there are no console errors to help us figure out what's going wrong. But in this case, what *is* going wrong is we changed the way our store module works to export an initializer function instead of an object. Let's change the way it's used in the store config file to reflect that:
+
+```diff
+ export default new Vuex.Store({
+-  modules: {restaurants},
++  modules: {
++    restaurants: restaurants(),
++  },
+ });
+```
+
+Save the file and rerun the E2E test. Now we get a new console error:
+
+```sh
+TypeError: Cannot read property 'loadRestaurants' of undefined
+```
+
+![Cypress console error showing loadRestaurants property on undefined](./images/2-3-load-restaurants-not-defined.png)
 
 Our component and store are built; now we just need to build our API. You may be surprised to hear that we aren't going to unit test it at all. Let's look at the implementation, then we'll discuss why.
 
@@ -954,29 +970,26 @@ Now, why aren't we unit testing this API? We could set it up to pass in a fake A
 
 So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
-With all that said, we're ready to wire up our store module and API to see if it all works. Make the following changes in `src/store/index.js`.  We can remove the root-level `state`, `mutations`, and `actions`, just filling in the `modules`:
+With all that said, we're ready to wire up our store module and API to see if it all works. Update `src/store/index.js`:
 
 ```diff
- import Vue from 'vue';
- import Vuex from 'vuex';
-+import restaurants from './restaurants';
+ import restaurants from './restaurants';
 +import api from '../api';
 
  Vue.use(Vuex);
 
  export default new Vuex.Store({
--  state: {},
--  mutations: {},
--  actions: {},
--  modules: {},
-+  modules: {
+   modules: {
+-    restaurants: restaurants(),
 +    restaurants: restaurants(api),
-+  },
+   },
  });
 ```
 
 Go back into the Chrome instance that's running our Cypress test, or re-open it if it's closed.
 Rerun the test. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
+
+![Cypress test passing](./images/2-4-cypress-green.png)
 
 Now let's see our app working against the real backend. Start the API by running `yarn start` in its folder.
 
@@ -1002,7 +1015,8 @@ $ vue-cli-service serve
 
 (Your port number may be different if you started the app before the Cypress tests, or if they are not running.)
 
-Now open the URL of your Vue app. You should see the default "Pasta Place" and "Salad Place" records.
+Now open the URL of your Vue app.
+You should see the default "Pasta Place" and "Salad Place" records.
 
 We successfully implemented our first feature with outside-in Test-Driven Development!
 
