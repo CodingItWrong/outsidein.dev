@@ -17,17 +17,17 @@ You could theoretically write an E2E test for this functionality, confirming the
 To prevent this from happening, the Test Pyramid is a concept that recommends writing fewer end-to-end tests and more unit tests. In the case of Outside-In TDD, the way this works is you write E2E tests for the main features of your application, as well as the unit tests to help implement them. Then, for more detailed or edge-case functionality, you only write the unit tests. In our case, the loading indicator and error message can be considered more detailed functionality. So we are still going to TDD it, but only at the unit level.
 
 ## Loading Indicator
-First, the loading indicator. Although we aren't writing an E2E test, we can still start from the "outside" in a sense: our RestaurantList component. Let's write a test of the loading indicator functionality for it.
+First, the loading indicator. Although we aren't writing an E2E test, we can still start from the "outside" in a sense: our `RestaurantList` component. Let's write a test of the loading indicator functionality for it.
 
 Right now in `RestaurantList.spec.js` we are mounting our component in a `beforeEach` block. This has worked so far, but now we need to set up the props slightly differently for different tests. We want a test where a loading flag is set.
 
 To do this, let's refactor our tests for more flexibility.
-First, let's extract all the contents of the `beforeEach` into a new function, called `mountWithProps`:
+First, let's extract all the contents of the `beforeEach` into a new function, called `renderWithProps`:
 
 ```diff
    let context;
 
-+  const mountWithProps = () => {
++  const renderWithProps = () => {
 +    loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
 +    context = render(
@@ -47,35 +47,35 @@ First, let's extract all the contents of the `beforeEach` into a new function, c
 -        restaurants={restaurants}
 -      />,
 -    );
-+    mountWithProps();
++    renderWithProps();
    });
 ```
 
 Save the file and the tests should still pass. When refactoring like this, we want to run the tests after each small step, so that if something breaks we know right away.
 
-Next, let's remove the `beforeEach` block and call `mountWithProps` at the start of each our our tests instead:
+Next, let's remove the `beforeEach` block and call `renderWithProps` at the start of each our our tests instead:
 
 ```diff
 -  beforeEach(() => {
--    mountWithProps();
+-    renderWithProps();
 -  });
 -
    it('loads restaurants on mount', () => {
-+    mountWithProps();
++    renderWithProps();
      expect(loadRestaurants).toHaveBeenCalled();
    });
 
    it('displays the restaurants', () => {
-+    mountWithProps();
++    renderWithProps();
      const {queryByText} = context;
 ```
 
 Save and confirm the tests pass.
 
-As our final refactoring, let's change the `mountWithProps` function to allow passing in the props the component should use, with defaults:
+As our final refactoring, let's change the `renderWithProps` function to allow passing in the props the component should use, with defaults:
 
 ```diff
--  const mountWithProps = () => {
+-  const renderWithProps = () => {
 -    loadRestaurants = jest.fn().mockName('loadRestaurants');
 -
 -    context = render(
@@ -84,7 +84,7 @@ As our final refactoring, let's change the `mountWithProps` function to allow pa
 -        restaurants={restaurants}
 -      />,
 -    );
-+  const mountWithProps = (propOverrides = {}) => {
++  const renderWithProps = (propOverrides = {}) => {
 +    const props = {
 +      loadRestaurants: jest.fn().mockName('loadRestaurants'),
 +      restaurants,
@@ -98,7 +98,7 @@ As our final refactoring, let's change the `mountWithProps` function to allow pa
 
 Here’s what’s going on:
 
-- `mountWithProps` takes an optional `propOverrides` argument.
+- `renderWithProps` takes an optional `propOverrides` argument.
 - We set a `props` variable to an object, providing default values for the `loadRestaurants` and `restaurants` properties, but using the object spread operator to set any passed-in properties, overriding the defaults.
 - Whatever the final value of the `loadRestaurants` property is, we set that in a variable so it can be accessed in the tests.
 - We `render` the component, passing it all the props.
@@ -107,7 +107,7 @@ Now we're ready to write our new test for when the store is in a loading state. 
 
 ```js
   it('displays the loading indicator while loading', () => {
-    mountWithProps({loading: true});
+    renderWithProps({loading: true});
     const {queryByTestId} = context;
     expect(queryByTestId('loading-indicator')).not.toBeNull();
   });
@@ -121,28 +121,21 @@ Sticking with the approach of making the smallest possible change to make the te
 Material-UI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js` with the correct test ID:
 
 ```diff
- import {loadRestaurants} from '../store/restaurants/actions';
+ import ListItemText from '@material-ui/core/ListItemText';
 +import CircularProgress from '@material-ui/core/CircularProgress';
- import List from '@material-ui/core/List';
+ import {loadRestaurants} from '../store/restaurants/actions';
 ...
    return (
--    <List>
--      {restaurants.map(restaurant => (
--        <ListItem key={restaurant.id}>
--          <ListItemText>{restaurant.name}</ListItemText>
--        </ListItem>
--      ))}
--    </List>
 +    <>
 +      <CircularProgress data-testid="loading-indicator" />
-+      <List>
-+        {restaurants.map(restaurant => (
-+          <ListItem key={restaurant.id}>
-+            <ListItemText>{restaurant.name}</ListItemText>
-+          </ListItem>
+       <List>
+         {restaurants.map(restaurant => (
+           <ListItem key={restaurant.id}>
+             <ListItemText>{restaurant.name}</ListItemText>
+           </ListItem>
 
-+        ))}
-+      </List>
+         ))}
+       </List>
 +    </>
    );
 ```
@@ -157,7 +150,7 @@ In our case, we *also* need a test to confirm that the conditional is *not* show
 
 ```js
   it('does not display a loading indicator while not loading', () => {
-    mountWithProps({loading: false});
+    renderWithProps({loading: false});
     const {queryByTestId} = context;
     expect(queryByTestId('loading-indicator')).toBeNull();
   });
@@ -190,7 +183,7 @@ describe('when loading succeeds', () => {
 
 Save and confirm the tests still pass.
 
-Now, we pass `loading: false` to the store, but conceptually that's the default state of the store. Let's set up `mountWithProps` to pass that as a default prop:
+Now, for the "does not display a loading indicator" test, we pass `loading: false` to the store. But conceptually that's the default state of the store, so let's set up `renderWithProps` to pass that as a default prop:
 
 ```diff
      const props = {
@@ -205,32 +198,32 @@ Now we don't need to pass a prop override in the test of the loading indicator h
 
 ```diff
      it('does not display the loading indicator while not loading', () => {
--      mountWithProps({loading: false});
-+      mountWithProps();
+-      renderWithProps({loading: false});
++      renderWithProps();
 ```
 
-Now our two "when loading succeeds" tests have the same call to `mountWithProps()`. It's small, so we could leave it in the individual tests. But we could also pull it out to a `beforeEach`. Let's do that now:
+Now our two "when loading succeeds" tests have the same call to `renderWithProps()`. It's small, so we could leave it in the individual tests. But we could also pull it out to a `beforeEach`. Let's do that now:
 
 ```diff
    describe('when loading succeeds', () => {
--    it('does not display the loading indicator while not loading', () => {
-+    beforeEach(() => {
-       mountWithProps();
-+    });
++     beforeEach(() => {
++       renderWithProps();
++     });
 +
-+    it('does not display the loading indicator while not loading', () => {
+     it('does not display the loading indicator while not loading', () => {
+-      renderWithProps();
        const {queryByTestId} = context;
        expect(queryByTestId('loading-indicator')).toBeNull();
      });
 
      it('displays the restaurants', () => {
--      mountWithProps();
+-      renderWithProps();
        const {queryByText} = context;
 ```
 
 Save and the tests should pass.
 
-Note that we have one more test that calls `mountWithProps()` with no argument: the test that it "loads restaurants on mount."
+Note that we have one more test that calls `renderWithProps()` with no argument: the test that it "loads restaurants on mount."
 Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
 
 Now we need to drive out the loading flag in the store itself.
@@ -278,7 +271,7 @@ Here's what's going on:
 
 - We define a stubbed API with a `loadRestaurants` method that returns a Promise. The function passed to the promise never calls its arguments, so the Promise never resolves or rejects. This is okay, because for this test we want to test what happens *before* the Promise resolves.
 - We set up a store with the restaurants reducer with that API.
-- We dispatch the loadRestaurants action. This time we don't need to `await` it.
+- We dispatch the `loadRestaurants` async action. This time we don't need to `await` it, because we want to check the state immediately upon it returning, *before* it resolves.
 - We check the state of the `loading` flag to confirm that it's `true` after we initiate a load.
 
 Our test fails, as we expect:
@@ -327,7 +320,7 @@ First, the `records` array is never modified by the test, so we can just define 
 +        {id: 2, name: 'Pizza Place'},
 +      ];
 
-      it('stores the restaurants', async () => {
+       it('stores the restaurants', async () => {
 -        const records = [
 -          {id: 1, name: 'Sushi Place'},
 -          {id: 2, name: 'Pizza Place'},
@@ -376,7 +369,7 @@ Finally, we move the code that sets up the `api`, the `store`, and dispatches th
 +          applyMiddleware(thunk.withExtraArgument(api)),
 +        );
 +
-+        await store.dispatch('restaurants/load');
++        await store.dispatch(loadRestaurants());
 +      });
 +
        it('stores the restaurants', async () => {
@@ -448,7 +441,7 @@ Our test fails, as we expect, and now we need to actually clear the loading flag
 Save the file and our test passes.
 
 Is our implementation complete? Well, the `loading` flag starts as `true`.
-Right now we dispatch the `loadRestaurants` action as soon as our app starts, so that's *almost* true. But it makes more sense for the `loadRestaurants` action to actually start the loading.
+Right now we dispatch the `loadRestaurants` action as soon as our app starts, so that's *almost* correct. But it makes more sense for the `loadRestaurants` action to actually start the loading.
 So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
 
 ```js
@@ -521,6 +514,8 @@ Our unit tests are passing, and all we need to do now is hook up the `loading` s
 
 With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our local API is set up with a hard-coded one second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
 
+![Restaurant list with loading spinner](./images/4-1-loading-spinner.png)
+
 Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the data is eventually shown.
 
 ## Error Flag
@@ -533,7 +528,7 @@ Start with the test for the component. We are describing a new situation, when l
 ```js
   describe('when loading fails', () => {
     beforeEach(() => {
-      mountWithProps({loadError: true});
+      renderWithProps({loadError: true});
     });
 
     it('displays the error message', () => {
@@ -567,7 +562,7 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
 ```diff
    describe('when loading succeeds', () => {
      beforeEach(() => {
-       mountWithProps();
+       renderWithProps();
      });
 
      it('does not display the loading indicator while not loading', () => {
