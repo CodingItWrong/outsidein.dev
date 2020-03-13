@@ -277,7 +277,7 @@ Here's what's going on:
 Our test fails, as we expect:
 
 ```sh
- ● restaurants › load action › while loading › sets a loading flag
+ ● restaurants › loadRestaurants action › while loading › sets a loading flag
 
     expect(received).toEqual(expected) // deep equality
 
@@ -545,8 +545,9 @@ Fix it the simplest way possible by hard-coding the error message to show.
 Material-UI’s `lab` package has an `Alert` component that will work well:
 
 ```diff
- import ListItemText from '@material-ui/core/ListItemText';
+ import CircularProgress from '@material-ui/core/CircularProgress';
 +import Alert from '@material-ui/lab/Alert';
+ import {loadRestaurants} from '../store/restaurants/actions';
 
  export const RestaurantList = ({loadRestaurants, restaurants, loading}) => {
 ...
@@ -637,7 +638,7 @@ When we run our test, it fails, but we also get a warning:
 (node:53012) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 2)
 (node:53012) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
  FAIL  src/store/__tests__/restaurants.spec.js
-  ● restaurants › load action › when loading fails › sets an error flag
+  ● restaurants › loadRestaurants action › when loading fails › sets an error flag
 
     expect(received).toEqual(expected) // deep equality
 
@@ -661,7 +662,7 @@ So in addition to our expectation not passing, Jest is warning that we have an u
 This fixes the warning, and now we just have the failing expectation:
 
 ```sh
-  ● restaurants › load action › when loading fails › sets an error flag
+  ● restaurants › loadRestaurants action › when loading fails › sets an error flag
 
     expect(received).toEqual(expected) // deep equality
 
@@ -785,7 +786,7 @@ And in `reducers.js`:
 
 Save the file and all tests should pass.
 
-We also want to make sure that if the restaurant is loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > while loading" group, so extract the setup from the "sets the loading flag" test:
+We also want to make sure that if the restaurants are loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "loadRestaurants action > while loading" group, so extract the setup from the "sets the loading flag" test:
 
 ```diff
      describe('while loading', () => {
@@ -897,7 +898,7 @@ To make it pass, just return `false` from the `loading` reducer upon `RECORD_LOA
  };
 ```
 
-With this, our tests pass. Our code has error state functionality added, and now we just need to wire up our RestaurantList component to our Redux state:
+With this, our tests pass. Our code has error state functionality added, and now we just need to wire up our `RestaurantList` component to our new Redux state value:
 
 ```diff
  const mapStateToProps = state => ({
@@ -907,7 +908,11 @@ With this, our tests pass. Our code has error state functionality added, and now
  });
 ```
 
-We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box. Start the API server again, then reload the page. You should see the loading spinner, then our results.
+We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
+
+![Loading error message](./images/4-2-error-message.png)
+
+Start the API server again, then reload the page. You should see the loading spinner, then our results.
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
