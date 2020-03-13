@@ -341,7 +341,7 @@ Finally, now that the entered text is stored in `name`, we'll pass that as the a
 
 Save the file and the test passes.
 
-We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store module. The restaurants module needs a `create` action that will make the appropriate call to the API, then insert the resulting record into the store. Let's write that test now. Below the "load action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
+We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store module. The store needs a `createRestaurant` action that will make the appropriate call to the API, then insert the resulting record into the store. Let's write that test now. Below the "loadRestaurants action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
 
 ```js
   describe('createRestaurant action', () => {
