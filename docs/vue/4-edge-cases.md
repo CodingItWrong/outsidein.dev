@@ -17,48 +17,53 @@ You could theoretically write an E2E test for this functionality, confirming the
 To prevent this from happening, the Test Pyramid is a concept that recommends writing fewer end-to-end tests and more unit tests. In the case of Outside-In TDD, the way this works is you write E2E tests for the main features of your application, as well as the unit tests to help implement them. Then, for more detailed or edge-case functionality, you only write the unit tests. In our case, the loading indicator and error message can be considered more detailed functionality. So we are still going to TDD it, but only at the unit level.
 
 ## Loading Indicator
-First, the loading indicator. Although we aren't writing an E2E test, we can still start from the "outside" in a sense: our RestaurantList component. Let's write a test of the loading indicator functionality for it.
+First, the loading indicator. Although we aren't writing an E2E test, we can still start from the "outside" in a sense: our `RestaurantList` component. Let's write a test of the loading indicator functionality for it.
 
-Right now in `RestaurantList.spec.js` we are setting up our store in a `beforeEach` block. This has worked so far, but now we need to set up the store slightly differently for different tests. We want a test where a loading flag is set on the restaurants store.
+Right now in `RestaurantList.spec.js` we are setting up our store in a `beforeEach` block. This has worked so far, but now we need to set up the store slightly differently for different tests. We want a test where a loading flag is set in the restaurants store module.
 
 To do this, let's refactor our tests for more flexibility.
-First, let's extract all the contents of the `beforeEach` into a new function, called `mountWithStore`:
+
+First, start the unit tests with `yarn test:unit --watch` and keep them running for the duration of this chapter.
+
+Next, let's extract all the contents of the `beforeEach` into a new function, called `mountWithStore`:
 
 ```diff
-+  const mountWithStore = () => {
-+    restaurantsModule = {
-+      namespaced: true,
-+      state: {records},
-+      actions: {
-+        load: jest.fn().mockName('load'),
-+      },
-+    };
-+    const store = new Vuex.Store({
-+      modules: {
-+        restaurants: restaurantsModule,
-+      },
-+    });
-+
-+    wrapper = mount(RestaurantList, {localVue, store});
- };
+ let restaurantsModule;
+ let wrapper;
 
++const mountWithStore = () => {
++  restaurantsModule = {
++    namespaced: true,
++    state: {records},
++    actions: {
++      load: jest.fn().mockName('load'),
++    },
++  };
++  const store = new Vuex.Store({
++    modules: {
++      restaurants: restaurantsModule,
++    },
++  });
++
++  wrapper = mount(RestaurantList, {localVue, store});
++};
++
  beforeEach(() => {
 +  mountWithStore();
--  const mountWithStore = () => {
--    restaurantsModule = {
--      namespaced: true,
--      state: {records},
--      actions: {
--        load: jest.fn().mockName('load'),
--      },
--    };
--    const store = new Vuex.Store({
--      modules: {
--        restaurants: restaurantsModule,
--      },
--    });
+-  restaurantsModule = {
+-    namespaced: true,
+-    state: {records},
+-    actions: {
+-      load: jest.fn().mockName('load'),
+-    },
+-  };
+-  const store = new Vuex.Store({
+-    modules: {
+-      restaurants: restaurantsModule,
+-    },
+-  });
 -
--    wrapper = mount(RestaurantList, {localVue, store});
+-  wrapper = mount(RestaurantList, {localVue, store});
  });
 ```
 
@@ -86,8 +91,7 @@ Save and confirm the tests pass.
 
 As our final refactoring, let's change the `mountWithStore` function to allow passing in the state the store should use, with a default:
 
-```
-diff
+```diff
 -  const mountWithStore = () => {
 +  const mountWithStore = (state = {records}) => {
      restaurantsModule = {
@@ -117,7 +121,11 @@ Vuetify has a `v-progress-circular` spinner that will work great. Add it to `Res
 
 ```diff
    <div>
-+    <v-progress-circular indeterminate data-testid="loading-indicator" />
++    <v-progress-circular
++      indeterminate
++      color="teal"
++      data-testid="loading-indicator"
++    />
      <v-list-item
 ```
 
@@ -140,12 +148,12 @@ This test fails, of course. And now that we have two tests, this will force us t
 
 ```diff
    <div>
--    <v-progress-circular indeterminate data-testid="loading-indicator" />
-+    <v-progress-circular
+     <v-progress-circular
 +      v-if="loading"
-+      indeterminate
-+      data-testid="loading-indicator"
-+    />
+       indeterminate
+       color="teal"
+       data-testid="loading-indicator"
+     />
      <v-list-item
 ...
    computed: mapState({
@@ -402,7 +410,7 @@ So it would be best if `loading` starts as `false`. We don't just want to make t
   });
 ```
 
-In this case we don't need to pass an `api` to the restaurant at all, because we won't be calling it. We assert that when we first create the store module its loading state is `false`.
+In this case we don't need to pass an `api` to the restaurant module function at all, because we won't be calling it. We assert that when we first create the store module its loading state is `false`.
 
 Our test fails, as we expect. Let's change the initial `loading` flag:
 
@@ -435,6 +443,8 @@ Now our test of the initial state passes, but our test for while loading fails. 
 Save the file, and all our tests pass. We now have a loading flag that starts `false`, is set to `true` when loading begins, and is set back to `false` when loading ends.
 
 With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our local API is set up with a hard-coded one second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
+
+![Restaurant list with loading spinner](./images/4-1-loading-spinner.png)
 
 Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the data is eventually shown.
 
@@ -789,7 +799,13 @@ To make it pass, just set the `loading` state in `recordLoadingError`:
 
 With this, our tests pass.
 
-We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box. Start the API server again, then reload the page. You should see the loading spinner, then our results.
+We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
+
+![Loading error message](./images/4-2-error-message.png)
+
+Start the API server again, then reload the page. You should see the loading spinner, then our results.
+
+Run the E2E test one more time to make sure it's still passing — it should be.
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
