@@ -22,7 +22,10 @@ First, the loading indicator. Although we aren't writing an E2E test, we can sti
 Right now in `RestaurantList.spec.js` we are mounting our component in a `beforeEach` block. This has worked so far, but now we need to set up the props slightly differently for different tests. We want a test where a loading flag is set.
 
 To do this, let's refactor our tests for more flexibility.
-First, let's extract all the contents of the `beforeEach` into a new function, called `renderWithProps`:
+
+First, start the unit tests with `yarn test` and keep them running for the duration of this chapter.
+
+Next, let's extract all the contents of the `beforeEach` into a new function, called `renderWithProps`:
 
 ```diff
    let context;
@@ -149,7 +152,7 @@ No, and here's why: if we add the conditional now, *it's not tested*. Because ou
 In our case, we *also* need a test to confirm that the conditional is *not* shown when *not* loading. Let's add that now:
 
 ```js
-  it('does not display a loading indicator while not loading', () => {
+  it('does not display the loading indicator while not loading', () => {
     renderWithProps({loading: false});
     const {queryByTestId} = context;
     expect(queryByTestId('loading-indicator')).toBeNull();
@@ -183,7 +186,7 @@ describe('when loading succeeds', () => {
 
 Save and confirm the tests still pass.
 
-Now, for the "does not display a loading indicator" test, we pass `loading: false` to the store. But conceptually that's the default state of the store, so let's set up `renderWithProps` to pass that as a default prop:
+Now, for the "does not display the loading indicator" test, we pass `loading: false` to the store. But conceptually that's the default state of the store, so let's set up `renderWithProps` to pass that as a default prop:
 
 ```diff
      const props = {
