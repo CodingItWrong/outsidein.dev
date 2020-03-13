@@ -914,6 +914,8 @@ We've now finished adding the error state. To see it in action, stop your API se
 
 Start the API server again, then reload the page. You should see the loading spinner, then our results.
 
+Run the E2E test one more time to make sure it's still passing — it should be.
+
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] Show Loading and Error States
