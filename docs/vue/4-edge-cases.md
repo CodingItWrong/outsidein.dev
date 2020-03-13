@@ -681,7 +681,7 @@ The test fails. Make it pass while keeping the other tests passing, by setting t
 
 Save the file and all tests should pass.
 
-We also want to make sure that if the restaurant is loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > while loading" group, so extract the setup from the "sets the loading flag" test:
+We also want to make sure that if the restaurants are loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > while loading" group, so extract the setup from the "sets the loading flag" test:
 
 ```diff
      describe('while loading', () => {
