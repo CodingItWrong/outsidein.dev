@@ -70,7 +70,7 @@ Start Cypress with `yarn test:e2e`, then choose the managing restaurants test. I
 
 > CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
 
-We need an "Add Restaurant" text input. What component should it be in? We discussed earlier that RestaurantScreen would hold both the restaurant list and new restaurant form. The text input should live on the New Restaurant Form, so it's time to create that component.
+We need an "Add Restaurant" text input. What component should it be in? We discussed earlier that `RestaurantScreen` would hold both the restaurant list and new restaurant form. The text input should live on the New Restaurant Form, so it's time to create that component.
 Create the file `src/components/NewRestaurantForm.vue`, and add the following:
 
 ```html
@@ -93,7 +93,6 @@ Next, add the form to the `NewRestaurantScreen` component:
 
 ```diff
      <v-card-text>
-       <v-btn>New Restaurant</v-btn>
 +      <NewRestaurantForm />
        <RestaurantList />
      </v-card-text>
@@ -188,7 +187,7 @@ A few notes:
 - We pass an extra option to `mount()` that was not needed for our list test: `attachToDocument: true`. This actually loads the component into the DOM. The reason we need this for this test is so the submit button can trigger the form submission.
 - Because we're attaching the component to the document, we need to call `wrapper.destroy()` afterward to remove the elements from the document again.
 
-Next, let's try to proactively organize our test file. Since we're taking the approach of having one expectation per test, it's likely that we will ultimately have multiple expectations for different situations. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
+Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
 
 ```js
   describe('when filled in', () => {
@@ -406,10 +405,10 @@ We'll circle back to test-drive edge case functionality to the form later, but f
           restaurants: restaurants(api),
         },
       });
-      return store.dispatch('restaurants/create', newRestaurantName);
     });
 
     it('saves the restaurant to the server', () => {
+      store.dispatch('restaurants/create', newRestaurantName);
       expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
     });
   });
@@ -458,7 +457,7 @@ Update the `create` action to call it:
      },
 -    create() {},
 +    create() {
-+      api.createRestaurant()
++      api.createRestaurant();
 +    }
    },
 
@@ -475,12 +474,6 @@ This changes the test failure. Now the method is called, but not with the right 
     Received: called with 0 arguments
 
     Number of calls: 1
-
-      126 |
-      127 |     it('saves the restaurant to the server', () => {
-    > 128 |       expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
-          |                                    ^
-      129 |     });
 ```
 
 Our restaurant name is passed in as the payload of the action, which is the second argument, so we can pass it along to the API method:
@@ -508,11 +501,7 @@ Save the file and the test passes. Now we need to specify one more thing that ha
 
      beforeEach(() => {
        api = {
--        createRestaurant: jest.fn().mockName('createRestaurant'),
-+        createRestaurant: jest
-+          .fn()
-+          .mockName('createRestaurant')
-+          .mockResolvedValue(responseRestaurant),
+         createRestaurant: jest.fn().mockName('createRestaurant'),
        };
        store = new Vuex.Store({
          modules: {
@@ -520,21 +509,27 @@ Save the file and the test passes. Now we need to specify one more thing that ha
 +          restaurants: restaurants(api, {records: [existingRestaurant]}),
          },
        });
-       return store.dispatch('restaurants/create', newRestaurantName);
      });
 ```
 
-This ensures the API call promise resolves, and provides a restaurant record for it. We also add a different restaurant to the pre-existing list of restaurants in the store. Save the file and the tests should still pass.
+This adds a restaurant to the pre-existing list of restaurants in the store. Save the file and the tests should still pass.
 
-Now we're ready to specify that the returned restaurant is added to the store:
+Now we're ready to specify that the returned restaurant is added to the store. Let's add it in a "describe" block:
 
 ```js
-    it('stores the returned restaurant in the store', () => {
-      expect(store.state.restaurants.records).toEqual([
-        existingRestaurant,
-        responseRestaurant,
-      ]);
-    });
+describe('when save succeeds', () => {
+  beforeEach(() => {
+    api.createRestaurant.mockResolvedValue(responseRestaurant);
+    store.dispatch('restaurants/create', newRestaurantName);
+  });
+
+  it('stores the returned restaurant in the store', () => {
+    expect(store.state.restaurants.records).toEqual([
+      existingRestaurant,
+      responseRestaurant,
+    ]);
+  });
+});
 ```
 
 We ensure that the existing restaurant is still in the store, and the restaurant record returned from the server is added after it. Save the file and the test fails:
@@ -557,14 +552,6 @@ We ensure that the existing restaurant is still in the store, and the restaurant
     -     "name": "Sushi Place",
     -   },
       ]
-
-      136 |
-      137 |     it('stores the returned restaurant in the store', () => {
-    > 138 |       expect(store.state.restaurants.records).toEqual([
-          |                                               ^
-      139 |         existingRestaurant,
-      140 |         responseRestaurant,
-      141 |       ]);
 ```
 
 The store only contains the restaurant it was initialized with, not the new one the server returned. Let's update the action to handle the returned value:
@@ -587,6 +574,35 @@ The store only contains the restaurant it was initialized with, not the new one 
 +    },
    },
 ```
+
+This makes our latest test pass, but our previous "saves the restaurant to the server" test now fails:
+
+```sh
+FAIL  tests/unit/store/restaurants.spec.js
+ ● restaurants › create action › saves the restaurant to the server
+
+   TypeError: Cannot read property 'then' of undefined
+
+     20 |     },
+     21 |     create({commit}, newRestaurantName) {
+   > 22 |       api.createRestaurant(newRestaurantName).then(record => {
+        |       ^
+     23 |         commit('addRecord', record);
+     24 |       });
+     25 |     },
+```
+
+Now that we are chaining `.then()` onto the call to `api.createRestaurant()`, our previous test fails because we didn't configure the API method to resolve. Do that:
+
+```diff
+ it('saves the restaurant to the server', () => {
++  api.createRestaurant.mockResolvedValue(responseRestaurant);
+   store.dispatch('restaurants/create', newRestaurantName);
+   expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
+ });
+```
+
+Save and all unit tests pass.
 
 With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The console says:
 
@@ -611,7 +627,7 @@ Now we get another console error:
 TypeError: Cannot read property 'then' of undefined
 ```
 
-But we also get a test failure after a few seconds:
+And we also get a test failure after a few seconds:
 
 > CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
 
@@ -654,6 +670,10 @@ We aren't displaying the restaurant on the page. This is because we aren't yet r
 ```
 
 Rerun the E2E test and it passes, and we see Sushi Place added to the restaurant list. Our feature is complete!
+
+Start the API and your app and try out creating a restaurant for real. Reload the page to make sure it's really saved to the server.
+
+![Restaurant created](./images/5-1-restaurant-created.png)
 
 ## Edge Cases
 Now let's look into those edge cases:
@@ -708,30 +728,32 @@ Make this change in `NewRestaurantForm.vue`:
      },
 ```
 
-Save the file and the test should pass. That was an easy one!
+Save the file and the test should pass. That was an easy one! If you add a new restaurant in the browser, now you'll see the name field cleared out afterward:
 
-REACT GIVES A THEN ERROR HERE; WHY DOESN"T VUE?
+![Name field cleared after submission](./images/5-2-name-field-cleared.png)
 
-Now let's implement the validation error. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
+Now let's implement the validation error when the restaurant name is empty. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
 ```js
-  describe('when empty', () => {
-    beforeEach(() => {
-      wrapper.find('[data-testid="new-restaurant-name-field"]').setValue('');
-      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
-    });
-
-    it('displays a validation error', () => {
-      expect(
-        wrapper.find('[data-testid="new-restaurant-name-error"]').text(),
-      ).toContain('Name is required');
-    });
+describe('when empty', () => {
+  beforeEach(() => {
+    wrapper.find('[data-testid="new-restaurant-name-field"]').setValue('');
+    wrapper
+      .find('[data-testid="new-restaurant-submit-button"]')
+      .trigger('click');
   });
+
+  it('displays a validation error', () => {
+    expect(
+      wrapper.find('[data-testid="new-restaurant-name-error"]').text(),
+    ).toContain('Name is required');
+  });
+});
 ```
 
 We don't actually need the line that sets the value of the text field to the empty string, because right now it starts out empty. But explicitly adding that line make the intention of the test more clear. And that way, if we did decide in the future to start the form out with default text, we would be sure this test scenario still worked. It's a judgment call whether to add it or not.
 
-Save the file and the test fails, because the validation error is not found:
+Save the file and the test fails, because the validation error message is not found:
 
 ```sh
   ● NewRestaurantForm › when empty › displays a validation error
@@ -748,12 +770,11 @@ Save the file and the test fails, because the validation error is not found:
 Let's fix this error in the simplest way possible by adding the validation error unconditionally:
 
 ```diff
-       data-testid="new-restaurant-name-field"
-     />
+   <form @submit.prevent="handleSave">
 +    <v-alert type="error" data-testid="new-restaurant-name-error">
 +      Name is required.
 +    </v-alert>
-     <v-btn
+     <v-text-field
 ```
 
 The tests pass. Now how can we write a test to drive out hiding that validation error in other circumstances? Well, we can check that it's not shown when the form is initially mounted.
@@ -761,13 +782,13 @@ The tests pass. Now how can we write a test to drive out hiding that validation 
 Add a new `describe` above the "when filled in" one:
 
 ```js
-  describe('initially', () => {
-    it('does not display a validation error', () => {
-      expect(
-        wrapper.find('[data-testid="new-restaurant-name-error"]').element,
-      ).not.toBeDefined();
-    });
+describe('initially', () => {
+  it('does not display a validation error', () => {
+    expect(
+      wrapper.find('[data-testid="new-restaurant-name-error"]').element,
+    ).not.toBeDefined();
   });
+});
 ```
 
 The test fails because we are always showing the error right now:
@@ -852,22 +873,26 @@ Save the file and all tests pass.
 Now, is there any other time we would want to hide or show the validation error? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
 
 ```js
-  describe('when correcting a validation error', () => {
-    beforeEach(() => {
-      wrapper.find('[data-testid="new-restaurant-name-field"]').setValue('');
-      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
-      wrapper
-        .find('[data-testid="new-restaurant-name-field"]')
-        .setValue(restaurantName);
-      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
-    });
-
-    it('clears the validation error', () => {
-      expect(
-        wrapper.find('[data-testid="new-restaurant-name-error"]').element,
-      ).not.toBeDefined();
-    });
+describe('when correcting a validation error', () => {
+  beforeEach(() => {
+    wrapper.find('[data-testid="new-restaurant-name-field"]').setValue('');
+    wrapper
+      .find('[data-testid="new-restaurant-submit-button"]')
+      .trigger('click');
+    wrapper
+      .find('[data-testid="new-restaurant-name-field"]')
+      .setValue(restaurantName);
+    wrapper
+      .find('[data-testid="new-restaurant-submit-button"]')
+      .trigger('click');
   });
+
+  it('clears the validation error', () => {
+    expect(
+      wrapper.find('[data-testid="new-restaurant-name-error"]').element,
+    ).not.toBeDefined();
+  });
+});
 ```
 
 Note that we repeat both sets of `beforeEach` steps from the other groups, submitting the empty form and then submitting the filled-in one. We want our unit tests to be independent, so they can be run without depending on the result of other tests. If this repeated code got too tedious we could extract it to helper functions that we could call in each `describe` block.
@@ -917,9 +942,9 @@ Save and the tests should still pass.
 Now we can handle the other expectation for when we submit an empty form: it should not dispatch the action to save the restaurant to the server. Add a new test in the "when empty" `describe` block:
 
 ```js
-    it('does not dispatch the create action', () => {
-      expect(restaurantsModule.actions.create).not.toHaveBeenCalled();
-    });
+it('does not dispatch the create action', () => {
+  expect(restaurantsModule.actions.create).not.toHaveBeenCalled();
+});
 ```
 
 We can fix this error by moving the call to `this.createRestaurant()` inside the true branch of the conditional:
@@ -941,29 +966,33 @@ We can fix this error by moving the call to `this.createRestaurant()` inside the
     },
 ```
 
-Save the file and the test passes.
+Save the file and the test passes. If you try to submit the form with an empty restaurant name in the browser, you'll see:
 
-Our third exception case is when the web service call fails. We want to display a validation error.
+![Name is required error](./images/5-3-validation-error.png)
 
-Since this is a new situation, let's set this up as yet another new `describe` block:
+Our third exception case is when the web service call fails. We want to display a server error.
+
+Since this is a new situation, let's set this up as yet another new `describe` block in `NewRestaurantForm.spec.js`:
 
 ```js
-  describe('when the store action rejects', () => {
-    beforeEach(() => {
-      restaurantsModule.actions.create.mockRejectedValue();
+describe('when the store action rejects', () => {
+  beforeEach(() => {
+    restaurantsModule.actions.create.mockRejectedValue();
 
-      wrapper
-        .find('[data-testid="new-restaurant-name-field"]')
-        .setValue(restaurantName);
-      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
-    });
-
-    it('displays a server error', () => {
-      expect(wrapper.find('[data-testid="new-restaurant-server-error"]').text()).toContain(
-        'The restaurant could not be saved. Please try again.',
-      );
-    });
+    wrapper
+      .find('[data-testid="new-restaurant-name-field"]')
+      .setValue(restaurantName);
+    wrapper
+      .find('[data-testid="new-restaurant-submit-button"]')
+      .trigger('click');
   });
+
+  it('displays a server error', () => {
+    expect(
+      wrapper.find('[data-testid="new-restaurant-server-error"]').text(),
+    ).toContain('The restaurant could not be saved. Please try again.');
+  });
+});
 ```
 
 This is the same as the successful submission case, but in the setup we call the `mockRejectedValue()` method of the mock function `restaurantsModule.actions.create`. This means that when this function is called, it will reject. In our case we don't actually care about what error it rejects with, so we don't have to provide a rejected value.
@@ -1002,22 +1031,21 @@ Save and the promise warning goes away, leaving us with just the expectation fai
 As usual, we'll first solve this by hard-coding the element into the component:
 
 ```diff
-       data-testid="new-restaurant-name-field"
-     />
+     </v-alert>
 +    <v-alert type="error" data-testid="new-restaurant-server-error">
 +      The restaurant could not be saved. Please try again.
 +    </v-alert>
-     <v-alert
+     <v-text-field
 ```
 
 Save and the test passes. Now, when do we want that message to *not* show? For one thing, when the component initially mounts. Add another test to the "initially" describe block:
 
 ```js
-    it('does not display a server error', () => {
-      expect(
-        wrapper.find('[data-testid="new-restaurant-server-error"]').element,
-      ).not.toBeDefined();
-    });
+it('does not display a server error', () => {
+  expect(
+    wrapper.find('[data-testid="new-restaurant-server-error"]').element,
+  ).not.toBeDefined();
+});
 ```
 
 Save and the test fails:
@@ -1040,10 +1068,13 @@ Save and the test fails:
 We'll add another flag to the data to track whether the error should show, starting hidden, and shown if the store action rejects:
 
 ```diff
-       data-testid="new-restaurant-name-field"
-     />
+     </v-alert>
 -    <v-alert type="error" data-testid="new-restaurant-server-error">
-+    <v-alert v-if="serverError" type="error" data-testid="new-restaurant-server-error">
++    <v-alert
++      v-if="serverError"
++      type="error"
++      data-testid="new-restaurant-server-error"
++    >
        The restaurant could not be saved. Please try again.
      </v-alert>
 ...
@@ -1067,14 +1098,14 @@ We'll add another flag to the data to track whether the error should show, start
 
 Save and the tests pass.
 
-Let's also write a test to confirm that the server is not shown after the server request returns successfully. In the "when filled in" describe block, add an identical test:
+Let's also write a test to confirm that the server error is not shown after the server request returns successfully. In the "when filled in" describe block, add an identical test:
 
 ```js
-    it('does not display a server error', () => {
-      expect(
-        wrapper.find('[data-testid="new-restaurant-server-error"]').element,
-      ).not.toBeDefined();
-    });
+it('does not display a server error', () => {
+  expect(
+    wrapper.find('[data-testid="new-restaurant-server-error"]').element,
+  ).not.toBeDefined();
+});
 ```
 
 Save and the test passes. This is another instance where the test doesn't drive new behavior, but it's helpful for extra assurance that the code is behaving the way we expect.
@@ -1082,25 +1113,29 @@ Save and the test passes. This is another instance where the test doesn't drive 
 We also want to hide the server error message each time we retry saving the form. This is a new situation, so let's create a new `describe` block for it:
 
 ```js
-  describe('when retrying after a server error', () => {
-    beforeEach(() => {
-      restaurantsModule.actions.create
-        .mockRejectedValueOnce()
-        .mockResolvedValueOnce();
+describe('when retrying after a server error', () => {
+  beforeEach(() => {
+    restaurantsModule.actions.create
+      .mockRejectedValueOnce()
+      .mockResolvedValueOnce();
 
-      wrapper
-        .find('[data-testid="new-restaurant-name-field"]')
-        .setValue('Sushi Place');
-      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
-      wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
-    });
-
-    it('clears the server error', () => {
-      expect(
-        wrapper.find('[data-testid="new-restaurant-server-error"]').element,
-      ).not.toBeDefined();
-    });
+    wrapper
+      .find('[data-testid="new-restaurant-name-field"]')
+      .setValue('Sushi Place');
+    wrapper
+      .find('[data-testid="new-restaurant-submit-button"]')
+      .trigger('click');
+    wrapper
+      .find('[data-testid="new-restaurant-submit-button"]')
+      .trigger('click');
   });
+
+  it('clears the server error', () => {
+    expect(
+      wrapper.find('[data-testid="new-restaurant-server-error"]').element,
+    ).not.toBeDefined();
+  });
+});
 ```
 
 Save the file and you'll get the expected test failure:
@@ -1133,7 +1168,7 @@ We should be able to make this test pass by just clearing the `serverError` flag
          this.createRestaurant(this.name)
 ```
 
-Save the file, but surprisingly, the test failure doesn't change! Why is that? It took me a little digging to find out, but it turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.
+Save the file, but surprisingly, the test failure doesn't change! Why is that? It turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.
 
 There are a few ways to do this in Vue tests; one simple one is to use the `flush-promises` npm package. Add it to your project:
 
@@ -1158,9 +1193,13 @@ Then add it to your test:
        wrapper
          .find('[data-testid="new-restaurant-name-field"]')
          .setValue('Sushi Place');
-       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
+       wrapper
+        .find('[data-testid="new-restaurant-submit-button"]')
+        .trigger('click');
 +      await flushPromises();
-       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
+       wrapper
+        .find('[data-testid="new-restaurant-submit-button"]')
+        .trigger('click');
     });
 ```
 
@@ -1168,36 +1207,110 @@ Note that we need to make the `beforeEach` function `async`, so we can `await` t
 
 Save and the test should pass.
 
-Now we have just one more test to make: that the restaurant name is not cleared when the server rejects. This should already be working because of how we implemented the code, but it would be frustrating for the user if they lost their data, so this is an especially important case to test. Add another expectation to the "when the store action rejects" `describe` block:
+There's one more circumstance we need to clear the server error: if a validation error occurs. Add this test to the "when empty" describe block:
 
 ```js
-    it('does not clear the name', () => {
-      expect(
-        wrapper.find('[data-testid="new-restaurant-name-field"]').element.value,
-      ).toEqual(restaurantName);
-    });
+it('clears a server error', () => {
+  expect(
+    wrapper.find('[data-testid="new-restaurant-server-error"]').element,
+  ).not.toBeDefined();
+});
+```
+
+Now we have just one more component test to make: that the restaurant name is not cleared when the server rejects. This should already be working because of how we implemented the code, but it would be frustrating for the user if they lost their data, so this is an especially important case to test. Add another expectation to the "when the store action rejects" `describe` block:
+
+```js
+it('does not clear the name', () => {
+  expect(
+    wrapper.find('[data-testid="new-restaurant-name-field"]').element.value,
+  ).toEqual(restaurantName);
+});
 ```
 
 Save and the test passes, confirming that the user's data is safe.
+
+We have a little bit to unit test in the store as well: `NewRestaurantForm` is relying on the `create` action returning a promise that resolves or rejects depending on whether the server request succeeds or fails. To test this, first let's add a test to the "when save succeeds" block:
+
+```diff
+ describe('create action', () => {
+...
+   let api;
+   let store;
++  let promise;
+
+   beforeEach(() => {
+...
+   describe('when save succeeds', () => {
+     beforeEach(() => {
+       api.createRestaurant.mockResolvedValue(responseRestaurant);
+-      store.dispatch('restaurants/create', newRestaurantName);
++      promise = store.dispatch('restaurants/create', newRestaurantName);
+    });
+
+     it('stores the returned restaurant in the store', () => {
+       expect(store.state.restaurants.records).toEqual([
+         existingRestaurant,
+         responseRestaurant,
+       ]);
+     });
+
++    it('resolves', () => {
++      return expect(promise).resolves.toBeUndefined();
++    });
+   });
+ });
+```
+
+This passes right away. Now let's add a new describe block for when save fails:
+
+MORE DETAIL HERE ON TESTING PROMISES
+
+```js
+describe('when save fails', () => {
+  it('rejects', () => {
+    api.createRestaurant.mockRejectedValue();
+    promise = store.dispatch('restaurants/create', newRestaurantName);
+    return expect(promise).rejects.toEqual(undefined);
+  });
+});
+```
+
+Save and this test fails: the promise resolves instead of rejecting. Why is this? It seems like `store.dispatch()` automatically returns a promise. CONFIRM VUEX BEHAVIOR HERE If your action returns a promise, it's forwarded along; otherwise the action just resolves. So fixing this test is as easy as returning the promise chain from our action:
+
+```diff
+ create({commit}, newRestaurantName) {
+-  api.createRestaurant(newRestaurantName).then(record => {
++  return api.createRestaurant(newRestaurantName).then(record => {
+     commit('addRecord', record);
+   });
+ },
+```
+
+The tests pass.
+
+Now let's run our app in the browser and see it handle a server error. Make sure your API server is running, then run the frontend and load it up. Next, stop your API server. Then enter a restaurant name and click "Add". You should see a red server error message:
+
+![Server error message](./images/5-4-server-error.png)
 
 That was a lot of edge cases, but we've added a lot of robustness to our form!
 
 Imagine if we had tried to handle all of these cases in E2E tests. We either would have had a lot of slow tests, or else one long test that ran through an extremely long sequence. Instead, our E2E tests cover our main functionality, and our unit tests cover all the edge cases thoroughly.
 
+Rerun your E2E tests to make sure they still pass.
+
 Now that all our tests are passing for the feature, let's think about refactoring.
 We used Vuetify components to make our form elements look good, but we didn't give any attention to the layout--we just put them one after another.
 In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
-
 
 Vuetify offers a [grid system](https://vuetifyjs.com/en/components/grids) that is useful for layout situations like this. Let's apply it to our form.
 
 ```diff
    <v-alert
-     v-if="validationError"
+     v-if="serverError"
      type="error"
-     data-testid="newRestaurantNameError"
+     data-testid="new-restaurant-server-error"
    >
-     Name is required.
+     The restaurant could not be saved. Please try again.
    </v-alert>
 +  <v-row>
 +    <v-col cols="9">
@@ -1220,12 +1333,16 @@ Vuetify offers a [grid system](https://vuetifyjs.com/en/components/grids) that i
        </v-btn>
 +    </v-col>
 +  </v-row>
-</form>
+ </form>
 ```
 
 We wrap the two form elements in a `v-row`, which will lay them out horizontally. We put each in `v-col` column. The `cols` attribute specifies how many units out of 12 the column should take up. We specify our text field should take up 9 of 12 spaces, or three quarters of the width. The button should take up 3 of 12 spaces, or one quarter.
 
-Pull up your app and see how it looks. The elements are next to each other, but if your window is wide enough, the save button doesn't take up the full width of its containing area. To fix this, specify the button should be a block:
+Pull up your app and see how it looks.
+
+![Form elements in a row](./images/5-5-form-row.png)
+
+The elements are next to each other, but if your window is wide enough, the save button doesn't take up the full width of its containing area. To fix this, specify the button should be a block:
 
 ```diff
  <v-btn
@@ -1239,7 +1356,11 @@ Pull up your app and see how it looks. The elements are next to each other, but 
  </v-btn>
 ```
 
-Check again, and the button fills up its containing area. The form looks pretty good now!
+Check again, and the button fills up its containing area.
+
+![Button filling containing area](./images/5-6-button-filling-containing-area.png)
+
+The form looks pretty good now!
 
 Most importantly, rerun the E2E tests and confirm that our app still works.
 
