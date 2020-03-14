@@ -70,7 +70,7 @@ Start Cypress with `yarn test:e2e`, then choose the managing restaurants test. I
 
 > CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
 
-We need an "Add Restaurant" text input. What component should it be in? We discussed earlier that RestaurantScreen would hold both the restaurant list and new restaurant form. The text input should live on the New Restaurant Form, so it's time to create that component.
+We need an "Add Restaurant" text input. What component should it be in? We discussed earlier that `RestaurantScreen` would hold both the restaurant list and new restaurant form. The text input should live on the New Restaurant Form, so it's time to create that component.
 Create the file `src/components/NewRestaurantForm.js`, and add the following:
 
 ```js
@@ -157,7 +157,7 @@ describe('NewRestaurantForm', () => {
 });
 ```
 
-Next, let's try to proactively organize our test file. Since we're taking the approach of having one expectation per test, it's likely that we will ultimately have multiple expectations for different situations. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
+Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
 
 ```js
   describe('when filled in', () => {
@@ -626,7 +626,7 @@ Now we get another console error:
 TypeError: Cannot read property 'then' of undefined
 ```
 
-But we also get a test failure after a few seconds:
+And we also get a test failure after a few seconds:
 
 > CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
 
@@ -814,7 +814,7 @@ Then we can replace our existing call:
 
 This reads a lot more nicely: "fill in the field with placeholder "Name", with restaurantName". By contrast, `fireEvent.click()` reads pretty simply as-is; we don't need to make a helper for it.
 
-Now let's implement the validation error. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
+Now let's implement the validation error when the restaurant name is empty. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
 ```js
   describe('when empty', () => {
@@ -837,7 +837,7 @@ Now let's implement the validation error. Create a new `describe` block for this
 
 We don't actually need the line that sets the value of the text field to the empty string, because right now it starts out empty. But explicitly adding that line make the intention of the test more clear. And that way, if we did decide in the future to start the form out with default text, we would be sure this test scenario still worked. It's a judgment call whether to add it or not.
 
-Save the file and the test fails, because the validation error is not found:
+Save the file and the test fails, because the validation error message is not found:
 
 ```sh
   ● NewRestaurantForm › when empty › displays a validation error
@@ -1057,7 +1057,7 @@ We can fix this error by moving the call to `createRestaurant()` inside the true
 
 Save the file and the test passes.
 
-Our third exception case is when the web service call fails. We want to display a validation error.
+Our third exception case is when the web service call fails. We want to display a server error.
 
 We'll want to check for the message in a few different places, so let's set it up as a constant in the uppermost `describe` block:
 
@@ -1192,7 +1192,7 @@ We'll add another bit of state to track whether the error should show, starting 
 
 Save and the tests pass.
 
-Let's also write a test to confirm that the server is not shown after the server request returns successfully. In the "when filled in" describe block, add an identical test:
+Let's also write a test to confirm that the server error is not shown after the server request returns successfully. In the "when filled in" describe block, add an identical test:
 
 ```js
     it('does not display a server error', () => {
