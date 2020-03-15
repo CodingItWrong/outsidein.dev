@@ -72,7 +72,8 @@ Next, we call `cy.wait()`. This waits for an HTTP request to be sent. We pass th
 
 Finally, we confirm that the restaurant name is shown on the page, showing that the restaurant has been added to the list.
 
-Start Cypress with `yarn test:e2e`, then choose the managing restaurants test. It fails, showing the first bit of functionality we need to implement:
+Start Cypress with `yarn test:e2e`, then choose the managing restaurants test.
+It fails, showing the first bit of functionality we need to implement:
 
 > CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
 
@@ -95,7 +96,7 @@ export default {
 
 Note the use of Vuetify's `v-text-field` component.
 
-Next, add the form to the `NewRestaurantScreen` component:
+Next, add the form to the `RestaurantScreen` component:
 
 ```diff
      <v-card-text>
@@ -215,7 +216,7 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
   });
 ```
 
-We describe the situation when the form is filled in. We enter a restaurant name into a text field, then submit the form.
+We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click the submit button.
 Note that while in the Cypress test we found elements by their placeholder and title text, with Vue Test Utils it's easier to find elements by a `data-testid` attribute, so we use that instead.
 
 In `RestaurantList` we didn't pass a payload to our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as the payload of the action, so we need to use the `.toHaveBeenCalledWith()` matcher. The first argument is one provided by Vuex that includes a `commit` function and others, so since it's not provided by us there's no reason for us to set an expectation on it. So instead we pass `expect.anything()`, to tell Jest that any value there is fine. It's the second argument, where the payload is passed, that we want to confirm that the correct `restaurantName` is passed through.
@@ -598,7 +599,7 @@ FAIL  tests/unit/store/restaurants.spec.js
      25 |     },
 ```
 
-Now that we are chaining `.then()` onto the call to `api.createRestaurant()`, our previous test fails because we didn't configure the API method to resolve. Do that:
+Now that we are chaining `.then()` onto the call to `api.createRestaurant()`, our previous test fails because we didn't configure the mock function to resolve. Do that:
 
 ```diff
  it('saves the restaurant to the server', () => {
@@ -976,7 +977,7 @@ Save the file and the test passes. If you try to submit the form with an empty r
 
 ![Name is required error](./images/5-3-validation-error.png)
 
-Our third exception case is when the web service call fails. We want to display a server error.
+Our third edge case is when the web service call fails. We want to display a server error.
 
 Since this is a new situation, let's set this up as yet another new `describe` block in `NewRestaurantForm.spec.js`:
 
@@ -1213,16 +1214,6 @@ Note that we need to make the `beforeEach` function `async`, so we can `await` t
 
 Save and the test should pass.
 
-There's one more circumstance we need to clear the server error: if a validation error occurs. Add this test to the "when empty" describe block:
-
-```js
-it('clears a server error', () => {
-  expect(
-    wrapper.find('[data-testid="new-restaurant-server-error"]').element,
-  ).not.toBeDefined();
-});
-```
-
 Now we have just one more component test to make: that the restaurant name is not cleared when the server rejects. This should already be working because of how we implemented the code, but it would be frustrating for the user if they lost their data, so this is an especially important case to test. Add another expectation to the "when the store action rejects" `describe` block:
 
 ```js
@@ -1303,6 +1294,8 @@ That was a lot of edge cases, but we've added a lot of robustness to our form!
 Imagine if we had tried to handle all of these cases in E2E tests. We either would have had a lot of slow tests, or else one long test that ran through an extremely long sequence. Instead, our E2E tests cover our main functionality, and our unit tests cover all the edge cases thoroughly.
 
 Rerun your E2E tests to make sure they still pass.
+
+## Refactoring Visuals
 
 Now that all our tests are passing for the feature, let's think about refactoring.
 We used Vuetify components to make our form elements look good, but we didn't give any attention to the layout--we just put them one after another.
