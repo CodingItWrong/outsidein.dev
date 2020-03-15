@@ -487,7 +487,9 @@ Now our test of the initial state passes, but our test for while loading fails. 
 
  export const loadRestaurants = () => (dispatch, getState, api) => {
 +  dispatch(startLoading());
-   api.loadRestaurants().then(records => dispatch(storeRestaurants(records)));
+   api.loadRestaurants().then(records => {
+     dispatch(storeRestaurants(records));
+   });
  };
 
 +const startLoading = () => ({type: START_LOADING});
@@ -660,10 +662,14 @@ So in addition to our expectation not passing, Jest is warning that we have an u
 ```diff
  export const loadRestaurants = () => (dispatch, getState, api) => {
    dispatch(startLoading());
--   api.loadRestaurants().then(records => dispatch(storeRestaurants(records)));
+-   api.loadRestaurants().then(records => {
+-     dispatch(storeRestaurants(records));
+-   });
 +   api
 +     .loadRestaurants()
-+     .then(records => dispatch(storeRestaurants(records)))
++     .then(records => {
++       dispatch(storeRestaurants(records));
++     })
 +     .catch(() => {});
  };
 ```
@@ -760,9 +766,13 @@ The test fails. Make it pass while keeping the other tests passing, by setting t
    dispatch(startLoading());
    api
      .loadRestaurants()
-     .then(records => dispatch(storeRestaurants(records)))
+     .then(records => {
+       dispatch(storeRestaurants(records));
+     })
 -    .catch(() => {});
-+    .catch(() => dispatch(recordLoadingError()));
++    .catch(() => {
++      dispatch(recordLoadingError());
++    });
  };
 …
    type: STORE_RESTAURANTS,

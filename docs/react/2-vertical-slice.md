@@ -824,7 +824,9 @@ First, update the `loadRestaurants` function in `actions.js`:
 +export const STORE_RESTAURANTS = 'STORE_RESTAURANTS';
 +
 +export const loadRestaurants = () => (dispatch, getState, api) => {
-+  api.loadRestaurants().then(records => dispatch(storeRestaurants(records)));
++  api.loadRestaurants().then(records => {
++    dispatch(storeRestaurants(records))
++  });
 +};
 +
 +const storeRestaurants = records => ({
