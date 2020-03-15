@@ -1450,7 +1450,7 @@ This helps, but there is no spacing between the text input and button. To add th
 
 `makeStyles()` allows creating and applying CSS styles to an element. The style we specify is that for every element (`*`) directly under (`>`) the element the style is applied to (`&`), add a margin of the smallest spacing increment the theme provides (`margin: theme.spacing(1)`). This creates a set of styles we named `root`. `makeStyles()` returns a hook function, that we can then call inside the component to get some `classes`. We apply the `root` class we created to the `Box` component. Reload the page, and you'll see some nice spacing in between the elements.
 
-![Form elements with padding](./images/5-5-form-padding.png)
+![Form elements with padding](./images/5-6-form-padding.png)
 
 Most importantly, rerun the E2E tests and confirm that our app still works.
 
