@@ -12,6 +12,12 @@ Our next story in Trello is:
 
 Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
+Create a new branch for this story:
+
+```sh
+$ git co -b creating-a-restaurant
+```
+
 Create a file `tests/e2e/specs/managing-restaurants.spec.js` and add the following:
 
 ```js

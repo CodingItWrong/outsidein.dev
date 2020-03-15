@@ -12,6 +12,12 @@ Our next story in Trello is:
 
 We kept out first story, loading restaurants, minimal so that we could build out a vertical slice quickly and get all the parts of our app talking together. But now our next story is to make that restaurant loading more robust, providing a loading indicator and an error message in case of problems.
 
+Create a new branch for this story:
+
+```sh
+$ git co -b edge-cases
+```
+
 You could theoretically write an E2E test for this functionality, confirming the loading indicator and error message appear at the appropriate times. But if you write too many E2E tests, your application's test suite will get slow. Over time, you'll run it less and less frequently locally, and it will slow down your ability to merge PRs on CI.
 
 To prevent this from happening, the Test Pyramid is a concept that recommends writing fewer end-to-end tests and more unit tests. In the case of Outside-In TDD, the way this works is you write E2E tests for the main features of your application, as well as the unit tests to help implement them. Then, for more detailed or edge-case functionality, you only write the unit tests. In our case, the loading indicator and error message can be considered more detailed functionality. So we are still going to TDD it, but only at the unit level.
