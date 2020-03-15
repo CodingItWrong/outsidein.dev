@@ -12,6 +12,8 @@ Our next story in Trello is:
 
 We chose this story as our first story because it allows us to build out a **vertical slice** of our application. It touches all layers of our code: it has a user interface aspect (the list screen), a data layer aspect (where the restaurants are loaded and stored), and an API client aspect (the HTTP request to load the restaurants). It also minimizes other work: we aren't building authentication now, and we aren't handling restaurant loading edge cases yet in this story. The point of a vertical slice is to get something in all layers of your application built out, to ensure they all work together.
 
+## Setup
+
 We'll do all our work from this feature on a branch. Create a new one:
 
 ```sh
@@ -75,6 +77,8 @@ $ git add .
 $ git commit -m "Delete sample content"
 ```
 
+## Reviewing the Backend
+
 For this tutorial, our backend web service has already been built. Let's get it set up and see how we can load our restaurant data from it. We've set up a Node.js API you can run locally; that way you can edit data without authentication or stepping on other users' data.
 
 Go to the [`codingitwrong/agilefrontend-api` project](https://github.com/CodingItWrong/agilefrontend-api) on GitHub. Clone the project, or just download and expand the zip file.
@@ -115,6 +119,8 @@ Go to `http://localhost:3333/restaurants` in a browser. You should see the follo
 ```
 
 So this is the web service endpoint our story will need to connect to. Now, to build the frontend.
+
+## End-to-End Test
 
 When performing outside-in TDD, our first step is to **create an end-to-end test describing the feature we want users to be able to do.**
 
@@ -235,6 +241,8 @@ export default RestaurantList;
 ```
 
 We do both a named and default export, because later our default export will be the `RestaurantList` connected to Redux, but we will also want the unconnected component for testing.
+
+## Stepping Down to a Unit Test
 
 Now we finally have `RestaurantList` where we'll put our UI for this story. So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. But `RestaurantList` will do more. It needs to:
 
@@ -535,6 +543,8 @@ Now we can remove the duplicated code from the individual tests:
 
 Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
+## Stepping Back Up
+
 We've now specified the behavior of our `RestaurantList` component, and our unit test is complete. The next step in outside-in TDD is to **step back up to the end-to-end test and see our next failure.** Rerun the test in Chrome and we see:
 
 ```sh
@@ -690,6 +700,8 @@ export const loadRestaurants = () => () => {};
 ```
 
 Rerun the E2E test. We now no longer get any application code errors; instead, we are back to the failure that the text "Sushi Place" is never shown. But we've made progress. Our component is now dispatching the `loadRestaurants` async action, and reading the `restaurants` from the store; our async action just isn't loading those records from the API yet. That's logic we need to implement, and that means it's time to step back down to a unit test, this time for our Redux store.
+
+## Unit Testing the Store
 
 Under `src/store/`, create a `__tests__` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
@@ -860,6 +872,8 @@ Save the file and the test failure is the same, because our reducer doesn’t st
 
 With this, our test passes.
 Note that our test doesn't know about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an async action, then reads a state item.
+
+## Creating the API Client
 
 Now that our unit test is passing, it's time to step back up to the E2E test. It fails with a new error:
 
