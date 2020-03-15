@@ -72,7 +72,8 @@ Next, we call `cy.wait()`. This waits for an HTTP request to be sent. We pass th
 
 Finally, we confirm that the restaurant name is shown on the page, showing that the restaurant has been added to the list.
 
-Start Cypress with `yarn test:e2e`, then choose the managing restaurants test. It fails, showing the first bit of functionality we need to implement:
+Start your app with `yarn start`, then start Cypress with `yarn cypress`. Choose the managing restaurants test.
+It fails, showing the first bit of functionality we need to implement:
 
 > CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
 
@@ -96,7 +97,7 @@ export default NewRestaurantForm;
 
 Note the use of Material-UI's `TextField` component. Also note that we're using the block form of the arrow function. We will need other statements in there besides the returned JSX.
 
-Next, add the form to the `NewRestaurantScreen` component:
+Next, add the form to the `RestaurantScreen` component:
 
 ```diff
  import RestaurantList from './RestaurantList';
@@ -141,7 +142,7 @@ So now we need to send the request is our backend service. This is missing logic
 - The action will call a function in our API client
 - The API client will make an HTTP `POST` request
 
-Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should dispatch an action to the store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too. Otherwise we would need to go back through our stack to pass it along.
+Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should call a function prop--which in production will be wired to an action in our store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too. Otherwise we would need to go back through our stack to pass it along.
 
 Create the file `src/components/__tests__/NewRestaurantForm.spec.js` and start out by setting up the component and a mock function in a `beforeEach` block:
 
@@ -157,7 +158,7 @@ describe('NewRestaurantForm', () => {
   let context;
 
   beforeEach(() => {
-    createRestaurant = jest.fn().mockName(‘createRestaurant’);
+    createRestaurant = jest.fn().mockName('createRestaurant');
     context = render(<NewRestaurantForm createRestaurant={createRestaurant} />);
   });
 });
@@ -166,32 +167,32 @@ describe('NewRestaurantForm', () => {
 Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
 
 ```js
-  describe('when filled in', () => {
-    beforeEach(() => {
-      const {getByPlaceholderText, getByTestId} = context;
+describe('when filled in', () => {
+  beforeEach(() => {
+    const {getByPlaceholderText, getByTestId} = context;
 
-      fireEvent.change(getByPlaceholderText('Add Restaurant'), {
-        target: {value: restaurantName},
-      });
-      fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    fireEvent.change(getByPlaceholderText('Add Restaurant'), {
+      target: {value: restaurantName},
     });
-
-    it('calls createRestaurant with the name', () => {
-      expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
-    });
+    fireEvent.click(getByTestId('new-restaurant-submit-button'));
   });
+
+  it('calls createRestaurant with the name', () => {
+    expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
+  });
+});
 ```
 
 We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click the submit button.
 
-Note that instead of finding the submit button by text, we find it by test ID. If we have a plain HTML `<button>` element, we can retrieve it either by text or test ID. But using Material-UI's `<Button>` component, using `getByTestId` will retrieve the underlying `<button>`, but using `getByText` will retrieve a `<span>` element instead. Clicking the `<span>` does not seem to result in submitting the form. So in this case, we use the test ID to make sure we retrieve the button.
+Note that instead of finding the submit button by text, we find it by test ID. If we had a plain HTML `<button>` element, we could retrieve it either by text or test ID. But using Material-UI's `<Button>` component, using `getByText` will retrieve a `<span>` element instead, and clicking it does not seem to result in submitting the form. So in this case, we use the test ID, which retrieves the underlying `<button>` instead.
 
 In `RestaurantList` we didn't pass any additional data with our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as an argument to the action function, so we need to use the `.toHaveBeenCalledWith()` matcher. We pass one argument to it, confirming that the correct `restaurantName` is passed through.
 
 Save the file and we get a failing test, as we expect:
 
 ```sh
-● NewRestaurantForm › when filled in › does not display a server error
+● NewRestaurantForm › when filled in › calls createRestaurant with the name
 
   Unable to find an element by: [data-testid="new-restaurant-submit-button"]
 ```
@@ -315,7 +316,7 @@ The function didn't receive the argument it expected: it wanted "Sushi Place", b
  export const NewRestaurantForm = ({createRestaurant}) => {
 +  const [name, setName] = useState('');
 +
-   return (
+   const handleSubmit = e => {
 ```
 
 Then, we'll make `TextField` a controlled component, reading its value from the `name` state item and writing changes back using `setName`:
@@ -347,35 +348,34 @@ Finally, now that the entered text is stored in `name`, we'll pass that as the a
 
 Save the file and the test passes.
 
-We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store module. The store needs a `createRestaurant` action that will make the appropriate call to the API, then insert the resulting record into the store. Let's write that test now. Below the "loadRestaurants action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
+We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store. The store needs a `createRestaurant` action that will make the appropriate call to the API, then dispatch an action. The `records` reducer needs to listen for that action to add the new restaurant to the list. Let's write a test for this now. Below the "loadRestaurants action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
 
 ```js
-  describe('createRestaurant action', () => {
-    const newRestaurantName = 'Sushi Place';
+describe('createRestaurant action', () => {
+  const newRestaurantName = 'Sushi Place';
 
-    let api;
-    let store;
+  let api;
+  let store;
 
-    beforeEach(() => {
-      api = {
-        createRestaurant: jest.fn().mockName('createRestaurant'),
-      };
+  beforeEach(() => {
+    api = {
+      createRestaurant: jest.fn().mockName('createRestaurant'),
+    };
 
-      const initialState = {};
+    const initialState = {};
 
-      store = createStore(
-        restaurantsReducer,
-        initialState,
-        applyMiddleware(thunk.withExtraArgument(api)),
-      );
-
-      store.dispatch(createRestaurant(newRestaurantName));
-    });
-
-    it('saves the restaurant to the server', () => {
-      expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
-    });
+    store = createStore(
+      restaurantsReducer,
+      initialState,
+      applyMiddleware(thunk.withExtraArgument(api)),
+    );
   });
+
+  it('saves the restaurant to the server', () => {
+    store.dispatch(createRestaurant(newRestaurantName));
+    expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
+  });
+});
 ```
 
 We'll need to add a second expectation shortly so we go ahead and set up the test in a `beforeEach`.
@@ -406,12 +406,6 @@ We also get an error that the function doesn't exist:
 
 ```sh
     TypeError: (0 , _actions.createRestaurant) is not a function
-
-      138 |       );
-      139 |
-    > 140 |       store.dispatch(createRestaurant(newRestaurantName));
-          |                      ^
-      141 |     });
 ```
 
 Let's fix that error first.
@@ -429,11 +423,6 @@ We get the error again that its return value isn't a valid thing to dispatch:
   ● restaurants › createRestaurant action › saves the restaurant to the server
 
     Actions must be plain objects. Use custom middleware for async actions.
-
-      138 |       );
-      139 |
-    > 140 |       store.dispatch(createRestaurant(newRestaurantName));
-          |             ^
 ```
 
 So let's have it return a function:
@@ -464,13 +453,6 @@ This changes the test failure. Now the method is called, but not with the right 
     Received: called with 0 arguments
 
     Number of calls: 1
-
-      142 |
-      143 |     it('saves the restaurant to the server', () => {
-    > 144 |       expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantNam
-e);
-
-          |                                    ^
 ```
 
 Our restaurant name is passed in as the first argument of the action, so we can pass it along to the API method:
@@ -496,11 +478,7 @@ Save the file and the test passes. Now we need to specify one more thing that ha
 
      beforeEach(() => {
        api = {
--        createRestaurant: jest.fn().mockName('createRestaurant'),
-+        createRestaurant: jest
-+          .fn()
-+          .mockName('createRestaurant')
-+          .mockResolvedValue(responseRestaurant),
+         createRestaurant: jest.fn().mockName('createRestaurant'),
        };
 
 -      const initialState = {};
@@ -509,44 +487,46 @@ Save the file and the test passes. Now we need to specify one more thing that ha
        store = createStore(
 ```
 
-This ensures the API call promise resolves, and provides a restaurant record for it. We also add a different restaurant to the pre-existing list of restaurants in the store. Save the file and the tests should still pass.
+This adds a restaurant to the pre-existing list of restaurants in the store. Save the file and the tests should still pass.
 
-Now we're ready to specify that the returned restaurant is added to the store:
+Now we're ready to specify that the returned restaurant is added to the store. Let's add it in a "describe" block:
 
 ```js
-    it('stores the returned restaurant in the store', () => {
-      expect(store.getState().records).toEqual([
-        existingRestaurant,
-        responseRestaurant,
-      ]);
-    });
+describe('when save succeeds', () => {
+  beforeEach(() => {
+    api.createRestaurant.mockResolvedValue(responseRestaurant);
+    store.dispatch(createRestaurant(newRestaurantName));
+  });
+
+  it('stores the returned restaurant in the store', () => {
+    expect(store.getState().records).toEqual([
+      existingRestaurant,
+      responseRestaurant,
+    ]);
+  });
+});
 ```
 
 We ensure that the existing restaurant is still in the store, and the restaurant record returned from the server is added after it. Save the file and the test fails:
 
 ```sh
-  ● restaurants › createRestaurant action › stores the returned restaurant in the store
+● restaurants › createRestaurant action › when save succeeds › stores the returned restaurant in the store
 
-    expect(received).toEqual(expected) // deep equality
+  expect(received).toEqual(expected) // deep equality
 
-    - Expected
-    + Received
+  - Expected
+  + Received
 
-      Array [
-        Object {
-          "id": 1,
-          "name": "Pizza Place",
-        },
-    -   Object {
-    -     "id": 2,
-    -     "name": "Sushi Place",
-    -   },
-      ]
-
-      152 |
-      153 |     it('stores the returned restaurant in the store', () => {
-    > 154 |       expect(store.getState().records).toEqual([
-          |                                        ^
+    Array [
+      Object {
+        "id": 1,
+        "name": "Pizza Place",
+      },
+  -   Object {
+  -     "id": 2,
+  -     "name": "Sushi Place",
+  -   },
+    ]
 ```
 
 The store only contains the restaurant it was initialized with, not the new one the server returned. Let's update the action to handle the returned value:
@@ -559,7 +539,9 @@ The store only contains the restaurant it was initialized with, not the new one 
 ...
  export const createRestaurant = name => (dispatch, getState, api) => {
 -  api.createRestaurant(name);
-+  api.createRestaurant(name).then(record => dispatch(addRestaurant(record)));
++  api.createRestaurant(name).then(record => {
++    dispatch(addRestaurant(record)));
++  });
  };
 +
 +const addRestaurant = record => ({
@@ -588,6 +570,32 @@ After `createRestaurant()` resolves, we take the record the API returns to us an
 ```
 
 When `ADD_RESTAURANT` is dispatched we set records to a new array including the previous array, plus the new record on the end.
+
+This makes our latest test pass, but our previous "saves the restaurant to the server" test now fails:
+
+```sh
+● restaurants › createRestaurant action › saves the restaurant to the server
+
+  TypeError: Cannot read property 'then' of undefined
+
+    13 |
+    14 | export const createRestaurant = name => (dispatch, getState, api) => {
+  > 15 |   api.createRestaurant(name).then(record => dispatch(addRestaurant(record)));
+       |   ^
+    16 | };
+```
+
+Now that we are chaining `.then()` onto the call to `api.createRestaurant()`, our previous test fails because we didn't configure the mock function to resolve. Do that:
+
+```diff
+ it('saves the restaurant to the server', () => {
++  api.createRestaurant.mockResolvedValue(responseRestaurant);
+   store.dispatch(createRestaurant(newRestaurantName));
+   expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
+ });
+```
+
+Save and all unit tests pass.
 
 Now our component and store should be set. Wire up the action to the form component by changing `NewRestaurantForm.js` to export a connected component instead:
 
@@ -632,10 +640,6 @@ Now we get another console error:
 TypeError: Cannot read property 'then' of undefined
 ```
 
-And we also get a test failure after a few seconds:
-
-> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
-
 We still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API:
 
 ```diff
@@ -675,6 +679,10 @@ We aren't displaying the restaurant on the page. This is because we aren't yet r
 ```
 
 Rerun the E2E test and it passes, and we see Sushi Place added to the restaurant list. Our feature is complete!
+
+Start the API and your app and try out creating a restaurant for real. Reload the page to make sure it's really saved to the server.
+
+![Restaurant created](./images/5-1-restaurant-created.png)
 
 ## Edge Cases
 Now let's look into those edge cases:
@@ -743,20 +751,17 @@ Our mocked `api.createRestaurant` doesn't return a promise; let's update it to r
 Save and the test now passes; what's left is a warning:
 
 ```sh
-      Warning: An update to NewRestaurantForm inside a test was not wrapped in act(.
-..).
+Warning: An update to NewRestaurantForm inside a test was not wrapped in act(...).
 
-      When testing, code that causes React state updates should be wrapped into act(
-...):
+When testing, code that causes React state updates should be wrapped into act(...):
 
-      act(() => {
-        /* fire events that update state */
-      });
+act(() => {
+  /* fire events that update state */
+});
 
-      /* assert on the output */
+/* assert on the output */
 
-      This ensures that you're testing the behavior the user would see in the browse
-r.
+This ensures that you're testing the behavior the user would see in the browser.
 ```
 
 What exactly is going on here is complex and beyond the scope of this tutorial. Specifically in this case, the React component state is being updated asynchronously, and React is warning us that we may have timing issues.
@@ -790,7 +795,7 @@ Before we proceed, let's think about some refactoring. Look at the following sta
 
 ```js
 fireEvent.change(getByPlaceholderText('Add Restaurant'), {
-	target: {value: restaurantName},
+  target: {value: restaurantName},
 });
 ```
 
@@ -806,7 +811,7 @@ Then we can replace our existing call:
      beforeEach(() => {
        createRestaurant.mockResolvedValue();
 
-       const {getByPlaceholderText, getByText} = context;
+       const {getByPlaceholderText, getByTestId} = context;
 
 -      fireEvent.change(getByPlaceholderText('Add Restaurant'), {
 -        target: {value: restaurantName},
@@ -820,25 +825,83 @@ Then we can replace our existing call:
 
 This reads a lot more nicely: "fill in the field with placeholder "Name", with restaurantName". By contrast, `fireEvent.click()` reads pretty simply as-is; we don't need to make a helper for it.
 
+We have a little bit to unit test in the store as well: `NewRestaurantForm` is relying on the `create` action returning a promise that resolves when the server request completes. To test this, first let's add a test to the "when save succeeds" block:
+
+```diff
+ describe('createRestaurant action', () => {
+...
+   let api;
+   let store;
++  let promise;
+
+   beforeEach(() => {
+...
+   describe('when save succeeds', () => {
+     beforeEach(() => {
+       api.createRestaurant.mockResolvedValue(responseRestaurant);
+-      store.dispatch(createRestaurant(newRestaurantName));
++      promise = store.dispatch(createRestaurant(newRestaurantName));
+     });
+
+     it('stores the returned restaurant in the store', () => {
+       expect(store.getState().records).toEqual([
+         existingRestaurant,
+         responseRestaurant,
+       ]);
+     });
+
++    it('resolves', () => {
++      return expect(promise).resolves.toBeUndefined();
++    });
+```
+
+The test fails:
+
+```sh
+● restaurants › createRestaurant action › when save succeeds › resolves
+
+  expect(received).resolves.toBeUndefined()
+
+  Matcher error: received value must be a promise
+
+  Received has value: undefined
+```
+
+So right now the return value of `store.dispatch()` is `undefined`. But if we return the promise chain from our async action function, Redux will return that from `store.dispatch()`. Let's do that:
+
+```diff
+ export const createRestaurant = name => (dispatch, getState, api) => {
+-  api.createRestaurant(name).then(record => {
++  return api.createRestaurant(name).then(record => {
+     dispatch(addRestaurant(record)));
+   });
+ };
+```
+
+Save and the test passes. Our component and store should now be set to work together to clear the name field.
+If you add a new restaurant in the browser, now you'll see the name field cleared out afterward:
+
+![Name field cleared after submission](./images/5-2-name-field-cleared.png)
+
 Now let's implement the validation error when the restaurant name is empty. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
 ```js
-  describe('when empty', () => {
-    beforeEach(() => {
-      createRestaurant.mockResolvedValue();
+describe('when empty', () => {
+  beforeEach(() => {
+    createRestaurant.mockResolvedValue();
 
-      const {getByPlaceholderText, getByText} = context;
-      fillIn(getByPlaceholderText('Add Restaurant'), '');
-      fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    const {getByPlaceholderText, getByTestId} = context;
+    fillIn(getByPlaceholderText('Add Restaurant'), '');
+    fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
-      return act(flushPromises);
-    });
-
-    it('displays a validation error', () => {
-      const {queryByText} = context;
-      expect(queryByText('Name is required')).not.toBeNull();
-    });
+    return act(flushPromises);
   });
+
+  it('displays a validation error', () => {
+    const {queryByText} = context;
+    expect(queryByText('Name is required')).not.toBeNull();
+  });
+});
 ```
 
 We don't actually need the line that sets the value of the text field to the empty string, because right now it starts out empty. But explicitly adding that line make the intention of the test more clear. And that way, if we did decide in the future to start the form out with default text, we would be sure this test scenario still worked. It's a judgment call whether to add it or not.
@@ -894,12 +957,12 @@ Save and confirm the tests still pass.
 Next, add a new `describe` above the "when filled in" one:
 
 ```js
-  describe('initially', () => {
-    it('does not display a validation error', () => {
-      const {queryByText} = context;
-      expect(queryByText(requiredError)).toBeNull();
-    });
+describe('initially', () => {
+  it('does not display a validation error', () => {
+    const {queryByText} = context;
+    expect(queryByText(requiredError)).toBeNull();
   });
+});
 ```
 
 The test fails because we are always showing the error right now:
@@ -973,24 +1036,24 @@ Save the file and all tests pass.
 Now, is there any other time we would want to hide or show the validation error? Well, if the user submits an empty form, gets the error, then adds the missing name and submits it again, we would want the validation error cleared out. Let's create this scenario as another `describe` block, below the "when empty" one:
 
 ```js
-  describe('when correcting a validation error', () => {
-    beforeEach(() => {
-      createRestaurant.mockResolvedValue();
+describe('when correcting a validation error', () => {
+  beforeEach(() => {
+    createRestaurant.mockResolvedValue();
 
-      const {getByPlaceholderText, getByText} = context;
-      fillIn(getByPlaceholderText('Add Restaurant'), '');
-      fireEvent.click(getByTestId('new-restaurant-submit-button'));
-      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-      fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    const {getByPlaceholderText, getByText} = context;
+    fillIn(getByPlaceholderText('Add Restaurant'), '');
+    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
+    fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
-      return act(flushPromises);
-    });
-
-    it('clears the validation error', () => {
-      const {queryByText} = context;
-      expect(queryByText(requiredError)).toBeNull();
-    });
+    return act(flushPromises);
   });
+
+  it('clears the validation error', () => {
+    const {queryByText} = context;
+    expect(queryByText(requiredError)).toBeNull();
+  });
+});
 ```
 
 Note that we repeat both sets of `beforeEach` steps from the other groups, submitting the empty form and then submitting the filled-in one. We want our unit tests to be independent, so they can be run without depending on the result of other tests. If this repeated code got too tedious we could extract it to helper functions that we could call in each `describe` block.
@@ -1026,11 +1089,11 @@ Note that we aren't waiting for the web service to return to clear it out, the w
 Save and the tests pass. Now that we have an `each` branch to that conditional, let's invert the boolean to make it easier to read. Refactor it to:
 
 ```js
-      if (name) {
-        setValidationError(false);
-      } else {
-        setValidationError(true);
-      }
+if (name) {
+  setValidationError(false);
+} else {
+  setValidationError(true);
+}
 ```
 
 Save and the tests should still pass.
@@ -1038,9 +1101,9 @@ Save and the tests should still pass.
 Now we can handle the other expectation for when we submit an empty form: it should not dispatch the action to save the restaurant to the server. Add a new test in the "when empty" `describe` block:
 
 ```js
-    it('does not call createRestaurant', () => {
-      expect(createRestaurant).not.toHaveBeenCalled();
-    });
+it('does not call createRestaurant', () => {
+  expect(createRestaurant).not.toHaveBeenCalled();
+});
 ```
 
 We can fix this error by moving the call to `createRestaurant()` inside the true branch of the conditional:
@@ -1061,14 +1124,17 @@ We can fix this error by moving the call to `createRestaurant()` inside the true
    };
 ```
 
-Save the file and the test passes.
+Save the file and the test passes. If you try to submit the form with an empty restaurant name in the browser, you'll see:
 
-Our third exception case is when the web service call fails. We want to display a server error.
+![Name is required error](./images/5-3-validation-error.png)
+
+Our third edge case is when the web service call fails. We want to display a server error.
 
 We'll want to check for the message in a few different places, so let's set it up as a constant in the uppermost `describe` block:
 
 ```diff
  describe('NewRestaurantForm', () => {
+   const restaurantName = 'Sushi Place';
    const requiredError = 'Name is required';
 +  const serverError = 'The restaurant could not be saved. Please try again.';
 
@@ -1078,23 +1144,23 @@ We'll want to check for the message in a few different places, so let's set it u
 Since this is a new situation, let's set this up as yet another new `describe` block:
 
 ```js
-  describe('when the store action rejects', () => {
-    beforeEach(() => {
-      createRestaurant.mockRejectedValue();
+describe('when the store action rejects', () => {
+  beforeEach(() => {
+    createRestaurant.mockRejectedValue();
 
-      const {getByPlaceholderText, getByText} = context;
+    const {getByPlaceholderText, getByTestId} = context;
 
-      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-      fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
+    fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
-      return act(flushPromises);
-    });
-
-    it('displays a server error', () => {
-      const {queryByText} = context;
-      expect(queryByText(serverError)).not.toBeNull();
-    });
+    return act(flushPromises);
   });
+
+  it('displays a server error', () => {
+    const {queryByText} = context;
+    expect(queryByText(serverError)).not.toBeNull();
+  });
+});
 ```
 
 This is the same as the successful submission case, but in the setup we call the `mockRejectedValue()` method of the mock function `restaurantsModule.actions.create`. This means that when this function is called, it will reject. In our case we don't actually care about what error it rejects with, so we don't have to provide a rejected value.
@@ -1155,10 +1221,10 @@ The message isn't very helpful, but "thrown" is a clue. What's happening is that
 Save and the test passes. Now, when do we want that message to *not* show? For one thing, when the component initially mounts. Add another test to the "initially" describe block:
 
 ```js
-    it('does not display a server error', () => {
-      const {queryByText} = context;
-      expect(queryByText(serverError)).toBeNull();
-    });
+it('does not display a server error', () => {
+  const {queryByText} = context;
+  expect(queryByText(serverError)).toBeNull();
+});
 ```
 
 Save and the test fails.
@@ -1201,10 +1267,10 @@ Save and the tests pass.
 Let's also write a test to confirm that the server error is not shown after the server request returns successfully. In the "when filled in" describe block, add an identical test:
 
 ```js
-    it('does not display a server error', () => {
-      const {queryByText} = context;
-      expect(queryByText(serverError)).toBeNull();
-    });
+it('does not display a server error', () => {
+  const {queryByText} = context;
+  expect(queryByText(serverError)).toBeNull();
+});
 ```
 
 Save and the test passes. This is another instance where the test doesn't drive new behavior, but it's helpful for extra assurance that the code is behaving the way we expect.
@@ -1212,22 +1278,22 @@ Save and the test passes. This is another instance where the test doesn't drive 
 We also want to hide the server error message each time we retry saving the form. This is a new situation, so let's create a new `describe` block for it:
 
 ```js
-  describe('when retrying after a server error', () => {
-    beforeEach(() => {
-      createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
+describe('when retrying after a server error', () => {
+  beforeEach(() => {
+    createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
-      const {getByPlaceholderText, getByText} = context;
-      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-      fireEvent.click(getByTestId('new-restaurant-submit-button'));
-      fireEvent.click(getByTestId('new-restaurant-submit-button'));
-      return act(flushPromises);
-    });
-
-    it('clears the server error', () => {
-      const {queryByText} = context;
-      expect(queryByText(serverError)).toBeNull();
-    });
+    const {getByPlaceholderText, getByTestId} = context;
+    fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
+    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    return act(flushPromises);
   });
+
+  it('clears the server error', () => {
+    const {queryByText} = context;
+    expect(queryByText(serverError)).toBeNull();
+  });
+});
 ```
 
 Save the file and you'll get the expected test failure:
@@ -1255,7 +1321,7 @@ We should be able to make this test pass by just clearing the `serverError` flag
        createRestaurant(name)
 ```
 
-Save the file, but surprisingly, the test failure doesn't change! Why is that? It took me a little digging to find out, but it turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.
+Save the file, but surprisingly, the test failure doesn't change! Why is that? It turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.
 
 We can fix this by waiting for promises to flush after the first click, as well as after the second:
 
@@ -1278,42 +1344,42 @@ Note that we need to make the `beforeEach` function `async`, so we can `await` t
 
 Save and the test should pass.
 
-Now we have just one more test to make: that the restaurant name is not cleared when the server rejects. This should already be working because of how we implemented the code, but it would be frustrating for the user if they lost their data, so this is an especially important case to test. Add another expectation to the "when the store action rejects" `describe` block:
+Now we have just one more component test to make: that the restaurant name is not cleared when the server rejects. This should already be working because of how we implemented the code, but it would be frustrating for the user if they lost their data, so this is an especially important case to test. Add another expectation to the "when the store action rejects" `describe` block:
 
 ```js
-    it('does not clear the name', () => {
-      const {getByPlaceholderText} = context;
-      expect(getByPlaceholderText('Add Restaurant').value).toEqual(restaurantName);
-    });
+it('does not clear the name', () => {
+  const {getByPlaceholderText} = context;
+  expect(getByPlaceholderText('Add Restaurant').value).toEqual(restaurantName);
+});
 ```
 
 Save and the test passes, confirming that the user's data is safe.
+
+Now we need to add one more store test as well: `NewRestaurantForm` is relying on the `createRestaurant` action returning a promise that rejects when there is a server error. Let's make sure this is happening. Add the following "describe" block inside "createRestaurant actin" below "when save succeeds":
+
+```js
+describe('when save fails', () => {
+  it('rejects', () => {
+    api.createRestaurant.mockRejectedValue();
+    promise = store.dispatch(createRestaurant(newRestaurantName));
+    return expect(promise).rejects.toEqual(undefined);
+  });
+});
+```
+
+The test passes right away. Because our store returned the promise chain returned from the API, the rejection is passed along to the caller of `store.dispatch()`. But this is part of the contract of the action that the component is relying on, so it's good to document it in a test.
+
+Now let's run our app in the browser and see it handle a server error. Make sure your API server is running, then run the frontend and load it up. Next, stop your API server. Then enter a restaurant name and click "Add". You should see a red server error message:
+
+![Server error message](./images/5-4-server-error.png)
 
 That was a lot of edge cases, but we've added a lot of robustness to our form!
 
 Imagine if we had tried to handle all of these cases in E2E tests. We either would have had a lot of slow tests, or else one long test that ran through an extremely long sequence. Instead, our E2E tests cover our main functionality, and our unit tests cover all the edge cases thoroughly.
 
-Try running your E2E test and you get an error:
+Rerun your E2E tests to make sure they still pass.
 
-> Uncaught TypeError: Cannot read property 'then' of undefined
-
-This is because of a mismatch between the contract of our component and async action:
-
-- `NewRestaurantForm` expects its `createRestaurant` function prop to return a promise
-- But our `createRestaurant` async action doesn't return the promise of the action it creates.
-
-We can fix this by just returning:
-
-```diff
- export const createRestaurant = name => (dispatch, getState, api) => {
--  api.createRestaurant(name).then(record => dispatch(addRestaurant(record)));
-+  return api
-+    .createRestaurant(name)
-+    .then(record => dispatch(addRestaurant(record)));
- };
-```
-
-Rerun the E2E test and it passes.
+## Refactoring Visuals
 
 Now that all our tests are passing for the feature, let's think about refactoring.
 We used Material-UI components to make our form elements look good, but we didn't give any attention to the layout--we just put them one after another.
@@ -1347,7 +1413,13 @@ Material-UI offers a `Box` component that can be used for layout and spacing. Le
  </form>
 ```
 
-This applies flexbox layout to the `Box`, organizing its contents in a row by default. This helps, but there is no spacing between the text input and button. To add that margin is actually a little trickier in Material-UI; here's how we do it:
+This applies flexbox layout to the `Box`, organizing its contents in a row by default.
+
+Pull up your app and see how it looks.
+
+![Form elements in a row](./images/5-5-form-row.png)
+
+This helps, but there is no spacing between the text input and button. To add that margin is actually a little trickier in Material-UI; here's how we do it:
 
 ```diff
  import Box from '@material-ui/core/Box';
@@ -1371,11 +1443,14 @@ This applies flexbox layout to the `Box`, organizing its contents in a row by de
    const handleSubmit = e => {
 ...
  {validationError && <Alert severity="error">Name is required</Alert>}
+-<Box display="flex">
 +<Box display="flex" className={classes.root}>
    <TextField
 ```
 
 `makeStyles()` allows creating and applying CSS styles to an element. The style we specify is that for every element (`*`) directly under (`>`) the element the style is applied to (`&`), add a margin of the smallest spacing increment the theme provides (`margin: theme.spacing(1)`). This creates a set of styles we named `root`. `makeStyles()` returns a hook function, that we can then call inside the component to get some `classes`. We apply the `root` class we created to the `Box` component. Reload the page, and you'll see some nice spacing in between the elements.
+
+![Form elements with padding](./images/5-5-form-padding.png)
 
 Most importantly, rerun the E2E tests and confirm that our app still works.
 
