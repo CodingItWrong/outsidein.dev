@@ -44,13 +44,13 @@ Create a new branch for this story:
 $ git co -b material-design
 ```
 
-Install Material-UI and some related packages:
+Install Material-UI and a related package:
 
 ```sh
-$ yarn add @material-ui/core @material-ui/icons @material-ui/lab
+$ yarn add @material-ui/core @material-ui/lab
 ```
 
-The `icons` package provides icons, as you might expect, and the `lab` package provides an error alert component we’ll use.
+The `core` package provides most of the components, and the `lab` package provides an error alert component we’ll use.
 
 Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
 
