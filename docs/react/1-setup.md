@@ -46,7 +46,7 @@ We'll be using Create React App as our build tool. Like most frontend build tool
 
 If you’d prefer to use `npm`, you can still follow this guide, you’ll just need to replace any `yarn` commands with the equivalent `npm` commands.
 
-## An Editor
+### An Editor
 
 There are a number of different editors that are good for React development; two popular free ones are [Visual Studio Code](https://code.visualstudio.com/) and [Atom](https://atom.io/).
 
