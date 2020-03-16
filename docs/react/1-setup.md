@@ -133,6 +133,15 @@ module.exports = {
 };
 ```
 
+Here's what this file is configuring:
+
+- Sets up recommended linting rules for JavaScript and React, to avoid errors.
+- Makes ESLint aware of global variables provided by the ECMAScript 6 version of the language, the browser, Jest, and Cypress.
+- Disables the ESLint check to require React prop types. We won't be using them in this tutorial, and you may not need them if you aren't creating a component library.
+- Configures ESLint to run Prettier, a code autoformatter.
+
+Next, let's tweak the autoformatting setup. Prettier doesn't have a lot of configuration options, but you can adjust a little.
+
 And another file `.prettierrc.js` and add the following:
 
 ```js
@@ -142,6 +151,8 @@ module.exports = {
   trailingComma: 'all',
 };
 ```
+
+These options configure Prettier with some helpful options to match common JavaScript practice. It also makes our diffs a bit simpler to read, which is not only helpful for this guide, but is also helpful for code reviews in your own projects.
 
 Now, set up ESLint integration with your editor. For example:
 

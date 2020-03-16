@@ -133,6 +133,8 @@ module.exports = {
 };
 ```
 
+These options configure Prettier with some helpful options to match common JavaScript practice. It also makes our diffs a bit simpler to read, which is not only helpful for this guide, but is also helpful for code reviews in your own projects.
+
 Now, set up ESLint integration with your editor by installing the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
 To confirm it works, open `src/App.vue`. You should see yellow underlines at a few different places:
