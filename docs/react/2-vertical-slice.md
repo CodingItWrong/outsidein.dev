@@ -703,6 +703,8 @@ Rerun the E2E test. We now no longer get any application code errors; instead, w
 
 ## Unit Testing the Store
 
+To test our store, we're going to create a real Redux store, configure it with our reducer, then dispatch our actions against it. After we write our test, we'll look at the advantages this approach gives us.
+
 Under `src/store/`, create a `__tests__` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
 ```js
@@ -871,7 +873,10 @@ Save the file and the test failure is the same, because our reducer doesn’t st
 ```
 
 With this, our test passes.
-Note that our test doesn't know about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an async action, then reads a state item.
+
+Now that our test is passing and our code is complete, we can see the benefits that come from testing the store from the outside. Our test interacts with the store the way the rest of our application does: by dispatching async actions and then observing state changes. Just like the rest of our application, our test doesn't know or care about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. This gives us greater flexibility to refactor our store; for example, we could change the way the actions that `loadRestaurants` dispatches are set up. Our tests would continue to pass as long as the action name and state stayed the same, which is fittingly exactly the contract that the rest of our application requires as well.
+
+Another benefit of testing the store from the outside is ensuring that all the pieces work together. If we were testing the `loadRestaurants` async action, `storeRestaurants` action creator, and reducer separately from one another, they might work individually, but not work together. For example, maybe the names of properties in the action object returned by `storeRestaurants` aren't the same names as the properties the reducer looks for in a `STORE_RESTAURANTS` action. Our test exercises the async action, action creator, and reducer in integration, ensuring that if they aren't working together, a unit test will fail. If we weren't testing this way, only an E2E test would catch this problem--and then only if the problem is in one of the main flows that our E2E test covers, not our edge cases.
 
 ## Creating the API Client
 

@@ -738,6 +738,8 @@ Rerun the E2E test. We now no longer get any application code errors; instead, w
 
 ## Unit Testing the Store
 
+To test our store, we're going to create a real Vuex store, configure it with our store module, then interact with it from the outside. After we write our test, we'll look at the advantages this approach gives us.
+
 Under `tests/unit/`, create a `store` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
 ```js
@@ -922,7 +924,10 @@ Now we're ready to implement our `load` action to retrieve the records from the 
 ```
 
 With this, our test passes.
-Note that our test doesn't know about the `storeRecords` mutation; it treats it as an implementation detail. Our test interacts with the store the same way our production code does: dispatches an action, then reads a state item.
+
+Now that our test is passing and our code is complete, we can see the benefits that come from testing the store from the outside. Our test interacts with the store the way the rest of our application does: by dispatching actions and then observing state changes. Just like the rest of our application, our test doesn't know or care about the `storeRecords` mutation; it treats it as an implementation detail. This gives us greater flexibility to refactor our store; for example, we could change the way our mutations are set up. Our tests would continue to pass as long as the action name and state stayed the same, which is fittingly exactly the contract that the rest of our application requires as well.
+
+Another benefit of testing the store from the outside is ensuring that all the pieces work together. If we were testing the `load` action and `storeRecords` mutation separately from one another, they might work individually, but not work together. For example, maybe the mutation name committed in the `load` action was different from the correct mutation name. Our test exercises the action, mutation, and state in integration, ensuring that if they aren't working together, a unit test will fail. If we weren't testing this way, only an E2E test would catch this problem--and then only if the problem is in one of the main flows that our E2E test covers, not our edge cases.
 
 ## Creating the API Client
 
