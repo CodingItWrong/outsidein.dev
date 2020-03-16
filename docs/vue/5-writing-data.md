@@ -12,6 +12,8 @@ Our next story in Trello is:
 
 Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
+## End-to-End Test
+
 Create a new branch for this story:
 
 ```sh
@@ -141,6 +143,8 @@ So now we need to send the request is our backend service. This is missing logic
 - The API client will make an HTTP `POST` request
 
 Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should dispatch an action to the store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too. Otherwise we would need to go back through our stack to pass it along.
+
+## Unit Testing the Component
 
 Create the file `tests/unit/components/NewRestaurantForm.spec.js` and start out by setting up the component and Vuex store in a `beforeEach` block:
 
@@ -394,7 +398,19 @@ Then we'll pass the data property when calling the action:
 
 Save the file and the test passes.
 
-We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store module. The restaurants module needs a `create` action that will make the appropriate call to the API, then insert the resulting record into the store. Let's write that test now. Below the "load action" group, add a "create action" group, and write a test to confirm the API is called:
+## Stepping Back Up
+
+We'll circle back to test-drive edge case functionality to the form later. But now that we have completed the functionaity the E2E test drove us to, let's step back up to the E2E test to see what functionality we need to implement next. Rerun the E2E test and see the following failure after a few seconds:
+
+```sh
+> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
+```
+
+Our `NewRestaurantForm` is dispatching the `restaurants/create` action, but because that action doesn't exist, the request to the server is never being made. It's time to step down to a unit test to drive out our store functionality.
+
+## Unit Testing the Store
+
+In `tests/unit/store/restaurants.spec.js`, below the "load action" group, add a "create action" group, and write a test to confirm the API is called:
 
 ```js
   describe('create action', () => {
@@ -609,9 +625,11 @@ Now that we are chaining `.then()` onto the call to `api.createRestaurant()`, ou
  });
 ```
 
-Save and all unit tests pass.
+Save and all unit tests pass. Now our store should be set.
 
-With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The console says:
+## Creating the API Method
+
+Let's step back up to the E2E level and see if the E2E test has progressed. Rerun it and the console says:
 
 ```sh
 TypeError: t.createRestaurant is not a function
@@ -682,7 +700,7 @@ Start the API and your app and try out creating a restaurant for real. Reload th
 
 ![Restaurant created](./images/5-1-restaurant-created.png)
 
-## Edge Cases
+## Clearing the Text Field
 Now let's look into those edge cases:
 
 * The form should clear out the text field after you save a restaurant
@@ -735,9 +753,47 @@ Make this change in `NewRestaurantForm.vue`:
      },
 ```
 
-Save the file and the test should pass. That was an easy one! If you add a new restaurant in the browser, now you'll see the name field cleared out afterward:
+Save the file and the test should pass.
+
+We have a little bit to unit test in the store as well: `NewRestaurantForm` is relying on the `create` action returning a promise that resolves when the server request completes. To test this, first let's add a test to the "when save succeeds" block:
+
+```diff
+ describe('create action', () => {
+...
+   let api;
+   let store;
++  let promise;
+
+   beforeEach(() => {
+...
+   describe('when save succeeds', () => {
+     beforeEach(() => {
+       api.createRestaurant.mockResolvedValue(responseRestaurant);
+-      store.dispatch('restaurants/create', newRestaurantName);
++      promise = store.dispatch('restaurants/create', newRestaurantName);
+    });
+
+     it('stores the returned restaurant in the store', () => {
+       expect(store.state.restaurants.records).toEqual([
+         existingRestaurant,
+         responseRestaurant,
+       ]);
+     });
+
++    it('resolves', () => {
++      return expect(promise).resolves.toBeUndefined();
++    });
+   });
+ });
+```
+
+This passes right away.
+
+Now our component and store should be working together. If you add a new restaurant in the browser, now you'll see the name field cleared out afterward:
 
 ![Name field cleared after submission](./images/5-2-name-field-cleared.png)
+
+## Validation Error
 
 Now let's implement the validation error when the restaurant name is empty. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
@@ -976,6 +1032,8 @@ We can fix this error by moving the call to `this.createRestaurant()` inside the
 Save the file and the test passes. If you try to submit the form with an empty restaurant name in the browser, you'll see:
 
 ![Name is required error](./images/5-3-validation-error.png)
+
+## Server Error
 
 Our third edge case is when the web service call fails. We want to display a server error.
 
@@ -1226,41 +1284,7 @@ it('does not clear the name', () => {
 
 Save and the test passes, confirming that the user's data is safe.
 
-We have a little bit to unit test in the store as well: `NewRestaurantForm` is relying on the `create` action returning a promise that resolves or rejects depending on whether the server request succeeds or fails. To test this, first let's add a test to the "when save succeeds" block:
-
-```diff
- describe('create action', () => {
-...
-   let api;
-   let store;
-+  let promise;
-
-   beforeEach(() => {
-...
-   describe('when save succeeds', () => {
-     beforeEach(() => {
-       api.createRestaurant.mockResolvedValue(responseRestaurant);
--      store.dispatch('restaurants/create', newRestaurantName);
-+      promise = store.dispatch('restaurants/create', newRestaurantName);
-    });
-
-     it('stores the returned restaurant in the store', () => {
-       expect(store.state.restaurants.records).toEqual([
-         existingRestaurant,
-         responseRestaurant,
-       ]);
-     });
-
-+    it('resolves', () => {
-+      return expect(promise).resolves.toBeUndefined();
-+    });
-   });
- });
-```
-
-This passes right away. Now let's add a new describe block for when save fails:
-
-MORE DETAIL HERE ON TESTING PROMISES
+Now we need to add one more store test as well: `NewRestaurantForm` is relying on the `createRestaurant` action returning a promise that rejects when there is a server error. Let's make sure this is happening. Add the following "describe" block inside "createRestaurant action" below "when save succeeds":
 
 ```js
 describe('when save fails', () => {
@@ -1272,7 +1296,9 @@ describe('when save fails', () => {
 });
 ```
 
-Save and this test fails: the promise resolves instead of rejecting. Why is this? It seems like `store.dispatch()` automatically returns a promise. CONFIRM VUEX BEHAVIOR HERE If your action returns a promise, it's forwarded along; otherwise the action just resolves. So fixing this test is as easy as returning the promise chain from our action:
+MORE DETAIL HERE ON TESTING PROMISES
+
+Save and this test fails: the promise resolves instead of rejecting. Why is this? Because Vuex actions are made for asynchronous logic,  `store.dispatch()` automatically returns a promise. If your action returns a promise, it's forwarded along; otherwise the action just resolves. So fixing this test is as easy as returning the promise chain from our action, so that when the inner promise rejects, the outer one will too:
 
 ```diff
  create({commit}, newRestaurantName) {

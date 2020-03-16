@@ -12,6 +12,8 @@ Our next story in Trello is:
 
 Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
+## End-to-End Test
+
 Create a new branch for this story:
 
 ```sh
@@ -143,6 +145,8 @@ So now we need to send the request is our backend service. This is missing logic
 - The API client will make an HTTP `POST` request
 
 Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should call a function prop--which in production will be wired to an action in our store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too. Otherwise we would need to go back through our stack to pass it along.
+
+## Unit Testing the Component
 
 Create the file `src/components/__tests__/NewRestaurantForm.spec.js` and start out by setting up the component and a mock function in a `beforeEach` block:
 
@@ -348,7 +352,63 @@ Finally, now that the entered text is stored in `name`, we'll pass that as the a
 
 Save the file and the test passes.
 
-We'll circle back to test-drive edge case functionality to the form later, but for now let's move on toward passing our E2E test by test-driving the store. The store needs a `createRestaurant` action that will make the appropriate call to the API, then dispatch an action. The `records` reducer needs to listen for that action to add the new restaurant to the list. Let's write a test for this now. Below the "loadRestaurants action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
+## Stepping Back Up
+
+We'll circle back to test-drive edge case functionality to the form later. But now that we have completed the functionaity the E2E test drove us to, let's step back up to the E2E test to see what functionality we need to implement next. Rerun the E2E test and see the following failure:
+
+```sh
+Uncaught Uncaught TypeError: createRestaurant is not a function
+
+src/components/NewRestaurantForm.js:10
+   7 |
+   8 | const handleSubmit = e => {
+   9 |   e.preventDefault();
+> 10 |   createRestaurant(name);
+     | ^
+  11 | };
+  12 | return (
+  13 |   <form onSubmit={handleSubmit}>
+```
+
+`createRestaurant` is not defined because we aren't passing it in to `NewRestaurantForm` as a prop. This is just a structural error, not a logic error, so let's fix this error directly instead of stepping down to a unit test yet.
+
+We want the `createRestaurant` prop to be passed in by Redux as an action, so let's wire it up:
+
+```diff
+ import React, {useState} from 'react';
++import {connect} from 'react-redux';
+ import TextField from '@material-ui/core/TextField';
+ import Button from '@material-ui/core/Button';
++import {createRestaurant} from '../store/restaurants/actions';
+
+ export const NewRestaurantForm = ({createRestaurant}) => {
+...
+ };
+
+-export default NewRestaurantForm;
++const mapStateToProps = null;
++const mapDispatchToProps = {createRestaurant};
++
++export default connect(mapStateToProps, mapDispatchToProps)(NewRestaurantForm);
+```
+
+Next, define a `createRestaurant` action in `src/store/restaurants/actions.js`. Because we know this will be an async action, we can go ahead and implement it that way:
+
+```js
+export const createRestaurant = () => () => {};
+```
+
+Rerun the E2E test, and it fails on a new error:
+
+```sh
+CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
+```
+
+Now our component is correctly calling our `createRestaurant` async action, but that function isn't doing anything. We need it to make the appropriate call to the API, then dispatch an action that results in the reducer adding the new restaurant to the list. That's a logic error, so it's time to step down to a unit test to drive out our store functionality.
+
+## Unit Testing the Store
+
+In `src/store/__tests__/restaurants.spec.js`, below the "loadRestaurants action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
 
 ```js
 describe('createRestaurant action', () => {
@@ -402,37 +462,6 @@ Save the file, and the test fails because the API method was not called:
     Number of calls: 0
 ```
 
-We also get an error that the function doesn't exist:
-
-```sh
-    TypeError: (0 , _actions.createRestaurant) is not a function
-```
-
-Let's fix that error first.
-Export an empty function from `actions.js`:
-
-```diff
- const recordLoadingError = () => ({type: RECORD_LOADING_ERROR});
-
-+export const createRestaurant = () => {};
-```
-
-We get the error again that its return value isn't a valid thing to dispatch:
-
-```sh
-  ● restaurants › createRestaurant action › saves the restaurant to the server
-
-    Actions must be plain objects. Use custom middleware for async actions.
-```
-
-So let's have it return a function:
-
-```diff
--export const createRestaurant = () => {};
-+export const createRestaurant = () => () => {};
-```
-
-This fixes the error, so now we just get the expectation failure that `api.createRestaurant` wasn't called.
 Update the `createRestaurant` thunk to call it:
 
 ```diff
@@ -540,7 +569,7 @@ The store only contains the restaurant it was initialized with, not the new one 
  export const createRestaurant = name => (dispatch, getState, api) => {
 -  api.createRestaurant(name);
 +  api.createRestaurant(name).then(record => {
-+    dispatch(addRestaurant(record)));
++    dispatch(addRestaurant(record));
 +  });
  };
 +
@@ -595,29 +624,11 @@ Now that we are chaining `.then()` onto the call to `api.createRestaurant()`, ou
  });
 ```
 
-Save and all unit tests pass.
+Save and all unit tests pass. Now our store should be set.
 
-Now our component and store should be set. Wire up the action to the form component by changing `NewRestaurantForm.js` to export a connected component instead:
+## Creating the API Method
 
-```diff
- import React, {useState} from 'react';
-+import {connect} from 'react-redux';
- import TextField from '@material-ui/core/TextField';
- import Button from '@material-ui/core/Button';
-+import {createRestaurant} from '../store/restaurants/actions';
-
- export const NewRestaurantForm = ({createRestaurant}) => {
-...
- };
-
--export default NewRestaurantForm;
-+const mapStateToProps = null;
-+const mapDispatchToProps = {createRestaurant};
-+
-+export default connect(mapStateToProps, mapDispatchToProps)(NewRestaurantForm);
-```
-
-With that, our store should be working. Let's rerun the E2E test to see if it's progressed. The console says:
+Let's step back up to the E2E level and see if the E2E test has progressed. Rerun it and the console says:
 
 ```sh
 TypeError: api.createRestaurant is not a function
@@ -684,7 +695,7 @@ Start the API and your app and try out creating a restaurant for real. Reload th
 
 ![Restaurant created](./images/5-1-restaurant-created.png)
 
-## Edge Cases
+## Clearing the Text Field
 Now let's look into those edge cases:
 
 * The form should clear out the text field after you save a restaurant
@@ -882,6 +893,8 @@ Save and the test passes. Our component and store should now be set to work toge
 If you add a new restaurant in the browser, now you'll see the name field cleared out afterward:
 
 ![Name field cleared after submission](./images/5-2-name-field-cleared.png)
+
+## Validation Error
 
 Now let's implement the validation error when the restaurant name is empty. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
@@ -1128,6 +1141,8 @@ Save the file and the test passes. If you try to submit the form with an empty r
 
 ![Name is required error](./images/5-3-validation-error.png)
 
+## Server Error
+
 Our third edge case is when the web service call fails. We want to display a server error.
 
 We'll want to check for the message in a few different places, so let's set it up as a constant in the uppermost `describe` block:
@@ -1355,7 +1370,7 @@ it('does not clear the name', () => {
 
 Save and the test passes, confirming that the user's data is safe.
 
-Now we need to add one more store test as well: `NewRestaurantForm` is relying on the `createRestaurant` action returning a promise that rejects when there is a server error. Let's make sure this is happening. Add the following "describe" block inside "createRestaurant actin" below "when save succeeds":
+Now we need to add one more store test as well: `NewRestaurantForm` is relying on the `createRestaurant` action returning a promise that rejects when there is a server error. Let's make sure this is happening. Add the following "describe" block inside "createRestaurant action" below "when save succeeds":
 
 ```js
 describe('when save fails', () => {
