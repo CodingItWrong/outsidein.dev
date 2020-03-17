@@ -271,9 +271,9 @@ describe('RestaurantList', () => {
 Because we are writing a unit test, we don't want to connect our component to our real Redux store. Instead, we want to create mock functions that are passed in the way Redux dispatch functions will be; then we can run expectations on those mock functions. Our component will ask our store to load the restaurants, so that means we need a `loadRestaurants` function:
 
 ```diff
-   it('loads restaurants on mount', () => {
-+    const loadRestaurants = jest.fn().mockName('loadRestaurants');
-   });
+ it('loads restaurants on mount', () => {
++  const loadRestaurants = jest.fn().mockName('loadRestaurants');
+ });
 ```
 
 We use `jest.fn()` to create a Jest mock function, which will allow us to check that the `loadRestaurants` action was called. We chain a call to `.mockName()` onto it to give our function a name; this will make our error messages more readable.
@@ -299,13 +299,13 @@ We import the `RestaurantList` component, making sure to use the named import be
 Finally, we're ready to run an expectation to confirm that the component loads restaurants on mount. We just check that our mock function was called:
 
 ```diff
-   it('loads restaurants on mount', () => {
-     const loadRestaurants = jest.fn().mockName('loadRestaurants');
+ it('loads restaurants on mount', () => {
+   const loadRestaurants = jest.fn().mockName('loadRestaurants');
 
-    render(<RestaurantList loadRestaurants={loadRestaurants} />);
+  render(<RestaurantList loadRestaurants={loadRestaurants} />);
 +
-+   expect(loadRestaurants).toHaveBeenCalled();
-   });
++ expect(loadRestaurants).toHaveBeenCalled();
+ });
 ```
 
 Now we're ready to run our unit test. Run `yarn test` and leave it running for the remainder of this section. Jest will run our unit test, and we'll get the following error:
@@ -372,17 +372,17 @@ $ git commit -m "Load restaurants upon mounting RestaurantList"
 This gives us one of the behaviors we want our `RestaurantList` to have: loading the restaurants when it is mounted. Now it's time to write a test for the second behavior: displaying the restaurants. Let's add another `it()` block inside the `describe()`, with the following contents:
 
 ```js
-  it('displays the restaurants', () => {
-    const noop = () => {};
-    const restaurants = [
-      {id: 1, name: 'Sushi Place'},
-      {id: 2, name: 'Pizza Place'},
-    ];
+it('displays the restaurants', () => {
+  const noop = () => {};
+  const restaurants = [
+    {id: 1, name: 'Sushi Place'},
+    {id: 2, name: 'Pizza Place'},
+  ];
 
-    const {queryByText} = render(
-      <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
-    );
-  });
+  const {queryByText} = render(
+    <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
+  );
+});
 ```
 
 So far it's pretty similar to our previous test. There are just a few differences:
@@ -394,13 +394,13 @@ So far it's pretty similar to our previous test. There are just a few difference
 Now, instead of running an expectation that `loadRestaurants` was called, we use the destructured `queryByText` function to check what is rendered out:
 
 ```diff
-     const {queryByText} = render(
-       <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
-     );
+   const {queryByText} = render(
+     <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
+   );
 +
-+    expect(queryByText('Sushi Place')).not.toBeNull();
-+    expect(queryByText('Pizza Place')).not.toBeNull();
-   });
++  expect(queryByText('Sushi Place')).not.toBeNull();
++  expect(queryByText('Pizza Place')).not.toBeNull();
+ });
 ```
 
 `queryByText` finds an element containing the passed-in text. We pass in the name of each of the two restaurants. If found, `queryByText` returns a reference to the element; if not found, it returns `null`. So, to confirm they are found, we check that return result is *not* null.
@@ -459,20 +459,20 @@ When we save the file, our test of the output passes, but now our first test fai
 We're `map`ping over the `restaurants`, but in our first test we didn't pass in a `restaurants` prop. Let's update the test to pass in an empty array, since that test doesn't care about the restaurants:
 
 ```diff
-   it('loads restaurants on mount', () => {
-     const loadRestaurants = jest.fn().mockName('loadRestaurants');
-+    const restaurants = [];
+ it('loads restaurants on mount', () => {
+   const loadRestaurants = jest.fn().mockName('loadRestaurants');
++  const restaurants = [];
 
--    render(<RestaurantList loadRestaurants={loadRestaurants} />);
-+    render(
-+      <RestaurantList
-+        loadRestaurants={loadRestaurants}
-+        restaurants={restaurants}
-+      />,
-+    );
+-  render(<RestaurantList loadRestaurants={loadRestaurants} />);
++  render(
++    <RestaurantList
++      loadRestaurants={loadRestaurants}
++      restaurants={restaurants}
++    />,
++  );
 
-     expect(loadRestaurants).toHaveBeenCalled();
-   });
+   expect(loadRestaurants).toHaveBeenCalled();
+ });
 ```
 
 Save and now both tests are passing. We've now successfully defined both behaviors of our `RestaurantList`!
@@ -501,7 +501,7 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +    );
 +  });
 +
-  it('loads restaurants on mount', () => {
+   it('loads restaurants on mount', () => {
 ```
 
 Although not *all* of these variables are needed for *both* tests, it's okay to set them up for both. This sets up a component in a good default state, so each test can stay focused on what it wants to assert.
@@ -509,36 +509,36 @@ Although not *all* of these variables are needed for *both* tests, it's okay to 
 Now we can remove the duplicated code from the individual tests:
 
 ```diff
-   it('loads restaurants on mount', () => {
--    const loadRestaurants = jest.fn().mockName('loadRestaurants');
--    const restaurants = [];
+ it('loads restaurants on mount', () => {
+-  const loadRestaurants = jest.fn().mockName('loadRestaurants');
+-  const restaurants = [];
 -
--    render(
--      <RestaurantList
--        loadRestaurants={loadRestaurants}
--        restaurants={restaurants}
--      />,
--    );
+-  render(
+-    <RestaurantList
+-      loadRestaurants={loadRestaurants}
+-      restaurants={restaurants}
+-    />,
+-  );
 -
-     expect(loadRestaurants).toHaveBeenCalled();
-   });
+   expect(loadRestaurants).toHaveBeenCalled();
+ });
 
-   it('displays the restaurants', () => {
--    const noop = () => {};
--    const restaurants = [
--      {id: 1, name: 'Sushi Place'},
--      {id: 2, name: 'Pizza Place'},
--    ];
+ it('displays the restaurants', () => {
+-  const noop = () => {};
+-  const restaurants = [
+-    {id: 1, name: 'Sushi Place'},
+-    {id: 2, name: 'Pizza Place'},
+-  ];
 -
--    const {queryByText} = render(
--      <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
--    );
+-  const {queryByText} = render(
+-    <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
+-  );
 -
-+    const {queryByText} = context;
++  const {queryByText} = context;
 +
-     expect(queryByText('Sushi Place')).not.toBeNull();
-     expect(queryByText('Pizza Place')).not.toBeNull();
-   });
+   expect(queryByText('Sushi Place')).not.toBeNull();
+   expect(queryByText('Pizza Place')).not.toBeNull();
+ });
 ```
 
 Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
@@ -721,12 +721,12 @@ We create a `describe` block for our `loadRestaurants` action, which right now j
 We will need some records to be returned by our mocked API:
 
 ```diff
-     it('stores the restaurants', async () => {
-+      const records = [
-+        {id: 1, name: 'Sushi Place'},
-+        {id: 2, name: 'Pizza Place'},
-+      ];
-     });
+ it('stores the restaurants', async () => {
++  const records = [
++    {id: 1, name: 'Sushi Place'},
++    {id: 2, name: 'Pizza Place'},
++  ];
+ });
 ```
 
 As we said earlier, our app will consist of three layers:
@@ -739,16 +739,16 @@ So we won't make an HTTP request directly in our Redux store.
 Instead, we'll delegate to an API object that we pass in. Let's design the interface of that object now:
 
 ```diff
-     it('stores the restaurants', async () => {
-       const records = [
-         {id: 1, name: 'Sushi Place'},
-         {id: 2, name: 'Pizza Place'},
-       ];
+ it('stores the restaurants', async () => {
+   const records = [
+     {id: 1, name: 'Sushi Place'},
+     {id: 2, name: 'Pizza Place'},
+   ];
 
-+      const api = {
-+        loadRestaurants: () => Promise.resolve(records),
-+      };
-     });
++  const api = {
++    loadRestaurants: () => Promise.resolve(records),
++  };
+ });
 ```
 
 Giving the `api` object a descriptive `loadRestaurants()` methods seems good. We are stubbing out the API here in the test, so we'll just implement that method to return a Promise that resolves to our hard-coded records.
@@ -758,14 +758,14 @@ Now, to set up our Redux store. We'll use a real Redux store to run our tests th
 Start with the initial state of the reducer:
 
 ```diff
-       const api = {
-         loadRestaurants: () => Promise.resolve(records),
-       };
+   const api = {
+     loadRestaurants: () => Promise.resolve(records),
+   };
 +
-+      const initialState = {
-+        records: [],
-+      };
-     });
++  const initialState = {
++    records: [],
++  };
+ });
 ```
 
 Now we’ll create the store itself. Unlike in the full application, we will only pass in the restaurant reducer. The full application may have other reducers, but we are keeping our test narrowed to just the restaurant reducer.
@@ -811,22 +811,22 @@ Now that our store is set, we can dispatch the `loadRestaurants` action, then ch
 The test fails, showing an empty array as the received value:
 
 ```sh
-    expect(received).toEqual(expected) // deep equality
+expect(received).toEqual(expected) // deep equality
 
-    - Expected
-    + Received
+- Expected
++ Received
 
-    - Array [
-    -   Object {
-    -     "id": 1,
-    -     "name": "Sushi Place",
-    -   },
-    -   Object {
-    -     "id": 2,
-    -     "name": "Pizza Place",
-    -   },
-    - ]
-    + Array []
+- Array [
+-   Object {
+-     "id": 1,
+-     "name": "Sushi Place",
+-   },
+-   Object {
+-     "id": 2,
+-     "name": "Pizza Place",
+-   },
+- ]
++ Array []
 ```
 
 Now we're ready to implement our `loadRestaurants` thunk to retrieve the records from the `api` and dispatch an action to store them.

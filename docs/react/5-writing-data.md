@@ -204,17 +204,17 @@ Save the file and we get a failing test, as we expect:
 Add the test ID to the button to find it:
 
 ```diff
-     <form>
-       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
--      <Button variant="contained" color="primary">
-+      <Button
-+        variant="contained"
-+        color="primary"
-+        data-testid="new-restaurant-submit-button"
-+      >
-         Add
-       </Button>
-     </form>
+ <form>
+   <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
+-  <Button variant="contained" color="primary">
++  <Button
++    variant="contained"
++    color="primary"
++    data-testid="new-restaurant-submit-button"
++  >
+     Add
+   </Button>
+ </form>
 ```
 
 Now we get an assertion failure:
@@ -238,17 +238,17 @@ Now we get an assertion failure:
 The test failure reports the action wasn't called at all. This is because our button isn't currently hooked up to anything. The typical way to set this up in HTML forms is to make the button a `submit` button, so it submits the form:
 
 ```diff
-     <form>
-       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
-       <Button
-+        type="submit"
-         variant="contained"
-         color="primary"
-         data-testid="new-restaurant-submit-button"
-       >
-         Add
-       </Button>
-     </form>
+ <form>
+   <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
+   <Button
++    type="submit"
+     variant="contained"
+     color="primary"
+     data-testid="new-restaurant-submit-button"
+   >
+     Add
+   </Button>
+ </form>
 ```
 
 Now, write just enough production code to get past the current test failure, let's just call the action without any arguments:
@@ -326,17 +326,17 @@ The function didn't receive the argument it expected: it wanted "Sushi Place", b
 Then, we'll make `TextField` a controlled component, reading its value from the `name` state item and writing changes back using `setName`:
 
 ```diff
-   return (
-     <form onSubmit={handleSubmit}>
--      <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
-+      <TextField
-+        value={name}
-+        onChange={e => setName(e.target.value)}
-+        placeholder="Add Restaurant"
-+        fullWidth
-+        variant="filled"
-+      />
-       <Button
+ return (
+   <form onSubmit={handleSubmit}>
+-    <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
++    <TextField
++      value={name}
++      onChange={e => setName(e.target.value)}
++      placeholder="Add Restaurant"
++      fullWidth
++      variant="filled"
++    />
+    <Button
 ```
 
 Finally, now that the entered text is stored in `name`, we'll pass that as the argument to `createRestaurant()`:
@@ -497,23 +497,23 @@ Our restaurant name is passed in as the first argument of the action, so we can 
 Save the file and the test passes. Now we need to specify one more thing that happens when the `create` action is dispatched: the returned restaurant from the API, including the ID that the API gives the record, is appended to the restaurant list in the state. To write that test, we're going to need to add a little to the setup as well:
 
 ```diff
-   describe('createRestaurant action', () => {
-     const newRestaurantName = 'Sushi Place';
-+    const existingRestaurant = {id: 1, name: 'Pizza Place'};
-+    const responseRestaurant = {id: 2, name: newRestaurantName};
+ describe('createRestaurant action', () => {
+   const newRestaurantName = 'Sushi Place';
++  const existingRestaurant = {id: 1, name: 'Pizza Place'};
++  const responseRestaurant = {id: 2, name: newRestaurantName};
 
-     let api;
-     let store;
+   let api;
+   let store;
 
-     beforeEach(() => {
-       api = {
-         createRestaurant: jest.fn().mockName('createRestaurant'),
-       };
+   beforeEach(() => {
+     api = {
+       createRestaurant: jest.fn().mockName('createRestaurant'),
+     };
 
--      const initialState = {};
-+      const initialState = {records: [existingRestaurant]};
+-    const initialState = {};
++    const initialState = {records: [existingRestaurant]};
 
-       store = createStore(
+     store = createStore(
 ```
 
 This adds a restaurant to the pre-existing list of restaurants in the store. Save the file and the tests should still pass.
@@ -669,11 +669,11 @@ Now the `POST` request is made, and we get an error on the assertion we made abo
 So we aren't passing the restaurant name in the `POST` body. That's easy to fix by passing it along from the argument to the method:
 
 ```diff
--  createRestaurant() {
-+  createRestaurant(name) {
--    return client.post('/restaurants', {});
-+    return client.post('/restaurants', {name});
-  },
+-createRestaurant() {
++createRestaurant(name) {
+-  return client.post('/restaurants', {});
++  return client.post('/restaurants', {name});
+ },
 ```
 
 Cypress confirms we're sending the `POST` request to the server correctly, and we've finally moved on to the next E2E assertion failure:
@@ -683,10 +683,10 @@ Cypress confirms we're sending the `POST` request to the server correctly, and w
 We aren't displaying the restaurant on the page. This is because we aren't yet returning it properly from the resolved value. The Axios promise resolves to the Axios response object, but we want to return a promise that resolves to the record. We can do this by getting the response body:
 
 ```diff
-   createRestaurant(name) {
--    return client.post('/restaurants', {name});
-+    return client.post('/restaurants', {name}).then(response => response.data);
-   },
+ createRestaurant(name) {
+-  return client.post('/restaurants', {name});
++  return client.post('/restaurants', {name}).then(response => response.data);
+ },
 ```
 
 Rerun the E2E test and it passes, and we see Sushi Place added to the restaurant list. Our feature is complete!
@@ -705,15 +705,15 @@ Now let's look into those edge cases:
 First, let's implement the form clearing out the text field after saving. In `NewRestaurantForm.spec.js`, add a new test:
 
 ```diff
-     it('calls createRestaurant with the name', () => {
-       expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
-     });
-+
-+    it('clears the name', () => {
-+      const {getByPlaceholderText} = context;
-+      expect(getByPlaceholderText('Add Restaurant').value).toEqual('');
-+    });
+   it('calls createRestaurant with the name', () => {
+     expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
    });
++
++  it('clears the name', () => {
++    const {getByPlaceholderText} = context;
++    expect(getByPlaceholderText('Add Restaurant').value).toEqual('');
++  });
+ });
 ```
 
 Save the test, and we get a test failure confirming that the text field is not yet cleared:
@@ -736,12 +736,12 @@ Where in the component should we clear the text field? Well, we have another sto
 Make this change in `NewRestaurantForm.js`:
 
 ```diff
-     handleSave() {
--      this.createRestaurant(this.name);
-+      this.createRestaurant(this.name).then(() => {
-+        setName('');
-+      });
-     },
+ handleSave() {
+-  this.createRestaurant(this.name);
++  this.createRestaurant(this.name).then(() => {
++    setName('');
++  });
+ },
 ```
 
 Save the file and the test fails, and we get a lot of scary console output. Let's handle one thing at a time. The easier one to fix is:
@@ -753,10 +753,10 @@ Error: Uncaught [TypeError: Cannot read property 'then' of undefined]
 Our mocked `api.createRestaurant` doesn't return a promise; let's update it to return a resolved one:
 
 ```diff
-     beforeEach(() => {
-+      createRestaurant.mockResolvedValue();
+ beforeEach(() => {
++  createRestaurant.mockResolvedValue();
 +
-       const {getByPlaceholderText, getByText} = context;
+   const {getByPlaceholderText, getByText} = context;
 ```
 
 Save and the test now passes; what's left is a warning:
@@ -819,19 +819,19 @@ const fillIn = (element, value) => fireEvent.change(element, {target: {value}});
 Then we can replace our existing call:
 
 ```diff
-     beforeEach(() => {
-       createRestaurant.mockResolvedValue();
+ beforeEach(() => {
+   createRestaurant.mockResolvedValue();
 
-       const {getByPlaceholderText, getByTestId} = context;
+   const {getByPlaceholderText, getByTestId} = context;
 
--      fireEvent.change(getByPlaceholderText('Add Restaurant'), {
--        target: {value: restaurantName},
--      });
-+      fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-       fireEvent.click(getByTestId('new-restaurant-submit-button'));
+-  fireEvent.change(getByPlaceholderText('Add Restaurant'), {
+-    target: {value: restaurantName},
+-  });
++  fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
+   fireEvent.click(getByTestId('new-restaurant-submit-button'));
 
-       return act(flushPromises);
-     });
+   return act(flushPromises);
+ });
 ```
 
 This reads a lot more nicely: "fill in the field with placeholder "Name", with restaurantName". By contrast, `fireEvent.click()` reads pretty simply as-is; we don't need to make a helper for it.
@@ -1013,10 +1013,10 @@ We'll add state to indicate whether it should be shown:
 Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown--that's all. The simplest logic to pass this test is to always show the validation error after saving:
 
 ```diff
-   const handleSubmit = e => {
-     e.preventDefault();
-+    setValidationError(true);
-     createRestaurant(name).then(() => {
+ const handleSubmit = e => {
+   e.preventDefault();
++  setValidationError(true);
+   createRestaurant(name).then(() => {
 ```
 
 Save the file and all tests pass.
@@ -1033,15 +1033,15 @@ it('does not display a validation error', () => {
 We can pass this test by adding a conditional around setting the `validationError` flag:
 
 ```diff
-   const handleSubmit = e => {
-     e.preventDefault();
--    setValidationError(true);
+ const handleSubmit = e => {
+   e.preventDefault();
+-  setValidationError(true);
 +
-+    if (!name) {
-+      setValidationError(true);
-+    }
++  if (!name) {
++    setValidationError(true);
++  }
 +
-     createRestaurant(name).then(() => {
+   createRestaurant(name).then(() => {
 ```
 
 Save the file and all tests pass.
@@ -1090,11 +1090,11 @@ Save the test file and our new test fails:
 We can fix this by clearing the `validationError` flag upon a successful submission:
 
 ```diff
-       if (!name) {
-         setValidationError(true);
-+      } else {
-+        setValidationError(false);
-       }
+ if (!name) {
+   setValidationError(true);
++} else {
++  setValidationError(false);
+ }
 ```
 
 Note that we aren't waiting for the web service to return to clear it out, the way we clear out the name field. We know right away that the form is valid, so we can clear it before the web service call is made.
@@ -1122,19 +1122,19 @@ it('does not call createRestaurant', () => {
 We can fix this error by moving the call to `createRestaurant()` inside the true branch of the conditional:
 
 ```diff
-     if (name) {
-       setValidationError(false);
-+      createRestaurant(name).then(() => {
-+        setName('');
-+      });
-     } else {
-       setValidationError(true);
-     }
+   if (name) {
+     setValidationError(false);
++    createRestaurant(name).then(() => {
++      setName('');
++    });
+   } else {
+     setValidationError(true);
+   }
 -
--    createRestaurant(name).then(() => {
--      setName('');
--    });
-   };
+-  createRestaurant(name).then(() => {
+-    setName('');
+-  });
+ };
 ```
 
 Save the file and the test passes. If you try to submit the form with an empty restaurant name in the browser, you'll see:
@@ -1196,12 +1196,12 @@ Save the file and we get an expectation failure:
 As usual, we'll first solve this by hard-coding the element into the component:
 
 ```diff
-   return (
-     <form onSubmit={handleSubmit}>
-+      <Alert severity="error">
-+        The restaurant could not be saved. Please try again.
-+      </Alert>
-       {validationError && <Alert severity="error">Name is required</Alert>}
+ return (
+   <form onSubmit={handleSubmit}>
++    <Alert severity="error">
++      The restaurant could not be saved. Please try again.
++    </Alert>
+     {validationError && <Alert severity="error">Name is required</Alert>}
 ```
 
 Save and we get a bit of a strange error:
@@ -1220,17 +1220,17 @@ Save and we get a bit of a strange error:
 The message isn't very helpful, but "thrown" is a clue. What's happening is that our call to `createRestaurants()` is rejecting, but we aren't handling it. Let's handle it with an empty `catch()` function, just to silence this warning; we'll add behavior to that `catch()` function momentarily.
 
 ```diff
-     if (name) {
-       setValidationError(false);
--      createRestaurant(name).then(() => {
--        setName('');
--      });
-+      createRestaurant(name)
-+        .then(() => {
-+          setName('');
-+        })
-+        .catch(() => {});
-     } else {
+ if (name) {
+   setValidationError(false);
+-  createRestaurant(name).then(() => {
+-    setName('');
+-  });
++  createRestaurant(name)
++    .then(() => {
++      setName('');
++    })
++    .catch(() => {});
+ } else {
 ```
 
 Save and the test passes. Now, when do we want that message to *not* show? For one thing, when the component initially mounts. Add another test to the "initially" describe block:
@@ -1330,10 +1330,10 @@ e try again.</div>
 We should be able to make this test pass by just clearing the `serverError` flag when attempting to save:
 
 ```diff
-     if (name) {
-       setValidationError(false);
- +     setServerError(false);
-       createRestaurant(name)
+ if (name) {
+   setValidationError(false);
++  setServerError(false);
+   createRestaurant(name)
 ```
 
 Save the file, but surprisingly, the test failure doesn't change! Why is that? It turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.
@@ -1341,18 +1341,18 @@ Save the file, but surprisingly, the test failure doesn't change! Why is that? I
 We can fix this by waiting for promises to flush after the first click, as well as after the second:
 
 ```diff
--    beforeEach(() => {
-+    beforeEach(async () => {
-       createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
+-beforeEach(() => {
++beforeEach(async () => {
+   createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
-       const {getByPlaceholderText, getByText} = context;
-       fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-       fireEvent.click(getByTestId('new-restaurant-submit-button'));
-+      await act(flushPromises);
+   const {getByPlaceholderText, getByText} = context;
+   fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
+   fireEvent.click(getByTestId('new-restaurant-submit-button'));
++  await act(flushPromises);
 +
-       fireEvent.click(getByTestId('new-restaurant-submit-button'));
-       return act(flushPromises);
-    });
+   fireEvent.click(getByTestId('new-restaurant-submit-button'));
+   return act(flushPromises);
+ });
 ```
 
 Note that we need to make the `beforeEach` function `async`, so we can `await` the call to `flushPromises()`. This ensures the results of the first click will complete before we start the second.

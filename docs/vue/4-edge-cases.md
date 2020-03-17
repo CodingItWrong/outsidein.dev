@@ -78,19 +78,19 @@ Save the file and the tests should still pass. When refactoring like this, we wa
 Next, let's remove the `beforeEach` block and call `mountWithStore` at the start of each our our tests instead:
 
 ```diff
--  beforeEach(() => {
--    mountWithStore();
--  });
+-beforeEach(() => {
+-  mountWithStore();
+-});
 -
-   it('loads restaurants on mount', () => {
-+    mountWithStore();
-     expect(restaurantsModule.actions.load).toHaveBeenCalled();
-   });
+ it('loads restaurants on mount', () => {
++  mountWithStore();
+   expect(restaurantsModule.actions.load).toHaveBeenCalled();
+ });
 
-   it('displays the restaurants', () => {
-+    mountWithStore();
+ it('displays the restaurants', () => {
++  mountWithStore();
 +
-     const firstRestaurantName = wrapper
+   const firstRestaurantName = wrapper
 ```
 
 Save and confirm the tests pass.
@@ -98,24 +98,24 @@ Save and confirm the tests pass.
 As our final refactoring, let's change the `mountWithStore` function to allow passing in the state the store should use, with a default:
 
 ```diff
--  const mountWithStore = () => {
-+  const mountWithStore = (state = {records}) => {
-     restaurantsModule = {
-       namespaced: true,
--      state: {records},
-+      state,
-       actions: {
-         load: jest.fn().mockName('load'),
-       },
+-const mountWithStore = () => {
++const mountWithStore = (state = {records}) => {
+   restaurantsModule = {
+     namespaced: true,
+-    state: {records},
++    state,
+     actions: {
+       load: jest.fn().mockName('load'),
+     },
 ```
 
 Now we're ready to write our new test for when the store is in a loading state. Let's pass in the state with a new property for whether the restaurants are loading:
 
 ```js
-  it('displays the loading indicator while loading', () => {
-    mountWithStore({loading: true});
-    expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(true);
-  });
+it('displays the loading indicator while loading', () => {
+  mountWithStore({loading: true});
+  expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(true);
+});
 ```
 
 Note that instead of calling `wrapper.findAll()` here, we call `wrapper.contains()`. We don't actually need the element returned to us, we just need to know if it's present or not. We confirm that it's true, showing that the element is present.
@@ -126,13 +126,13 @@ Sticking with the approach of making the smallest possible change to make the te
 Vuetify has a `v-progress-circular` spinner that will work great. Add it to `RestaurantList.vue` with the correct test ID:
 
 ```diff
-   <div>
-+    <v-progress-circular
-+      indeterminate
-+      color="teal"
-+      data-testid="loading-indicator"
-+    />
-     <v-list-item
+ <div>
++  <v-progress-circular
++    indeterminate
++    color="teal"
++    data-testid="loading-indicator"
++  />
+   <v-list-item
 ```
 
 The test passes.
@@ -144,28 +144,28 @@ No, and here's why: if we add the conditional now, *it's not tested*. Because ou
 In our case, we *also* need a test to confirm that the conditional is *not* shown when *not* loading. Let's add that now:
 
 ```js
-  it('does not display the loading indicator while not loading', () => {
-    mountWithStore({loading: false});
-    expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
-  });
+it('does not display the loading indicator while not loading', () => {
+  mountWithStore({loading: false});
+  expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
+});
 ```
 
 This test fails, of course. And now that we have two tests, this will force us to implement the conditional to get them both to pass:
 
 ```diff
-   <div>
-     <v-progress-circular
-+      v-if="loading"
-       indeterminate
-       color="teal"
-       data-testid="loading-indicator"
-     />
-     <v-list-item
+ <div>
+   <v-progress-circular
++    v-if="loading"
+     indeterminate
+     color="teal"
+     data-testid="loading-indicator"
+   />
+   <v-list-item
 ...
-   computed: mapState({
-+    loading: state => state.restaurants.loading,
-     restaurants: state => state.restaurants.records,
-   }),
+ computed: mapState({
++  loading: state => state.restaurants.loading,
+   restaurants: state => state.restaurants.records,
+ }),
 ```
 
 Save the file and all tests pass.
@@ -183,35 +183,35 @@ Save and confirm the tests still pass.
 Now, we pass `loading: false` to the store, but conceptually that's the default state of the store. Let's set up `mountWithStore` to pass that as default state:
 
 ```diff
--  const mountWithStore = (state = {records}) => {
-+  const mountWithStore = (state = {records, loading: false}) => {
+-const mountWithStore = (state = {records}) => {
++const mountWithStore = (state = {records, loading: false}) => {
 ```
 
 Now we don't need to pass a state override in the test of the loading indicator hiding:
 
 ```diff
-     it('does not display the loading indicator while not loading', () => {
--      mountWithStore({loading: false});
-+      mountWithStore();
+ it('does not display the loading indicator while not loading', () => {
+-  mountWithStore({loading: false});
++  mountWithStore();
 ```
 
 Now our two "when loading succeeds" tests have the same call to `mountWithStore()`. It's small, so we could leave it in the individual tests. But we could also pull it out to a `beforeEach`. Let's do that now:
 
 ```diff
-   describe('when loading succeeds', () => {
--    it('does not display the loading indicator while not loading', () => {
-+    beforeEach(() => {
-       mountWithStore();
-+    });
+ describe('when loading succeeds', () => {
+-  it('does not display the loading indicator while not loading', () => {
++  beforeEach(() => {
+     mountWithStore();
++  });
 +
-+    it('does not display the loading indicator while not loading', () => {
-       expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
-     });
++  it('does not display the loading indicator while not loading', () => {
+     expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
+   });
 
-     it('displays the restaurants', () => {
--      mountWithStore();
+   it('displays the restaurants', () => {
+-    mountWithStore();
 -
-       const firstRestaurantName = wrapper
+     const firstRestaurantName = wrapper
 ```
 
 Save and the tests should pass.
@@ -241,18 +241,18 @@ describe('while loading', () => {
 Inside that describe block, add the test:
 
 ```js
-      it('sets a loading flag', () => {
-        const api = {
-          loadRestaurants: () => new Promise(() => {}),
-        };
-        const store = new Vuex.Store({
-          modules: {
-            restaurants: restaurants(api),
-          },
-        });
-        store.dispatch('restaurants/load');
-        expect(store.state.restaurants.loading).toEqual(true);
-      });
+it('sets a loading flag', () => {
+  const api = {
+    loadRestaurants: () => new Promise(() => {}),
+  };
+  const store = new Vuex.Store({
+    modules: {
+      restaurants: restaurants(api),
+    },
+  });
+  store.dispatch('restaurants/load');
+  expect(store.state.restaurants.loading).toEqual(true);
+});
 ```
 
 Here's what's going on:
@@ -278,10 +278,10 @@ The `loading` flag isn't even defined yet.
 Following the principle of making the test green in the easiest way possible, we just set the state of the store module to have a `loading` flag that is already `true`:
 
 ```diff
-   state: {
-     records: [],
-+    loading: true,
-   },
+ state: {
+   records: [],
++  loading: true,
+ },
 ```
 
 As before, we know this won't be our final implementation, but we want to write tests that drive us to handle all the scenarios.
@@ -293,108 +293,108 @@ So why is it not enough to have a `loading` flag that is always `true`? Well, we
 First, the `records` array is never modified by the test, so we can just define it at the top level:
 
 ```diff
-     describe('when loading succeeds', () => {
-+      const records = [
-+        {id: 1, name: 'Sushi Place'},
-+        {id: 2, name: 'Pizza Place'},
-+      ];
+ describe('when loading succeeds', () => {
++  const records = [
++    {id: 1, name: 'Sushi Place'},
++    {id: 2, name: 'Pizza Place'},
++  ];
 
-      it('stores the restaurants', async () => {
--        const records = [
--          {id: 1, name: 'Sushi Place'},
--          {id: 2, name: 'Pizza Place'},
--        ];
-         const api = {
+   it('stores the restaurants', async () => {
+-    const records = [
+-      {id: 1, name: 'Sushi Place'},
+-      {id: 2, name: 'Pizza Place'},
+-    ];
+     const api = {
 ```
 
 Next, we will need to access the `store` from both tests, so make it a `let` variable defined outside the individual test:
 
 ```diff
-       ];
+ ];
 
-+      let store;
++let store;
 +
-       it('stores the restaurants', async () => {
-         const api = {
-           loadRestaurants: () => Promise.resolve(records),
-         };
--        const store = new Vuex.Store({
-+        store = new Vuex.Store({
-           modules: {
+ it('stores the restaurants', async () => {
+   const api = {
+     loadRestaurants: () => Promise.resolve(records),
+   };
+-  const store = new Vuex.Store({
++  store = new Vuex.Store({
+     modules: {
 ```
 
 Finally, we move the code that sets up the `api`, the `store`, and dispatches the action to a `beforeEach` block:
 
 ```diff
-       let store;
+ let store;
 
-+      beforeEach(async () => {
-+        const api = {
-+          loadRestaurants: () => Promise.resolve(records),
-+        };
-+        store = new Vuex.Store({
-+          modules: {
-+            restaurants: restaurants(api),
-+          },
-+        });
++beforeEach(async () => {
++  const api = {
++    loadRestaurants: () => Promise.resolve(records),
++  };
++  store = new Vuex.Store({
++    modules: {
++      restaurants: restaurants(api),
++    },
++  });
 +
-+        await store.dispatch('restaurants/load');
-+      });
++  await store.dispatch('restaurants/load');
++});
 +
-       it('stores the restaurants', async () => {
--        const api = {
--          loadRestaurants: () => Promise.resolve(records),
--        };
--        store = new Vuex.Store({
--          modules: {
--            restaurants: restaurants(api),
--          },
--        });
+ it('stores the restaurants', async () => {
+-  const api = {
+-    loadRestaurants: () => Promise.resolve(records),
+-  };
+-  store = new Vuex.Store({
+-    modules: {
+-      restaurants: restaurants(api),
+-    },
+-  });
 -
--        await store.dispatch('restaurants/load');
+-  await store.dispatch('restaurants/load');
 -
-         expect(store.state.restaurants.records).toEqual(records);
-       });
+   expect(store.state.restaurants.records).toEqual(records);
+ });
 ```
 
 Now we can simplify our async code. Since the `beforeEach` function only has one promise it waits on, and it's the final statement, we can just return the promise instead of `await`ing it, and then the function no longer needs to be an `async` function:
 
 ```diff
--      beforeEach(async () => {
-+      beforeEach(() => {
-        const api = {
-          loadRestaurants: () => Promise.resolve(records),
-        };
+-beforeEach(async () => {
++beforeEach(() => {
+  const api = {
+    loadRestaurants: () => Promise.resolve(records),
+  };
 ...
--        await store.dispatch('restaurants/load');
-+        return store.dispatch('restaurants/load');
-       });
+-  await store.dispatch('restaurants/load');
++  return store.dispatch('restaurants/load');
+ });
 ```
 
 And the test no longer has any asynchrony, so we can remove the `async` keyword from the function as well:
 
 ```diff
--      it('stores the restaurants', async () => {
-+      it('stores the restaurants', () => {
-         expect(store.state.restaurants.records).toEqual(records);
-       });
+-it('stores the restaurants', async () => {
++it('stores the restaurants', () => {
+   expect(store.state.restaurants.records).toEqual(records);
+ });
 ```
 
 Now we can add another test in that describe block to check the loading state:
 
 ```js
-      it('clears the loading flag', () => {
-        expect(store.state.restaurants.loading).toEqual(false);
-      });
+it('clears the loading flag', () => {
+  expect(store.state.restaurants.loading).toEqual(false);
+});
 ```
 
 Our test fails, as we expect, and now we need to actually clear the loading flag. We can do this in the `storeRecords` mutation:
 
 ```diff
-     storeRecords(state, records) {
-       state.records = records;
-+      state.loading = false;
-     },
+ storeRecords(state, records) {
+   state.records = records;
++  state.loading = false;
+ },
 ```
 
 Save the file and our test passes.
@@ -404,16 +404,16 @@ Right now we dispatch the `load` action as soon as our app starts, so that's *al
 So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
 
 ```js
-  describe('initially', () => {
-    it('does not have the loading flag set', () => {
-      const store = new Vuex.Store({
-        modules: {
-          restaurants: restaurants(),
-        },
-      });
-      expect(store.state.restaurants.loading).toEqual(false);
+describe('initially', () => {
+  it('does not have the loading flag set', () => {
+    const store = new Vuex.Store({
+      modules: {
+        restaurants: restaurants(),
+      },
     });
+    expect(store.state.restaurants.loading).toEqual(false);
   });
+});
 ```
 
 In this case we don't need to pass an `api` to the restaurant module function at all, because we won't be calling it. We assert that when we first create the store module its loading state is `false`.
@@ -421,29 +421,29 @@ In this case we don't need to pass an `api` to the restaurant module function at
 Our test fails, as we expect. Let's change the initial `loading` flag:
 
 ```diff
-   state: {
-     records: [],
--    loading: true,
-+    loading: false,
-   },
+ state: {
+   records: [],
+-  loading: true,
++  loading: false,
+ },
 ```
 
 Now our test of the initial state passes, but our test for while loading fails. Previously the way that the app ensured the `loading` flag was set while loading was the fact that it was *initially* set. Now that it's initially cleared, we need to *change* the value when `load` is called. We can do this by adding a new mutation that is committed immediately in the `load` action, before the API is called:
 
 ```diff
-   actions: {
-     load({commit}) {
-+      commit('startLoading');
-       api.loadRestaurants().then(records => {
-         commit('storeRecords', records);
-       });
-     },
+ actions: {
+   load({commit}) {
++    commit('startLoading');
+     api.loadRestaurants().then(records => {
+       commit('storeRecords', records);
+     });
    },
-   mutations: {
-+    startLoading(state) {
-+      state.loading = true;
-+    },
-     storeRecords(state, records) {
+ },
+ mutations: {
++  startLoading(state) {
++    state.loading = true;
++  },
+   storeRecords(state, records) {
 ```
 
 Save the file, and all our tests pass. We now have a loading flag that starts `false`, is set to `true` when loading begins, and is set back to `false` when loading ends.
@@ -462,15 +462,15 @@ Note that we listed the loading flag and error flag as separate stories. Instead
 Start with the test for the component. We are describing a new situation, when loading fails, so let's put our test in a new `describe` block:
 
 ```js
-  describe('when loading fails', () => {
-    beforeEach(() => {
-      mountWithStore({loadError: true});
-    });
-
-    it('displays the error message', () => {
-      expect(wrapper.contains('[data-testid="loading-error"]')).toBe(true);
-    });
+describe('when loading fails', () => {
+  beforeEach(() => {
+    mountWithStore({loadError: true});
   });
+
+  it('displays the error message', () => {
+    expect(wrapper.contains('[data-testid="loading-error"]')).toBe(true);
+  });
+});
 ```
 
 We decide we want to indicate the error state with a flag named `loadError`, so we initialize the store with that flag set to `true`.
@@ -480,16 +480,15 @@ Fix it the simplest way possible by hard-coding the error message to show.
 Vuetify has a `v-alert` component that will work well:
 
 ```diff
-   <div>
-     <v-progress-circular
-       v-if="loading"
-       indeterminate
-       data-testid="loading-indicator"
-     />
-+    <v-alert type="error" data-testid="loading-error">
-+      Restaurants could not be loaded.
-+    </v-alert>
-    <v-list-item
+ <v-progress-circular
+   v-if="loading"
+   indeterminate
+   data-testid="loading-indicator"
+ />
++<v-alert type="error" data-testid="loading-error">
++  Restaurants could not be loaded.
++</v-alert>
+ <v-list-item
 ```
 
 Note that we aren't asserting the text of the message in our test. This way, the copy can be changed, and our test still passes. We are just confirming that whatever the error message is, that it is displayed.
@@ -497,20 +496,20 @@ Note that we aren't asserting the text of the message in our test. This way, the
 Save the file and our test passes. Now, specify that the error does _not_ show when loading succeeds:
 
 ```diff
-   describe('when loading succeeds', () => {
-     beforeEach(() => {
-       mountWithStore();
-     });
+ describe('when loading succeeds', () => {
+   beforeEach(() => {
+     mountWithStore();
+   });
 
-     it('does not display the loading indicator while not loading', () => {
-       expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
-     });
+   it('does not display the loading indicator while not loading', () => {
+     expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
+   });
 
-+    it('does not display the error message', () => {
-+      expect(wrapper.contains('[data-testid="loading-error"]')).toBe(false);
-+    });
++  it('does not display the error message', () => {
++    expect(wrapper.contains('[data-testid="loading-error"]')).toBe(false);
++  });
 +
-     it('displays the restaurants', () => {
+   it('displays the restaurants', () => {
 ```
 
 Make this test pass by making the display of the error alert conditional on the `loadError` store property that we set up in our test:
@@ -523,13 +522,13 @@ Make this test pass by making the display of the error alert conditional on the 
      </v-alert>
      <v-list-item
 ...
-  }),
-  computed: mapState({
-    loading: state => state.restaurants.loading,
-+   loadError: state => state.restaurants.loadError,
-    restaurants: state => state.restaurants.records,
-  }),
-};
+   }),
+   computed: mapState({
+     loading: state => state.restaurants.loading,
++    loadError: state => state.restaurants.loadError,
+     restaurants: state => state.restaurants.records,
+   }),
+ };
 ```
 
 Now both tests pass. Our component is working; on to the store.
@@ -537,26 +536,26 @@ Now both tests pass. Our component is working; on to the store.
 In `restaurants.spec.js`, create a new `describe` block after "when loading succeeds" for the error scenario. Let's go ahead and do the setup in a `beforeEach` block, assuming we will need to have other expectations too:
 
 ```js
-    describe('when loading fails', () => {
-      let store;
+describe('when loading fails', () => {
+  let store;
 
-      beforeEach(() => {
-        const api = {
-          loadRestaurants: () => Promise.reject(),
-        };
-        store = new Vuex.Store({
-          modules: {
-            restaurants: restaurants(api),
-          },
-        });
-
-        return store.dispatch('restaurants/load');
-      });
-
-      it('sets an error flag', () => {
-        expect(store.state.restaurants.loadError).toEqual(true);
-      });
+  beforeEach(() => {
+    const api = {
+      loadRestaurants: () => Promise.reject(),
+    };
+    store = new Vuex.Store({
+      modules: {
+        restaurants: restaurants(api),
+      },
     });
+
+    return store.dispatch('restaurants/load');
+  });
+
+  it('sets an error flag', () => {
+    expect(store.state.restaurants.loadError).toEqual(true);
+  });
+});
 ```
 
 We decide that when an API call fails, the promise `api.loadRestaurants()` returns will reject. This is common practice for JavaScript HTTP clients.
@@ -579,18 +578,18 @@ When we run our test, it fails, but we also get a warning:
 So in addition to our expectation not passing, Jest is warning that we have an unhandled promise rejection. Since it's a good practice to handle promise rejections in general, let's set up our action to catch a rejected promise. We won't do anything with the catch for now; maybe our tests will drive us to do something in there later.
 
 ```diff
-     load({commit}) {
-       commit('startLoading');
--      api.loadRestaurants().then(records => {
--        commit('storeRecords', records);
--      });
-+      api
-+        .loadRestaurants()
-+        .then(records => {
-+          commit('storeRecords', records);
-+        })
-+        .catch(() => {});
-     },
+ load({commit}) {
+   commit('startLoading');
+-  api.loadRestaurants().then(records => {
+-    commit('storeRecords', records);
+-  });
++  api
++    .loadRestaurants()
++    .then(records => {
++      commit('storeRecords', records);
++    })
++    .catch(() => {});
+ },
 ```
 
 This fixes the warning, and now we just have the failing expectation:
@@ -613,11 +612,11 @@ This fixes the warning, and now we just have the failing expectation:
 We fix this failing test the simplest way possible, adding an initially-true `loadError` state property:
 
 ```diff
-   state: {
-     records: [],
-     loading: false,
-+    loadError: true,
-   },
+ state: {
+   records: [],
+   loading: false,
++  loadError: true,
+ },
 ```
 
 Save and the tests pass.
@@ -625,74 +624,74 @@ Save and the tests pass.
 Now we specify that the `loadError` flag should actually start out as `false`, and _only_ be set to true upon a failing load. First, extract the setup in the "initially" block:
 
 ```diff
-   describe('initially', () => {
-+    let store;
+ describe('initially', () => {
++  let store;
 +
-+    beforeEach(() => {
-+      store = new Vuex.Store({
-+        modules: {
-+          restaurants: restaurants(),
-+        },
-+      });
++  beforeEach(() => {
++    store = new Vuex.Store({
++      modules: {
++        restaurants: restaurants(),
++      },
 +    });
++  });
 +
-     it('does not have the loading flag set', () => {
--      const store = new Vuex.Store({
--        modules: {
--          restaurants: restaurants(),
--        },
--      });
-       expect(store.state.restaurants.loading).toEqual(false);
-     });
+   it('does not have the loading flag set', () => {
+-    const store = new Vuex.Store({
+-      modules: {
+-        restaurants: restaurants(),
+-      },
+-    });
+     expect(store.state.restaurants.loading).toEqual(false);
    });
+ });
 ```
 
 Then add a test for the `loadError` flag:
 
 ```diff
-   describe('initially', () => {
+ describe('initially', () => {
 ...
-     it('does not have the loading flag set', () => {
-       expect(store.state.restaurants.loading).toEqual(false);
-     });
-+
-+    it('does not have the error flag set', () => {
-+      expect(store.state.restaurants.loadError).toEqual(false);
-+    });
+   it('does not have the loading flag set', () => {
+     expect(store.state.restaurants.loading).toEqual(false);
    });
++
++  it('does not have the error flag set', () => {
++    expect(store.state.restaurants.loadError).toEqual(false);
++  });
+ });
 ```
 
 The test fails. Make it pass while keeping the other tests passing, by setting the flag to `false` initially, and adding a new mutation to handle if the API promise rejects:
 
 ```diff
-   state: {
-     records: [],
-     loading: false,
--    loadError: true,
-+    loadError: false,
+ state: {
+   records: [],
+   loading: false,
+-  loadError: true,
++  loadError: false,
+ },
+...
+   load({commit}) {
+     commit('startLoading');
+     api
+       .loadRestaurants()
+       .then(records => {
+         commit('storeRecords', records);
+       })
+-      .catch(() => {});
++      .catch(() => {
++        commit('recordLoadingError');
++      });
+  },
+...
+ mutations: {
+   startLoading(state) {
+     state.loading = true;
    },
-...
-     load({commit}) {
-       commit('startLoading');
-       api
-         .loadRestaurants()
-         .then(records => {
-           commit('storeRecords', records);
-         })
--        .catch(() => {});
-+        .catch(() => {
-+          commit('recordLoadingError');
-+        });
-    },
-...
-   mutations: {
-     startLoading(state) {
-       state.loading = true;
-     },
-+    recordLoadingError(state) {
-+      state.loadError = true;
-+    },
-     storeRecords(state, records) {
++  recordLoadingError(state) {
++    state.loadError = true;
++  },
+   storeRecords(state, records) {
 ```
 
 Save the file and all tests should pass.
@@ -700,33 +699,33 @@ Save the file and all tests should pass.
 We also want to make sure that if the restaurants are loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "load action > while loading" group, so extract the setup from the "sets the loading flag" test:
 
 ```diff
-     describe('while loading', () => {
-+      let store;
+ describe('while loading', () => {
++  let store;
 +
-+      beforeEach(() => {
-+        const api = {
-+          loadRestaurants: () => new Promise(() => {}),
-+        };
-+        store = new Vuex.Store({
-+          modules: {
-+            restaurants: restaurants(api),
-+          },
-+        });
-+        store.dispatch('restaurants/load');
-+      });
++  beforeEach(() => {
++    const api = {
++      loadRestaurants: () => new Promise(() => {}),
++    };
++    store = new Vuex.Store({
++      modules: {
++        restaurants: restaurants(api),
++      },
++    });
++    store.dispatch('restaurants/load');
++  });
 +
-       it('sets a loading flag', () => {
--        const api = {
--          loadRestaurants: () => new Promise(() => {}),
--        };
--        const store = new Vuex.Store({
--          modules: {
--            restaurants: restaurants(api),
--          },
--        });
-         expect(store.state.restaurants.loading).toEqual(true);
-       });
-     });
+   it('sets a loading flag', () => {
+-    const api = {
+-      loadRestaurants: () => new Promise(() => {}),
+-    };
+-    const store = new Vuex.Store({
+-      modules: {
+-        restaurants: restaurants(api),
+-      },
+-    });
+     expect(store.state.restaurants.loading).toEqual(true);
+   });
+ });
 ```
 
 Now we need a way to have our store start out with the `loadError` flag set. To do this, we can add an optional argument to our `restaurants()` module setup function to allow us to override properties of the state. It won't be used in production; it's just a convenience for testing.
@@ -751,12 +750,12 @@ Save the file and ensure the tests still pass after this refactoring.
 Then, update the call to `restaurants()` in our `beforeEach` block to set `loadError` to `true`:
 
 ```diff
-         store = new Vuex.Store({
-           modules: {
--            restaurants: restaurants(api),
-+            restaurants: restaurants(api, {loadError: true}),
-           },
-         });
+ store = new Vuex.Store({
+   modules: {
+-    restaurants: restaurants(api),
++    restaurants: restaurants(api, {loadError: true}),
+   },
+ });
 ```
 
 Save and the tests should still pass.
@@ -764,43 +763,43 @@ Save and the tests should still pass.
 Now we're finally ready to set up our expectation that the `loadError` should be reset to `false` after starting a load operation. Add the following test after the "sets a loading flag" test:
 
 ```js
-      it('clears the error flag', () => {
-        expect(store.state.restaurants.loadError).toEqual(false);
-      });
+it('clears the error flag', () => {
+  expect(store.state.restaurants.loadError).toEqual(false);
+});
 ```
 
 Save the file and the new test should fail.
 Fix it by clearing `loadError` in the `startLoading` mutation:
 
 ```diff
-     startLoading(state) {
-       state.loading = true;
-+      state.loadError = false;
-     },
+ startLoading(state) {
+   state.loading = true;
++  state.loadError = false;
+ },
 ```
 
 Now that we are handling the error state, there's one more bit of functionality we could add: currently the `loading` flag is not cleared when the request errors. Let's add a test for that:
 
 ```diff
-     describe('when loading fails', () => {
+ describe('when loading fails', () => {
 ...
-       it('sets an error flag', () => {
-         expect(store.state.restaurants.loadError).toEqual(true);
-       });
+   it('sets an error flag', () => {
+     expect(store.state.restaurants.loadError).toEqual(true);
+   });
 +
-+      it('clears the loading flag', () => {
-+        expect(store.state.restaurants.loading).toEqual(false);
-+      });
-     });
++  it('clears the loading flag', () => {
++    expect(store.state.restaurants.loading).toEqual(false);
++  });
+ });
 ```
 
 To make it pass, just set the `loading` state in `recordLoadingError`:
 
 ```diff
-     recordLoadingError(state) {
-+      state.loading = false;
-       state.loadError = true;
-     },
+ recordLoadingError(state) {
++  state.loading = false;
+   state.loadError = true;
+ },
 ```
 
 With this, our tests pass.

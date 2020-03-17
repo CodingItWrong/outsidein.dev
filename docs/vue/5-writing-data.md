@@ -124,12 +124,12 @@ Rerun the E2E tests and they should get past finding and typing into the Add Res
 To fix this error, we add a button to `NewRestaurantForm` but don't wire it up to anything yet:
 
 ```diff
-   <form>
-     <v-text-field placeholder="Add Restaurant" filled type="text" />
-+    <v-btn color="teal" class="white--text">
-+      Add
-+    </v-btn>
-   </form>
+ <form>
+   <v-text-field placeholder="Add Restaurant" filled type="text" />
++  <v-btn color="teal" class="white--text">
++    Add
++  </v-btn>
+ </form>
 ```
 
 Rerun the E2E tests and we get this failure:
@@ -201,23 +201,23 @@ A few notes:
 Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
 
 ```js
-  describe('when filled in', () => {
-    beforeEach(() => {
-      wrapper
-        .find('[data-testid="new-restaurant-name-field"]')
-        .setValue(restaurantName);
-      wrapper
-        .find('[data-testid="new-restaurant-submit-button"]')
-        .trigger('click');
-    });
-
-    it('dispatches the create action', () => {
-      expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
-        expect.anything(),
-        restaurantName,
-      );
-    });
+describe('when filled in', () => {
+  beforeEach(() => {
+    wrapper
+      .find('[data-testid="new-restaurant-name-field"]')
+      .setValue(restaurantName);
+    wrapper
+      .find('[data-testid="new-restaurant-submit-button"]')
+      .trigger('click');
   });
+
+  it('dispatches the create action', () => {
+    expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
+      expect.anything(),
+      restaurantName,
+    );
+  });
+});
 ```
 
 We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click the submit button.
@@ -242,15 +242,15 @@ Save the file and we get a failing test, as we expect:
 To fix this error, let's add the `data-testid` attribute to the existing text field:
 
 ```diff
-    <form>
--     <v-text-field placeholder="Add Restaurant" filled type="text" />
-+     <v-text-field
-+      placeholder="Add Restaurant"
-+      filled
-+      type="text"
-+      data-testid="new-restaurant-name-field"
-+    />
-     <v-btn color="teal" class="white--text">
+ <form>
+-  <v-text-field placeholder="Add Restaurant" filled type="text" />
++  <v-text-field
++    placeholder="Add Restaurant"
++    filled
++    type="text"
++    data-testid="new-restaurant-name-field"
++  />
+   <v-btn color="teal" class="white--text">
 ```
 
 The next error we get is:
@@ -305,8 +305,7 @@ The test failure reports the action wasn't called at all. This is because our bu
 +  >
 +    Add
 +  </v-btn>
-</form>
-
+ </form>
 ```
 
 Now, write just enough production code to get past the current test failure, let's just call the action without any arguments:
@@ -370,30 +369,30 @@ Save the file and the test failure has changed:
 Now we're getting to the end of our test, and the function is called, but it didn't receive the arguments it expected. It's a bit hard to find the second argument because the contents of the first argument Vuex provide are spelled out. But it's the `undefined`. To pass the restaurant name, first we're going to need to bind the form field's value to a data property:
 
 ```diff
-     <v-text-field
-       placeholder="Add Restaurant"
-       filled
-       type="text"
-+      v-model="name"
-       data-testid="new-restaurant-name-field"
-     />
+   <v-text-field
+     placeholder="Add Restaurant"
+     filled
+     type="text"
++    v-model="name"
+     data-testid="new-restaurant-name-field"
+   />
 ...
-   name: 'NewRestaurantForm',
-+  data() {
-+    return {
-+      name: '',
-+    };
-+  },
-   methods: {
+ name: 'NewRestaurantForm',
++data() {
++  return {
++    name: '',
++  };
++},
+ methods: {
 ```
 
 Then we'll pass the data property when calling the action:
 
 ```diff
-     handleSave() {
--      this.createRestaurant();
-+      this.createRestaurant(this.name);
-     },
+ handleSave() {
+-  this.createRestaurant();
++  this.createRestaurant(this.name);
+ },
 ```
 
 Save the file and the test passes.
@@ -413,28 +412,28 @@ Our `NewRestaurantForm` is dispatching the `restaurants/create` action, but beca
 In `tests/unit/store/restaurants.spec.js`, below the "load action" group, add a "create action" group, and write a test to confirm the API is called:
 
 ```js
-  describe('create action', () => {
-    const newRestaurantName = 'Sushi Place';
+describe('create action', () => {
+  const newRestaurantName = 'Sushi Place';
 
-    let api;
-    let store;
+  let api;
+  let store;
 
-    beforeEach(() => {
-      api = {
-        createRestaurant: jest.fn().mockName('createRestaurant'),
-      };
-      store = new Vuex.Store({
-        modules: {
-          restaurants: restaurants(api),
-        },
-      });
-    });
-
-    it('saves the restaurant to the server', () => {
-      store.dispatch('restaurants/create', newRestaurantName);
-      expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
+  beforeEach(() => {
+    api = {
+      createRestaurant: jest.fn().mockName('createRestaurant'),
+    };
+    store = new Vuex.Store({
+      modules: {
+        restaurants: restaurants(api),
+      },
     });
   });
+
+  it('saves the restaurant to the server', () => {
+    store.dispatch('restaurants/create', newRestaurantName);
+    expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
+  });
+});
 ```
 
 We'll need to add a second expectation shortly so we go ahead and set up the test in a `beforeEach`.
@@ -462,28 +461,27 @@ Let's fix that error first.
 Add an empty action to the store module:
 
 ```diff
-   actions: {
-     load({commit}) {
+ actions: {
+   load({commit}) {
 ...
-     },
-+    create() {},
    },
++  create() {},
+ },
 ```
 
 This fixes the error, so now we just get the expectation failure that `api.createRestaurant` wasn't called.
 Update the `create` action to call it:
 
 ```diff
-   actions: {
-     load({commit}) {
+ actions: {
+   load({commit}) {
 ...
-     },
--    create() {},
-+    create() {
-+      api.createRestaurant();
-+    }
    },
-
+-  create() {},
++  create() {
++    api.createRestaurant();
++  }
+ },
 ```
 
 This changes the test failure. Now the method is called, but not with the right arguments:
@@ -502,11 +500,11 @@ This changes the test failure. Now the method is called, but not with the right 
 Our restaurant name is passed in as the payload of the action, which is the second argument, so we can pass it along to the API method:
 
 ```diff
--    create() {
-+    create(context, newRestaurantName) {
--      api.createRestaurant();
-+      api.createRestaurant(newRestaurantName);
-    },
+-create() {
++create(context, newRestaurantName) {
+-  api.createRestaurant();
++  api.createRestaurant(newRestaurantName);
+ },
 ```
 
 We aren't yet using the context, the first argument that Vuex passes to the action, so we ignore it for now.
@@ -514,25 +512,25 @@ We aren't yet using the context, the first argument that Vuex passes to the acti
 Save the file and the test passes. Now we need to specify one more thing that happens when the `create` action is dispatched: the returned restaurant from the API, including the ID that the API gives the record, is appended to the restaurant list in the state. To write that test, we're going to need to add a little to the setup as well:
 
 ```diff
-   describe('create action', () => {
-     const newRestaurantName = 'Sushi Place';
-+    const existingRestaurant = {id: 1, name: 'Pizza Place'};
-+    const responseRestaurant = {id: 2, name: newRestaurantName};
+ describe('create action', () => {
+   const newRestaurantName = 'Sushi Place';
++  const existingRestaurant = {id: 1, name: 'Pizza Place'};
++  const responseRestaurant = {id: 2, name: newRestaurantName};
 
-     let api;
-     let store;
+   let api;
+   let store;
 
-     beforeEach(() => {
-       api = {
-         createRestaurant: jest.fn().mockName('createRestaurant'),
-       };
-       store = new Vuex.Store({
-         modules: {
--          restaurants: restaurants(api),
-+          restaurants: restaurants(api, {records: [existingRestaurant]}),
-         },
-       });
+   beforeEach(() => {
+     api = {
+       createRestaurant: jest.fn().mockName('createRestaurant'),
+     };
+     store = new Vuex.Store({
+       modules: {
+-        restaurants: restaurants(api),
++        restaurants: restaurants(api, {records: [existingRestaurant]}),
+       },
      });
+   });
 ```
 
 This adds a restaurant to the pre-existing list of restaurants in the store. Save the file and the tests should still pass.
@@ -580,22 +578,22 @@ We ensure that the existing restaurant is still in the store, and the restaurant
 The store only contains the restaurant it was initialized with, not the new one the server returned. Let's update the action to handle the returned value:
 
 ```diff
--    create(context, newRestaurantName) {
-+    create({commit}, newRestaurantName) {
--      api.createRestaurant(newRestaurantName);
-+      api.createRestaurant(newRestaurantName).then(record => {
-+        commit('addRecord', record);
-+      });
-     },
-...
-     storeRecords(state, records) {
-       state.records = records;
-       state.loading = false;
-     },
-+    addRecord(state, record) {
-+      state.records.push(record);
-+    },
+-  create(context, newRestaurantName) {
++  create({commit}, newRestaurantName) {
+-    api.createRestaurant(newRestaurantName);
++    api.createRestaurant(newRestaurantName).then(record => {
++      commit('addRecord', record);
++    });
    },
+...
+   storeRecords(state, records) {
+     state.records = records;
+     state.loading = false;
+   },
++  addRecord(state, record) {
++    state.records.push(record);
++  },
+ },
 ```
 
 This makes our latest test pass, but our previous "saves the restaurant to the server" test now fails:
@@ -688,10 +686,10 @@ Cypress confirms we're sending the `POST` request to the server correctly, and w
 We aren't displaying the restaurant on the page. This is because we aren't yet returning it properly from the resolved value. The Axios promise resolves to the Axios response object, but we want to return a promise that resolves to the record. We can do this by getting the response body:
 
 ```diff
-   createRestaurant(name) {
--    return client.post('/restaurants', {name});
-+    return client.post('/restaurants', {name}).then(response => response.data);
-   },
+ createRestaurant(name) {
+-  return client.post('/restaurants', {name});
++  return client.post('/restaurants', {name}).then(response => response.data);
+ },
 ```
 
 Rerun the E2E test and it passes, and we see Sushi Place added to the restaurant list. Our feature is complete!
@@ -710,19 +708,19 @@ Now let's look into those edge cases:
 First, let's implement the form clearing out the text field after saving. In `NewRestaurantForm.spec.js`, add a new test:
 
 ```diff
-     it('dispatches the create action', () => {
-       expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
-         expect.anything(),
-         restaurantName,
-       );
-     });
-+
-+    it('clears the name', () => {
-+      expect(
-+        wrapper.find('[data-testid="new-restaurant-name-field"]').element.value,
-+      ).toEqual('');
-+    });
+   it('dispatches the create action', () => {
+     expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
+       expect.anything(),
+       restaurantName,
+     );
    });
++
++  it('clears the name', () => {
++    expect(
++      wrapper.find('[data-testid="new-restaurant-name-field"]').element.value,
++    ).toEqual('');
++  });
+ });
 ```
 
 Save the test, and we get a test failure confirming that the text field is not yet cleared:
@@ -745,12 +743,12 @@ Where in the component should we clear the text field? Well, we have another sto
 Make this change in `NewRestaurantForm.vue`:
 
 ```diff
-     handleSave() {
--      this.createRestaurant(this.name);
-+      this.createRestaurant(this.name).then(() => {
-+        this.name = '';
-+      });
-     },
+ handleSave() {
+-  this.createRestaurant(this.name);
++  this.createRestaurant(this.name).then(() => {
++    this.name = '';
++  });
+ },
 ```
 
 Save the file and the test should pass.
@@ -833,11 +831,11 @@ Save the file and the test fails, because the validation error message is not fo
 Let's fix this error in the simplest way possible by adding the validation error unconditionally:
 
 ```diff
-   <form @submit.prevent="handleSave">
-+    <v-alert type="error" data-testid="new-restaurant-name-error">
-+      Name is required.
-+    </v-alert>
-     <v-text-field
+ <form @submit.prevent="handleSave">
++  <v-alert type="error" data-testid="new-restaurant-name-error">
++    Name is required.
++  </v-alert>
+   <v-text-field
 ```
 
 The tests pass. Now how can we write a test to drive out hiding that validation error in other circumstances? Well, we can check that it's not shown when the form is initially mounted.
@@ -875,38 +873,38 @@ Time to add some logic around this error.
 We'll add a data property to indicate whether it should be shown:
 
 ```diff
-       data-testid="new-restaurant-name-field"
-     />
--    <v-alert type="error" data-testid="new-restaurant-name-error">
--      Name is required.
--    </v-alert>
-+    <v-alert
-+      v-if="validationError"
-+      type="error"
-+      data-testid="new-restaurant-name-error"
-+    >
-+      Name is required.
-+    </v-alert>
-     <v-btn
+     data-testid="new-restaurant-name-field"
+   />
+-  <v-alert type="error" data-testid="new-restaurant-name-error">
+-    Name is required.
+-  </v-alert>
++  <v-alert
++    v-if="validationError"
++    type="error"
++    data-testid="new-restaurant-name-error"
++  >
++    Name is required.
++  </v-alert>
+   <v-btn
 ...
-   data() {
-     return {
-       name: '',
-+      validationError: false,
-     };
-   },
+ data() {
+   return {
+     name: '',
++    validationError: false,
+   };
+ },
 ```
 
 Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown--that's all. The simplest logic to pass this test is to always show the validation error after saving:
 
 ```diff
-     handleSave() {
-+      this.validationError = true;
+ handleSave() {
++  this.validationError = true;
 +
-       this.createRestaurant(this.name).then(() => {
-         this.name = '';
-       });
-     },
+   this.createRestaurant(this.name).then(() => {
+     this.name = '';
+   });
+ },
 ```
 
 Save the file and all tests pass.
@@ -980,12 +978,12 @@ Save the test file and our new test fails:
 We can fix this by clearing the `validationError` flag upon a successful submission:
 
 ```diff
-     handleSave() {
-       if (!this.name) {
-         this.validationError = true;
-+      } else {
-+        this.validationError = false;
-       }
+ handleSave() {
+   if (!this.name) {
+     this.validationError = true;
++  } else {
++    this.validationError = false;
+   }
 ```
 
 Note that we aren't waiting for the web service to return to clear it out, the way we clear out the name field. We know right away that the form is valid, so we can clear it before the web service call is made.
@@ -993,11 +991,11 @@ Note that we aren't waiting for the web service to return to clear it out, the w
 Save and the tests pass. Now that we have an `each` branch to that conditional, let's invert the boolean to make it easier to read. Refactor it to:
 
 ```js
-      if (this.name) {
-        this.validationError = false;
-      } else {
-        this.validationError = true;
-      }
+if (this.name) {
+  this.validationError = false;
+} else {
+  this.validationError = true;
+}
 ```
 
 Save and the tests should still pass.
@@ -1013,20 +1011,20 @@ it('does not dispatch the create action', () => {
 We can fix this error by moving the call to `this.createRestaurant()` inside the true branch of the conditional:
 
 ```diff
-     handleSave() {
-       if (this.name) {
-         this.validationError = false;
-+        this.createRestaurant(this.name).then(() => {
-+          this.name = '';
-+        });
-       } else {
-         this.validationError = true;
-       }
+ handleSave() {
+   if (this.name) {
+     this.validationError = false;
++    this.createRestaurant(this.name).then(() => {
++      this.name = '';
++    });
+   } else {
+     this.validationError = true;
+   }
 -
--      this.createRestaurant(this.name).then(() => {
--        this.name = '';
--      });
-    },
+-  this.createRestaurant(this.name).then(() => {
+-    this.name = '';
+-  });
+ },
 ```
 
 Save the file and the test passes. If you try to submit the form with an empty restaurant name in the browser, you'll see:
@@ -1065,17 +1063,17 @@ This is the same as the successful submission case, but in the setup we call the
 Save the file and the expectation fails, but we also get an UnhandledPromiseRejectionWarning. Let's fix that warning first by adding an empty `.catch()` function:
 
 ```diff
-       if (this.name) {
-         this.validationError = false;
--        this.createRestaurant(this.name).then(() => {
--          this.name = '';
--        });
-+        this.createRestaurant(this.name)
-+          .then(() => {
-+            this.name = '';
-+          })
-+          .catch(() => {});
-       } else {
+ if (this.name) {
+   this.validationError = false;
+-  this.createRestaurant(this.name).then(() => {
+-    this.name = '';
+-  });
++  this.createRestaurant(this.name)
++    .then(() => {
++      this.name = '';
++    })
++    .catch(() => {});
+ } else {
 ```
 
 Save and the promise warning goes away, leaving us with just the expectation failure:
@@ -1096,11 +1094,11 @@ Save and the promise warning goes away, leaving us with just the expectation fai
 As usual, we'll first solve this by hard-coding the element into the component:
 
 ```diff
-     </v-alert>
-+    <v-alert type="error" data-testid="new-restaurant-server-error">
-+      The restaurant could not be saved. Please try again.
-+    </v-alert>
-     <v-text-field
+ </v-alert>
++<v-alert type="error" data-testid="new-restaurant-server-error">
++  The restaurant could not be saved. Please try again.
++</v-alert>
+ <v-text-field
 ```
 
 Save and the test passes. Now, when do we want that message to *not* show? For one thing, when the component initially mounts. Add another test to the "initially" describe block:
@@ -1133,32 +1131,32 @@ Save and the test fails:
 We'll add another flag to the data to track whether the error should show, starting hidden, and shown if the store action rejects:
 
 ```diff
-     </v-alert>
--    <v-alert type="error" data-testid="new-restaurant-server-error">
-+    <v-alert
-+      v-if="serverError"
-+      type="error"
-+      data-testid="new-restaurant-server-error"
-+    >
-       The restaurant could not be saved. Please try again.
-     </v-alert>
+   </v-alert>
+-  <v-alert type="error" data-testid="new-restaurant-server-error">
++  <v-alert
++    v-if="serverError"
++    type="error"
++    data-testid="new-restaurant-server-error"
++  >
+     The restaurant could not be saved. Please try again.
+   </v-alert>
 ...
-   data() {
-     return {
-       name: '',
-       validationError: false,
-+      serverError: false,
-     };
-   },
+ data() {
+   return {
+     name: '',
+     validationError: false,
++    serverError: false,
+   };
+ },
 ...
-         this.createRestaurant(this.name)
-           .then(() => {
-             this.name = '';
-           })
--          .catch(() => {});
-+          .catch(() => {
-+            this.serverError = true;
-+          });
+       this.createRestaurant(this.name)
+         .then(() => {
+           this.name = '';
+         })
+-        .catch(() => {});
++        .catch(() => {
++          this.serverError = true;
++        });
 ```
 
 Save and the tests pass.
@@ -1225,12 +1223,12 @@ dark">$error</i><div class="v-alert__content">
 We should be able to make this test pass by just clearing the `serverError` flag when attempting to save:
 
 ```diff
-     handleSave() {
-       if (this.name) {
-         this.validationError = false;
-+        this.serverError = false;
+ handleSave() {
+   if (this.name) {
+     this.validationError = false;
++    this.serverError = false;
 +
-         this.createRestaurant(this.name)
+     this.createRestaurant(this.name)
 ```
 
 Save the file, but surprisingly, the test failure doesn't change! Why is that? It turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.

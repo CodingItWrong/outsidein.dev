@@ -265,14 +265,14 @@ describe('RestaurantList', () => {
 Because we are writing a unit test, we don't want to connect our component to our real Vuex store module. Instead, we want to create a mocked store module that specifies the interface we want our store module to have, and lets us run expectations on it. Our component will ask our store module to load the restaurants, so that means we need a `load` action in the store module:
 
 ```diff
-   it('loads restaurants on mount', () => {
-+    const restaurantsModule = {
-+      namespaced: true,
-+      actions: {
-+        load: jest.fn().mockName('load'),
-+      },
-+    };
-  });
+ it('loads restaurants on mount', () => {
++  const restaurantsModule = {
++    namespaced: true,
++    actions: {
++      load: jest.fn().mockName('load'),
++    },
++  };
+ });
 ```
 
 We use `jest.fn()` to create a Jest mock function, which will allow us to check that the `load` action was called. We chain a call to `.mockName()` onto it to give our function a name; this will make our error messages more readable.
@@ -339,12 +339,12 @@ We import the `RestaurantList` component, then use Vue Test Utils' `mount()` fun
 Finally, we're ready to run an expectation to confirm that the component loads restaurants on mount. We just check that our mock action was called:
 
 ```diff
-   it('loads restaurants on mount', () => {
+ it('loads restaurants on mount', () => {
 ...
-     mount(RestaurantList, {localVue, store});
+   mount(RestaurantList, {localVue, store});
 +
-+    expect(restaurantsModule.actions.load).toHaveBeenCalled();
-   });
++  expect(restaurantsModule.actions.load).toHaveBeenCalled();
+ });
 ```
 
 Now we're ready to run our unit test. Run `yarn test:unit --watch`. The `--watch` flag means the test runner stays open, watching for changes to our files to rerun the tests. Leave it running for the remainder of this section. Jest will run our unit test, and we'll get the following error:
@@ -446,14 +446,14 @@ So far it's pretty similar to our previous test. There are just a few difference
 Now, instead of running an expectation that `load` was called, we use the `wrapper` to check what is rendered out:
 
 ```diff
-     const wrapper = mount(RestaurantList, {localVue, store});
+   const wrapper = mount(RestaurantList, {localVue, store});
 +
-+    const firstRestaurantName = wrapper
-+      .findAll('[data-testid="restaurant"]')
-+      .at(0)
-+      .text();
-+    expect(firstRestaurantName).toBe('Sushi Place');
-   });
++  const firstRestaurantName = wrapper
++    .findAll('[data-testid="restaurant"]')
++    .at(0)
++    .text();
++  expect(firstRestaurantName).toBe('Sushi Place');
+ });
 ```
 
 This is little verbose, so let's see what's going on:
@@ -541,16 +541,16 @@ We configure a `computed` property on the component named `restaurants`, that pu
 Now, let's loop through these restaurants to display a list item for each:
 
 ```diff
-   <ul>
--    <li data-testid="restaurant" />
-+    <li
-+      v-for="restaurant in restaurants"
-+      :key="restaurant.id"
-+      data-testid="restaurant"
-+    >
-+      {{ restaurant.name }}
-+    </li>
-  </ul>
+ <ul>
+-  <li data-testid="restaurant" />
++  <li
++    v-for="restaurant in restaurants"
++    :key="restaurant.id"
++    data-testid="restaurant"
++  >
++    {{ restaurant.name }}
++  </li>
+ </ul>
 ```
 
 We use Vue's `v-for` directive to loop over the `restaurants`. Vue requires us to specify a `:key` so it can keep track of which DOM elements correspond to which records, so we pass the `record.id` as the key. We keep the `data-testid` attribute so our test can find the restaurants. Then we output the `restaurant.name` as text in the list item.
@@ -560,18 +560,18 @@ Save and now both tests are passing.
 For completeness, let's check the second displayed restaurant as well:
 
 ```diff
-     const firstRestaurantName = wrapper
-       .findAll('[data-testid="restaurant"]')
-       .at(0)
-       .text();
-     expect(firstRestaurantName).toBe('Sushi Place');
+   const firstRestaurantName = wrapper
+     .findAll('[data-testid="restaurant"]')
+     .at(0)
+     .text();
+   expect(firstRestaurantName).toBe('Sushi Place');
 +
-+    const secondRestaurantName = wrapper
-+      .findAll('[data-testid="restaurant"]')
-+      .at(1)
-+      .text();
-+    expect(secondRestaurantName).toBe('Pizza Place');
-   });
++  const secondRestaurantName = wrapper
++    .findAll('[data-testid="restaurant"]')
++    .at(1)
++    .text();
++  expect(secondRestaurantName).toBe('Pizza Place');
+ });
 ```
 
 This test passes right away. Although this step isn't really TDD because we write the test that already passes, it can be useful to confirm a behavior for extra certainty.
@@ -763,12 +763,12 @@ As with our component test, we create a local Vue instance and attach Vuex to it
 We will need some records to be returned by our mocked API:
 
 ```diff
-     it('stores the restaurants', async () => {
-+      const records = [
-+        {id: 1, name: 'Sushi Place'},
-+        {id: 2, name: 'Pizza Place'},
-+      ];
-     });
+ it('stores the restaurants', async () => {
++  const records = [
++    {id: 1, name: 'Sushi Place'},
++    {id: 2, name: 'Pizza Place'},
++  ];
+ });
 ```
 
 As we said earlier, our app will consist of three layers:
@@ -781,16 +781,16 @@ So we won't make an HTTP request directly in our Vuex module.
 Instead, we'll delegate to an API object that we pass in. Let's design the interface of that object now:
 
 ```diff
-     it('stores the restaurants', async () => {
-       const records = [
-         {id: 1, name: 'Sushi Place'},
-         {id: 2, name: 'Pizza Place'},
-       ];
+ it('stores the restaurants', async () => {
+   const records = [
+     {id: 1, name: 'Sushi Place'},
+     {id: 2, name: 'Pizza Place'},
+   ];
 
-+      const api = {
-+        loadRestaurants: () => Promise.resolve(records),
-+      };
-     });
++  const api = {
++    loadRestaurants: () => Promise.resolve(records),
++  };
+ });
 ```
 
 Giving the `api` object a descriptive `loadRestaurants()` methods seems good. We are stubbing out the API here in the test, so we'll just implement that method to return a Promise that resolves to our hard-coded records.
@@ -833,16 +833,16 @@ Now use it in your test like so:
 Now that our store is set, we can dispatch the `load` action, then check the state of the store afterward:
 
 ```diff
-       const store = new Vuex.Store({
-         modules: {
-           restaurants: restaurants(api),
-         },
-       });
+   const store = new Vuex.Store({
+     modules: {
+       restaurants: restaurants(api),
+     },
+   });
 
-+      await store.dispatch('restaurants/load');
++  await store.dispatch('restaurants/load');
 +
-+      expect(store.state.restaurants.records).toEqual(records);
-     });
++  expect(store.state.restaurants.records).toEqual(records);
+ });
 ```
 
 When the test runs, you should see the error:

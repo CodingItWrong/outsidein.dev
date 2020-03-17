@@ -34,30 +34,30 @@ First, start the unit tests with `yarn test` and keep them running for the durat
 Next, let's extract all the contents of the `beforeEach` into a new function, called `renderWithProps`:
 
 ```diff
-   let context;
+ let context;
 
-+  const renderWithProps = () => {
-+    loadRestaurants = jest.fn().mockName('loadRestaurants');
++const renderWithProps = () => {
++  loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
-+    context = render(
-+      <RestaurantList
-+        loadRestaurants={loadRestaurants}
-+        restaurants={restaurants}
-+      />,
-+    );
-+  };
++  context = render(
++    <RestaurantList
++      loadRestaurants={loadRestaurants}
++      restaurants={restaurants}
++    />,
++  );
++};
 +
-   beforeEach(() => {
--    loadRestaurants = jest.fn().mockName('loadRestaurants');
+ beforeEach(() => {
+-  loadRestaurants = jest.fn().mockName('loadRestaurants');
 -
--    context = render(
--      <RestaurantList
--        loadRestaurants={loadRestaurants}
--        restaurants={restaurants}
--      />,
--    );
-+    renderWithProps();
-   });
+-  context = render(
+-    <RestaurantList
+-      loadRestaurants={loadRestaurants}
+-      restaurants={restaurants}
+-    />,
+-  );
++  renderWithProps();
+ });
 ```
 
 Save the file and the tests should still pass. When refactoring like this, we want to run the tests after each small step, so that if something breaks we know right away.
@@ -65,18 +65,18 @@ Save the file and the tests should still pass. When refactoring like this, we wa
 Next, let's remove the `beforeEach` block and call `renderWithProps` at the start of each our our tests instead:
 
 ```diff
--  beforeEach(() => {
--    renderWithProps();
--  });
+-beforeEach(() => {
+-  renderWithProps();
+-});
 -
-   it('loads restaurants on mount', () => {
-+    renderWithProps();
-     expect(loadRestaurants).toHaveBeenCalled();
-   });
+ it('loads restaurants on mount', () => {
++  renderWithProps();
+   expect(loadRestaurants).toHaveBeenCalled();
+ });
 
-   it('displays the restaurants', () => {
-+    renderWithProps();
-     const {queryByText} = context;
+ it('displays the restaurants', () => {
++  renderWithProps();
+   const {queryByText} = context;
 ```
 
 Save and confirm the tests pass.
@@ -84,25 +84,25 @@ Save and confirm the tests pass.
 As our final refactoring, let's change the `renderWithProps` function to allow passing in the props the component should use, with defaults:
 
 ```diff
--  const renderWithProps = () => {
--    loadRestaurants = jest.fn().mockName('loadRestaurants');
+-const renderWithProps = () => {
+-  loadRestaurants = jest.fn().mockName('loadRestaurants');
 -
--    context = render(
--      <RestaurantList
--        loadRestaurants={loadRestaurants}
--        restaurants={restaurants}
--      />,
--    );
-+  const renderWithProps = (propOverrides = {}) => {
-+    const props = {
-+      loadRestaurants: jest.fn().mockName('loadRestaurants'),
-+      restaurants,
-+      ...propOverrides,
-+    };
-+    loadRestaurants = props.loadRestaurants;
+-  context = render(
+-    <RestaurantList
+-      loadRestaurants={loadRestaurants}
+-      restaurants={restaurants}
+-    />,
+-  );
++const renderWithProps = (propOverrides = {}) => {
++  const props = {
++    loadRestaurants: jest.fn().mockName('loadRestaurants'),
++    restaurants,
++    ...propOverrides,
++  };
++  loadRestaurants = props.loadRestaurants;
 +
-+    context = render(<RestaurantList {...props} />);
-   };
++  context = render(<RestaurantList {...props} />);
+ };
 ```
 
 Here’s what’s going on:
@@ -115,11 +115,11 @@ Here’s what’s going on:
 Now we're ready to write our new test for when the store is in a loading state. Let's pass in a new prop for whether the restaurants are loading:
 
 ```js
-  it('displays the loading indicator while loading', () => {
-    renderWithProps({loading: true});
-    const {queryByTestId} = context;
-    expect(queryByTestId('loading-indicator')).not.toBeNull();
-  });
+it('displays the loading indicator while loading', () => {
+  renderWithProps({loading: true});
+  const {queryByTestId} = context;
+  expect(queryByTestId('loading-indicator')).not.toBeNull();
+});
 ```
 
 Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won’t have text content, so instead we use a test ID to identify it. We confirm that it's not null, showing that the element is present.
@@ -158,11 +158,11 @@ No, and here's why: if we add the conditional now, *it's not tested*. Because ou
 In our case, we *also* need a test to confirm that the conditional is *not* shown when *not* loading. Let's add that now:
 
 ```js
-  it('does not display the loading indicator while not loading', () => {
-    renderWithProps({loading: false});
-    const {queryByTestId} = context;
-    expect(queryByTestId('loading-indicator')).toBeNull();
-  });
+it('does not display the loading indicator while not loading', () => {
+  renderWithProps({loading: false});
+  const {queryByTestId} = context;
+  expect(queryByTestId('loading-indicator')).toBeNull();
+});
 ```
 
 This test fails, of course. And now that we have two tests, this will force us to implement the conditional to get them both to pass:
@@ -195,39 +195,39 @@ Save and confirm the tests still pass.
 Now, for the "does not display the loading indicator" test, we pass `loading: false` to the store. But conceptually that's the default state of the store, so let's set up `renderWithProps` to pass that as a default prop:
 
 ```diff
-     const props = {
-       loadRestaurants: jest.fn().mockName('loadRestaurants'),
-+      loading: false,
-       restaurants,
-       ...propOverrides,
-     };
+ const props = {
+   loadRestaurants: jest.fn().mockName('loadRestaurants'),
++  loading: false,
+   restaurants,
+   ...propOverrides,
+ };
 ```
 
 Now we don't need to pass a prop override in the test of the loading indicator hiding:
 
 ```diff
-     it('does not display the loading indicator while not loading', () => {
--      renderWithProps({loading: false});
-+      renderWithProps();
+ it('does not display the loading indicator while not loading', () => {
+-  renderWithProps({loading: false});
++  renderWithProps();
 ```
 
 Now our two "when loading succeeds" tests have the same call to `renderWithProps()`. It's small, so we could leave it in the individual tests. But we could also pull it out to a `beforeEach`. Let's do that now:
 
 ```diff
-   describe('when loading succeeds', () => {
-+     beforeEach(() => {
-+       renderWithProps();
-+     });
+ describe('when loading succeeds', () => {
++  beforeEach(() => {
++    renderWithProps();
++  });
 +
-     it('does not display the loading indicator while not loading', () => {
--      renderWithProps();
-       const {queryByTestId} = context;
-       expect(queryByTestId('loading-indicator')).toBeNull();
-     });
+ it('does not display the loading indicator while not loading', () => {
+-  renderWithProps();
+   const {queryByTestId} = context;
+   expect(queryByTestId('loading-indicator')).toBeNull();
+ });
 
-     it('displays the restaurants', () => {
--      renderWithProps();
-       const {queryByText} = context;
+ it('displays the restaurants', () => {
+-  renderWithProps();
+   const {queryByText} = context;
 ```
 
 Save and the tests should pass.
@@ -257,23 +257,23 @@ describe('while loading', () => {
 Inside that describe block, add the test:
 
 ```js
-      it('sets a loading flag', () => {
-        const api = {
-          loadRestaurants: () => new Promise(() => {}),
-        };
+it('sets a loading flag', () => {
+  const api = {
+    loadRestaurants: () => new Promise(() => {}),
+  };
 
-        const initialState = {};
+  const initialState = {};
 
-        const store = createStore(
-          restaurantsReducer,
-          initialState,
-          applyMiddleware(thunk.withExtraArgument(api)),
-        );
+  const store = createStore(
+    restaurantsReducer,
+    initialState,
+    applyMiddleware(thunk.withExtraArgument(api)),
+  );
 
-        store.dispatch(loadRestaurants());
+  store.dispatch(loadRestaurants());
 
-        expect(store.getState().loading).toEqual(true);
-      });
+  expect(store.getState().loading).toEqual(true);
+});
 ```
 
 Here's what's going on:
@@ -323,114 +323,114 @@ So why is it not enough to have a `loading` flag that is always `true`? Well, we
 First, the `records` array is never modified by the test, so we can just define it at the top level:
 
 ```diff
-     describe('when loading succeeds', () => {
-+      const records = [
-+        {id: 1, name: 'Sushi Place'},
-+        {id: 2, name: 'Pizza Place'},
-+      ];
+ describe('when loading succeeds', () => {
++  const records = [
++    {id: 1, name: 'Sushi Place'},
++    {id: 2, name: 'Pizza Place'},
++  ];
 
-       it('stores the restaurants', async () => {
--        const records = [
--          {id: 1, name: 'Sushi Place'},
--          {id: 2, name: 'Pizza Place'},
--        ];
-         const api = {
+   it('stores the restaurants', async () => {
+-    const records = [
+-      {id: 1, name: 'Sushi Place'},
+-      {id: 2, name: 'Pizza Place'},
+-    ];
+     const api = {
 ```
 
 Next, we will need to access the `store` from both tests, so make it a `let` variable defined outside the individual test:
 
 ```diff
-       ];
+ ];
 
-+      let store;
++let store;
 +
-       it('stores the restaurants', async () => {
-         const api = {
-           loadRestaurants: () => Promise.resolve(records),
-         };
+ it('stores the restaurants', async () => {
+   const api = {
+     loadRestaurants: () => Promise.resolve(records),
+   };
 
-         const initialState = {
-           records: [],
-         };
+   const initialState = {
+     records: [],
+   };
 
--        const store = createStore(
-+        store = createStore(
-           restaurantsReducer,
+-  const store = createStore(
++  store = createStore(
+     restaurantsReducer,
 ```
 
 Finally, we move the code that sets up the `api`, the `store`, and dispatches the action to a `beforeEach` block:
 
 ```diff
-       let store;
+ let store;
 
-+      beforeEach(async () => {
-+        const api = {
-+          loadRestaurants: () => Promise.resolve(records),
-+        };
++beforeEach(async () => {
++  const api = {
++    loadRestaurants: () => Promise.resolve(records),
++  };
 +
-+        const initialState = {
-+          records: [],
-+        };
++  const initialState = {
++    records: [],
++  };
 +
-+        store = createStore(
-+          restaurantsReducer,
-+          initialState,
-+          applyMiddleware(thunk.withExtraArgument(api)),
-+        );
++  store = createStore(
++    restaurantsReducer,
++    initialState,
++    applyMiddleware(thunk.withExtraArgument(api)),
++  );
 +
-+        await store.dispatch(loadRestaurants());
-+      });
++  await store.dispatch(loadRestaurants());
++});
 +
-       it('stores the restaurants', async () => {
--        const api = {
--          loadRestaurants: () => Promise.resolve(records),
--        };
+ it('stores the restaurants', async () => {
+-  const api = {
+-    loadRestaurants: () => Promise.resolve(records),
+-  };
 -
--        const initialState = {
--          records: [],
--        };
+-  const initialState = {
+-    records: [],
+-  };
 -
--        store = createStore(
--          restaurantsReducer,
--          initialState,
--          applyMiddleware(thunk.withExtraArgument(api)),
--        );
+-  store = createStore(
+-    restaurantsReducer,
+-    initialState,
+-    applyMiddleware(thunk.withExtraArgument(api)),
+-  );
 -
--        await store.dispatch(loadRestaurants());
+-  await store.dispatch(loadRestaurants());
 -
-         expect(store.getState().records).toEqual(records);
-       });
+   expect(store.getState().records).toEqual(records);
+ });
 ```
 
 Now we can simplify our async code. Since the `beforeEach` function only has one promise it waits on, and it's the final statement, we can just return the promise instead of `await`ing it, and then the function no longer needs to be an `async` function:
 
 ```diff
--      beforeEach(async () => {
-+      beforeEach(() => {
-        const api = {
-          loadRestaurants: () => Promise.resolve(records),
-        };
+-beforeEach(async () => {
++beforeEach(() => {
+   const api = {
+     loadRestaurants: () => Promise.resolve(records),
+   };
 ...
--        await store.dispatch(loadRestaurants());
-+        return store.dispatch(loadRestaurants());
-       });
+-  await store.dispatch(loadRestaurants());
++  return store.dispatch(loadRestaurants());
+ });
 ```
 
 And the test no longer has any asynchrony, so we can remove the `async` keyword from the function as well:
 
 ```diff
--      it('stores the restaurants', async () => {
-+      it('stores the restaurants', () => {
-         expect(store.state.restaurants.records).toEqual(records);
-       });
+-it('stores the restaurants', async () => {
++it('stores the restaurants', () => {
+   expect(store.state.restaurants.records).toEqual(records);
+ });
 ```
 
 Now we can add another test in that describe block to check the loading state:
 
 ```js
-      it('clears the loading flag', () => {
-        expect(store.getState().loading).toEqual(false);
-      });
+it('clears the loading flag', () => {
+  expect(store.getState().loading).toEqual(false);
+});
 ```
 
 Our test fails, as we expect, and now we need to actually clear the loading flag. We can do this in the `loading` reducer:
@@ -454,19 +454,19 @@ Right now we dispatch the `loadRestaurants` action as soon as our app starts, so
 So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
 
 ```js
-  describe('initially', () => {
-    it('does not have the loading flag set', () => {
-      const initialState = {};
+describe('initially', () => {
+  it('does not have the loading flag set', () => {
+    const initialState = {};
 
-      const store = createStore(
-        restaurantsReducer,
-        initialState,
-        applyMiddleware(thunk),
-      );
+    const store = createStore(
+      restaurantsReducer,
+      initialState,
+      applyMiddleware(thunk),
+    );
 
-      expect(store.getState().loading).toEqual(false);
-    });
+    expect(store.getState().loading).toEqual(false);
   });
+});
 ```
 
 In this case we don't need to pass an `api` to `thunk` at all, because we won't be calling it. We create a store with empty initial state, and assert that the starting value of `loading` is `false`.
@@ -537,16 +537,16 @@ Note that we listed the loading flag and error flag as separate stories. Instead
 Start with the test for the component. We are describing a new situation, when loading fails, so let's put our test in a new `describe` block:
 
 ```js
-  describe('when loading fails', () => {
-    beforeEach(() => {
-      renderWithProps({loadError: true});
-    });
-
-    it('displays the error message', () => {
-      const {queryByText} = context;
-      expect(queryByText('Restaurants could not be loaded.')).not.toBeNull();
-    });
+describe('when loading fails', () => {
+  beforeEach(() => {
+    renderWithProps({loadError: true});
   });
+
+  it('displays the error message', () => {
+    const {queryByText} = context;
+    expect(queryByText('Restaurants could not be loaded.')).not.toBeNull();
+  });
+});
 ```
 
 We decide we want to indicate the error state with a flag named `loadError`, so we set it up as a prop set to `true`.
@@ -572,22 +572,22 @@ Note that we're asserting the text of the message in our test.
 Save the file and our test passes. Now, specify that the error does _not_ show when loading succeeds:
 
 ```diff
-   describe('when loading succeeds', () => {
-     beforeEach(() => {
-       renderWithProps();
-     });
+ describe('when loading succeeds', () => {
+   beforeEach(() => {
+     renderWithProps();
+   });
 
-     it('does not display the loading indicator while not loading', () => {
-       const {queryByTestId} = context;
-       expect(queryByTestId('loading-indicator')).toBeNull();
-     });
+   it('does not display the loading indicator while not loading', () => {
+     const {queryByTestId} = context;
+     expect(queryByTestId('loading-indicator')).toBeNull();
+   });
 
-+    it('does not display the error message', () => {
-+      const {queryByText} = context;
-+      expect(queryByText('Restaurants could not be loaded.')).toBeNull();
-+    });
++  it('does not display the error message', () => {
++    const {queryByText} = context;
++    expect(queryByText('Restaurants could not be loaded.')).toBeNull();
++  });
 +
-     it('displays the restaurants', () => {
+   it('displays the restaurants', () => {
 ```
 
 Make this test pass by making the display of the error alert conditional on the `loadError` prop that we set up in our test:
@@ -615,29 +615,29 @@ Now both tests pass. Our component is working; on to the store.
 In `restaurants.spec.js`, create a new `describe` block after "when loading succeeds" for the error scenario. Let's go ahead and do the setup in a `beforeEach` block, assuming we will need to have other expectations too:
 
 ```js
-    describe('when loading fails', () => {
-      let store;
+describe('when loading fails', () => {
+  let store;
 
-      beforeEach(() => {
-        const api = {
-          loadRestaurants: () => Promise.reject(),
-        };
+  beforeEach(() => {
+    const api = {
+      loadRestaurants: () => Promise.reject(),
+    };
 
-        const initialState = {};
+    const initialState = {};
 
-        store = createStore(
-          restaurantsReducer,
-          initialState,
-          applyMiddleware(thunk.withExtraArgument(api)),
-        );
+    store = createStore(
+      restaurantsReducer,
+      initialState,
+      applyMiddleware(thunk.withExtraArgument(api)),
+    );
 
-        return store.dispatch(loadRestaurants());
-      });
+    return store.dispatch(loadRestaurants());
+  });
 
-      it('sets an error flag', () => {
-        expect(store.getState().loadError).toEqual(true);
-      });
-    });
+  it('sets an error flag', () => {
+    expect(store.getState().loadError).toEqual(true);
+  });
+});
 ```
 
 We decide that when an API call fails, the promise `api.loadRestaurants()` returns will reject. This is common practice for JavaScript HTTP clients.
@@ -714,46 +714,46 @@ Save and the tests pass.
 Now we specify that the `loadError` flag should actually start out as `false`, and _only_ be set to true upon a failing load. First, extract the setup in the "initially" block:
 
 ```diff
-   describe('initially', () => {
-+    let store;
+ describe('initially', () => {
++  let store;
 +
-+    beforeEach(() => {
-+      const initialState = {};
++  beforeEach(() => {
++    const initialState = {};
 +
-+      store = createStore(
-+        restaurantsReducer,
-+        initialState,
-+        applyMiddleware(thunk),
-+      );
-+    });
++    store = createStore(
++      restaurantsReducer,
++      initialState,
++      applyMiddleware(thunk),
++    );
++  });
 +
-     it('does not have the loading flag set', () => {
--      const initialState = {};
+   it('does not have the loading flag set', () => {
+-    const initialState = {};
 -
--      const store = createStore(
--        restaurantsReducer,
--        initialState,
--        applyMiddleware(thunk),
--      );
+-    const store = createStore(
+-      restaurantsReducer,
+-      initialState,
+-      applyMiddleware(thunk),
+-    );
 -
-       expect(store.getState().loading).toEqual(false);
-     });
+     expect(store.getState().loading).toEqual(false);
    });
+ });
 ```
 
 Then add a test for the `loadError` flag:
 
 ```diff
-   describe('initially', () => {
+ describe('initially', () => {
 ...
-     it('does not have the loading flag set', () => {
-       expect(store.getState().loading).toEqual(false);
-     });
-+
-+    it('does not have the error flag set', () => {
-+      expect(store.getState().loadError).toEqual(false);
-+    });
+   it('does not have the loading flag set', () => {
+     expect(store.getState().loading).toEqual(false);
    });
++
++  it('does not have the error flag set', () => {
++    expect(store.getState().loadError).toEqual(false);
++  });
+ });
 ```
 
 The test fails. Make it pass while keeping the other tests passing, by setting the `loadError` to have initial state of `false`, then set to true when a new loading error action is dispatched. In `actions.js`:
@@ -808,56 +808,56 @@ Save the file and all tests should pass.
 We also want to make sure that if the restaurants are loaded again later, the error flag is cleared out, since a new request is being made. This test should go in the "loadRestaurants action > while loading" group, so extract the setup from the "sets the loading flag" test:
 
 ```diff
-     describe('while loading', () => {
-+      let store;
+ describe('while loading', () => {
++  let store;
 +
-+      beforeEach(() => {
-+        const api = {
-+          loadRestaurants: () => new Promise(() => {}),
-+        };
++  beforeEach(() => {
++    const api = {
++      loadRestaurants: () => new Promise(() => {}),
++    };
 +
-+        const initialState = {};
++    const initialState = {};
 +
-+        store = createStore(
-+          restaurantsReducer,
-+          initialState,
-+          applyMiddleware(thunk.withExtraArgument(api)),
-+        );
++    store = createStore(
++      restaurantsReducer,
++      initialState,
++      applyMiddleware(thunk.withExtraArgument(api)),
++    );
 +
-+        store.dispatch(loadRestaurants());
-+      });
++    store.dispatch(loadRestaurants());
++  });
 +
-       it('sets a loading flag', () => {
--        const api = {
--          loadRestaurants: () => new Promise(() => {}),
--        };
+   it('sets a loading flag', () => {
+-    const api = {
+-      loadRestaurants: () => new Promise(() => {}),
+-    };
 -
--        const initialState = {};
+-    const initialState = {};
 -
--        const store = createStore(
--          restaurantsReducer,
--          initialState,
--          applyMiddleware(thunk.withExtraArgument(api)),
--        );
+-    const store = createStore(
+-      restaurantsReducer,
+-      initialState,
+-      applyMiddleware(thunk.withExtraArgument(api)),
+-    );
 -
--        store.dispatch(loadRestaurants());
+-    store.dispatch(loadRestaurants());
 -
-         expect(store.getState().loading).toEqual(true);
-       });
-     });
+     expect(store.getState().loading).toEqual(true);
+   });
+ });
 ```
 
 Now, update the `initialState` in our `beforeEach` block to set `loadError` to `true`:
 
 ```diff
-         const api = {
-           loadRestaurants: () => new Promise(() => {}),
-         };
+ const api = {
+   loadRestaurants: () => new Promise(() => {}),
+ };
 
--        const initialState = {};
-+        const initialState = {loadError: true};
+-const initialState = {};
++const initialState = {loadError: true};
 
-         store = createStore(
+ store = createStore(
 ```
 
 Save and the tests should still pass.
@@ -865,9 +865,9 @@ Save and the tests should still pass.
 Now we're finally ready to set up our expectation that the `loadError` should be reset to `false` after starting a load operation. Add the following test after the "sets a loading flag" test:
 
 ```js
-      it('clears the error flag', () => {
-        expect(store.getState().loadError).toEqual(false);
-      });
+it('clears the error flag', () => {
+  expect(store.getState().loadError).toEqual(false);
+});
 ```
 
 Save the file and the new test should fail.
@@ -889,16 +889,16 @@ Fix it by updating the `loadError` reducer to return `false` upon the `START_LOA
 Now that we are handling the error state, there's one more bit of functionality we could add: currently the `loading` flag is not cleared when the request errors. Let's add a test for that:
 
 ```diff
-     describe('when loading fails', () => {
+ describe('when loading fails', () => {
 ...
-       it('sets an error flag', () => {
-         expect(store.state.restaurants.loadError).toEqual(true);
-       });
+   it('sets an error flag', () => {
+     expect(store.state.restaurants.loadError).toEqual(true);
+   });
 +
-+      it('clears the loading flag', () => {
-+        expect(store.getState().loading).toEqual(false);
-+      });
-     });
++  it('clears the loading flag', () => {
++    expect(store.getState().loading).toEqual(false);
++  });
+ });
 ```
 
 To make it pass, just return `false` from the `loading` reducer upon `RECORD_LOADING_ERROR`:
