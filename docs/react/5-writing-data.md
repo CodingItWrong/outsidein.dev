@@ -947,7 +947,7 @@ Let's fix this error in the simplest way possible by adding the validation error
        <TextField
 ```
 
-The tests pass. Now how can we write a test to drive out hiding that validation error in other circumstances? Well, we can check that it's not shown when the form is initially mounted.
+The tests pass. Now how can we write a test to drive out hiding that validation error in other circumstances? Well, we can check that it's not shown when the form is first rendered.
 
 In preparation, let's move the validation error text we're searching for to a constant directly under our top-level `describe`:
 
@@ -1233,7 +1233,7 @@ The message isn't very helpful, but "thrown" is a clue. What's happening is that
  } else {
 ```
 
-Save and the test passes. Now, when do we want that message to *not* show? For one thing, when the component initially mounts. Add another test to the "initially" describe block:
+Save and the test passes. Now, when do we want that message to *not* show? For one thing, when the component first renders. Add another test to the "initially" describe block:
 
 ```js
 it('does not display a server error', () => {

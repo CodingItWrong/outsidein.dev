@@ -263,7 +263,7 @@ Now, we'll write a test for the first bit of functionality we need, to load the 
 
 ```js
 describe('RestaurantList', () => {
-  it('loads restaurants on mount', () => {
+  it('loads restaurants on first render', () => {
   });
 });
 ```
@@ -271,7 +271,7 @@ describe('RestaurantList', () => {
 Because we are writing a unit test, we don't want to connect our component to our real Redux store. Instead, we want to create mock functions that are passed in the way Redux dispatch functions will be; then we can run expectations on those mock functions. Our component will ask our store to load the restaurants, so that means we need a `loadRestaurants` function:
 
 ```diff
- it('loads restaurants on mount', () => {
+ it('loads restaurants on first render', () => {
 +  const loadRestaurants = jest.fn().mockName('loadRestaurants');
  });
 ```
@@ -286,7 +286,7 @@ Now, we're ready to render our component:
 +import {RestaurantList} from '../RestaurantList';
 
  describe('RestaurantList', () => {
-   it('loads restaurants on mount', () => {
+   it('loads restaurants on first render', () => {
      const loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
 +    render(<RestaurantList loadRestaurants={loadRestaurants} />);
@@ -296,10 +296,10 @@ Now, we're ready to render our component:
 
 We import the `RestaurantList` component, making sure to use the named import because that will continue to be the unconnected component. Then we use React Testing Library's `render()` function to render it. We pass the `loadRestaurants` function as a prop.
 
-Finally, we're ready to run an expectation to confirm that the component loads restaurants on mount. We just check that our mock function was called:
+Finally, we're ready to run an expectation to confirm that the component loads restaurants on first render. We just check that our mock function was called:
 
 ```diff
- it('loads restaurants on mount', () => {
+ it('loads restaurants on first render', () => {
    const loadRestaurants = jest.fn().mockName('loadRestaurants');
 
   render(<RestaurantList loadRestaurants={loadRestaurants} />);
@@ -313,9 +313,9 @@ Now we're ready to run our unit test. Run `yarn test` and leave it running for t
 ```sh
  FAIL  src/components/__tests__/RestaurantList.spec.js
   RestaurantList
-    ✕ loads restaurants on mount (19ms)
+    ✕ loads restaurants on first render (19ms)
 
-  ● RestaurantList › loads restaurants on mount
+  ● RestaurantList › loads restaurants on first render
 
     expect(loadRestaurants).toHaveBeenCalled()
 
@@ -333,9 +333,9 @@ d();
       13 | });
 ```
 
-Our test says we expected the `loadRestaurants()` function to have been called at least once, but it wasn't called. This makes sense: we haven't hooked up the mount functionality yet. Now that our test is red, it's time to make it green.
+Our test says we expected the `loadRestaurants()` function to have been called at least once, but it wasn't called. This makes sense: we haven't hooked up the first-render functionality yet. Now that our test is red, it's time to make it green.
 
-To call a function once when our component mounts, we'll use an effect. First, let's adjust the `RestaurantList` function to use a block:
+To call a function once when our component renders, we'll use an effect. First, let's adjust the `RestaurantList` function to use a block:
 
 ```diff
 -export const RestaurantList = () => <div>RestaurantList</div>;
@@ -360,16 +360,16 @@ Now, we run the `loadRestaurants` prop in a `useEffect`:
  };
 ```
 
-The dependency array we pass to `useEffect` consists only of `loadRestaurants`, so the effect will run once each time `loadRestaurants` changes. In our test (and in our real application) it will never change, so the effect just runs once when the component mounts.
+The dependency array we pass to `useEffect` consists only of `loadRestaurants`, so the effect will run once each time `loadRestaurants` changes. In our test (and in our real application) it will never change, so the effect just runs once when the component first renders.
 
 Save the file and Jest will automatically rerun our unit test. Sure enough, our test is green. We've passed our first unit test! Let's commit the unit test and production code that makes it pass in one commit:
 
 ```sh
 $ git add .
-$ git commit -m "Load restaurants upon mounting RestaurantList"
+$ git commit -m "Load restaurants upon first rendering RestaurantList"
 ```
 
-This gives us one of the behaviors we want our `RestaurantList` to have: loading the restaurants when it is mounted. Now it's time to write a test for the second behavior: displaying the restaurants. Let's add another `it()` block inside the `describe()`, with the following contents:
+This gives us one of the behaviors we want our `RestaurantList` to have: loading the restaurants when it is first rendered. Now it's time to write a test for the second behavior: displaying the restaurants. Let's add another `it()` block inside the `describe()`, with the following contents:
 
 ```js
 it('displays the restaurants', () => {
@@ -447,7 +447,7 @@ So no element with the text "Sushi Place" is found. At this point, we could hard
 When we save the file, our test of the output passes, but now our first test fails:
 
 ```sh
-● RestaurantList › loads restaurants on mount
+● RestaurantList › loads restaurants on first render
 
   TypeError: Cannot read property 'map' of undefined
 
@@ -459,7 +459,7 @@ When we save the file, our test of the output passes, but now our first test fai
 We're `map`ping over the `restaurants`, but in our first test we didn't pass in a `restaurants` prop. Let's update the test to pass in an empty array, since that test doesn't care about the restaurants:
 
 ```diff
- it('loads restaurants on mount', () => {
+ it('loads restaurants on first render', () => {
    const loadRestaurants = jest.fn().mockName('loadRestaurants');
 +  const restaurants = [];
 
@@ -501,7 +501,7 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +    );
 +  });
 +
-   it('loads restaurants on mount', () => {
+   it('loads restaurants on first render', () => {
 ```
 
 Although not *all* of these variables are needed for *both* tests, it's okay to set them up for both. This sets up a component in a good default state, so each test can stay focused on what it wants to assert.
@@ -509,7 +509,7 @@ Although not *all* of these variables are needed for *both* tests, it's okay to 
 Now we can remove the duplicated code from the individual tests:
 
 ```diff
- it('loads restaurants on mount', () => {
+ it('loads restaurants on first render', () => {
 -  const loadRestaurants = jest.fn().mockName('loadRestaurants');
 -  const restaurants = [];
 -

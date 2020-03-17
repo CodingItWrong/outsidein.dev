@@ -25,7 +25,7 @@ To prevent this from happening, the Test Pyramid is a concept that recommends wr
 ## Loading Indicator
 First, the loading indicator. Although we aren't writing an E2E test, we can still start from the "outside" in a sense: our `RestaurantList` component. Let's write a test of the loading indicator functionality for it.
 
-Right now in `RestaurantList.spec.js` we are mounting our component in a `beforeEach` block. This has worked so far, but now we need to set up the props slightly differently for different tests. We want a test where a loading flag is set.
+Right now in `RestaurantList.spec.js` we are rendering our component in a `beforeEach` block. This has worked so far, but now we need to set up the props slightly differently for different tests. We want a test where a loading flag is set.
 
 To do this, let's refactor our tests for more flexibility.
 
@@ -69,7 +69,7 @@ Next, let's remove the `beforeEach` block and call `renderWithProps` at the star
 -  renderWithProps();
 -});
 -
- it('loads restaurants on mount', () => {
+ it('loads restaurants on first render', () => {
 +  renderWithProps();
    expect(loadRestaurants).toHaveBeenCalled();
  });
@@ -232,7 +232,7 @@ Now our two "when loading succeeds" tests have the same call to `renderWithProps
 
 Save and the tests should pass.
 
-Note that we have one more test that calls `renderWithProps()` with no argument: the test that it "loads restaurants on mount."
+Note that we have one more test that calls `renderWithProps()` with no argument: the test that it "loads restaurants on first render."
 Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
 
 Now we need to drive out the loading flag in the store itself.
