@@ -600,7 +600,7 @@ Make this test pass by making the display of the error alert conditional on the 
 +  loading,
 +  loadError,
 +}) => {
-  useEffect(() => {
+   useEffect(() => {
 ...
        {loading && <CircularProgress data-testid="loading-indicator" />}
 -      <Alert severity="error">Restaurants could not be loaded.</Alert>

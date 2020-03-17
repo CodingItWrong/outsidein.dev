@@ -330,7 +330,7 @@ Now, write just enough production code to get past the current test failure, let
 +    },
 +  },
  };
-</script>
+ </script>
 ```
 
 We map the `restaurants/create` action into the component, naming it `createRestaurant`. Then then we create a `handleSave` method that calls `createRestaurant`. Finally, we tell the form that upon the `submit` event, `handleSave` should be called.
@@ -672,11 +672,11 @@ Now the `POST` request is made, and we get an error on the assertion we made abo
 So we aren't passing the restaurant name in the `POST` body. That's easy to fix by passing it along from the argument to the method:
 
 ```diff
--  createRestaurant() {
-+  createRestaurant(name) {
--    return client.post('/restaurants', {});
-+    return client.post('/restaurants', {name});
-  },
+-createRestaurant() {
++createRestaurant(name) {
+-  return client.post('/restaurants', {});
++  return client.post('/restaurants', {name});
+ },
 ```
 
 Cypress confirms we're sending the `POST` request to the server correctly, and we've finally moved on to the next E2E assertion failure:

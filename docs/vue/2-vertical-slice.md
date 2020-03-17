@@ -414,27 +414,27 @@ $ git commit -m "Load restaurants upon mounting RestaurantList"
 This gives us one of the behaviors we want our `RestaurantList` to have: loading the restaurants when it is mounted. Now it's time to write a test for the second behavior: displaying the restaurants. Let's add another `it()` block inside the `describe()`, with the following contents:
 
 ```js
-  it('displays the restaurants', () => {
-    const records = [
-      {id: 1, name: 'Sushi Place'},
-      {id: 2, name: 'Pizza Place'},
-    ];
+it('displays the restaurants', () => {
+  const records = [
+    {id: 1, name: 'Sushi Place'},
+    {id: 2, name: 'Pizza Place'},
+  ];
 
-    const restaurantsModule = {
-      namespaced: true,
-      state: {records},
-      actions: {
-        load: jest.fn().mockName('load'),
-      },
-    };
-    const store = new Vuex.Store({
-      modules: {
-        restaurants: restaurantsModule,
-      },
-    });
-
-    const wrapper = mount(RestaurantList, {localVue, store});
+  const restaurantsModule = {
+    namespaced: true,
+    state: {records},
+    actions: {
+      load: jest.fn().mockName('load'),
+    },
+  };
+  const store = new Vuex.Store({
+    modules: {
+      restaurants: restaurantsModule,
+    },
   });
+
+  const wrapper = mount(RestaurantList, {localVue, store});
+});
 ```
 
 So far it's pretty similar to our previous test. There are just a few differences:
@@ -807,7 +807,7 @@ Now, to set up our `restaurants` store module. Just like in our component test, 
 -};
 +});
 
-export default restaurants;
+ export default restaurants;
 ```
 
 Now use it in your test like so:
@@ -920,7 +920,7 @@ Now we're ready to implement our `load` action to retrieve the records from the 
 +      state.records = records;
 +    },
 +  },
-});
+ });
 ```
 
 With this, our test passes.

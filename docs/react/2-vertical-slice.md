@@ -290,8 +290,8 @@ Now, we're ready to render our component:
      const loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
 +    render(<RestaurantList loadRestaurants={loadRestaurants} />);
-  });
-});
+   });
+ });
 ```
 
 We import the `RestaurantList` component, making sure to use the named import because that will continue to be the unconnected component. Then we use React Testing Library's `render()` function to render it. We pass the `loadRestaurants` function as a prop.
@@ -302,9 +302,9 @@ Finally, we're ready to run an expectation to confirm that the component loads r
  it('loads restaurants on first render', () => {
    const loadRestaurants = jest.fn().mockName('loadRestaurants');
 
-  render(<RestaurantList loadRestaurants={loadRestaurants} />);
+   render(<RestaurantList loadRestaurants={loadRestaurants} />);
 +
-+ expect(loadRestaurants).toHaveBeenCalled();
++  expect(loadRestaurants).toHaveBeenCalled();
  });
 ```
 
@@ -323,11 +323,9 @@ Now we're ready to run our unit test. Run `yarn test` and leave it running for t
     Expected number of calls: >= 1
     Received number of calls:    0
 
-       9 |     render(<RestaurantList loadRestaurants=
-{loadRestaurants} />);
+       9 |     render(<RestaurantList loadRestaurants={loadRestaurants} />);
       10 |
-    > 11 |     expect(loadRestaurants).toHaveBeenCalle
-d();
+    > 11 |     expect(loadRestaurants).toHaveBeenCalled();
          |                             ^
       12 |   });
       13 | });
