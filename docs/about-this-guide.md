@@ -26,3 +26,40 @@ Jest and Mocha are two popular JavaScript testing libraries. We'll be using Jest
 - [Jest - Getting Started](https://jestjs.io/docs/en/getting-started): review "Introduction" section, "Getting Started" through "Mock Functions".
 
 Interestingly, our end-to-end test framework, Cypress, uses Mocha under the hood. But in our Cypress tests we'll mostly be using Cypress APIs, not Mocha ones. So don't worry about getting familiar with Mocha if you haven't used it before: you'll be able to pick it up as we go.
+
+## Text Formatting
+
+When we are displaying whole new blocks of code, they'll be syntax highlighted like this:
+
+```jsx
+import React from 'react';
+
+const RestaurantScreen = () => (
+  <div>
+    <h1>Restaurants</h1>
+  </div>
+);
+
+export default RestaurantScreen;
+```
+
+If you haven't used Vue.js or React before, notice that they each have ways syntactically to combine JavaScript code and what looks like HTML tags. See the Vue.js or React docs for more details.
+
+Because we'll be using Test-Driven Development, we'll be spending less time writing large chunks of code and more time making tiny changes to existing code. In that case, we'll use diff syntax, where lines that are added have a `+` to the left of them, and lines that are removed have a `-`. Those lines will also be highlighted to draw attention to them:
+
+```diff
+ import React from 'react';
++import {Provider} from 'react-redux';
++import store from './store';
+ import RestaurantScreen from './components/RestaurantScreen';
+
+ const App = () => (
+-  <div>
++  <Provider store={store}>
+     <RestaurantScreen />
+-  </div>
++  </Provider>
+ );
+```
+
+These `+`s and `-`s aren't part of the code; they just highlight the changes.
