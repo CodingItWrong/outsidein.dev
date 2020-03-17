@@ -2,6 +2,7 @@ module.exports = {
   title: 'AgileFrontend.dev',
   themeConfig: {
     sidebar: [
+      '/about-this-guide',
       ['/why-tdd', 'Why TDD?'],
       ['/outside-in-tdd', 'Overview'],
       '/exercise-intro',

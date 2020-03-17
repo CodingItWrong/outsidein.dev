@@ -1,0 +1,28 @@
+---
+title: "About This Guide"
+---
+
+# About This Guide
+
+## Prerequisites
+
+You'll have the best experience with this guide if you've already done the following.
+
+### Familiarity With Vue and Vuex, or React and Redux
+
+The bulk of this guide will involve building a frontend application in one of two stacks: Vue.js and Vuex, or React and Redux. It's helpful if you already have some familiarity with the stack you choose. We won't be using any too-advanced features of them, and we'll explain what's happening as we go. But we won't explain everything about how the frameworks work or why. Because of that, if you don't already know the stack you'll choose, it's recommended that you go through a basic tutorial on them first. The Vue.js and React guides are excellent, so they make a great place to start:
+
+- Vue.js and Vuex
+  - [Vue.js Guide](https://vuejs.org/v2/guide/)
+  - [Vuex Guide](https://vuex.vuejs.org/guide/)
+- React and Redux
+  - [React Tutorial](https://reactjs.org/tutorial/tutorial.html)
+  - [Redux Tutorial](https://redux.js.org/basics/basic-tutorial)
+
+### Familiarity with Jest or Mocha
+
+Jest and Mocha are two popular JavaScript testing libraries. We'll be using Jest in this guide. We won't be using any too-advanced features of it, so if you have a basic familiarity with Jest you should be set. And Jest and Mocha are similar enough that if you've used Mocha (and its related libraries Chai and Sinon) you should be able to pick Jest up no problem. But if you haven't used one of these libraries before, it's recommended that you look through the Jest docs to get familiar.
+
+- [Jest - Getting Started](https://jestjs.io/docs/en/getting-started): review Getting Started, Matchers, Testing Asynchronous Code, and Mock Functions.
+
+Interestingly, our end-to-end test framework, Cypress, uses Mocha under the hood. But in our Cypress tests we'll mostly be using Cypress APIs, not Mocha ones. So don't worry about getting familiar with Mocha if you haven't used it before: you'll be able to pick it up as we go.
