@@ -23,6 +23,6 @@ The bulk of this guide will involve building a frontend application in one of tw
 
 Jest and Mocha are two popular JavaScript testing libraries. We'll be using Jest in this guide. We won't be using any too-advanced features of it, so if you have a basic familiarity with Jest you should be set. And Jest and Mocha are similar enough that if you've used Mocha (and its related libraries Chai and Sinon) you should be able to pick Jest up no problem. But if you haven't used one of these libraries before, it's recommended that you look through the Jest docs to get familiar.
 
-- [Jest - Getting Started](https://jestjs.io/docs/en/getting-started): review Getting Started, Matchers, Testing Asynchronous Code, and Mock Functions.
+- [Jest - Getting Started](https://jestjs.io/docs/en/getting-started): review "Introduction" section, "Getting Started" through "Mock Functions".
 
 Interestingly, our end-to-end test framework, Cypress, uses Mocha under the hood. But in our Cypress tests we'll mostly be using Cypress APIs, not Mocha ones. So don't worry about getting familiar with Mocha if you haven't used it before: you'll be able to pick it up as we go.
