@@ -50,7 +50,7 @@ Install Material-UI and a related package:
 $ yarn add @material-ui/core @material-ui/lab
 ```
 
-The `core` package provides most of the components, and the `lab` package provides an error alert component we’ll use.
+The `core` package provides most of the components, and the `lab` package provides an error alert component we'll use.
 
 Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
 

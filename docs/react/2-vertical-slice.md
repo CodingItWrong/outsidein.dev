@@ -158,7 +158,7 @@ Then, we call `cy.route()` to stub a specific backend request; in this case, the
 
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
-After we’ve created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be "red") at first because we haven’t yet implemented the functionality.
+After we've created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be "red") at first because we haven't yet implemented the functionality.
 
 To run our test, run the app with `yarn start` and leave it running, then, in another terminal, run `yarn cypress`.
 After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
@@ -249,7 +249,7 @@ Now we finally have `RestaurantList` where we'll put our UI for this story. So f
 - Request for the restaurants to be loaded
 - Display the restaurants once they're returned
 
-Instead of adding the behavior directly, let’s **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
+Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
 
 Before we step down to a unit test, though, let's commit the changes we have. They're a nice, small unit of work: we've added the structure of components that we'll add the behavior to next.
 
@@ -405,7 +405,7 @@ Now, instead of running an expectation that `loadRestaurants` was called, we use
 
 Why did we split this unit test out from the first one? There is a common unit testing principle to **check one behavior per test in component tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
 
-You may recall that this isn’t what we did in the end-to-end test, though. Generally you should **check _multiple_ behaviors per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
+You may recall that this isn't what we did in the end-to-end test, though. Generally you should **check _multiple_ behaviors per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
 
 When we save the file, our test runs, and it's red, as we expect. We get the following error:
 
@@ -626,7 +626,7 @@ import restaurants from './restaurants/reducers';
 export default combineReducers({restaurants});
 ```
 
-Right now it’s a bit unnecessary that we're combining a _single_ reducer into a larger one, but this sets our app up for other reducers for the future.
+Right now it's a bit unnecessary that we're combining a _single_ reducer into a larger one, but this sets our app up for other reducers for the future.
 
 Now we need to create that restaurant reducer. Create a `src/store/restaurants` folder, then a `reducers.js` file inside it. Add the following contents:
 
@@ -766,7 +766,7 @@ Start with the initial state of the reducer:
  });
 ```
 
-Now we’ll create the store itself. Unlike in the full application, we will only pass in the restaurant reducer. The full application may have other reducers, but we are keeping our test narrowed to just the restaurant reducer.
+Now we'll create the store itself. Unlike in the full application, we will only pass in the restaurant reducer. The full application may have other reducers, but we are keeping our test narrowed to just the restaurant reducer.
 
 ```diff
 +import {createStore, applyMiddleware} from 'redux';
@@ -849,7 +849,7 @@ First, update the `loadRestaurants` function in `actions.js`:
 
 We define a new `STORE_RESTAURANTS` action name. Then, in the function `loadRestaurants()` returns, we call `.loadRestaurants()` on the passed-in `api` that we configured when we set up the store. When it resolves, we dispatch a new `storeRestaurants()` action, passing it the records. We define a `storeRestaurants` action creator to create the correct action object.
 
-Save the file and the test failure is the same, because our reducer doesn’t store the restaurants. Update the `records` reducer:
+Save the file and the test failure is the same, because our reducer doesn't store the restaurants. Update the `records` reducer:
 
 ```diff
  import {combineReducers} from 'redux';

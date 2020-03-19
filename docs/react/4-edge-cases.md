@@ -105,7 +105,7 @@ As our final refactoring, let's change the `renderWithProps` function to allow p
  };
 ```
 
-Here’s what’s going on:
+Here's what's going on:
 
 - `renderWithProps` takes an optional `propOverrides` argument.
 - We set a `props` variable to an object, providing default values for the `loadRestaurants` and `restaurants` properties, but using the object spread operator to set any passed-in properties, overriding the defaults.
@@ -122,7 +122,7 @@ it('displays the loading indicator while loading', () => {
 });
 ```
 
-Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won’t have text content, so instead we use a test ID to identify it. We confirm that it's not null, showing that the element is present.
+Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. We confirm that it's not null, showing that the element is present.
 
 In good TDD style, our test fails, because the element isn't present.
 
@@ -561,7 +561,7 @@ We decide we want to indicate the error state with a flag named `loadError`, so 
 We check for a new loading error element on the page. Our test fails because the element is not found.
 
 Fix it the simplest way possible by hard-coding the error message to show.
-Material-UI’s `lab` package has an `Alert` component that will work well:
+Material-UI's `lab` package has an `Alert` component that will work well:
 
 ```diff
  import CircularProgress from '@material-ui/core/CircularProgress';
