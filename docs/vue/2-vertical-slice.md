@@ -140,7 +140,7 @@ Then, we call `cy.route()` to stub a specific backend request; in this case, the
 
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
-After we’ve created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be “red”) at first because we haven’t yet implemented the functionality.
+After we’ve created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be "red") at first because we haven’t yet implemented the functionality.
 
 To run our test, run `yarn test:e2e`.
 After a few seconds the Cypress app should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
@@ -243,7 +243,7 @@ Now we finally have `RestaurantList` where we'll put our UI for this story. So f
 - Request for the restaurants to be loaded
 - Display the restaurants once they're returned
 
-Instead of adding the behavior directly, let’s **step down from the “outside” level of end-to-end tests to an “inside” component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
+Instead of adding the behavior directly, let’s **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
 
 Before we step down to a unit test, though, let's commit the changes we have. They're a nice, small unit of work: we've added the structure of components that we'll add the behavior to next.
 

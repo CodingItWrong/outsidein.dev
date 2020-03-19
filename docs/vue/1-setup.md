@@ -78,7 +78,7 @@ Create a new Vue app:
 $ vue create opinion-ate
 ```
 
-You’ll be asked for a preset; choose “Manually select features”.
+You’ll be asked for a preset; choose "Manually select features".
 
 You'll be prompted with a list of features to choose. Use the arrow keys and spacebar to select:
 
@@ -187,7 +187,7 @@ Now we’ll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that 
 
 ![Cypress window with smoke test](./images/1-2-cypress-smoke-test.png)
 
-Click on `test.js`. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is “My First Test” and a series of steps, which should pass. On the right is our app.
+Click on `test.js`. A new instance of Chrome will open and you’ll see the Cypress test runner interface. On the left is "My First Test" and a series of steps, which should pass. On the right is our app.
 
 ![Cypress window with smoke test](./images/1-3-cypress-smoke-test-run.png)
 
@@ -257,21 +257,21 @@ $ git commit -m "Set up test action"
 $ git push -u origin ci
 ```
 
-GitHub will give you a URL to create a pull request. Open it in the browser, and click “Create pull request”.
+GitHub will give you a URL to create a pull request. Open it in the browser, and click "Create pull request".
 
-Notice the yellow “Some checks haven't completed yet” warning, with “Test/Test” under it. That’s our GitHub Action running.
+Notice the yellow "Some checks haven't completed yet" warning, with "Test/Test" under it. That’s our GitHub Action running.
 
 ![PR screen with tests running](./images/1-4-pr-screen-with-tests-running.png)
 
-Click the “Details” link next to it. You’ll see our unit and E2E tests running.
+Click the "Details" link next to it. You’ll see our unit and E2E tests running.
 
 ![Actions screen with tests running](./images/1-5-actions-screen-with-test-running.png)
 
-When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you’ll see a green “All checks have passed”.
+When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you’ll see a green "All checks have passed".
 
 ![PR screen with tests passed](./images/1-6-pr-screen-with-tests-passed.png)
 
-Go ahead and click “Merge pull request”, then “Confirm merge”, then "Delete branch".
+Go ahead and click "Merge pull request", then "Confirm merge", then "Delete branch".
 
 In your local project, switch back to `master` and pull down the latest changes that we merged in from the branch:
 
@@ -293,9 +293,9 @@ There are many ways to deploy frontend apps. One easy one is services like Netli
 
 Create a Netlify account from [Netlify’s Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
-Once you’re signed in, click "New site from Git”. Click the “GitHub” button. A list of all your repos will appear. Search for your repo and click it. Leave “Branch to deploy” as `master`. Under “Basic build settings”, for the “Build command”, enter `yarn build` just like we ran locally. Then enter `dist` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them. That’s all we need to configure, so click “Deploy site”.
+Once you’re signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it. Leave "Branch to deploy" as `master`. Under "Basic build settings", for the "Build command", enter `yarn build` just like we ran locally. Then enter `dist` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them. That’s all we need to configure, so click "Deploy site".
 
-You will be sent to the Overview page for your new site. In yellow you’ll see “Site deploy in progress”. Click that text and you’ll be taken to the Deploys page. In a list at the bottom you’ll see “Production: master@HEAD Building”—click that. You’ll see a console log of output as the site is being built. Eventually you’ll see:
+You will be sent to the Overview page for your new site. In yellow you’ll see "Site deploy in progress". Click that text and you’ll be taken to the Deploys page. In a list at the bottom you’ll see "Production: master@HEAD Building"—click that. You’ll see a console log of output as the site is being built. Eventually you’ll see:
 
 ```
 6:53:02 AM: Site is live
@@ -304,9 +304,9 @@ You will be sent to the Overview page for your new site. In yellow you’ll see 
 
 (Your timestamps will be different depending on how unreasonably early you wake up.)
 
-Click “< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. (For example, mine is `https://xenodochial-aryabhata-5985da.netlify.com`.) Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
+Click "< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you’ll see the name of your site, with an automatically-assigned set of nonsense words and characters. (For example, mine is `https://xenodochial-aryabhata-5985da.netlify.com`.) Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
 
-Now let’s rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then “Site settings” button. Under General > Site details > Site information, click “Change site name”. Enter anything you like and click Save. At the top of this screen, under “Settings for”, your site URL appears in gray. Click on it to confirm your new domain works.
+Now let’s rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then "Site settings" button. Under General > Site details > Site information, click "Change site name". Enter anything you like and click Save. At the top of this screen, under "Settings for", your site URL appears in gray. Click on it to confirm your new domain works.
 
 We're now set to run our app's tests on CI and deploy to production. What would have taken even the most experienced developer days to set up in the past was trivial thanks to the smart defaults provided by Vue CLI, GitHub Actions, and Netlify.
 
