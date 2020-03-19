@@ -3,7 +3,7 @@ home: true
 heroText: AgileFrontend.dev
 tagline: Build frontend apps with confidence.
 actionText: Get Started →
-actionLink: /exercise-intro.html
+actionLink: /about-this-guide.html
 features:
 - title: Intro to Agile Development
   details: What outside-in TDD is and how it works
