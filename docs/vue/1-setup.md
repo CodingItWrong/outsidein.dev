@@ -39,6 +39,9 @@ Here are the tools we'll need to install:
 - Vue CLI
 - Recommended editor: VS Code with Vetur extension
 
+### Git
+Version control is essential for most developers, but even more so for agile developers. You need to be able to track the small steps you take to make sure they aren't lost. Although we won't get into it in this guide, focused and well-explained commits are essential for communicating to your teammates as well. [Git](https://git-scm.com/) is probably the most popular version control tool right now, and we'll use GitHub for pull requests and CI purposes as well.
+
 ### Node
 Like most frontend build tools, Vue CLI runs on top of [Node.js](https://nodejs.org/en/), so you’ll need node installed locally.
 
