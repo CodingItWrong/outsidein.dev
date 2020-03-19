@@ -220,18 +220,29 @@ name: Test
 on: [push]
 
 jobs:
-  unit-test:
+  test:
     name: Test
     runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v1
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
       - name: Unit Tests
         run: yarn test:unit
       - name: E2E tests
         run: yarn test:e2e --headless
 ```
+
+Here's what's going on in this file:
+
+- We name the workflow "Test".
+- We configure it to run any time code is pushed to the server. This means both PR branches and merges to the master branch will be tested.
+- We configure a single job for the workflow, also named "Test".
+- We configure it to run on a specific version of the Ubuntu distribution of Linux. You can also run on `ubuntu-latest`, but new versions of Ubuntu have broken Cypress in the past, so fixing the version ensures it will continue to keep wroking.
+- Now, we define the series of steps to run for the job. First, we use the GitHub Action `actions/checkout` to check out our code.
+- We install our Yarn dependencies. The `--frozen-lockfile` flag is good to use on CI servers: it ensures Yarn won't install versions different from what is in the lockfile.
+- We run our unit tests.
+- We run our E2E tests. We pass the `--headless` flag so Cypress won't attempt to show the GUI or wait for us to choose a test; it will run all the E2E tests.
 
 Commit the file then push up your changes to GitHub:
 
