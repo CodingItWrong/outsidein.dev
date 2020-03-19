@@ -17,11 +17,13 @@ In this first chapter, we'll set up our project and process. This won't involve 
 That's a lot, but we want to get it in place before we write our first line of production code to ensure we have support in place for our agile process. And it won't take too long because we'll use powerful tools to help us get there. Once that's all in place, we'll be ready to start implementing our application's features.
 
 ## Planning Our Work
-Before we start our work, we want a way to track it. Let's use Trello.
+Before we start our work, we want a way to track it. In this guide it'll just be you working by yourself, so you could just keep a to-do list on paper or a to-do app if you like. But when doing agile development in a team environment, it's a good idea to have a shared tracker. Trello is a great flexible tool that is useful for tracking work.
+
+If you want to try out Trello as part of this guide, go to <https://trello.com> and sign up for a free account. Create a new board and name it "Agile Frontend Dev". Create three columns: "To Do", "In Progress", and "Done". In the "To Do" column, add a card for each of the following stories:
 
 * Set Up Development Environment
 * Create App
-* Set up Autoformatting
+* Set Up Autoformatting
 * Set Up Tests On CI
 * Set Up Automatic Deployment
 * Fill In Readme
@@ -31,6 +33,8 @@ Before we start our work, we want a way to track it. Let's use Trello.
 * Add Restaurants
 
 ## Setting Up Development Environment
+Our first task is "Set Up Development Environment". In Trello, drag that card to the "In Progress" column.
+
 Here are the tools we'll need to install:
 
 - Git
@@ -63,11 +67,11 @@ $ npm install -g @vue/cli
 
 You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly, autocompletion, syntax highlighting, and autoformatting in `.vue` files.
 
-With this, we can mark off our first task in Trello:
-
-- [x] Set Up Development Environment
+With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
 
 ## Creating the App
+Our next story is "Create App" -- drag it to "In Progress".
+
 Create a new Vue app:
 
 ```sh
@@ -120,13 +124,13 @@ Open the `Local` URL in the browser and you should see a page welcoming you to y
 
 ![Vue app intro screen](./images/1-1-hello-vue.png)
 
-With this, we can mark off our next task in Trello:
+With this, we can move our "Create App" task in Trello to "Done".
 
-- [x] Create App
+## Setting Up Autoformatting
 
-Next, let's tweak the autoformatting setup. Prettier doesn't have a lot of configuration options, but you can adjust a little.
+Next is "Set Up Autoformatting" -- drag it to "In Progress".
 
-And a `.prettierrc.js` file at the root of your project and add the following:
+Prettier doesn't have a lot of configuration options, but you can adjust a little. And a `.prettierrc.js` file at the root of your project and add the following:
 
 ```js
 module.exports = {
@@ -156,11 +160,13 @@ $ git add .
 $ git commit -m "Set up linting and autoformatting"
 ```
 
-With this, we can mark off our next task in Trello:
+With this, we can drag "Set Up Autoformatting" to "Done".
 
-- [x] Set up autoformatting
+## Running Tests on CI
 
-Next, let’s confirm our tests work. Open `tests/unit/example.spec.js`. Note that it’s testing the `HelloWorld` component. Now run `yarn test:unit`. You should see the following:
+Next is "Set Up Tests on CI" -- drag it to "In Progress".
+
+Vue CLI automatically sets up some example tests for us. Before we run them on CI, let’s confirm they work for us locally. Open `tests/unit/example.spec.js`. Note that it’s testing the `HelloWorld` component. Now run `yarn test:unit`. You should see the following:
 
 ```
 yarn run v1.21.1
@@ -187,7 +193,6 @@ Click on `test.js`. A new instance of Chrome will open and you’ll see the Cypr
 
 There’s one more mode we can run our Cypress tests in: headless mode. Run `yarn test:e2e --headless`. You’ll see tests run in the console and say in the end that they passed. This runs our whole test suite without a GUI, and will be useful in a moment.
 
-## Continuous Integration
 When Vue CLI creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
 
 ```sh
@@ -275,12 +280,12 @@ $ git checkout master
 $ git pull
 ```
 
-With this, we can mark off our next task in Trello:
+With this, we can drag the "Set Up Tests On CI" task to "Done" in Trello.
 
-- [x] Set Up Tests On CI
+## Setting Up Automatic Deployment
+Our next task is "Set Up Automatic Deployment" -- drag it to "In Progress" in Trello.
 
-## Deployment
-Next we're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
+We're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
 
 First let's see how a production build works locally. Run `yarn build`. The files are written to a `dist` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can’t just open the HTML file in the browser, but they’ll work when deployed to a server.
 
@@ -305,11 +310,11 @@ Now let’s rename that site to be a bit easier to remember. Go back to Netlify,
 
 We're now set to run our app's tests on CI and deploy to production. What would have taken even the most experienced developer days to set up in the past was trivial thanks to the smart defaults provided by Vue CLI, GitHub Actions, and Netlify.
 
-With this, we can mark off our next task in Trello:
-
-- [x] Set Up Automatic Deployment
+With this, we can drag "Set Up Automatic Deployment" to "Done" in Trello.
 
 ## Filling In the Readme
+Our final setup task before we begin developing features is "Fill In Readme". Drag it to "In Progress" in Trello.
+
 Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Vue CLI created for us by default. It’s a nice minimal readme that lists the NPM scripts available, without a lot of filler text. If these commands weren’t in here, I would recommend that we add them: how to install, run, build, and test.
 
 Let’s add a description of the project and link to production, filling in your Netlify domain:
@@ -334,8 +339,6 @@ Also, if someone uses `npm` instead of `yarn` they won’t get the right depende
 
 Commit these README changes to git.
 
-With this, we can mark off our next task in Trello:
-
-- [x] Fill In Readme
+With this, we can drag "Fill In Readme" to "Done" in Trello.
 
 Now all our setup is done and we are ready to work on our first feature!

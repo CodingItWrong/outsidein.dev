@@ -17,11 +17,13 @@ In this first chapter, we'll set up our project and process. This won't involve 
 That's a lot, but we want to get it in place before we write our first line of production code to ensure we have support in place for our agile process. And it won't take too long because we'll use powerful tools to help us get there. Once that's all in place, we'll be ready to start implementing our application's features.
 
 ## Planning Our Work
-Before we start our work, we want a way to track it. Let's use Trello.
+Before we start our work, we want a way to track it. In this guide it'll just be you working by yourself, so you could just keep a to-do list on paper or a to-do app if you like. But when doing agile development in a team environment, it's a good idea to have a shared tracker. Trello is a great flexible tool that is useful for tracking work.
+
+If you want to try out Trello as part of this guide, go to <https://trello.com> and sign up for a free account. Create a new board and name it "Agile Frontend Dev". Create three columns: "To Do", "In Progress", and "Done". In the "To Do" column, add a card for each of the following stories:
 
 * Set Up Development Environment
 * Create App
-* Set up Autoformatting
+* Set Up Autoformatting
 * Set Up Tests On CI
 * Set Up Automatic Deployment
 * Fill In Readme
@@ -31,6 +33,8 @@ Before we start our work, we want a way to track it. Let's use Trello.
 * Add Restaurants
 
 ## Setting Up Development Environment
+Our first task is "Set Up Development Environment". In Trello, drag that card to the "In Progress" column.
+
 Here are the tools we'll need to install:
 
 - Git
@@ -53,11 +57,11 @@ If you’d prefer to use `npm`, you can still follow this guide, you’ll just n
 
 There are a number of different editors that are good for React development; two popular free ones are [Visual Studio Code](https://code.visualstudio.com/) and [Atom](https://atom.io/).
 
-With this, we can mark off our first task in Trello:
-
-- [x] Set Up Development Environment
+With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
 
 ## Creating the App
+Our next story is "Create App" -- drag it to "In Progress".
+
 Create a new React app:
 
 ```sh
@@ -91,11 +95,13 @@ Note that the development build is not optimized.
 To create a production build, use yarn build.
 ```
 
-With this, we can mark off our next task in Trello:
+With this, we can move our "Create App" task in Trello to "Done".
 
-- [x] Create App
+## Setting Up Autoformatting
 
-Next, let's set up linting and autoformatting. Create React App includes a built-in ESLint config to check your code for issues while it runs. But we can set up a separate ESLint config that our editor can see, so it can warn us about issues right away and autoformat files upon save.
+Next is "Set Up Autoformatting" -- drag it to "In Progress".
+
+Create React App includes a built-in ESLint config to check your code for issues while it runs. But we can set up a separate ESLint config that our editor can see, so it can warn us about issues right away and autoformat files upon save.
 
 Add this rather lengthy list of packages:
 
@@ -171,11 +177,13 @@ $ git add .
 $ git commit -m "Set up linting and autoformatting"
 ```
 
-With this, we can mark off our next task in Trello:
+With this, we can drag "Set Up Autoformatting" to "Done".
 
-- [x] Set up autoformatting
+## Running Tests on CI
 
-Next, let’s confirm our tests work. Open `src/App.test.js`. Note that it’s testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press a to run all tests.
+Next is "Set Up Tests on CI" -- drag it to "In Progress".
+
+Create React App automatically sets up an example component test for us. Before we run it on CI, let’s confirm it works for us locally. Open `src/App.test.js`. Note that it’s testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press a to run all tests.
 
  You should see the following:
 
@@ -258,7 +266,6 @@ $ git add .
 $ git commit -m "Set up Cypress E2E tests"
 ```
 
-## Continuous Integration
 When Create React App creates our project, it initializes a git repo and adds our code to it. Let’s push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
 
 ```sh
@@ -349,11 +356,11 @@ $ git checkout master
 $ git pull
 ```
 
-With this, we can mark off our next task in Trello:
+With this, we can drag the "Set Up Tests On CI" task to "Done" in Trello.
 
-- [x] Set Up Tests On CI
+## Setting Up Automatic Deployment
+Our next task is "Set Up Automatic Deployment" -- drag it to "In Progress" in Trello.
 
-## Deployment
 Next we're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
 
 First let's see how a production build works locally. Run `yarn build`. The files are written to a `build` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can’t just open the HTML file in the browser, but they’ll work when deployed to a server.
@@ -379,11 +386,11 @@ Now let’s rename that site to be a bit easier to remember. Go back to Netlify,
 
 We're now set to run our app's tests on CI and deploy to production. We had a little setup to do, but the defaults provided by Create React App, GitHub Actions, and Netlify went a long way toward simplifying the process.
 
-With this, we can mark off our next task in Trello:
-
-- [x] Set Up Automatic Deployment
+With this, we can drag "Set Up Automatic Deployment" to "Done" in Trello.
 
 ## Filling In the Readme
+Our final setup task before we begin developing features is "Fill In Readme". Drag it to "In Progress" in Trello.
+
 Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Create React App created for us by default. It’s a fairly minimal readme that lists the NPM scripts available, as well as links to learn more about Create React App. If these commands weren’t in here, I would recommend that we add them: how to run, build, and test.
 
 Let’s add a description of the project and link to production, filling in your Netlify domain:
