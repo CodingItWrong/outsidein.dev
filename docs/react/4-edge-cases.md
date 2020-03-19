@@ -416,6 +416,14 @@ Now we can simplify our async code. Since the `beforeEach` function only has one
  });
 ```
 
+::: tip
+If you remove the `await` keyword but don't add the `return` keyword, you'll notice that the tests still pass. As of this writing, it seems like Jest is still waiting for the promise to resolve whether we return it or not. Why is that?
+
+It has to do with the way Jest uses promises internally in running tests. This won't work for just any promise, though: for example, if our promise was really hitting an external service, or was set up with a `setTimeout()`, Jest would move on and not wait for the promise to resolve before running the tests.
+
+The fact that Jest works this way is an implementation detail and isn't documented as a behavior you can rely on; it could change at any time without warning. Because of this, it's safer to rely on the [documented behavior](https://jestjs.io/docs/en/setup-teardown#repeating-setup-for-many-tests) that if we want Jest to wait for a promise in a `beforeEach` block to resolve, we should return it. This is one way to make your tests as robust as possible, and avoid them breaking for mysterious reasons in the future.
+:::
+
 And the test no longer has any asynchrony, so we can remove the `async` keyword from the function as well:
 
 ```diff
