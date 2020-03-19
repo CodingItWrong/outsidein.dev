@@ -4,6 +4,13 @@ title: "About This Guide"
 
 # About This Guide
 
+## Who Is This Guide For
+
+- **Frontend developers new to testing.** If you haven't written unit or end-to-end tests in frontend apps before, this guide will walk you through the basic elements of these types of tests. You'll get familiar with some of the best tools for writing them, as well as techniques that will help you minimize the costs of those tests while maximizing the value they provide.
+- **Frontend developers new to Test-Driven Development.** If you write your frontend tests after you write your production code, this guide will show you how and why you might want to write your tests first. You'll see how Test-Driven Development helps you ensure you cover all the functionality of your app that you might otherwise miss, as well as keeping your tests at an interface level so they won't easily break.
+- **Frontend TDDers who only write component tests, or write them first.** This is sometimes referred to as classic TDD, or inside-out TDD because you start with the inside of your app--in the case of frontend apps, your components. You'll see why end-to-end tests complement your unit tests by adding a different kind of coverage, and how they can help keep your units even more focused by helping you avoid TDDing unneeded functionality. You'll also see how Cypress overcomes some of the pain points you may have experienced with end-to-end testing tools in the past.
+- **Experienced TDDers new to the frontend.** This was me when I moved into frontend development. I didn't want to leave behind the TDD practices that had helped me so much in server-side apps, but there weren't a lot of resources on how to do TDD effectively in modern frontend frameworks. This guide will give you what you need to apply the TDD techniques you love in React or Vue.js, as well as suggestions for what judgment calls might make sense in frontend development.
+
 ## Prerequisites
 
 You'll have the best experience with this guide if you've already done the following.
