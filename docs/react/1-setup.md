@@ -109,11 +109,8 @@ Add this rather lengthy list of packages:
 $ yarn add --dev eslint \
                  eslint-config-prettier \
                  eslint-plugin-cypress \
-                 eslint-plugin-import \
                  eslint-plugin-jest \
-                 eslint-plugin-jsx-a11y \
                  eslint-plugin-prettier \
-                 eslint-plugin-react \
                  prettier
 ```
 
@@ -121,7 +118,7 @@ Then create a file `.eslintrc.js` at the root of your project and add the follow
 
 ```js
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:react/recommended', 'prettier'],
+  extends: ['react-app', 'prettier'],
   plugins: ['prettier', 'jest', 'cypress'],
   parser: 'babel-eslint',
   env: {
@@ -136,18 +133,16 @@ module.exports = {
     },
   },
   rules: {
-    'prettier/prettier': 'error',
-    'react/prop-types': 'off',
+    'prettier/prettier': 'warn',
   },
 };
+
 ```
 
 Here's what this file is configuring:
 
-- Sets up recommended linting rules for JavaScript and React, to avoid errors.
+- Sets up with Create React App's default linting rules, adding in Prettier for autoformatting.
 - Makes ESLint aware of global variables provided by the ECMAScript 6 version of the language, the browser, Jest, and Cypress.
-- Disables the ESLint check to require React prop types. We won't be using them in this tutorial, and you may not need them if you aren't creating a component library.
-- Configures ESLint to run Prettier, a code autoformatter.
 
 Next, let's tweak the autoformatting setup. Prettier doesn't have a lot of configuration options, but you can adjust a little.
 
