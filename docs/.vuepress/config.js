@@ -28,6 +28,7 @@ module.exports = {
           '/react/5-writing-data',
         ],
       },
+      '/next-steps',
     ],
   },
 };
