@@ -866,6 +866,12 @@ We have a little bit to unit test in the store as well: `NewRestaurantForm` is r
 +    });
 ```
 
+Here's what's going on in this test:
+
+- We use the `.resolves` helper to confirm that the promise resolves instead of rejecting.
+- Although we don't care about the value the promise resolves with, Jest requires a matcher to be used after `.resolves`. To allow us to resolve without a value, we check that the resolved value is `undefined`.
+- We need Jest to wait on the promise to settle before it considers the test complete, so, as elsewhere, we return the promise we want Jest to wait on.
+
 The test fails:
 
 ```sh
@@ -1377,7 +1383,7 @@ describe('when save fails', () => {
   it('rejects', () => {
     api.createRestaurant.mockRejectedValue();
     promise = store.dispatch(createRestaurant(newRestaurantName));
-    return expect(promise).rejects.toEqual(undefined);
+    return expect(promise).rejects.toBeUndefined();
   });
 });
 ```

@@ -785,6 +785,12 @@ We have a little bit to unit test in the store as well: `NewRestaurantForm` is r
  });
 ```
 
+Here's what's going on in this test:
+
+- We use the `.resolves` helper to confirm that the promise resolves instead of rejecting.
+- Although we don't care about the value the promise resolves with, Jest requires a matcher to be used after `.resolves`. To allow us to resolve without a value, we check that the resolved value is `undefined`.
+- We need Jest to wait on the promise to settle before it considers the test complete, so, as elsewhere, we return the promise we want Jest to wait on.
+
 This passes right away.
 
 Now our component and store should be working together. If you add a new restaurant in the browser, now you'll see the name field cleared out afterward:
@@ -1289,12 +1295,10 @@ describe('when save fails', () => {
   it('rejects', () => {
     api.createRestaurant.mockRejectedValue();
     promise = store.dispatch('restaurants/create', newRestaurantName);
-    return expect(promise).rejects.toEqual(undefined);
+    return expect(promise).rejects.toBeUndefined();
   });
 });
 ```
-
-MORE DETAIL HERE ON TESTING PROMISES
 
 Save and this test fails: the promise resolves instead of rejecting. Why is this? Because Vuex actions are made for asynchronous logic,  `store.dispatch()` automatically returns a promise. If your action returns a promise, it's forwarded along; otherwise the action just resolves. So fixing this test is as easy as returning the promise chain from our action, so that when the inner promise rejects, the outer one will too:
 
