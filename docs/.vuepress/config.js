@@ -3,6 +3,7 @@ module.exports = {
   themeConfig: {
     sidebar: [
       '/about-this-guide',
+      '/why-agile',
       ['/why-tdd', 'Why TDD?'],
       ['/outside-in-tdd', 'Overview'],
       '/exercise-intro',

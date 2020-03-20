@@ -4,6 +4,8 @@ title: "Why Test-Driven Development?"
 
 # Why Test-Driven Development?
 
+This guide will walk us through a number of agile development practices, but with a particular focus on Test-Driven Development.
+
 Test-Driven Development is the practice of writing a test for functionality before you write the functionality itself. It follows the "Red-Green-Refactor Cycle:" first you write a failing test, then you write the minimum functionality to pass the test, then you rearrange the code if necessary to be simpler and clearer while still passing the test. Then the cycle begins again.
 
 Why would you want to practice Test-Driven Development? Let's talk about a few extremely common problems in programming that Test-Driven Development addresses in a unique way.
