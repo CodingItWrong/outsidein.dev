@@ -291,24 +291,53 @@ We're going to go ahead and deploy our application to production. Yes, even thou
 
 First let's see how a production build works locally. Run `yarn build`. The files are written to a `dist` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can't just open the HTML file in the browser, but they'll work when deployed to a server.
 
-There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users.
+There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users. You don't need to provide a credit card, but just keep an eye out for emails about approaching your limit of build minutes: if you go over the limit you'll need to pay for more minutes or your sites will be shut down.
 
 Create a Netlify account from [Netlify's Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
-Once you're signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it. Leave "Branch to deploy" as `master`. Under "Basic build settings", for the "Build command", enter `yarn build` just like we ran locally. Then enter `dist` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them. That's all we need to configure, so click "Deploy site".
+Once you're signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it.
 
-You will be sent to the Overview page for your new site. In yellow you'll see "Site deploy in progress". Click that text and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: master@HEAD Building"—click that. You'll see a console log of output as the site is being built. Eventually you'll see:
+![Choosing repo for a new site in Netlify](./images/1-7-searching-for-site.png)
 
-```
-6:53:02 AM: Site is live
-6:53:52 AM: Finished processing build request in 2m5.053946316s
-```
+Leave "Branch to deploy" as `master`. Under "Basic build settings", for the "Build command", enter `yarn build` just like we ran locally. Then enter `dist` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them.
+
+![Configuring Netlify build settings](./images/1-8-build-settings.png)
+
+That's all we need to configure, so click "Deploy site".
+
+You will be sent to the Overview page for your new site. In yellow you'll see "Site deploy in progress".
+
+![Netlify deploy in progress](./images/1-9-deploy-in-progress.png)
+
+Click that text and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: master@HEAD Building":
+
+![Netlify list of deployments](./images/1-10-deploy-list.png)
+
+Click "Production: master@HEAD Building". You'll see a console log of output as the site is being built. Eventually you'll see "Site is live":
+
+![Netlify site is live](./images/1-11-site-is-live.png)
 
 (Your timestamps will be different depending on how unreasonably early you wake up.)
 
-Click "< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you'll see the name of your site, with an automatically-assigned set of nonsense words and characters. (For example, mine is `https://xenodochial-aryabhata-5985da.netlify.com`.) Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
+Click "< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you'll see the name of your site, with an automatically-assigned set of nonsense words and characters:
 
-Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then "Site settings" button. Under General > Site details > Site information, click "Change site name". Enter anything you like and click Save. At the top of this screen, under "Settings for", your site URL appears in gray. Click on it to confirm your new domain works.
+![Netlify site automatically assigned name](./images/1-12-site-name.png)
+
+Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
+
+Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then "Site settings" button. Under General > Site details > Site information, click "Change site name".
+
+![Change Site Name button](./images/1-13-change-site-name-button.png)
+
+In the dialog that appears, enter any site name you like and click Save.
+
+![Change Site Name dialog](./images/1-14-change-site-name-dialog.png)
+
+At the top of this screen, under "Settings for", your site URL appears in gray.
+
+![New site name link](./images/1-15-new-site-name.png)
+
+Click on your new site URL to confirm your site is working at that URL.
 
 We're now set to run our app's tests on CI and deploy to production. What would have taken even the most experienced developer days to set up in the past was trivial thanks to the smart defaults provided by Vue CLI, GitHub Actions, and Netlify.
 
