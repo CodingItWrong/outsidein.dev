@@ -20,10 +20,10 @@ Create a new branch for this story:
 $ git co -b creating-a-restaurant
 ```
 
-Create a file `cypress/integration/managing-restaurants.spec.js` and add the following:
+Create a file `cypress/integration/creating-a-restaurant.spec.js` and add the following:
 
 ```js
-describe('Managing Restaurants', () => {
+describe('Creating a Restaurant', () => {
   it('allows adding restaurants', () => {
     const restaurantId = 27;
     const restaurantName = 'Sushi Place';

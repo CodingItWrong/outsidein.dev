@@ -20,10 +20,10 @@ Create a new branch for this story:
 $ git co -b creating-a-restaurant
 ```
 
-Create a file `tests/e2e/specs/managing-restaurants.spec.js` and add the following:
+Create a file `tests/e2e/specs/creating-a-restaurant.spec.js` and add the following:
 
 ```js
-describe('Managing Restaurants', () => {
+describe('Creating a Restaurant', () => {
   it('allows adding restaurants', () => {
     const restaurantId = 27;
     const restaurantName = 'Sushi Place';
