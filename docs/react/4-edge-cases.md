@@ -122,7 +122,9 @@ it('displays the loading indicator while loading', () => {
 });
 ```
 
-Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. We confirm that it's not null, showing that the element is present.
+Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a Test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
+
+Once we find our loading indicator by test ID, we confirm that it's not null, showing that the element is present.
 
 In good TDD style, our test fails, because the element isn't present.
 

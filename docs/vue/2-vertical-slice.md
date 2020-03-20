@@ -458,7 +458,7 @@ Now, instead of running an expectation that `load` was called, we use the `wrapp
 
 This is little verbose, so let's see what's going on:
 
-- We call `wrapper.findAll()` to find all the elements matching a CSS selector. The selector we use is `[data-testid='restaurant']`. Test IDs are a helpful way to pull up elements in your tests.
+- We call `wrapper.findAll()` to find all the elements matching a CSS selector. The selector we use is `[data-testid='restaurant']`. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a Test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
 - There should be two different restaurants displayed, so we get the element of the first one (index zero) by calling `.at(0)`.
 - We call `.text()` to get the text contents of the element, and assign it to the variable `firstRestaurantName`.
 - We check that the value of `firstRestaurantName` is "Sushi Place".
