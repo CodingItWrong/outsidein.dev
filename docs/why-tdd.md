@@ -66,7 +66,3 @@ Let me ask a more personal question: are *you* always that careful? *Always?* Ev
 Programming allows us to create incredibly powerful software with relative ease. As a result, programmers are tempted to think of ourselves as having unlimited abilities. But programmers are still human. We have limited energy, attention, and patience (especially patience). We can't perform at our peak capacity 100% of the time.
 
 The more we programmers embrace our limited capacities, the more we will lean on techniques that acknowledge and support those limitations. Test-Driven Development is one such technique. If you find yourself experiencing development slowdown and bugs making their way to production, I would encourage you to give Test-Driven Development some time to learn it, to see if it helps.
-
-## Ready?
-
-If this has gotten you curious enough to try Test-Driven Development, [pick a framework](/) and let's get started!
