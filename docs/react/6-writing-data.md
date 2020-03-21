@@ -1,8 +1,8 @@
 ---
-title: 5 - Writing Data
+title: 6 - Writing Data
 ---
 
-# 5 - Writing Data
+# 6 - Writing Data
 
 In this chapter we'll move on to our next new feature. We'll follow the process of outside-in TDD once again, with an outer and inner red-green-refactor loop. We'll also see some of the situations that come up when testing forms and when saving data to an API.
 

@@ -1,8 +1,8 @@
 ---
-title: 0 - Intro
+title: 1 - Intro
 ---
 
-# 0 - Intro
+# 1 - Intro
 
 Here's the stack of libraries we'll use for our React application:
 

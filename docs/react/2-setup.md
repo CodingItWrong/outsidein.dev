@@ -1,14 +1,14 @@
 ---
-title: 1 - Setup
+title: 2 - Setup
 ---
 
-# 1 - Setup
+# 2 - Setup
 
 In this first chapter, we'll set up our project and process. This won't involve writing any app-specific functionality. Instead, what we'll do is:
 
 - Make a list of our stories to work on
 - Get our development machine dependencies installed
-- Get Vue installed and running
+- Get React installed and running
 - Get linting and autoformatting working
 - Get E2E and component tests running
 - Get our tests running on CI
@@ -42,89 +42,60 @@ Here are the tools we'll need to install:
 - Git
 - Node
 - Yarn
-- Vue CLI
-- Recommended editor: VS Code with Vetur extension
+- An editor
 
 ### Git
 Version control is essential for most developers, but even more so for agile developers. You need to be able to track the small steps you take to make sure they aren't lost. Although we won't get into it in this guide, focused and well-explained commits are essential for communicating to your teammates as well. [Git](https://git-scm.com/) is probably the most popular version control tool right now, and we'll use GitHub for pull requests and CI purposes as well.
 
 ### Node
-Like most frontend build tools, Vue CLI runs on top of [Node.js](https://nodejs.org/en/), so you'll need node installed locally.
+We'll be using Create React App as our build tool. Like most frontend build tools, it runs on top of [Node.js](https://nodejs.org/en/), so you'll need node installed locally.
 
 ### Yarn
 [Yarn](https://yarnpkg.com/) is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
 
 If you'd prefer to use `npm`, you can still follow this guide, you'll just need to replace any `yarn` commands with the equivalent `npm` commands.
 
-### Vue CLI
-[Vue CLI](https://cli.vuejs.org/) is a robust tooling layer that allows you to create, run, and build Vue single-page applications. Rather than having to set up your own configuration of a bundler like Webpack, Vue CLI abstracts over it and gives you the settings most applications need.
+### An Editor
 
-Install it:
-
-```sh
-$ npm install -g @vue/cli
-```
-
-### VS Code
-
-You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly, autocompletion, syntax highlighting, and autoformatting in `.vue` files.
+There are a number of different editors that are good for React development; two popular free ones are [Visual Studio Code](https://code.visualstudio.com/) and [Atom](https://atom.io/).
 
 With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
 
 ## Creating the App
 Our next story is "Create App" -- drag it to "In Progress".
 
-Create a new Vue app:
+Create a new React app:
 
 ```sh
-$ vue create opinion-ate
+$ npx create-react-app opinion-ate
 ```
 
-You'll be asked for a preset; choose "Manually select features".
-
-You'll be prompted with a list of features to choose. Use the arrow keys and spacebar to select:
-
-* Babel
-* Vuex
-* Linter / Formatter
-* Unit Testing
-* E2E Testing
-
-When you're done, press Return. You'll be given followup questions for some of these. Choose:
-
-* `Pick a linter / formatter config`: choose `ESLint + Prettier`, then `Lint on save`. Prettier automatically formats your code when you save the file. Code consistency is a big help for productivity and catching bugs.
-* `Pick a unit testing solution:` choose `Jest`. Jest has a lot of features built in.
-* `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. Cypress is built from the ground up for rich frontend applications. The tradeoff, as Vue CLI mentions, is that Cypress 3.x runs only in Chrome. But Cypress 4 has added support for testing in Firefox and MS Edge as well! Vue CLI should be updated to use Cypress 4 soon.
-* `Where do you prefer placing config for Babel, ESLint, etc.?` I choose `In dedicated config files`, but it doesn't make a difference for this tutorial.
-* `Save this as a preset for future projects?` You can enter `N`, we shouldn't need it again.
-
-Vue CLI will start the installation process, and when it completes, your application will be created and ready to use.
+Create React App will start the installation process, and when it completes, your application will be created and ready to use.
 
 Open your `package.json` and note the scripts we have available:
 
-- `serve` to run the app locally
+- `start` to run the app locally
 - `build` to create a release build of the app
-- `test:unit` to run unit tests, including Vue component tests
-- `test:e2e` to run end-to-end tests
-- `lint` to run code linting
+- `test` to run unit tests, including React component tests
+- `eject` for if we ever want to move away from Create React App
 
-Let's try it out. Run `yarn serve`. You'll see something like the following:
+Let's try it out. Run `yarn start`. Your app should automatically open in your default browser, with a spinning React logo.
+
+![React app intro screen](./images/1-1-hello-react.png)
+
+In the console you'll see something like the following:
 
 ```
- DONE  Compiled successfully in 2578ms
+Compiled successfully!
 
+You can now view opinion-ate in the browser.
 
-  App running at:
-  - Local:   http://localhost:8080/
-  - Network: http://10.0.1.16:8080/
+  Local:            http://localhost:3000
+  On Your Network:  http://10.0.1.7:3000
 
-  Note that the development build is not optimized.
-  To create a production build, run yarn build.
+Note that the development build is not optimized.
+To create a production build, use yarn build.
 ```
-
-Open the `Local` URL in the browser and you should see a page welcoming you to your Vue.js app.
-
-![Vue app intro screen](./images/1-1-hello-vue.png)
 
 With this, we can move our "Create App" task in Trello to "Done".
 
@@ -132,7 +103,52 @@ With this, we can move our "Create App" task in Trello to "Done".
 
 Next is "Set Up Autoformatting" -- drag it to "In Progress".
 
-Prettier doesn't have a lot of configuration options, but you can adjust a little. And a `.prettierrc.js` file at the root of your project and add the following:
+Create React App includes a built-in ESLint config to check your code for issues while it runs. But we can set up a separate ESLint config that our editor can see, so it can warn us about issues right away and autoformat files upon save.
+
+Add this rather lengthy list of packages:
+
+```sh
+$ yarn add --dev eslint \
+                 eslint-config-prettier \
+                 eslint-plugin-cypress \
+                 eslint-plugin-jest \
+                 eslint-plugin-prettier \
+                 prettier
+```
+
+Then create a file `.eslintrc.js` at the root of your project and add the following:
+
+```js
+module.exports = {
+  extends: ['react-app', 'prettier'],
+  plugins: ['prettier', 'jest', 'cypress'],
+  parser: 'babel-eslint',
+  env: {
+    browser: true,
+    'cypress/globals': true,
+    es6: true,
+    'jest/globals': true,
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  rules: {
+    'prettier/prettier': 'warn',
+  },
+};
+
+```
+
+Here's what this file is configuring:
+
+- Sets up with Create React App's default linting rules, adding in Prettier for autoformatting.
+- Makes ESLint aware of global variables provided by the ECMAScript 6 version of the language, the browser, Jest, and Cypress.
+
+Next, let's tweak the autoformatting setup. Prettier doesn't have a lot of configuration options, but you can adjust a little.
+
+And another file `.prettierrc.js` and add the following:
 
 ```js
 module.exports = {
@@ -144,18 +160,14 @@ module.exports = {
 
 These options configure Prettier with some helpful options to match common JavaScript practice. It also makes our diffs a bit simpler to read, which is not only helpful for this guide, but is also helpful for code reviews in your own projects.
 
-Now, set up ESLint integration with your editor by installing the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+Now, set up ESLint integration with your editor. For example:
 
-To confirm it works, open `src/App.vue`. You should see yellow underlines at a few different places:
+- Atom: [linter-eslint](https://atom.io/packages/linter-eslint)
+- VS Code: [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-- Double quotes should be replaced with single quotes
-- Inside object literals, every property on its own line should have a comma after it, even the last one
+After enabling this integration, open `App.test.js`. Notice warnings on line 2 and 6 inside the curly brackets: Prettier is suggesting removing the spaces inside the curlies. If you've enabled autoformatting on save, which I recommend, when you save the file those spaces will be removed automatically.
 
-Save the file, and these changes should be made for you automatically.
-
-We can update all our files to be formatted this way by running `yarn lint --fix`.
-
-Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. Vue CLI initializes our app with a git repo, so we can just add the changes:
+Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. Create React App initializes our app with a git repo, so we can just add the changes:
 
 ```sh
 $ git add .
@@ -168,34 +180,90 @@ With this, we can drag "Set Up Autoformatting" to "Done".
 
 Next is "Set Up Tests on CI" -- drag it to "In Progress".
 
-Vue CLI automatically sets up some example tests for us. Before we run them on CI, let's confirm they work for us locally. Open `tests/unit/example.spec.js`. Note that it's testing the `HelloWorld` component. Now run `yarn test:unit`. You should see the following:
+Create React App automatically sets up an example component test for us. Before we run it on CI, let's confirm it works for us locally. Open `src/App.test.js`. Note that it's testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press a to run all tests.
+
+ You should see the following:
 
 ```
-yarn run v1.21.1
-$ vue-cli-service test:unit
- PASS  tests/unit/example.spec.js
-  HelloWorld.vue
-    ✓ renders props.msg when passed (20ms)
+PASS  src/App.test.js
+ ✓ renders learn react link (32ms)
 
 Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
-Time:        2.037s
+Time:        1.816s
 Ran all test suites.
-✨  Done in 4.50s.
+
+Watch Usage: Press w to show more.
 ```
 
-Now we'll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that we are loading the app and confirming we can see a welcome message. Now run `yarn test:e2e`. You'll see the Cypress application launch. Its window will show a list of Integration Tests with just one item: `test.js`.
+Press ctrl-C to leave the test runner.
+
+Now we need to install Cypress for end-to-end tests. Run:
+
+```sh
+$ yarn add --dev cypress
+```
+
+When it completes, in your `package.json`, add a new script:
+
+```diff
+ "scripts": {
+   "start": "react-scripts start",
+   "build": "react-scripts build",
+   "test": "react-scripts test",
++  "cypress": "cypress open",
+   "eject": "react-scripts eject"
+ }
+```
+
+Now run that command:
+
+```sh
+$ yarn cypress
+```
+
+A Cypress window will open, with a modal that says "To help you get started", informing us Cypress created some sample files. Click "OK, got it!"
+
+Now let's tweak these files. In the root of your project should be a `cypress.json` file. Open it and replace the contents with:
+
+```json
+{
+  "baseUrl": "http://localhost:3000"
+}
+```
+
+This configures Cypress to treat all URLs from the root of our local React app.
+
+Now, open the `cypress/integration` folder Cypress created, and see that there is an `examples` child folder under it. Delete the `examples` folder with its child test files. In its place, create a file `cypress/integration/smoke.spec.js` and add the following contents:
+
+```js
+describe('Smoke Test', () => {
+  it('can view the home page', () => {
+    cy.visit('/');
+    cy.contains('Learn React');
+  });
+});
+```
+
+This test will load up the root of our app and confirm it can see the text "Learn React" on it.
+
+Now, back in the Cypress window, you should see the list updated to only contain our `smoke.spec.js` test.
 
 ![Cypress window with smoke test](./images/1-2-cypress-smoke-test.png)
 
-Click on `test.js`. A new instance of Chrome will open and you'll see the Cypress test runner interface. On the left is "My First Test" and a series of steps, which should pass. On the right is our app.
+Click on `smoke.spec.js`. A new instance of Chrome will open and you'll see the Cypress test runner interface. On the left is our "Smoke Test" and a series of steps, which should pass. On the right is our app.
 
 ![Cypress window with smoke test](./images/1-3-cypress-smoke-test-run.png)
 
-There's one more mode we can run our Cypress tests in: headless mode. Run `yarn test:e2e --headless`. You'll see tests run in the console and say in the end that they passed. This runs our whole test suite without a GUI, and will be useful in a moment.
+Add the Cypress tests to git:
 
-When Vue CLI creates our project, it initializes a git repo and adds our code to it. Let's push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
+```sh
+$ git add .
+$ git commit -m "Set up Cypress E2E tests"
+```
+
+When Create React App creates our project, it initializes a git repo and adds our code to it. Let's push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
 
 ```sh
 $ git remote add origin https://github.com/your-user-name/your-repo-name.git
@@ -235,9 +303,12 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
       - name: Unit Tests
-        run: yarn test:unit
-      - name: E2E tests
-        run: yarn test:e2e --headless
+        run: yarn test --watchAll=false
+      - name: E2E Tests
+        uses: cypress-io/github-action@v1
+        with:
+          start: yarn start
+          wait-on: 'http://localhost:3000'
 ```
 
 Here's what's going on in this file:
@@ -248,8 +319,8 @@ Here's what's going on in this file:
 - We configure it to run on a specific version of the Ubuntu distribution of Linux. You can also run on `ubuntu-latest`, but new versions of Ubuntu have broken Cypress in the past, so fixing the version ensures it will continue to keep wroking.
 - Now, we define the series of steps to run for the job. First, we use the GitHub Action `actions/checkout` to check out our code.
 - We install our Yarn dependencies. The `--frozen-lockfile` flag is good to use on CI servers: it ensures Yarn won't install versions different from what is in the lockfile.
-- We run our unit tests.
-- We run our E2E tests. We pass the `--headless` flag so Cypress won't attempt to show the GUI or wait for us to choose a test; it will run all the E2E tests.
+- We run our unit tests. The `--watchAll=false` flag ensures they won't continue running and watching for file changes; they just run once.
+- We run our E2E tests. We use a Cypress GitHub action to do it, which we tell to start our development server and to wait until it finishes starting.
 
 Commit the file then push up your changes to GitHub:
 
@@ -287,19 +358,15 @@ With this, we can drag the "Set Up Tests On CI" task to "Done" in Trello.
 ## Setting Up Automatic Deployment
 Our next task is "Set Up Automatic Deployment" -- drag it to "In Progress" in Trello.
 
-We're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
+Next we're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
 
-First let's see how a production build works locally. Run `yarn build`. The files are written to a `dist` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can't just open the HTML file in the browser, but they'll work when deployed to a server.
+First let's see how a production build works locally. Run `yarn build`. The files are written to a `build` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can't just open the HTML file in the browser, but they'll work when deployed to a server.
 
-There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users. You don't need to provide a credit card, but just keep an eye out for emails about approaching your limit of build minutes: if you go over the limit you'll need to pay for more minutes or your sites will be shut down.
+There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users.
 
 Create a Netlify account from [Netlify's Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
-Once you're signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it.
-
-![Choosing repo for a new site in Netlify](./images/1-7-searching-for-site.png)
-
-Leave "Branch to deploy" as `master`. Under "Basic build settings", for the "Build command", enter `yarn build` just like we ran locally. Then enter `dist` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them.
+Once you're signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it. Leave "Branch to deploy" as `master`. Under "Basic build settings", you should see "Build command" pre-populated to `yarn build`, and `build/` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
 
 ![Configuring Netlify build settings](./images/1-8-build-settings.png)
 
@@ -323,7 +390,7 @@ Click "< Deploys" to go back to the Deploys tab. If you waited for the deploymen
 
 ![Netlify site automatically assigned name](./images/1-12-site-name.png)
 
-Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
+Click the green link in your browser. You should get the Learn React page.
 
 Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then "Site settings" button. Under General > Site details > Site information, click "Change site name".
 
@@ -339,37 +406,41 @@ At the top of this screen, under "Settings for", your site URL appears in gray.
 
 Click on your new site URL to confirm your site is working at that URL.
 
-We're now set to run our app's tests on CI and deploy to production. What would have taken even the most experienced developer days to set up in the past was trivial thanks to the smart defaults provided by Vue CLI, GitHub Actions, and Netlify.
+We're now set to run our app's tests on CI and deploy to production. We had a little setup to do, but the defaults provided by Create React App, GitHub Actions, and Netlify went a long way toward simplifying the process.
 
 With this, we can drag "Set Up Automatic Deployment" to "Done" in Trello.
 
 ## Filling In the Readme
 Our final setup task before we begin developing features is "Fill In Readme". Drag it to "In Progress" in Trello.
 
-Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Vue CLI created for us by default. It's a nice minimal readme that lists the NPM scripts available, without a lot of filler text. If these commands weren't in here, I would recommend that we add them: how to install, run, build, and test.
+Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Create React App created for us by default. It's a fairly minimal readme that lists the NPM scripts available, as well as links to learn more about Create React App. If these commands weren't in here, I would recommend that we add them: how to run, build, and test.
 
 Let's add a description of the project and link to production, filling in your Netlify domain:
 
 ```diff
- # opinion-ate
++# opinion-ate
 +
 +An app for tracking reviews of dishes at different restaurants.
 +
 +Production: https://your-netlify-domain.netlify.com/
-
- ## Project setup
++
+ This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ```
 
 Also, if someone uses `npm` instead of `yarn` they won't get the right dependencies. Let's make a note about this:
 
 ```diff
- ## Project setup
-+Dependencies are locked with a `yarn.lock` file, so please use `yarn` and not `npm` for installing them.
+ Production: https://your-netlify-domain.netlify.com/
 +
++Dependencies are locked with a `yarn.lock` file, so please use `yarn` and not `npm` for installing them.
+
+ This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ```
 
 Commit these README changes to git.
 
-With this, we can drag "Fill In Readme" to "Done" in Trello.
+With this, we can mark off our next task in Trello:
+
+- [x] Fill In Readme
 
 Now all our setup is done and we are ready to work on our first feature!

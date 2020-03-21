@@ -1,8 +1,8 @@
 ---
-title: 2 - Vertical Slice
+title: 3 - Vertical Slice
 ---
 
-# 2 - Vertical Slice
+# 3 - Vertical Slice
 
 In this chapter, we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple inner red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
 

@@ -1,8 +1,8 @@
 ---
-title: 4 - Edge Cases
+title: 5 - Edge Cases
 ---
 
-# 4 - Edge Cases
+# 5 - Edge Cases
 
 In this chapter we'll look at how to test-drive edge case functionality using unit tests.
 

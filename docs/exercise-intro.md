@@ -30,5 +30,5 @@ If you use a different frontend library or state management later, don't worry: 
 
 From here, pick the exercise you want to do:
 
-- [Vue Exercise](/vue/0-intro.html)
-- [React Exercise](/react/0-intro.html)
+- [Vue Exercise](/vue/)
+- [React Exercise](/react/)
