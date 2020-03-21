@@ -4,6 +4,7 @@ title: "About This Guide"
 
 # About This Guide
 
+## Testing on the Frontend
 Web browsers started out displaying static documents, but they're now a platform for fully-featured interactive applications. The JavaScript language and the APIs the browser exposes to it allow building user interfaces that are in many ways as rich as traditional desktop and mobile applications. Frontend JavaScript frameworks like React and Vue.js abstract away many of the details of managing the user interface, allowing developers to focus on the business functionality.
 
 Back when JavaScript was only used to provide a little enhancement on top of server-rendered web pages, testing your JavaScript code was both difficult and, in many cases, unnecessary. But now many web applications have their entire user interface rendered by JavaScript, so testing your JavaScript becomes extremely important. Thankfully, JavaScript test runners, framework-specific testing libraries, and end-to-end testing tools have stepped up to fill the gap.
@@ -20,6 +21,31 @@ But we *can* learn from others' experiences. This guide is an attempt to demonst
 - **Frontend developers new to Test-Driven Development.** If you write your frontend tests after you write your production code, this guide will show you how and why you might want to write your tests first. You'll see how Test-Driven Development helps you ensure you cover all the functionality of your app that you might otherwise miss, as well as keeping your tests at an interface level so they won't easily break.
 - **Frontend TDDers who only write component tests, or write them first.** This is sometimes referred to as classic TDD, or inside-out TDD because you start with the inside of your app--in the case of frontend apps, your components. You'll see why end-to-end tests complement your unit tests by adding a different kind of coverage, and how they can help keep your units even more focused by helping you avoid TDDing unneeded functionality. You'll also see how Cypress overcomes some of the pain points you may have experienced with end-to-end testing tools in the past.
 - **Experienced TDDers new to the frontend.** This was me when I moved into frontend development. I didn't want to leave behind the TDD practices that had helped me so much in server-side apps, but there weren't a lot of resources on how to do TDD effectively in modern frontend frameworks. This guide will give you what you need to apply the TDD techniques you love in React or Vue.js, as well as suggestions for what judgment calls might make sense in frontend development.
+
+## Chapters
+
+The chapters of this guide are grouped into three sections.
+
+The first section is about general concepts related to outside-in TDD.
+
+- *About This Guide* is this chapter.
+- *Why Agile?* describes problems common to much of software development, and how agile development practices address those problems. These practices include small stories, evolutionary design, test-driven development, refactoring, and others.
+- *Why TDD?* focuses on one particular agile development practice: test-driven development. It explains why writing tests before you write the production code has surprising benefits to regression safety, test robustness, and speed of development.
+- *Outside-In TDD* describes the approach to TDD this guide will take: outside-in TDD. It explains how end-to-end tests and unit tests work together to ensure both the external and internal quality of your app.
+- *Exercise Intro* introduces the extended exercise we will go through together for the remainder of this guide, presenting the option of either the Vue.js or React version.
+
+The second section of the guide puts outside-in TDD into practice by building a real application. There are two versions of this section: one using Vue.js and the other using React. The contents of the two are the same:
+
+- *Intro* introduces the tech stack we will be using for your chosen version of the exercise.
+- *Project Setup* prepares our process and codebase by listing out the stories we'll work on, getting the project spun up, configuring it, getting tests running on CI, and getting it automatically deploying to a hosting service.
+- *Vertical Slice* puts outside-in TDD into practice with our first feature, for reading data from an API. We build a minimal feature that touches all layers of the app, to start getting them built out.
+- *Refactoring Styles* demonstrates the benefit of thorough test coverage by allowing us to separate setting up functionality and styling. We take our plain-looking app and apply a nice look-and-feel to it,  while the passing tests assure us we haven't broken anything.
+- *Edge Cases* adds some more detail to our first feature, handling loading and error states. We show how handling these edge cases at the unit test level keeps our end-to-end tests simple and fast, and how TDD helps us ensure we have all edge cases covered by test.
+- *Writing Data* puts what we've learned all together by building out a second feature, this time writing data to the server. We see how to work with forms and verify data posted to the server. First we build out the core functionality in an outside-in TDD loop with end-to-end and unit tests, then we handle edge cases with additional unit tests
+
+The third section wraps up the guide:
+
+- *Next Steps* points to additional resources you can use to learn more about test patterns, tools, outside-in TDD, refactoring, and agile in general.
 
 ## About the Author
 
