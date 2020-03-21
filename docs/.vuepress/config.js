@@ -11,7 +11,7 @@ module.exports = {
         title: 'Vue',
         children: [
           '/vue/',
-          '/vue/2-setup',
+          '/vue/2-project-setup',
           '/vue/3-vertical-slice',
           '/vue/4-refactoring-styles',
           '/vue/5-edge-cases',
@@ -22,7 +22,7 @@ module.exports = {
         title: 'React',
         children: [
           '/react/',
-          '/react/2-setup',
+          '/react/2-project-setup',
           '/react/3-vertical-slice',
           '/react/4-refactoring-styles',
           '/react/5-edge-cases',
