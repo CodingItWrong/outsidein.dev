@@ -5,7 +5,7 @@ module.exports = {
       '/about-this-guide',
       '/why-agile',
       ['/why-tdd', 'Why TDD?'],
-      ['/outside-in-tdd', 'Overview'],
+      ['/outside-in-tdd', 'Outside-In TDD'],
       '/exercise-intro',
       {
         title: 'Vue',
