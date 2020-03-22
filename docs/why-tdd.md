@@ -6,7 +6,13 @@ title: "Why Test-Driven Development?"
 
 This guide will walk us through a number of agile development practices, but with a particular focus on Test-Driven Development.
 
-Test-Driven Development is the practice of writing a test for functionality before you write the functionality itself. It follows the "Red-Green-Refactor Cycle:" first you write a failing test, then you write the minimum functionality to pass the test, then you rearrange the code if necessary to be simpler and clearer while still passing the test. Then the cycle begins again.
+Test-Driven Development is the practice of writing a test for functionality before you write the functionality itself. It follows a three-step process, "Red-Green-Refactor":
+
+1. Red: write a test for functionality that does not yet exist, and watch it fail
+2. Green: write only enough production code to pass the test
+3. Refactor: rearrange the test and production code to improve it without changing its functionality
+
+Then the cycle repeats again for your next bit of functionality: you write the next test and watch it fail, etc.
 
 Why would you want to practice Test-Driven Development? Let's talk about a few extremely common problems in programming that Test-Driven Development addresses in a unique way.
 
@@ -35,7 +41,11 @@ As many applications grow over time, the speed of development gets slower and sl
 
 Why does this slowdown happen? Because when you wrote the code in the first place, your understanding of the needs of the application was different than it is now. The code was never designed to handle this new requirement. So to make this new feature fit, you put a workaround in place. Then another. And as these workarounds multiply, you end up with code that is very difficult to understand and change. The amount of effort to follow what even one massive function is doing can be overwhelming.
 
-To keep your development speed up, you need to adjust the code as you go so that it's always the simplest representation of the requirements as they stand right now. If you have a regression test suite that gives you 100% confidence, you can make adjustments at any time. But if you have even a *little bit* of doubt in your test suite, you'll hesitate. It will be safer to just leave the workaround in place. After an accumulation of thousands of such decisions, you can end up with a codebase that is a mess of giant functions with deeply-nested conditional logic.
+**One way Test-Driven Development speeds up your development is by guiding you to the simplest implementation.** Programmers can jump to conclusions about the implementation needed for a module, but sometimes the needs of an application are simpler than that. With TDD, you will only change to the complex implementation when there are enough tests to force you to do so. If you don't need those tests, you don't need that implementation, and you avoid carrying the cost of a complex implementation.
+
+**Test-Driven Development also guides you to write the simplest interface for a module.** Before you write the implementation, you think about how you want the rest of your application to use it. You're a lot less likely to end up with a function with eight positional arguments when the first thing you decide is how you want to call it. Interface thinking helps ensure your code presents a clean abstraction to the rest of the application. This reduces time spent trying to understand the calling code in the future, and makes changes easier.
+
+Once you *do* need to add additional functionality, you need to adjust the code as you go so that it's always the simplest representation of the requirements as they stand right now. If you have a regression test suite that gives you 100% confidence, you can make adjustments at any time. But if you have even a *little bit* of doubt in your test suite, you'll hesitate. It will be safer to just leave the workaround in place. After an accumulation of thousands of such decisions, you can end up with a codebase that is a mess of giant functions with deeply-nested conditional logic.
 
 **With Test-Driven Development, because you have a regression test suite you know you can trust, you can clean up the code any time with very little friction.** You can make the code just a bit clearer or simpler, and if the tests are green you have a high degree of confidence that you haven't broken anything. Over time these tiny improvements add up to a codebase that looks like it was designed from the start knowing what you know now. And this simple, clear code helps your development speed stay fast.
 

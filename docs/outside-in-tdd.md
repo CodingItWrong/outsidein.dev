@@ -4,25 +4,6 @@ title: Overview of Outside-In TDD
 
 # Overview of Outside-In TDD
 
-## The TDD Loop
-Test-Driven Development, at its root, is a method of development where you only write production code when a failing test drives you to do so. It follows a three-step process, "Red-Green-Refactor":
-
-1. Red: write a test for functionality that does not yet exist, and watch it fail
-2. Green: write only enough production code to pass the test
-3. Refactor: rearrange the test and production code to improve it without changing its functionality
-
-Then the cycle repeats again for your next bit of functionality: you write the next test and watch it fail, etc.
-
-What is the benefit of such an appraoch? Benefits include:
-
-- Interface thinking. Before you write the implementation of a module, you think about how you want the rest of your application to use it. You're a lot less likely to end up with a function with eight positional arguments when the first thing you decide is how you want to call it. Interface thinking helps ensure your code presents a clean abstraction to the rest of the application, which reduces cognitive load by the caller.
-- Ensures test coverage. If you follow the discipline of TDD, you can have complete confidence that all your application's functionality is covered by test, because you didn't write any production code unless a test drove you to it. This means you can refactor with confidence any time you run across code that's less than ideal. If you have any doubt that your test suite doesn't fully cover your code, you'll hesitate to make such improvements, and then code degradation is inevitable.
-- Guides you to the simplest implementation. Programmers can jump to conclusions about the implementation needed for a module, but sometimes the needs of an application are simpler than that. With TDD, you will only change to the complex implementation when there are enough tests to force you to do so. If you don't need those tests, you don't need that implementation, and you avoid carrying the cost of a complex implementation.
-
-TDDed unit tests also have the benefits of other unit tests:
-
-- Exposes coupling. If your production code is hard to set up in a test, that means it has a lot of external dependencies. It may be easy enough to use from your other production code *now,* but it's making a lot of assumptions about the environment around it, which means it's harder to change your application in the future. If it's hard to write a unit test for some code, that's not necessarily a problem with your test: it could be a problem with your production code. Unit tests expose dependencies more clearly than production code.
-
 ## The Outside-In Difference
 Traditional Test-Driven Development is usually done only at a unit test level, so you are creating objects and calling functions or methods. It's sometimes referred to as "middle-out TDD", because you start in the middle of your application building domain objects, then you assemble your application features from them.
 
