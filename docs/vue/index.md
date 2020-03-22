@@ -40,7 +40,7 @@ Vue Test Utils is Vue's built-in library of component testing helper functions.
 
 * E2E Tests: [Cypress][cypress]
 
-Cypress is an end-to-end testing tool that was written with Test-Driven Development in mind. Because it runs in the same browser context as your frontend app it has insight into the event loop and network requests, reducing flake and allowing easy request stubbing.
+Cypress is an end-to-end testing tool that was written with Test-Driven Development in mind. Because it runs in the same browser context as your frontend app it has insight into the event loop and network requests, reducing flake and allowing easy request stubbing. If you've had a bad experience with complex and flaky tests using other browser automation frameworks in the past, Cypress will convince you that E2E tests *can* be great.
 
 * CI: [GitHub Actions][github-actions]
 
