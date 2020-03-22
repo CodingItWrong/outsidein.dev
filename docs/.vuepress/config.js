@@ -29,6 +29,7 @@ module.exports = {
           '/react/6-writing-data',
         ],
       },
+      '/exercise-wrap-up',
       '/next-steps',
     ],
   },
