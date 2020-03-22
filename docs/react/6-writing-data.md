@@ -50,11 +50,9 @@ describe('Creating a Restaurant', () => {
     cy.get('[placeholder="Add Restaurant"]').type(restaurantName);
     cy.contains('Add').click();
 
-    cy.wait('@addRestaurant')
-      .its('requestBody')
-      .should('deep.equal', {
-        name: restaurantName,
-      });
+    cy.wait('@addRestaurant').its('requestBody').should('deep.equal', {
+      name: restaurantName,
+    });
 
     cy.contains(restaurantName);
   });
