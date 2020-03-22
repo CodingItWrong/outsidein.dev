@@ -136,6 +136,7 @@ Prettier doesn't have a lot of configuration options, but you can adjust a littl
 
 ```js
 module.exports = {
+  arrowParens: 'avoid',
   bracketSpacing: false,
   singleQuote: true,
   trailingComma: 'all',

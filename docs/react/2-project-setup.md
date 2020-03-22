@@ -152,6 +152,7 @@ And another file `.prettierrc.js` and add the following:
 
 ```js
 module.exports = {
+  arrowParens: 'avoid',
   bracketSpacing: false,
   singleQuote: true,
   trailingComma: 'all',
