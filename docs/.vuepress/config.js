@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'AgileFrontend.dev',
+  title: 'Outside-In Frontend Development',
   themeConfig: {
     sidebar: [
       '/about-this-guide',
