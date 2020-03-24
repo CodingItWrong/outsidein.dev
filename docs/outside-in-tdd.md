@@ -4,7 +4,7 @@ title: Overview of Outside-In TDD
 
 # Overview of Outside-In TDD
 
-## The Outside-In Difference
+## End-to-End Tests
 Traditional Test-Driven Development is usually done only at a unit test level, so you are creating objects and calling functions or methods. It's sometimes referred to as "middle-out TDD", because you start in the middle of your application building domain objects, then you assemble your application features from them.
 
 Outside-In TDD adds a second kind of test: acceptance tests, or E2E tests. These are tests that simulate a user interacting with your application. Acceptance tests work together with unit tests, covering the same functionality. Each provides a different type of value:
@@ -19,6 +19,17 @@ Outside-In TDD adds a second kind of test: acceptance tests, or E2E tests. These
 	- Cover many edge cases
 	- Provide most immediate feedback on what exactly is going wrong (defect localization)
 
+There are a number of different names for end-to-end tests that have similar but not quite identical meanings:
+
+- "Feature tests" emphasizes that each one tests a feature, a user-facing bit of functionality.
+- "Acceptance tests" emphasizes that a test is written in terms a user could understand, so that once it passes the user could accept the feature as working.
+- "End-to-end tests" and "system tests" emphasizes that they test the entire system all together, not just units of it.
+- "Integration tests" is a term that is used for many different things. In the context of these kind of tests, it can be used when the backend is stubbed out, so you aren't testing "end-to-end" across the entire system that runs in production.
+- "UI automation tests" focuses on the mechanics of the test: that it is automating UI interactions.
+
+In this guide we'll use the term "end-to-end test", because it's the most commonly used in the frontend development world, including in the tooling that our Vue.js exercise uses. We'll use the term even though our tests will stub out the backend API, so they aren't "end-to-end" in that sense.
+
+## The Two-Level TDD Loop
 How do you decide when and how many E2E tests vs unit tests to write? You write them together in a two-level TDD cycle:
 
 - Red: write an E2E test and watch it fail
