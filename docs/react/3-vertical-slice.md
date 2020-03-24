@@ -79,46 +79,34 @@ $ git commit -m "Delete sample content"
 
 ## Reviewing the Backend
 
-For this tutorial, our backend web service has already been built. Let's get it set up and see how we can load our restaurant data from it. We've set up a Node.js API you can run locally; that way you can edit data without authentication or stepping on other users' data.
+For this tutorial, our backend web service has already been built. Let's take a look at it and see how we can load our restaurant data from it. It's accessible at <https://api.outsidein.dev>. Rather than using username-and-password based authentication as we might do for a real system, for simplicity you'll just set up an API key instead. This will allow you to access your own personal data on the server, so you can edit it without stepping on other users' data.
 
-Go to the [`codingitwrong/agilefrontend-api` project](https://github.com/CodingItWrong/agilefrontend-api) on GitHub. Clone the project, or just download and expand the zip file.
+Go to <https://api.outsidein.dev> in a browser. Click the "Create API Key" button. You'll be given a new API key that is a random sequence of letters and numbers. Copy it and save it someplace safe--you won't be able to get back to it again.
 
-In the `agilefrontend-api` directory, run the following commands:
-
-```sh
-$ yarn install
-$ yarn setup
-$ yarn start
-```
-
-This will set up a SQLite database with some test data, and start the API server. You'll see:
-
-```sh
-yarn run v1.22.0
-$ node server.js
-info: serving app on http://127.0.0.1:3333
-```
-
-Go to `http://localhost:3333/restaurants` in a browser. You should see the following JSON data (formatted differently depending on your browser and extensions, and of course the dates will differ):
+Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, filling in your API key in place of `YOUR-API-KEY`. You should see the following JSON data with default restaurants created when your API key was created. It may be formatted differently depending on your browser and extensions, and of course the dates will differ:
 
 ```json
 [
   {
     "id": 1,
     "name": "Pasta Place",
+    "application_id": 1,
     "created_at": "2020-02-27 07:43:58",
     "updated_at": "2020-02-27 07:43:58"
   },
   {
     "id": 2,
     "name": "Salad Place",
+    "application_id": 1,
     "created_at": "2020-02-27 07:43:58",
     "updated_at": "2020-02-27 07:43:58"
   }
 ]
 ```
 
-So this is the web service endpoint our story will need to connect to. Now, to build the frontend.
+So this is the web service endpoint our story will need to connect to. You can also `POST` JSON data to that endpoint to create a new restaurant; feel free to try that out if you like.
+
+Now, to build the frontend.
 
 ## End-to-End Test
 
@@ -136,7 +124,8 @@ describe('Listing Restaurants', () => {
 
     cy.route({
       method: 'GET',
-      url: 'http://localhost:3333/restaurants',
+      url:
+        'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
       response: [
         {id: 1, name: sushiPlace},
         {id: 2, name: pizzaPlace},
@@ -150,11 +139,13 @@ describe('Listing Restaurants', () => {
 });
 ```
 
+As before, fill in your API key in place of `YOUR-API-KEY`.
+
 First, we create variables with a few restaurant names, because we'll use them several times.
 
 Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a `404 Not Found` status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
 
-Then, we call `cy.route()` to stub a specific backend request; in this case, the `http://localhost:3333/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` and `updated_at` fields, because our app won't be using them.
+Then, we call `cy.route()` to stub a specific backend request; in this case, the `https://api.outsidein.dev/YOUR-API-KEY/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` and `updated_at` fields, because our app won't be using them.
 
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
@@ -906,7 +897,7 @@ Now create an `api.js` file under `src`, and provide the following implementatio
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://localhost:3333/',
+  baseURL: 'https://api.outsidein.dev/YOUR-API-KEY',
 });
 
 const api = {
@@ -917,6 +908,8 @@ const api = {
 
 export default api;
 ```
+
+In the `baseURL`, replace `YOUR-API-KEY` with the API key you created earlier.
 
 First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
 
@@ -944,10 +937,9 @@ Rerun the E2E test one more time. The test should confirm that "Sushi Place" and
 
 ![Cypress test passing](./images/2-6-cypress-green.png)
 
-Now let's see our app working against the real backend. Start the API by running `yarn start` in its folder.
-
-Now go to your React app at `http://localhost:3000`.
-You should see the default "Pasta Place" and "Salad Place" records.
+Now let's see our app working against the real backend.
+Go to your React app at `http://localhost:3000`.
+You should see the default "Pasta Place" and "Salad Place" records loaded from the API.
 
 ![App with real API](./images/2-7-app-with-real-api.png)
 

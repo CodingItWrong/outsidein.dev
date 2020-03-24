@@ -32,13 +32,15 @@ describe('Creating a Restaurant', () => {
 
     cy.route({
       method: 'GET',
-      url: 'http://localhost:3333/restaurants',
+      url:
+        'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
       response: [],
     });
 
     cy.route({
       method: 'POST',
-      url: 'http://localhost:3333/restaurants',
+      url:
+        'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
       response: {
         id: restaurantId,
         name: restaurantName,
@@ -58,6 +60,8 @@ describe('Creating a Restaurant', () => {
   });
 });
 ```
+
+As before, fill in your API key in place of `YOUR-API-KEY`.
 
 As in our previous E2E test, we are stubbing the GET request to load the restaurants—but this time we're returning an empty array, as we don't need any restaurants for the test.
 
@@ -689,7 +693,7 @@ We aren't displaying the restaurant on the page. This is because we aren't yet r
 
 Rerun the E2E test and it passes, and we see Sushi Place added to the restaurant list. Our feature is complete!
 
-Start the API and your app and try out creating a restaurant for real. Reload the page to make sure it's really saved to the server.
+Try out creating a restaurant for real. Reload the page to make sure it's really saved to the server.
 
 ![Restaurant created](./images/5-1-restaurant-created.png)
 
