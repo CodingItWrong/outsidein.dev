@@ -25,8 +25,6 @@ How do you decide when and how many E2E tests vs unit tests to write? You write 
 - Green: to make it pass, step down to a unit test and use a Red-Green-Refactor cycle to implement only enough functionality to get past the current E2E test failure
 - Step back up and rerun the E2E test to see if it passes. If it fails with another failure, step back down to the unit test level again
 
-LOOK INTO HOW GOOS DESCRIBES THE TWO-LEVEL LOOP
-
 This style of TDD is called outside-in because you start from the outside of your application (the E2E test), and you step inward to implement only the functionality that's needed from the outside.
 
 ## Write the Code You Wish You Had
