@@ -90,16 +90,12 @@ Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, f
   {
     "id": 1,
     "name": "Pasta Place",
-    "application_id": 1,
-    "created_at": "2020-02-27 07:43:58",
-    "updated_at": "2020-02-27 07:43:58"
+    "created_at": "2020-02-27 07:43:58"
   },
   {
     "id": 2,
     "name": "Salad Place",
-    "application_id": 1,
-    "created_at": "2020-02-27 07:43:58",
-    "updated_at": "2020-02-27 07:43:58"
+    "created_at": "2020-02-27 07:43:58"
   }
 ]
 ```
@@ -145,7 +141,7 @@ First, we create variables with a few restaurant names, because we'll use them s
 
 Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a `404 Not Found` status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
 
-Then, we call `cy.route()` to stub a specific backend request; in this case, the `https://api.outsidein.dev/YOUR-API-KEY/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` and `updated_at` fields, because our app won't be using them.
+Then, we call `cy.route()` to stub a specific backend request; in this case, the `https://api.outsidein.dev/YOUR-API-KEY/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` field, because our app won't be using it.
 
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
