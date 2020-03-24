@@ -1,10 +1,9 @@
 ---
-title: 1 - Intro
+title: 1 - About This Exercise
 ---
 
-# 1 - Intro
+# Outside-In Vue Exercise
 
-## About This Exercise
 This is the beginning of a six-part exercise building a Vue.js application using Outside-In Test-Driven Development (TDD).
 
 If you've been linked directly to this part of the guide, and you'd like to learn about the concepts behind Outside-In TDD, you can go to [About This Guide](/about-this-guide.html), start from there, and continue with this exercise when you get back to it. Or, you can jump right in to the code, then go back to learn about the concepts when you're done.
