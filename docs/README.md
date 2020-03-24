@@ -1,15 +1,15 @@
 ---
 home: true
-heroText: AgileFrontend.dev
+heroText: Outside-In Frontend Development
 tagline: Build frontend apps with confidence.
 actionText: Get Started →
 actionLink: /about-this-guide.html
 features:
-- title: Intro to Agile Development
-  details: What outside-in TDD is and how it works
-- title: Vue Exercise
-  details: Put outside-in TDD into practice in a real Vue app.
-- title: React Exercise
-  details: Put outside-in TDD into practice in a real React app.
+- title: Agile Development Practices
+  details: See the problems that cause software development to get slower and more frustrating, and how agile development practices solve them.
+- title: Outside-In TDD
+  details: Learn a unique Test-Driven Development approach that increases confidence, decreases test fragility, and improves your design.
+- title: Exercises in React and Vue
+  details: Put Outside-In TDD and other agile development practices to work in an extended exercise in either React or Vue.js.
 footer: Copyright © 2020-present Josh Justice
 ---
