@@ -1480,3 +1480,7 @@ Most importantly, rerun the E2E tests and confirm that our app still works.
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] Add Restaurants
+
+## What's Next
+
+With this we've completed our second feature, including edge cases and styling. We've also reached the end of this exercise! In the next chapter we'll take a look at resources you can use to learn outside-in development more deeply.

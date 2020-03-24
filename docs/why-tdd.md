@@ -73,6 +73,8 @@ But is this approach practical? I would ask, have you ever worked with a develop
 
 Let me ask a more personal question: are *you* always that careful? *Always?* Even when management is demanding three number-one priorities before the end of the day? When you're sick? When a major stressful life event happens to you?
 
-Programming allows us to create incredibly powerful software with relative ease. As a result, programmers are tempted to think of ourselves as having unlimited abilities. But programmers are still human. We have limited energy, attention, and patience (especially patience). We can't perform at our peak capacity 100% of the time.
+Programming allows us to create incredibly powerful software with relative ease. As a result, programmers are tempted to think of ourselves as having unlimited abilities. But programmers are still human. We have limited energy, attention, and patience (especially patience). We can't perform at our peak capacity 100% of the time. The more we programmers embrace our limited capacities, the more we will lean on techniques that acknowledge and support those limitations. Test-Driven Development is one such technique.
 
-The more we programmers embrace our limited capacities, the more we will lean on techniques that acknowledge and support those limitations. Test-Driven Development is one such technique. If you find yourself experiencing development slowdown and bugs making their way to production, I would encourage you to give Test-Driven Development some time to learn it, to see if it helps.
+## What's Next
+
+We've just seen how Test-Driven Development works and the benefits it provides. This guide takes a particular kind of TDD approach called Outside-In TDD. In the next chapter, we'll see how outside-in TDD adds to the TDD practice we've just seen to provide extra confidence and benefits.

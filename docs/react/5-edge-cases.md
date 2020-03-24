@@ -948,3 +948,7 @@ Run the E2E test one more time to make sure it's still passing — it should be.
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] Show Loading and Error States
+
+## What's Next
+
+With these edge cases handled there's nothing else for us to do for our restaurant-loading feature. In the next chapter we'll apply what we've learned to a second feature, creating a new restaurant.

@@ -373,4 +373,5 @@ Commit these README changes to git.
 
 With this, we can drag "Fill In Readme" to "Done" in Trello.
 
-Now all our setup is done and we are ready to work on our first feature!
+## What's Next
+Now all our setup is done and we are ready to work on our first feature! In the next chapter we'll see how to build a feature using the Outside-In TDD loop.

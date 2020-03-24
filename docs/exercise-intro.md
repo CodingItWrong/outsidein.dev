@@ -28,7 +28,8 @@ Vue.js provides an official first-party state management library, Vuex, so that'
 
 If you use a different frontend library or state management later, don't worry: the testing principles and practices in this book apply to any frontend application.
 
-From here, pick the exercise you want to do:
+## Pick Your Framework
+To get started, pick the version of the exercise you want to do:
 
 - [Vue Exercise](/vue/)
 - [React Exercise](/react/)

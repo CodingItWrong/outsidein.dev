@@ -199,3 +199,6 @@ We've successfully styled our app relying on the tests to confirm all the functi
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] Style App with Material Design
+
+## What's Next
+In this chapter we improved the look-and-feel of our first feature. But there are some functionality improvements it could benefit from as well. In the next chapter we'll add support for edge cases related to loading and error states.

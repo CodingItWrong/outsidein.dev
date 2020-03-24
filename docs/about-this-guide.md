@@ -118,3 +118,7 @@ Because we'll be using Test-Driven Development, we'll be spending less time writ
 ```
 
 These `+`s and `-`s aren't part of the code; they just highlight the changes.
+
+## What's Next
+
+With that, we're ready to get started learning about Outside-In Development. We begin looking at the problem that agile development solves.

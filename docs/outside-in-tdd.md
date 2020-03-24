@@ -40,3 +40,7 @@ There are a number of criticisms of mocking in tests, but the context of outside
 
 - Do mocks make your tests less realistic? Well, they test your code in isolation from other code. Is isolated testing less realistic? It doesn't ensure all your units work together—but that's not the job of unit tests. In Outside-In TDD, the acceptance tests ensure your units work together, so that need is met. And if you don't test your units in isolation, you don't get the other benefits of unit testing.
 - Do mocks make your tests complex because you have to create mocks that return mocks that return mocks? If that happens, it's not revealing a problem with mocks, but a problem with your production code. It's revealing that the production code has deep coupling to other code, depending on the structure of it. This is a sign the production code should be changed to have simpler dependencies: specifically, to only rely on dependencies passed directly to it, so that only one level of mock is needed. This coupling problem is revealed most clearly when you're using mocks, so this is actually a point in mocks' favor.
+
+## What's Next
+
+In this chapter we heard a summary of what Outside-In Test Driven Development is and how it works. Next, rather than talking about theory, we'll dive in to an exercise building an app together using Outside-In TDD and the frontend framework of your choice.

@@ -1036,3 +1036,7 @@ We successfully implemented our first feature with outside-in Test-Driven Develo
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 
 - [x] List Restaurants
+
+## What's Next
+
+Now our first feature is working, and TDD has guided us to start with a minimal implementation. In the next chapter we'll iterate on this implementation by adding a UI component library and improving the styling of the app so far.
