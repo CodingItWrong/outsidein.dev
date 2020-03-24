@@ -1,5 +1,6 @@
 ---
 title: 1 - About This Exercise
+prev: /exercise-intro.html
 ---
 
 # Outside-In React Exercise

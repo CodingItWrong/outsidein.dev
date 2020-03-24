@@ -1,5 +1,6 @@
 ---
 title: Exercise Intro
+next: false
 ---
 
 # Exercise Intro

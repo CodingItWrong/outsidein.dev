@@ -1,5 +1,6 @@
 ---
 title: "Exercise Wrap-Up"
+prev: false
 ---
 
 # Exercise Wrap-Up
