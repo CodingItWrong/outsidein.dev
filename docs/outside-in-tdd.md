@@ -27,7 +27,7 @@ There are a number of different names for end-to-end tests that have similar but
 - "Integration tests" is a term that is used for many different things. In the context of these kind of tests, it can be used when the backend is stubbed out, so you aren't testing "end-to-end" across the entire system that runs in production.
 - "UI automation tests" focuses on the mechanics of the test: that it is automating UI interactions.
 
-In this guide we'll use the term "end-to-end test", because it's the most commonly used in the frontend development world, including in the tooling that our Vue.js exercise uses. We'll use the term even though our tests will stub out the backend API, so they aren't "end-to-end" in that sense.
+In this guide we'll use the term "end-to-end test", because it's the most commonly used in the frontend development world, including in the tooling that our Vue exercise uses. We'll use the term even though our tests will stub out the backend API, so they aren't "end-to-end" in that sense.
 
 ## The Two-Level TDD Loop
 How do you decide when and how many E2E tests vs unit tests to write? You write them together in a two-level TDD cycle:

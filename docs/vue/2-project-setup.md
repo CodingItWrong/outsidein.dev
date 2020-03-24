@@ -122,7 +122,7 @@ Let's try it out. Run `yarn serve`. You'll see something like the following:
   To create a production build, run yarn build.
 ```
 
-Open the `Local` URL in the browser and you should see a page welcoming you to your Vue.js app.
+Open the `Local` URL in the browser and you should see a page welcoming you to your Vue app.
 
 ![Vue app intro screen](./images/1-1-hello-vue.png)
 
