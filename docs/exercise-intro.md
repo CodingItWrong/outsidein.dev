@@ -5,9 +5,9 @@ next: false
 
 # Exercise Intro
 
-To see Outside-In TDD in action, we're going to walk through creating a few features in a simple frontend application. We'll build an app for rating dishes at restaurants. We'll call it Opinion Ate. Note that we won't get anywhere near finishing the app as part of this guide: we'll only get it started.
+To see outside-in test-driven development in action, we're going to walk through creating a few features in a simple frontend application. We'll build an app for rating dishes at restaurants. We'll call it Opinion Ate. Note that we won't get anywhere near finishing the app as part of this guide: we'll only get it started.
 
-One important note before we begin: if you aren't used to Test-Driven Development, it can feel slow, and this can make it tempting to give up. Stick with it through this guide! The value of TDD usually doesn't click until you've given it a bit of practice.
+One important note before we begin: if you aren't used to test-driven development, it can feel slow, and this can make it tempting to give up. Stick with it through this guide! The value of TDD usually doesn't click until you've given it a bit of practice.
 
 Anything new you learn is going to be slower while you're learning it, so don't let that dissuade you. In addition to that, of course for the simple functionality we'll be writing in this tutorial it would be quicker to write it directly. In real applications, the time it takes to do TDD is offset by the time you save troubleshooting, tracking down bugs that were released to production, restructuring your code because the interface is hard to use, manually testing, and struggling to unit test code that wasn't written to be unit testable. I can't demonstrate that time savings to you in an exercise, but as you go, think about how much time you give to all of those things, and think about what it would be like if they were drastically reduced.
 

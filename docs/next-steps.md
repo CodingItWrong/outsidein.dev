@@ -4,7 +4,7 @@ title: "Next Steps"
 
 # Next Steps
 
-You've completed this guide and gotten a taste of Outside-In Test Driven Development on the frontend. But this is just the beginning of your journey. Here are some more resources to take your learning further, depending on what you want to learn more about.
+You've completed this guide and gotten a taste of outside-in test-driven development on the frontend. But this is just the beginning of your journey. Here are some more resources to take your learning further, depending on what you want to learn more about.
 
 Note that none of the below are affiliate links; I don't make any money off of them. These are just resources that have helped me that I want to pass along. For published books, I link to Pragmatic Bookshelf and InformIT because they offer DRM-free ebooks. They are all available through other channels as well.
 
@@ -40,7 +40,7 @@ The functionality we wrote in this guide was pretty straightforward, so there wa
 ## Agile Methodology
 This book has contained a brief introduction to agile development practices, but it hasn't gotten into the broader scope of doing agile as a team. There are many books on agile development; here are two I would recommend.
 
-[*Extreme Programming Explained*][xp-explained] is by Kent Beck, the creator of Extreme Programming, one of the early agile methodologies. Beck is also the creator of Test-Driven Development. Unlike some other agile methodologies, Extreme Programming is not agnostic about technical practices. This is important because you can't deliver reliable software on a regular basis without technical processes to keep the software reliable and development speed consistent. *Extreme Programming Explained* also gets into the big-picture values behind Extreme Programming, such as the fact that humans have limited capacities and we should design software practices that acknowledge and support that, rather than deny it.
+[*Extreme Programming Explained*][xp-explained] is by Kent Beck, the creator of Extreme Programming, one of the early agile methodologies. Beck is also the creator of test-driven development. Unlike some other agile methodologies, Extreme Programming is not agnostic about technical practices. This is important because you can't deliver reliable software on a regular basis without technical processes to keep the software reliable and development speed consistent. *Extreme Programming Explained* also gets into the big-picture values behind Extreme Programming, such as the fact that humans have limited capacities and we should design software practices that acknowledge and support that, rather than deny it.
 
 [*The Nature of Software Development*][nature-sw-dev], by Ron Jeffries, is a recent attempt to restate the values and priorities of agile development in a methodology-agnostic way. Rather than teaching a complex approach, it draws out common principles.
 

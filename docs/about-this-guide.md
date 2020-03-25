@@ -13,13 +13,13 @@ But like in every area of computing, on the frontend, just having testing tools 
 
 This is because testing is inherently complex. Whereas there might be only one obvious way to implement a certain production feature, there are likely several possible ways to test it, each with pros and cons that make it difficult to know which to choose. Judgment is necessary. And usually you can't learn judgment from the docs of testing tools. Judgment comes from time and experience.
 
-But we *can* learn from others' experiences. This guide is an attempt to demonstrate how testing principles that emerged in other contexts apply to frontend development. We'll see how to practice Test-Driven Development—specifically, a form called Outside-In Test Driven Development. This approach helps you write tests that thoroughly cover your app but are loosely-coupled so they don't hinder you from making changes.
+But we *can* learn from others' experiences. This guide is an attempt to demonstrate how testing principles that emerged in other contexts apply to frontend development. We'll see how to practice test-driven development—specifically, a form called outside-in test-driven development. This approach helps you write tests that thoroughly cover your app but are loosely-coupled so they don't hinder you from making changes.
 
 ## Who Is This Guide For
 
 - **Frontend developers new to testing.** If you haven't written unit or end-to-end tests in frontend apps before, this guide will walk you through the basic elements of these types of tests. You'll get familiar with some of the best tools for writing them, as well as techniques that will help you minimize the costs of those tests while maximizing the value they provide.
-- **Frontend developers new to Test-Driven Development.** If you write your frontend tests after you write your production code, this guide will show you how and why you might want to write your tests first. You'll see how Test-Driven Development helps you ensure you cover all the functionality of your app that you might otherwise miss, as well as keeping your tests at an interface level so they won't easily break.
-- **Frontend TDDers who only write component tests, or write them first.** This is sometimes referred to as classic TDD, or inside-out TDD because you start with the inside of your app--in the case of frontend apps, your components. You'll see why end-to-end tests complement your unit tests by adding a different kind of coverage, and how they can help keep your units even more focused by helping you avoid TDDing unneeded functionality. You'll also see how Cypress overcomes some of the pain points you may have experienced with end-to-end testing tools in the past.
+- **Frontend developers new to test-driven development.** If you write your frontend tests after you write your production code, this guide will show you how and why you might want to write your tests first. You'll see how test-driven development helps you ensure you cover all the functionality of your app that you might otherwise miss, as well as keeping your tests at an interface level so they won't easily break.
+- **Frontend TDDers who only write component tests, or write them first.** This is sometimes referred to as classic TDD, or middle-out TDD because you start with the inside of your app--in the case of frontend apps, your components. You'll see why end-to-end tests complement your unit tests by adding a different kind of coverage, and how they can help keep your units even more focused by helping you avoid TDDing unneeded functionality. You'll also see how Cypress overcomes some of the pain points you may have experienced with end-to-end testing tools in the past.
 - **Experienced TDDers new to the frontend.** This was me when I moved into frontend development. I didn't want to leave behind the TDD practices that had helped me so much in server-side apps, but there weren't a lot of resources on how to do TDD effectively in modern frontend frameworks. This guide will give you what you need to apply the TDD techniques you love in React or Vue, as well as suggestions for what judgment calls might make sense in frontend development.
 
 ## Chapters
@@ -100,7 +100,7 @@ export default RestaurantScreen;
 
 If you haven't used Vue or React before, notice that they each have ways syntactically to combine JavaScript code and what looks like HTML tags. See the Vue or React Guides for more details.
 
-Because we'll be using Test-Driven Development, we'll be spending less time writing large chunks of code and more time making tiny changes to existing code. In that case, we'll use diff syntax, where lines that are added have a `+` to the left of them, and lines that are removed have a `-`. Those lines will also be highlighted to draw attention to them:
+Because we'll be using test-driven development, we'll be spending less time writing large chunks of code and more time making tiny changes to existing code. In that case, we'll use diff syntax, where lines that are added have a `+` to the left of them, and lines that are removed have a `-`. Those lines will also be highlighted to draw attention to them:
 
 ```diff
  import React from 'react';
@@ -137,4 +137,4 @@ It's no exaggeration to say that this guide has no original content and is only 
 
 ## What's Next
 
-With that, we're ready to get started learning about Outside-In Development. We begin looking at the problem that agile development solves.
+With that, we're ready to get started learning about outside-in development. We begin looking at the problem that agile development solves.

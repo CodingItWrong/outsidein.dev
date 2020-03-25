@@ -939,7 +939,7 @@ You should see the default "Pasta Place" and "Salad Place" records loaded from t
 
 ![App with real API](./images/2-7-app-with-real-api.png)
 
-We successfully implemented our first feature with outside-in Test-Driven Development!
+We successfully implemented our first feature with outside-in test-driven development!
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
 

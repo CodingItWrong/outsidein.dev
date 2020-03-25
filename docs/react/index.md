@@ -5,9 +5,9 @@ prev: /exercise-intro.html
 
 # Outside-In React Exercise
 
-This is the beginning of a six-part exercise building a React application using Outside-In Test-Driven Development (TDD).
+This is the beginning of a six-part exercise building a React application using outside-in test-driven development (TDD).
 
-If you've been linked directly to this part of the guide, and you'd like to learn about the concepts behind Outside-In TDD, you can go to [About This Guide](/about-this-guide.html), start from there, and continue with this exercise when you get back to it. Or, you can jump right in to the code, then go back to learn about the concepts when you're done.
+If you've been linked directly to this part of the guide, and you'd like to learn about the concepts behind outside-in TDD, you can go to [About This Guide](/about-this-guide.html), start from there, and continue with this exercise when you get back to it. Or, you can jump right in to the code, then go back to learn about the concepts when you're done.
 
 The app we'll begin building is for rating dishes at restaurants. We'll call it Opinion Ate. Note that we won't get anywhere near finishing the app as part of this guide: we'll only get it started.
 
@@ -44,7 +44,7 @@ RTL will help us write component tests. Unlike other component testing libraries
 
 * E2E Tests: [Cypress][cypress]
 
-Cypress is an end-to-end testing tool that was written with Test-Driven Development in mind. Because it runs in the same browser context as your frontend app it has insight into the event loop and network requests, reducing flake and allowing easy request stubbing. If you've had a bad experience with complex and flaky tests using other browser automation frameworks in the past, Cypress will convince you that E2E tests *can* be great.
+Cypress is an end-to-end testing tool that was written with test-driven development in mind. Because it runs in the same browser context as your frontend app it has insight into the event loop and network requests, reducing flake and allowing easy request stubbing. If you've had a bad experience with complex and flaky tests using other browser automation frameworks in the past, Cypress will convince you that E2E tests *can* be great.
 
 * CI: [GitHub Actions][github-actions]
 

@@ -8,8 +8,8 @@ features:
 - title: Agile Development Practices
   details: See the problems that cause software development to get slower and more frustrating, and how agile development practices solve them.
 - title: Outside-In TDD
-  details: Learn a unique Test-Driven Development approach that increases confidence, decreases test fragility, and improves your design.
+  details: Learn a unique test-driven development approach that increases confidence, decreases test fragility, and improves your design.
 - title: Exercises in React and Vue
-  details: Put Outside-In TDD and other agile development practices to work in an extended exercise in either React or Vue.js.
+  details: Put outside-in TDD and other agile development practices to work in an extended exercise in either React or Vue.js.
 footer: Copyright © 2020-present Josh Justice
 ---

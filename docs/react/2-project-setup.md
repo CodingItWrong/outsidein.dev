@@ -445,4 +445,4 @@ With this, we can mark off our next task in Trello:
 - [x] Fill In Readme
 
 ## What's Next
-Now all our setup is done and we are ready to work on our first feature! In the next chapter we'll see how to build a feature using the Outside-In TDD loop.
+Now all our setup is done and we are ready to work on our first feature! In the next chapter we'll see how to build a feature using the outside-in TDD loop.

@@ -5,7 +5,7 @@ title: Overview of Outside-In TDD
 # Overview of Outside-In TDD
 
 ## Beyond Traditional TDD
-Traditional Test-Driven Development is usually done only at a unit test level, so you are creating objects and calling functions or methods. It's sometimes referred to as "middle-out TDD", because you start in the middle of your application building domain objects, then you assemble your application features from them.
+Traditional test-driven development is usually done only at a unit test level, so you are creating objects and calling functions or methods. It's sometimes referred to as "middle-out TDD", because you start in the middle of your application building domain objects, then you assemble your application features from them.
 
 There are a few limitations to this approach, however. End-to-end testing is another valuable kind of test, and is now feasible for developers to write, especially for web applications. But traditional TDD doesn't provide any guidance on how to incorporate end-to-end tests into your TDD workflow, or when to write them, or how to write them.
 
@@ -14,7 +14,7 @@ Also, in middle-out TDD code is usually tested with its real collaborators, the 
 Finally, building from the middle out can result in can result in building functionality that is unused or difficult to use. Say you put a lot of effort TDDing a robust, well-designed module for handling data, then afterward try to integrate it with the rest of your application. Maybe it turns out your app gets all the data it needs from elsewhere, and doesn't actually need that module you put so much effort into. Maybe you discover that the interface of that module isn't in the form that the rest of the app needs, and you need to rework it. Middle-out TDD can be vulnerable to wasted effort.
 
 ## End-to-End Tests
-Outside-In TDD addresses all of these problems with middle-out TDD, but before we look at how, we need to dig into end-to-end tests a bit. End-to-end tests, or acceptance tests, simulate a user interacting with your application. There are a number of different names for end-to-end tests that have similar but not quite identical meanings:
+Outside-in TDD addresses all of these problems with middle-out TDD, but before we look at how, we need to dig into end-to-end tests a bit. End-to-end tests, or acceptance tests, simulate a user interacting with your application. There are a number of different names for end-to-end tests that have similar but not quite identical meanings:
 
 - "Feature tests" emphasizes that each one tests a feature, a user-facing bit of functionality.
 - "Acceptance tests" emphasizes that a test is written in terms a user could understand, so that once it passes the user could accept the feature as working.
@@ -58,11 +58,11 @@ If you haven't used mocks before, they are a kind of function or object that sta
 
 When you finish testing the current unit, now it's time to build any new collaborators that you mocked. Test-drive them to match the interface you designed for them in the test of the first unit. Again, you'll only be building just enough functionality for that collaborator to satisfy the current feature, which might less than *all* the functionality you could imagine it to have.
 
-There are a number of criticisms of mocking in tests, but the context of outside-in TDD helps explain how they're intended to be used. (In fact, the creators of Outside-In TDD are also the creators of mock objects!)
+There are a number of criticisms of mocking in tests, but the context of outside-in TDD helps explain how they're intended to be used. (In fact, the creators of outside-in TDD are also the creators of mock objects!)
 
-- Do mocks make your tests less realistic? Well, they test your code in isolation from other code. Is isolated testing less realistic? It doesn't ensure all your units work together—but that's not the job of unit tests. In Outside-In TDD, the acceptance tests ensure your units work together, so that need is met. And if you don't test your units in isolation, you don't get the other benefits of unit testing.
+- Do mocks make your tests less realistic? Well, they test your code in isolation from other code. Is isolated testing less realistic? It doesn't ensure all your units work together—but that's not the job of unit tests. In outside-in TDD, the acceptance tests ensure your units work together, so that need is met. And if you don't test your units in isolation, you don't get the other benefits of unit testing.
 - Do mocks make your tests complex because you have to create mocks that return mocks that return mocks? If that happens, it's not revealing a problem with mocks, but a problem with your production code. It's revealing that the production code has deep coupling to other code, depending on the structure of it. This is a sign the production code should be changed to have simpler dependencies: specifically, to only rely on dependencies passed directly to it, so that only one level of mock is needed. This coupling problem is revealed most clearly when you're using mocks, so this is actually a point in mocks' favor.
 
 ## What's Next
 
-In this chapter we heard a summary of what Outside-In Test Driven Development is and how it works. Next, rather than talking about theory, we'll dive in to an exercise building an app together using Outside-In TDD and the frontend framework of your choice.
+In this chapter we heard a summary of what outside-in test-driven development is and how it works. Next, rather than talking about theory, we'll dive in to an exercise building an app together using outside-in TDD and the frontend framework of your choice.

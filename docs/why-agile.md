@@ -52,4 +52,4 @@ For more information on agile methodology in general, check out [Agile Methodolo
 
 ## What's Next
 
-In this guide we'll examine and try out most of these agile development practices, but we will have a particular emphasis on Test-Driven Development. In the next chapter we'll dig into a bit more of what it means, and how the unintuitive practice of writing your tests first leads to a number of benefits.
+In this guide we'll examine and try out most of these agile development practices, but we will have a particular emphasis on test-driven development. In the next chapter we'll dig into a bit more of what it means, and how the unintuitive practice of writing your tests first leads to a number of benefits.

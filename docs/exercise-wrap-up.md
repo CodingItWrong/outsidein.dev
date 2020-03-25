@@ -5,7 +5,7 @@ prev: false
 
 # Exercise Wrap-Up
 
-We haven't finished building our app, but we've reached the end of our guide. You've now experienced enough Outside-In Test Driven Development that you can continue that approach as you continue to build out our example app, or as you build your own frontend applications.
+We haven't finished building our app, but we've reached the end of our guide. You've now experienced enough outside-in test-driven development that you can continue that approach as you continue to build out our example app, or as you build your own frontend applications.
 
 Let's think about how this process differed from how you may have built frontend apps in the past.
 
