@@ -4,22 +4,17 @@ title: Overview of Outside-In TDD
 
 # Overview of Outside-In TDD
 
-## End-to-End Tests
+## Beyond Traditional TDD
 Traditional Test-Driven Development is usually done only at a unit test level, so you are creating objects and calling functions or methods. It's sometimes referred to as "middle-out TDD", because you start in the middle of your application building domain objects, then you assemble your application features from them.
 
-Outside-In TDD adds a second kind of test: acceptance tests, or E2E tests. These are tests that simulate a user interacting with your application. Acceptance tests work together with unit tests, covering the same functionality. Each provides a different type of value:
+There are a few limitations to this approach, however. End-to-end testing is another valuable kind of test, and is now feasible for developers to write, especially for web applications. But traditional TDD doesn't provide any guidance on how to incorporate end-to-end tests into your TDD workflow, or when to write them, or how to write them.
 
-- E2E tests
-	- Confirms your application does what the user wants it to do ("external" quality) — confidence
-	- Helps you focus on writing just enough code to get the current feature working (simple design)
-	- Allows larger refactorings involving replacing entire function or object hierarchies, which unit tests would not cover
-- Unit tests
-	- Confirms your modules have clear and simple interfaces, are loosely coupled ("internal" quality)
-	- Run quickly
-	- Cover many edge cases
-	- Provide most immediate feedback on what exactly is going wrong (defect localization)
+Also, in middle-out TDD code is usually tested with its real collaborators, the other code it works with in production. This is helpful for test realism and can catch bugs with how modules integrate with one another. But it means that making a change to one lower-level module can cause test failures in many higher-level modules. There can also be a problem with defect localization: the tests aren't able to pinpoint the source of the bug in a lower-level module, because they only see the problem that comes out the other end of the higher-level module.
 
-There are a number of different names for end-to-end tests that have similar but not quite identical meanings:
+Finally, building from the middle out can result in can result in building functionality that is unused or difficult to use. Say you put a lot of effort TDDing a robust, well-designed module for handling data, then afterward try to integrate it with the rest of your application. Maybe it turns out your app gets all the data it needs from elsewhere, and doesn't actually need that module you put so much effort into. Maybe you discover that the interface of that module isn't in the form that the rest of the app needs, and you need to rework it. Middle-out TDD can be vulnerable to wasted effort.
+
+## End-to-End Tests
+Outside-In TDD addresses all of these problems with middle-out TDD, but before we look at how, we need to dig into end-to-end tests a bit. End-to-end tests, or acceptance tests, simulate a user interacting with your application. There are a number of different names for end-to-end tests that have similar but not quite identical meanings:
 
 - "Feature tests" emphasizes that each one tests a feature, a user-facing bit of functionality.
 - "Acceptance tests" emphasizes that a test is written in terms a user could understand, so that once it passes the user could accept the feature as working.
@@ -38,8 +33,26 @@ How do you decide when and how many E2E tests vs unit tests to write? You write 
 
 This style of TDD is called outside-in because you start from the outside of your application (the E2E test), and you step inward to implement only the functionality that's needed from the outside.
 
+## The Role of End-to-End Tests
+End-to-end tests work together with unit tests, covering the same functionality in a complementary way. Each type of test provides a different value.
+
+End-to-end tests confirm that your application does what the user wants it to do. Whatever is happening inside the code doesn't matter if it doesn't show up on screen for the user. Also, testing the entire app together provides maximum realism, giving confidence that the units all work together. This is sometimes referred to as "external quality": from the outside, the app works.
+
+Outside-in TDD writes end-to-end tests that focus on a certain user-facing feature. When you start working on the feature, you write the end-to-end tests. Then you follow the two-level TDD loop to build out that feature. When the end-to-end test passes, you're done with that feature. This can help you resist the temptation to overdesign the code you're working on, preparing for future features that may never come. It helps you focus on simple design, so that your architecture can evolve as the app grows. This minimizes wasted effort, and complex code that has a high maintenance cost without providing benefit.
+
+End-to-end tests allow larger refactorings, because everything about the implementation of your app can change as long as the same UI elements are exposed to the test. You can replace entire function or object hierarchies, which isn't possible with unit tests that each are focused on a single function or object.
+
+## The Role of Unit Tests
+With all these benefits of end-to-end tests, what's the point of writing unit tests?
+
+Whereas end-to-end tests ensure the external quality of your app, unit tests expose a kind of "internal quality," by showing how your units are used. Do they have clear and simple interfaces? Are your units easy to instantiate for tests, or do they require a lot of dependencies that are going to make them harder to work with and change in the future? These are factors that affect your speed of development in the future, but end-to-end tests don't expose them. You can have an app that works reliably from the outside, but is a mess of spaghetti code on the inside, and that means you'll have trouble coping with future change. Unit tests provide pressure towards good design that pays off in the long run.
+
+Unit tests also run much more quickly than end-to-end tests. This means you get immediate feedback when a bug is introduced. This feedback also provides good defect localization, because it pinpoints which unit is not working and what exactly it's doing wrong. The speed of unit tests also makes it feasible to cover every edge case with unit tests, which is just not realistic for end-to-end tests of a system of any size. This full coverage is what provides the confidence to refactor your code, keeping it as usable as possible.
+
+Because of the complementary value of end-to-end and unit tests, outside-in TDDers don't see the two as duplicating effort; they see the two as making up for the limitations of each, to thoroughly ensure the quality of your app.
+
 ## Write the Code You Wish You Had
-But if you're starting from the outside, how can you TDD units that rely on other units that haven't been written yet? The solution is a principle called "write the code you wish you had." When you are test-driving one unit of code, think about what functionality you want it to have itself, and what functionality you want it to rely on collaborators for: other functions or objects. Then, if that collaborator doesn't already exist, write the code you wish you had: call it the way you'd like to be able to call it. Then, in the test, use mock functions or mock objects to take the place of that collaborator, so you can verify how your unit under test interacts with this collaborator.
+If the outside-in TDD process starts from the outside, how can you TDD units that rely on other units that haven't been written yet? The solution is a principle called "write the code you wish you had." When you are test-driving one unit of code, think about what functionality you want it to have itself, and what functionality you want it to rely on collaborators for: other functions or objects. Then, if that collaborator doesn't already exist, write the code you wish you had: call it the way you'd like to be able to call it. Then, in the test, use mock functions or mock objects to take the place of that collaborator, so you can verify how your unit under test interacts with this collaborator.
 
 If you haven't used mocks before, they are a kind of function or object that stands in for a real function or object. Mocks allow you to configure the return values from function calls to match the needs of your test, and they allow you to confirm that functions were called in the way you expect. In this way, mocks can allow you to simulate a collaborator and confirm your unit is interacting with a collaborator the way you expect, before you even write that collaborator.
 
