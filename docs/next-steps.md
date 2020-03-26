@@ -44,6 +44,15 @@ This book has contained a brief introduction to agile development practices, but
 
 [*The Nature of Software Development*][nature-sw-dev], by Ron Jeffries, is a recent attempt to restate the values and priorities of agile development in a methodology-agnostic way. Rather than teaching a complex approach, it draws out common principles.
 
+## Epilogue
+We've reached the end of this guide. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And the reason for that is because they solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
+
+New languages and frameworks don't fix this problem, because you can make a mess in any language. More process doesn't fix the problem if the process doesn't account for change. Trying harder doesn't fix the problem, because we're human and have limited capacity.
+
+The reason agile development practices work is that they are based on an accurate view of reality: one where change is inevitable and people have limited capacities. They're the best way I've found to deliver value to my employers and to have a smooth and calm development experience.
+
+And now you have a foundation and a taste of those practices. I hope you'll try putting them into practice in your development work. I think you'll like the results.
+
 
 [99-bottles]: https://www.sandimetz.com/99bottles
 [cypress]: https://docs.cypress.io/guides/overview/why-cypress.html
