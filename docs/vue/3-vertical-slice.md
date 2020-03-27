@@ -747,7 +747,7 @@ describe('restaurants', () => {
 
 As with our component test, we create a local Vue instance and attach Vuex to it. Then we create a `describe` block for our load action, which right now just has one test: that it stores the restaurants. Note that the test function is `async`, to allow for our stubbed network request. Now let's fill that test out.
 
-We will need some records to be returned by our mocked API:
+We will need some records to be returned by our stubbed API:
 
 ```diff
  it('stores the restaurants', async () => {
@@ -946,7 +946,7 @@ $ yarn add axios
 ```
 
 ::: warning
-One reason to use `axios` is that Cypress's network request mocking doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+One reason to use `axios` is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
 :::
 
 Now create an `api.js` file under `src`, and provide the following implementation:
@@ -971,7 +971,7 @@ In the `baseURL`, replace `YOUR-API-KEY` with the API key you created earlier.
 
 First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
 
-Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** There are a few reasons for this:
+Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** The principle applies equally well to using any kind of test doubles for code you don't own. There are a few reasons for this:
 
 - If you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test.
 - Some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
