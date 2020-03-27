@@ -7,6 +7,7 @@ module.exports = {
         title: 'Concepts',
         children: [
           '/why-agile',
+          '/testing-concepts',
           ['/why-tdd', 'Why TDD?'],
           ['/outside-in-tdd', 'Outside-In TDD'],
         ]
