@@ -66,7 +66,7 @@ As before, fill in your API key in place of `YOUR-API-KEY`.
 
 As in our previous E2E test, we are stubbing the GET request to load the restaurants—but this time we're returning an empty array, as we don't need any restaurants for the test.
 
-We also stub a POST request, which is the request we'll use to create a restaurant. From it, we return an object that is the new restaurant that is created. We also chain a call to `.as()` on it to give it the name `addRestaurant`—we'll see why in a moment.
+We also configure Cypress to handle a POST request, which is the request we'll use to create a restaurant. From it, we return an object that is the new restaurant that is created. We also chain a call to `.as()` on it to give it the name `addRestaurant`—we'll see why in a moment.
 
 We visit the home page, and this time we do some interaction with the page:
 
