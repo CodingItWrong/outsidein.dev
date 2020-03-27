@@ -13,18 +13,9 @@ Also, in middle-out TDD code is usually tested with its real collaborators, the 
 
 Finally, building from the middle out can result in can result in building functionality that is unused or difficult to use. Say you put a lot of effort TDDing a robust, well-designed module for handling data, then afterward try to integrate it with the rest of your application. Maybe it turns out your app gets all the data it needs from elsewhere, and doesn't actually need that module you put so much effort into. Maybe you discover that the interface of that module isn't in the form that the rest of the app needs, and you need to rework it. Middle-out TDD can be vulnerable to wasted effort.
 
-## End-to-End Tests
-Outside-in TDD addresses all of these problems with middle-out TDD, but before we look at how, we need to dig into end-to-end tests a bit. End-to-end tests, or acceptance tests, simulate a user interacting with your application. There are a number of different names for end-to-end tests that have similar but not quite identical meanings:
-
-- "Feature tests" emphasizes that each one tests a feature, a user-facing bit of functionality.
-- "Acceptance tests" emphasizes that a test is written in terms a user could understand, so that once it passes the user could accept the feature as working.
-- "End-to-end tests" and "system tests" emphasizes that they test the entire system all together, not just units of it.
-- "Integration tests" is a term that is used for many different things. In the context of these kind of tests, it can be used when the backend is stubbed out, so you aren't testing "end-to-end" across the entire system that runs in production.
-- "UI automation tests" focuses on the mechanics of the test: that it is automating UI interactions.
-
-In this guide we'll use the term "end-to-end test", because it's the most commonly used in the frontend development world, including in the tooling that our Vue exercise uses. We'll use the term even though our tests will stub out the backend API, so they aren't "end-to-end" in that sense.
-
 ## The Two-Level TDD Loop
+Outside-in TDD addresses all of these problems with middle-out TDD, but before we look at how, we need to dig into end-to-end tests a bit. End-to-end tests simulate a user interacting with your application.
+
 How do you decide when and how many E2E tests vs unit tests to write? You write them together in a two-level TDD cycle:
 
 - Red: write an E2E test and watch it fail
