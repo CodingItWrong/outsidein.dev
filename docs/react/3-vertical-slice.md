@@ -564,6 +564,10 @@ Next, connect the `RestaurantList` component to the appropriate state. This is w
 +export default connect(mapStateToProps)(RestaurantList);
 ```
 
+::: tip
+Note that we are using the React-Redux `connect()` function rather than the newer hooks-based API. Redux maintainer Mark Erikson writes about the [tradeoffs between the two React-Redux APIs](https://blog.isquaredsoftware.com/2019/07/blogged-answers-thoughts-on-hooks/), and there is not a strong recommendation to use one or the other. Because our testing approach involves passing props to a component that is unaware of Redux, the `connect()` function is a more natural fit. We could accomplish the same by creating a "connected" component that uses React-Redux hooks and passes the props down to the unconnected component, but there are few benefits to that approach over using `connect()`.
+:::
+
 If you've used Redux before you know we have more setup steps to do. But let's rerun the E2E test to let it drive us to do so. The error we get is:
 
 ```sh
