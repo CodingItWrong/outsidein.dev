@@ -232,7 +232,6 @@ Now we get an assertion failure:
     Number of calls: 0
 
       25 |
-
       26 |     it('calls createRestaurant with the name', () => {
     > 27 |       expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
          |                                ^
@@ -273,7 +272,8 @@ Save the file and now we get this test error:
 
 ```sh
 Error: Not implemented: HTMLFormElement.prototype.submit
-    at module.exports (/Users/josh/apps/agilefrontend/react/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at module.exports (/Users/josh/apps/agilefrontend/react/node_modules/jsdom/
+    lib/jsdom/browser/not-implemented.js:9:17)
 ```
 
 This is because the HTML form is attempting to submit using the default browser mechanism. By default, HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
@@ -404,7 +404,8 @@ export const createRestaurant = () => () => {};
 Rerun the E2E test, and it fails on a new error:
 
 ```sh
-CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
+CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the
+1st request to the route: 'addRestaurant'. No request ever occurred.
 ```
 
 Now our component is correctly calling our `createRestaurant` async action, but that function isn't doing anything. We need it to make the appropriate call to the API, then dispatch an action that results in the reducer adding the new restaurant to the list. That's a logic error, so it's time to step down to a unit test to drive out our store functionality.
@@ -542,7 +543,8 @@ describe('when save succeeds', () => {
 We ensure that the existing restaurant is still in the store, and the restaurant record returned from the server is added after it. Save the file and the test fails:
 
 ```sh
-● restaurants › createRestaurant action › when save succeeds › stores the returned restaurant in the store
+● restaurants › createRestaurant action › when save succeeds › stores the
+returned restaurant in the store
 
   expect(received).toEqual(expected) // deep equality
 
@@ -1083,7 +1085,8 @@ Note that we repeat both sets of `beforeEach` steps from the other groups, submi
 Save the test file and our new test fails:
 
 ```sh
-  ● NewRestaurantForm › when correcting a validation error › clears the validation error
+  ● NewRestaurantForm › when correcting a validation error › clears the
+  validation error
 
     expect(received).toBeNull()
 

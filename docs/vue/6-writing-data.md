@@ -235,13 +235,16 @@ Save the file and we get a failing test, as we expect:
 ```sh
   ● NewRestaurantForm › when filled in › dispatches the create action
 
-    [vue-test-utils]: find did not return [data-testid="new-restaurant-name-field"], cannot call setValue() on empty Wrapper
+    [vue-test-utils]: find did not return
+    [data-testid="new-restaurant-name-field"], cannot call setValue() on empty
+    Wrapper
 
       36 |       wrapper
       37 |         .find('[data-testid="new-restaurant-name-field"]')
     > 38 |         .setValue(restaurantName);
          |          ^
-      39 |       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
+      39 |       wrapper.find('[data-testid="new-restaurant-submit-button"]')
+                        .trigger('click');
 ```
 
 To fix this error, let's add the `data-testid` attribute to the existing text field:
@@ -258,12 +261,14 @@ To fix this error, let's add the `data-testid` attribute to the existing text fi
    <v-btn color="teal" class="white--text">
 ```
 
-The next error we get is:
+The next error we get is a different missing element:
 
 ```sh
 ● NewRestaurantForm › when filled in › dispatches the create action
 
-  [vue-test-utils]: find did not return [data-testid='new-restaurant-submit-button'], cannot call trigger() on empty Wrapper
+  [vue-test-utils]: find did not return
+  [data-testid='new-restaurant-submit-button'], cannot call trigger() on empty
+  Wrapper
 ```
 
 We fix this by adding that test ID as well:
@@ -288,7 +293,8 @@ The next failure we get is:
 
     Number of calls: 0
 
-      39 |       wrapper.find('[data-testid="new-restaurant-submit-button"]').trigger('click');
+      39 |       wrapper.find('[data-testid="new-restaurant-submit-button"]')
+                        .trigger('click');
       40 |
     > 41 |       expect(restaurantsModule.actions.create).toHaveBeenCalledWith(
          |                                                ^
@@ -346,7 +352,8 @@ Save the file and now we get this test error:
 
 ```sh
 Error: Not implemented: HTMLFormElement.prototype.submit
-    at module.exports (/Users/josh/apps/agilefrontend/vue/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at module.exports (/Users/josh/apps/agilefrontend/vue/node_modules/jsdom/
+    lib/jsdom/browser/not-implemented.js:9:17)
 ```
 
 This is because the HTML form is attempting to submit using the default browser mechanism. By default, HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
@@ -368,7 +375,9 @@ Save the file and the test failure has changed:
     expect(create).toHaveBeenCalledWith(...expected)
 
     Expected: Anything, "Sushi Place"
-    Received: {"commit": [Function anonymous], "dispatch": [Function anonymous], "getters": {}, "rootGetters": {}, "rootState": {"restaurants": {}}, "state": {}}, undefined
+    Received: {"commit": [Function anonymous], "dispatch": [Function
+    anonymous], "getters": {}, "rootGetters": {}, "rootState": {"restaurants":
+    {}}, "state": {}}, undefined
 ```
 
 Now we're getting to the end of our test, and the function is called, but it didn't receive the arguments it expected. It's a bit hard to find the second argument because the contents of the first argument Vuex provide are spelled out. But it's the `undefined`. To pass the restaurant name, first we're going to need to bind the form field's value to a data property:
@@ -407,7 +416,8 @@ Save the file and the test passes.
 We'll circle back to test-drive edge case functionality to the form later. But now that we have completed the functionaity the E2E test drove us to, let's step back up to the E2E test to see what functionality we need to implement next. Rerun the E2E test and see the following failure after a few seconds:
 
 ```sh
-> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
+> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the
+1st request to the route: 'addRestaurant'. No request ever occurred.
 ```
 
 Our `NewRestaurantForm` is dispatching the `restaurants/create` action, but because that action doesn't exist, the request to the server is never being made. It's time to step down to a unit test to drive out our store functionality.
@@ -739,7 +749,8 @@ Save the test, and we get a test failure confirming that the text field is not y
     Received: "Sushi Place"
 
       50 |       expect(
-      51 |         wrapper.find('[data-testid="new-restaurant-name-field"]').element.value,
+      51 |         wrapper.find('[data-testid="new-restaurant-name-field"]')
+                          .element.value,
     > 52 |       ).toEqual('');
          |         ^
 ```
@@ -830,7 +841,8 @@ Save the file and the test fails, because the validation error message is not fo
 ```sh
   ● NewRestaurantForm › when empty › displays a validation error
 
-    [vue-test-utils]: find did not return [data-testid="new-restaurant-name-error"], cannot call text() on empty Wrapper
+    [vue-test-utils]: find did not return [data-testid="new-restaurant-name-
+    error"], cannot call text() on empty Wrapper
 
       62 |     it('displays a validation error', () => {
       63 |       expect(
@@ -870,12 +882,16 @@ The test fails because we are always showing the error right now:
 
     expect(received).not.toBeDefined()
 
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-restaurant-name-error" role="alert"><div class="v-alert__wrapper"><i aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons theme--dark">$error</i><div class="v-alert__content">
+    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
+    restaurant-name-error" role="alert"><div class="v-alert__wrapper"><i aria-
+    hidden="true" class="v-icon notranslate v-alert__icon material-icons theme-
+    -dark">$error</i><div class="v-alert__content">
         Name is required.
       </div></div></div>
 
       34 |       expect(
-      35 |         wrapper.find('[data-testid="new-restaurant-name-error"]').element,
+      35 |         wrapper.find('[data-testid="new-restaurant-name-error"]')
+                          .element,
     > 36 |       ).not.toBeDefined();
          |             ^
 ```
@@ -972,16 +988,21 @@ Note that we repeat both sets of `beforeEach` steps from the other groups, submi
 Save the test file and our new test fails:
 
 ```sh
-  ● NewRestaurantForm › when correcting a validation error › clears the validation error
+  ● NewRestaurantForm › when correcting a validation error › clears the
+  validation error
 
     expect(received).not.toBeDefined()
 
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-restaurant-name-error" role="alert"><div class="v-alert__wrapper"><i aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons theme--dark">$error</i><div class="v-alert__content">
+    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
+    restaurant-name-error" role="alert"><div class="v-alert__wrapper"><i aria-
+    hidden="true" class="v-icon notranslate v-alert__icon material-icons theme-
+    -dark">$error</i><div class="v-alert__content">
         Name is required.
       </div></div></div>
 
       90 |       expect(
-      91 |         wrapper.find('[data-testid="new-restaurant-name-error"]').element,
+      91 |         wrapper.find('[data-testid="new-restaurant-name-error"]')
+                          .element,
     > 92 |       ).not.toBeDefined();
          |             ^
 ```
@@ -1092,12 +1113,14 @@ Save and the promise warning goes away, leaving us with just the expectation fai
 ```sh
   ● NewRestaurantForm › when empty › displays a server error
 
-    [vue-test-utils]: find did not return [data-testid="new-restaurant-name-error"], cannot call text() on empty Wrapper
+    [vue-test-utils]: find did not return [data-testid="new-restaurant-name-
+    error"], cannot call text() on empty Wrapper
 
       70 |     it('displays a server error', () => {
       71 |       expect(
-    > 72 |         wrapper.find('[data-testid="new-restaurant-name-error"]').text(),
+    > 72 |         wrapper.find('[data-testid="new-restaurant-name-error"]')
          |                                                                ^
+                          .text(),
       73 |       ).toContain('Name is required');
       74 |     });
 ```
@@ -1129,12 +1152,16 @@ Save and the test fails:
 
     expect(received).not.toBeDefined()
 
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-restaurant-server-error" role="alert"><div class="v-alert__wrapper"><i aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons theme--dark">$error</i><div class="v-alert__content">
+    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
+    restaurant-server-error" role="alert"><div class="v-alert__wrapper"><i
+    aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons
+    theme--dark">$error</i><div class="v-alert__content">
         The restaurant could not be saved. Please try again.
       </div></div></div>
 
       40 |       expect(
-      41 |         wrapper.find('[data-testid="new-restaurant-server-error"]').element,
+      41 |         wrapper.find('[data-testid="new-restaurant-server-error"]')
+                          .element,
     > 42 |       ).not.toBeDefined();
          |             ^
 ```
@@ -1219,14 +1246,16 @@ Save the file and you'll get the expected test failure:
 
     expect(received).not.toBeDefined()
 
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-restaurant-server-error" role="alert"><div cl
-ass="v-alert__wrapper"><i aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons theme--
-dark">$error</i><div class="v-alert__content">
+    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
+    restaurant-server-error" role="alert"><div class="v-alert__wrapper"><i
+    aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons
+    theme--dark">$error</i><div class="v-alert__content">
         The restaurant could not be saved. Please try again.
       </div></div></div>
 
       147 |       expect(
-      148 |         wrapper.find('[data-testid="new-restaurant-server-error"]').element,
+      148 |         wrapper.find('[data-testid="new-restaurant-server-error"]')
+                           .element,
     > 149 |       ).not.toBeDefined();
           |             ^
 ```

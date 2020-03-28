@@ -170,7 +170,9 @@ Here's what the components do:
 Our E2E tests still pass. Our unit tests do as well, but they also output a lot of warnings:
 
 ```sh
-[Vue warn]: Unknown custom element: <v-list-item-content> - did you register the component correctly? For recursive components, make sure to provide the "name" option.
+[Vue warn]: Unknown custom element: <v-list-item-content> - did you register
+the component correctly? For recursive components, make sure to provide the
+"name" option.
 
       found in
 

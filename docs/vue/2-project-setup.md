@@ -365,7 +365,8 @@ Also, if someone uses `npm` instead of `yarn` they won't get the right dependenc
 
 ```diff
  ## Project setup
-+Dependencies are locked with a `yarn.lock` file, so please use `yarn` and not `npm` for installing them.
++Dependencies are locked with a `yarn.lock` file, so please use `yarn` and not
++`npm` for installing them.
 +
 ```
 

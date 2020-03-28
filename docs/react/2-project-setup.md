@@ -425,7 +425,8 @@ Let's add a description of the project and link to production, filling in your N
 +
 +Production: https://your-netlify-domain.netlify.com/
 +
- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ This project was bootstrapped with
+ [Create React App](https://github.com/facebook/create-react-app).
 ```
 
 Also, if someone uses `npm` instead of `yarn` they won't get the right dependencies. Let's make a note about this:
@@ -433,9 +434,11 @@ Also, if someone uses `npm` instead of `yarn` they won't get the right dependenc
 ```diff
  Production: https://your-netlify-domain.netlify.com/
 +
-+Dependencies are locked with a `yarn.lock` file, so please use `yarn` and not `npm` for installing them.
++Dependencies are locked with a `yarn.lock` file, so please use `yarn` and not
++`npm` for installing them.
 
- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ This project was bootstrapped with
+ [Create React App](https://github.com/facebook/create-react-app).
 ```
 
 Commit these README changes to git.
