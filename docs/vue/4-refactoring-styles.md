@@ -66,7 +66,28 @@ This will restore `App.vue` to the state we had it in before. There are a few ot
 $ rm -r src/assets src/components/HelloWorld.vue
 ```
 
-Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
+Now we're ready to begin styling our app. We'll begin by configuring Vuetify's theme to set a primary color.
+
+Open `src/plugins/vuetify.js`, a configuration file created when you installed Vuetify. Make the following change:
+
+```diff
+Vue.use(Vuetify);
+
+-export default new Vuetify({});
++export default new Vuetify({
++  theme: {
++    themes: {
++      light: {
++        primary: '#00C853',
++      },
++    },
++  },
++});
+```
+
+This sets the primary color to a vibrant green. We'll see it in use in a moment.
+
+Next, let's style the `App` component to give it a title bar and some theme-standard layout.
 
 In `App.vue`, keep the `<RestaurantScreen />` component but wrap it with different Vuetify components:
 
@@ -76,7 +97,7 @@ In `App.vue`, keep the `<RestaurantScreen />` component but wrap it with differe
 -    <RestaurantScreen />
 -  </div>
 +  <v-app>
-+    <v-app-bar color="teal" dark fixed app>
++    <v-app-bar color="primary" fixed app>
 +      <v-toolbar-title>Opinion Ate</v-toolbar-title>
 +    </v-app-bar>
 +    <v-content>
@@ -90,7 +111,7 @@ In `App.vue`, keep the `<RestaurantScreen />` component but wrap it with differe
 
 Notice that Vuetify components all start with a `v-` prefix. We also don't have to import them into our file, as we do with our custom components. The assumption is that Vuetify components will be used *a lot* throughout your app, so this avoids having to do lots of imports.
 
-Rerun the E2E test. They still pass, and notice we now have a nice teal toolbar, and there's some padding on the left and right on the content area.
+Rerun the E2E test. They still pass, and notice we now have a nice green toolbar, and there's some padding on the left and right on the content area.
 
 ![App styled with Vuetify](./images/3-2-app-styles.png)
 

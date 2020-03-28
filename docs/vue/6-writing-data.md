@@ -129,7 +129,7 @@ To fix this error, we add a button to `NewRestaurantForm` but don't wire it up t
 ```diff
  <form>
    <v-text-field placeholder="Add Restaurant" filled type="text" />
-+  <v-btn color="teal" class="white--text">
++  <v-btn color="primary" class="black--text">
 +    Add
 +  </v-btn>
  </form>
@@ -256,7 +256,7 @@ To fix this error, let's add the `data-testid` attribute to the existing text fi
 +    type="text"
 +    data-testid="new-restaurant-name-field"
 +  />
-   <v-btn color="teal" class="white--text">
+   <v-btn color="primary" class="black--text">
 ```
 
 The next error we get is a different missing element:
@@ -273,8 +273,8 @@ We fix this by adding that test ID as well:
 
 ```diff
    />
--  <v-btn color="teal" class="white--text">
-+  <v-btn color="teal" class="white--text" data-testid="new-restaurant-submit-button">
+-  <v-btn color="primary" class="black--text">
++  <v-btn color="primary" class="black--text" data-testid="new-restaurant-submit-button">
      Add
    </v-btn>
  </form>
@@ -305,11 +305,11 @@ The test failure reports the action wasn't called at all. This is because our bu
 
 ```diff
    />
--  <v-btn color="teal" class="white--text" data-testid="new-restaurant-submit-button">
+-  <v-btn color="primary" class="black--text" data-testid="new-restaurant-submit-button">
 +  <v-btn
 +    type="submit"
-+    color="teal"
-+    class="white--text"
++    color="primary"
++    class="black--text"
 +    data-testid="new-restaurant-submit-button"
 +  >
 +    Add
@@ -1384,8 +1384,8 @@ Vuetify offers a [grid system](https://vuetifyjs.com/en/components/grids) that i
 +    <v-col cols="3">
        <v-btn
          type="submit"
-         color="teal"
-         class="white--text"
+         color="primary"
+         class="black--text"
          data-testid="new-restaurant-submit-button"
        >
          Add
@@ -1406,8 +1406,8 @@ The elements are next to each other, but if your window is wide enough, the save
 ```diff
  <v-btn
    type="submit"
-   color="teal"
-   class="white--text"
+   color="primary"
+   class="black--text"
 +  block
    data-testid="new-restaurant-submit-button"
  >

@@ -127,7 +127,7 @@ Vuetify has a `v-progress-circular` spinner that will work great. Add it to `Res
  <div>
 +  <v-progress-circular
 +    indeterminate
-+    color="teal"
++    color="primary"
 +    data-testid="loading-indicator"
 +  />
    <v-list-item
@@ -155,7 +155,7 @@ This test fails, of course. And now that we have two tests, this will force us t
    <v-progress-circular
 +    v-if="loading"
      indeterminate
-     color="teal"
+     color="primary"
      data-testid="loading-indicator"
    />
    <v-list-item
