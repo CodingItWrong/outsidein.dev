@@ -6,9 +6,7 @@ title: 5 - Edge Cases
 
 In this chapter we'll look at how to test-drive edge case functionality using unit tests.
 
-Our next story in Trello is:
-
-- [ ] Show Loading and Error States
+Our next story in Trello is "Show Loading and Error States"; drag it to "In Progress".
 
 We kept out first story, loading restaurants, minimal so that we could build out a vertical slice quickly and get all the parts of our app talking together. But now our next story is to make that restaurant loading more robust, providing a loading indicator and an error message in case of problems.
 
@@ -952,9 +950,7 @@ Start the API server again, then reload the page. You should see the loading spi
 
 Run the E2E test one more time to make sure it's still passing — it should be.
 
-If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
-
-- [x] Show Loading and Error States
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "Show Loading and Error States".
 
 ## What's Next
 

@@ -443,9 +443,7 @@ Also, if someone uses `npm` instead of `yarn` they won't get the right dependenc
 
 Commit these README changes to git.
 
-With this, we can mark off our next task in Trello:
-
-- [x] Fill In Readme
+With this, we can drag our next task to "Done" in Trello: "Fill In Readme".
 
 ## What's Next
 Now all our setup is done and we are ready to work on our first feature! In the next chapter we'll see how to build a feature using the outside-in TDD loop.

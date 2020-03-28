@@ -6,9 +6,7 @@ title: 4 - Refactoring Styles
 
 In this chapter we'll see one example of the kind of refactoring you can do when you have the thorough test coverage that TDD provides: restyling your application. We'll update our application from using plain unstyled HTML elements to using styled elements provided by a component library. TDD allows us to separate the process of getting the application working from the process of making it look good.
 
-Our next story in Trello is:
-
-- [ ] Style App with Material Design
+Our next story in Trello is "Style App with Material Design"; drag it to "In Progress".
 
 And we need it: by following TDD and writing only the minimal code to pass the tests, we certainly don't have much in the way of visual design:
 
@@ -180,9 +178,7 @@ Here's what the components do:
 Our E2E and unit tests still pass.
 We've successfully styled our app relying on the tests to confirm all the functionality still works.
 
-If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
-
-- [x] Style App with Material Design
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "Style App with Material Design".
 
 ## What's Next
 In this chapter we improved the look-and-feel of our first feature. But there are some functionality improvements it could benefit from as well. In the next chapter we'll add support for edge cases related to loading and error states.

@@ -7,9 +7,7 @@ next: /next-steps.html
 
 In this chapter we'll move on to our next new feature. We'll follow the process of outside-in TDD once again, with an outer and inner red-green-refactor loop. We'll also see some of the situations that come up when testing forms and when saving data to an API.
 
-Our next story in Trello is:
-
-- [ ] Add Restaurants
+Our next story in Trello is "Add Restaurants"; drag it to "In Progress".
 
 Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
 
@@ -1481,9 +1479,7 @@ This helps, but there is no spacing between the text input and button. To add th
 
 Most importantly, rerun the E2E tests and confirm that our app still works.
 
-If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
-
-- [x] Add Restaurants
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "Add Restaurants".
 
 ## What's Next
 

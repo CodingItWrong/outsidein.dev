@@ -6,9 +6,7 @@ title: 3 - Vertical Slice
 
 In this chapter, we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple inner red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
 
-Our next story in Trello is:
-
-- [ ] List Restaurants
+Our next story in Trello is "List Restaurants"; drag it to "In Progress".
 
 We chose this story as our first story because it allows us to build out a **vertical slice** of our application. It touches all layers of our code: it has a user interface aspect (the list screen), a data layer aspect (where the restaurants are loaded and stored), and an API client aspect (the HTTP request to load the restaurants). It also minimizes other work: we aren't building authentication now, and we aren't handling restaurant loading edge cases yet in this story. The point of a vertical slice is to get something in all layers of your application built out, to ensure they all work together.
 
@@ -945,9 +943,7 @@ You should see the default "Pasta Place" and "Salad Place" records loaded from t
 
 We successfully implemented our first feature with outside-in test-driven development!
 
-If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can mark off our story in Trello:
-
-- [x] List Restaurants
+If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our next task to "Done" in Trello: "List Restaurants".
 
 ## What's Next
 
