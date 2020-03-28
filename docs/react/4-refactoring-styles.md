@@ -65,13 +65,13 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 +import Toolbar from '@material-ui/core/Toolbar';
 +import Typography from '@material-ui/core/Typography';
 +import Container from '@material-ui/core/Container';
-+import teal from '@material-ui/core/colors/teal';
++import green from '@material-ui/core/colors/green';
  import store from './store';
  import RestaurantScreen from './components/RestaurantScreen';
 
 +const theme = createMuiTheme({
 +  palette: {
-+    primary: teal,
++    primary: green,
 +  },
 +});
 +
@@ -101,7 +101,9 @@ Rerun the E2E test. They still pass, and notice we now have a nice teal toolbar,
 
 Here's what these Material-UI components do to achieve this look:
 
-- `ThemeProvider` is the root Material-UI component that lets it set up some things that affect your whole app, including taking the `theme`, which sets the `primary` color of the app.
+- `createMuiTheme()` allows us to configure a theme, including setting the `primary` color of our app to green.
+- `ThemeProvider` is the root Material-UI component that lets it set up some things that affect your whole app, including taking the `theme`.
+- `CssBaseline` applies default page-wide CSS styles.
 - `AppBar` and `Toolbar` together provide the top title bar.
 - `Typography` provides proper styling for the text at certain spots in the app, including in the toolbar. Material-UI components relate to one another like this, so it's always best to check the docs for full examples of what components to nest inside one another.
 - `Container` centers your content horizontally to provide some padding, as well as keeping the content from getting too wide in really wide browser windows.
