@@ -12,5 +12,5 @@ features:
   details: Learn a unique test-driven development approach that increases confidence, decreases test fragility, and improves your design.
 - title: Exercises in React and Vue
   details: Put outside-in TDD and other agile development practices to work in an extended exercise in either React or Vue.js.
-footer: Copyright © 2020-present Josh Justice
+footer: Copyright © 2020-present Josh Justice. Down arrow icon by Mega Agustina from the Noun Project.
 ---
