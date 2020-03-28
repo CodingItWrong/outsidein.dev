@@ -945,7 +945,7 @@ We'll use the popular `axios` library to make our HTTP requests. Add it to your 
 $ yarn add axios
 ```
 
-::: warning
+::: tip
 One reason to use `axios` is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
 :::
 
