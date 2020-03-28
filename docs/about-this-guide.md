@@ -1,5 +1,6 @@
 ---
 title: "About This Guide"
+sidebarDepth: 0
 ---
 
 # About This Guide
