@@ -1,5 +1,6 @@
 ---
 home: true
+heroImage: /logo-280@3x.gif
 heroText: Outside-In Frontend Development
 tagline: Build frontend apps with confidence.
 actionText: Get Started →
