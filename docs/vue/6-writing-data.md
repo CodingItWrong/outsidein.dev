@@ -1,6 +1,6 @@
 ---
 title: 6 - Writing Data
-next: /next-steps.html
+next: /exercise-wrap-up.html
 ---
 
 # 6 - Writing Data
