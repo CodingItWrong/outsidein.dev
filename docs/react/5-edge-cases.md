@@ -942,11 +942,11 @@ With this, our tests pass. Our code has error state functionality added, and now
  });
 ```
 
-We've now finished adding the error state. To see it in action, stop your API server. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
+We've now finished adding the error state. To see it in action, in `src/api.js`, in the `baseURL` property for the Axios instance, change the API key to an incorrect value. This will result in the server returning a 404 Not Found response code. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
 
 ![Loading error message](./images/4-2-error-message.png)
 
-Start the API server again, then reload the page. You should see the loading spinner, then our results.
+Restore the correct API key value, then reload the page. You should see the loading spinner, then our results.
 
 Run the E2E test one more time to make sure it's still passing — it should be.
 
