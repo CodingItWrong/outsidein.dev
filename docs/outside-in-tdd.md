@@ -59,3 +59,7 @@ There are a number of criticisms of mocking in tests, usually referring to conce
 ## What's Next
 
 In this chapter we heard a summary of what outside-in test-driven development is and how it works. Next, rather than talking about theory, we'll dive in to an exercise building an app together using outside-in TDD and the frontend framework of your choice.
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

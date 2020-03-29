@@ -68,3 +68,7 @@ Now that we've reviewed the tech stack we'll be using, it's time to get it set u
 [react-testing-library]: https://testing-library.com/react
 [redux]: https://redux.js.org/
 [redux-thunk]: https://github.com/reduxjs/redux-thunk
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

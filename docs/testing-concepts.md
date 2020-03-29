@@ -37,3 +37,7 @@ In our tests we'll take advantage of both stubbing and mocking in both our unit 
 
 ## What's Next
 Now that we've gotten our testing terms straight, let's look at the way the agile development approach of this guide approaches testing: test-driven development. In the next chapter we'll dig into a bit more of what TDD means, and how the unintuitive practice of writing your tests first leads to a number of benefits.
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

@@ -19,3 +19,7 @@ I've found these differences have a tremendous impact on what the software devel
 TDD gives me back control over my code, so I can make changes at any time with confidence. This allows me to refactor the code to be as easy to understand as possible, so that my future development speed stays fast. This way I can keep delivering value to my users.
 
 Maybe you're already convinced that TDD accomplishes these things. If so, give it a try on your projects! Or maybe you aren't yet sure that TDD will make this much of a difference. If so, I would ask, do you have an another solution for how to keep your development speed fast, avoiding production bugs and allowing you to keep your code easy to understand in the face of unanticipated changes? If you don't have another solution, I would encourage you to give TDD a try to see if it works as a solution.
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

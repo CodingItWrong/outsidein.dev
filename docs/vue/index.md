@@ -63,3 +63,7 @@ Now that we've reviewed the tech stack we'll be using, it's time to get it set u
 [vue-test-utils]: https://vue-test-utils.vuejs.org/
 [vuetify]: https://vuetifyjs.com/
 [vuex]: https://vuex.vuejs.org/
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

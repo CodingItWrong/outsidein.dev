@@ -34,3 +34,7 @@ To get started, pick the version of the exercise you want to do:
 
 - [Vue Exercise](/vue/)
 - [React Exercise](/react/)
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

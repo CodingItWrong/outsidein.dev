@@ -82,3 +82,7 @@ Programming allows us to create incredibly powerful software with relative ease.
 ## What's Next
 
 We've just seen how test-driven development works and the benefits it provides. This guide takes a particular kind of TDD approach called outside-in TDD. In the next chapter, we'll see how outside-in TDD adds to the TDD practice we've just seen to provide extra confidence and benefits.
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

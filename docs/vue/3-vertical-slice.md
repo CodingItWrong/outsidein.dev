@@ -1032,3 +1032,7 @@ If you have any uncommitted changes, commit them to git. Push up your branch to 
 ## What's Next
 
 Now our first feature is working, and TDD has guided us to start with a minimal implementation. In the next chapter we'll iterate on this implementation by adding a UI component library and improving the styling of the app so far.
+
+:::tip
+Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

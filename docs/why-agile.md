@@ -53,3 +53,7 @@ For more information on agile methodology in general, check out [Agile Methodolo
 ## What's Next
 
 In this guide we'll examine and try out most of these agile development practices, but we will have a particular emphasis on test-driven development. We'll start out in the next chapter by taking a look at some important testing concepts and defining the terms as we'll use them in this guide.
+
+:::tip
+Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::

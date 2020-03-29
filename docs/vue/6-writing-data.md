@@ -1430,3 +1430,7 @@ If you have any uncommitted changes, commit them to git. Push up your branch to 
 ## What's Next
 
 With this we've completed our second feature, including edge cases and styling. We've also reached the end of this exercise! In the next chapter we'll take a look at resources you can use to learn outside-in development more deeply.
+
+:::tip
+Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
+:::
