@@ -72,7 +72,7 @@ You can build Vue applications with any editor you like, but some have more faci
 With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
 
 ## Creating the App
-Our next story is "Create App" -- drag it to "In Progress".
+Our next story is "Create App"; drag it to "In Progress".
 
 Create a new Vue app:
 
@@ -130,7 +130,7 @@ With this, we can move our "Create App" task in Trello to "Done".
 
 ## Setting Up Autoformatting
 
-Next is "Set Up Autoformatting" -- drag it to "In Progress".
+Next is "Set Up Autoformatting"; drag it to "In Progress".
 
 Prettier doesn't have a lot of configuration options, but you can adjust a little. And a `.prettierrc.js` file at the root of your project and add the following:
 
@@ -167,7 +167,7 @@ With this, we can drag "Set Up Autoformatting" to "Done".
 
 ## Running Tests on CI
 
-Next is "Set Up Tests on CI" -- drag it to "In Progress".
+Next is "Set Up Tests on CI"; drag it to "In Progress".
 
 Vue CLI automatically sets up some example tests for us. Before we run them on CI, let's confirm they work for us locally. Open `tests/unit/example.spec.js`. Note that it's testing the `HelloWorld` component. Now run `yarn test:unit`. You should see the following:
 
@@ -286,7 +286,7 @@ $ git pull
 With this, we can drag the "Set Up Tests On CI" task to "Done" in Trello.
 
 ## Setting Up Automatic Deployment
-Our next task is "Set Up Automatic Deployment" -- drag it to "In Progress" in Trello.
+Our next task is "Set Up Automatic Deployment"; drag it to "In Progress" in Trello.
 
 We're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
 

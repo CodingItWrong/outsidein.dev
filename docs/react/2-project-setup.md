@@ -62,7 +62,7 @@ There are a number of different editors that are good for React development; two
 With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
 
 ## Creating the App
-Our next story is "Create App" -- drag it to "In Progress".
+Our next story is "Create App"; drag it to "In Progress".
 
 Create a new React app:
 
@@ -101,7 +101,7 @@ With this, we can move our "Create App" task in Trello to "Done".
 
 ## Setting Up Autoformatting
 
-Next is "Set Up Autoformatting" -- drag it to "In Progress".
+Next is "Set Up Autoformatting"; drag it to "In Progress".
 
 Create React App includes a built-in ESLint config to check your code for issues while it runs. But we can set up a separate ESLint config that our editor can see, so it can warn us about issues right away and autoformat files upon save.
 
@@ -179,7 +179,7 @@ With this, we can drag "Set Up Autoformatting" to "Done".
 
 ## Running Tests on CI
 
-Next is "Set Up Tests on CI" -- drag it to "In Progress".
+Next is "Set Up Tests on CI"; drag it to "In Progress".
 
 Create React App automatically sets up an example component test for us. Before we run it on CI, let's confirm it works for us locally. Open `src/App.test.js`. Note that it's testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press a to run all tests.
 
@@ -357,7 +357,7 @@ $ git pull
 With this, we can drag the "Set Up Tests On CI" task to "Done" in Trello.
 
 ## Setting Up Automatic Deployment
-Our next task is "Set Up Automatic Deployment" -- drag it to "In Progress" in Trello.
+Our next task is "Set Up Automatic Deployment"; drag it to "In Progress" in Trello.
 
 Next we're going to go ahead and deploy our application to production. Yes, even though it doesn't do anything yet!
 

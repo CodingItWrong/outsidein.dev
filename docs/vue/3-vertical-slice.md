@@ -61,7 +61,7 @@ $ git commit -m "Delete sample content"
 
 For this tutorial, our backend web service has already been built. Let's take a look at it and see how we can load our restaurant data from it. It's accessible at <https://api.outsidein.dev>. Rather than using username-and-password based authentication as we might do for a real system, for simplicity you'll just set up an API key instead. This will allow you to access your own personal data on the server, so you can edit it without stepping on other users' data.
 
-Go to <https://api.outsidein.dev> in a browser. Click the "Create API Key" button. You'll be given a new API key that is a random sequence of letters and numbers. Copy it and save it someplace safe--you won't be able to get back to it again.
+Go to <https://api.outsidein.dev> in a browser. Click the "Create API Key" button. You'll be given a new API key that is a random sequence of letters and numbers. Copy it and save it someplace safe—you won't be able to get back to it again.
 
 Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, filling in your API key in place of `YOUR-API-KEY`. You should see the following JSON data with default restaurants created when your API key was created. It may be formatted differently depending on your browser and extensions, and of course the dates will differ:
 
@@ -912,7 +912,7 @@ With this, our test passes.
 
 Now that our test is passing and our code is complete, we can see the benefits that come from testing the store from the outside. Our test interacts with the store the way the rest of our application does: by dispatching actions and then observing state changes. Just like the rest of our application, our test doesn't know or care about the `storeRecords` mutation; it treats it as an implementation detail. This gives us greater flexibility to refactor our store; for example, we could change the way our mutations are set up. Our tests would continue to pass as long as the action name and state stayed the same, which is fittingly exactly the contract that the rest of our application requires as well.
 
-Another benefit of testing the store from the outside is ensuring that all the pieces work together. If we were testing the `load` action and `storeRecords` mutation separately from one another, they might work individually, but not work together. For example, maybe the mutation name committed in the `load` action was different from the correct mutation name. Our test exercises the action, mutation, and state in integration, ensuring that if they aren't working together, a unit test will fail. If we weren't testing this way, only an E2E test would catch this problem--and then only if the problem is in one of the main flows that our E2E test covers, not our edge cases.
+Another benefit of testing the store from the outside is ensuring that all the pieces work together. If we were testing the `load` action and `storeRecords` mutation separately from one another, they might work individually, but not work together. For example, maybe the mutation name committed in the `load` action was different from the correct mutation name. Our test exercises the action, mutation, and state in integration, ensuring that if they aren't working together, a unit test will fail. If we weren't testing this way, only an E2E test would catch this problem—and then only if the problem is in one of the main flows that our E2E test covers, not our edge cases.
 
 ## Creating the API Client
 

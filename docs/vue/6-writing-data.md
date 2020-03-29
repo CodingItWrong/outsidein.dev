@@ -920,7 +920,7 @@ We'll add a data property to indicate whether it should be shown:
  },
 ```
 
-Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown--that's all. The simplest logic to pass this test is to always show the validation error after saving:
+Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown—that's all. The simplest logic to pass this test is to always show the validation error after saving:
 
 ```diff
  handleSave() {
@@ -1345,7 +1345,7 @@ Save and this test fails: the promise resolves instead of rejecting. Why is this
 
 The tests pass.
 
-Now let's run our app in the browser and see it handle a server error. As you did in the last chapter, open `src/api.js` and put an incorrect API key in the `baseURL` value. Load up the frontend and you will see the error message for loading the restaurants--but we want to try out what happens when there is an error *saving* the restaurants. Enter a restaurant name and click "Add". You should see another red server error message, this time for saving:
+Now let's run our app in the browser and see it handle a server error. As you did in the last chapter, open `src/api.js` and put an incorrect API key in the `baseURL` value. Load up the frontend and you will see the error message for loading the restaurants—but we want to try out what happens when there is an error *saving* the restaurants. Enter a restaurant name and click "Add". You should see another red server error message, this time for saving:
 
 ![Server error message](./images/5-4-server-error.png)
 
@@ -1360,7 +1360,7 @@ Rerun your E2E tests to make sure they still pass.
 ## Refactoring Visuals
 
 Now that all our tests are passing for the feature, let's think about refactoring.
-We used Vuetify components to make our form elements look good, but we didn't give any attention to the layout--we just put them one after another.
+We used Vuetify components to make our form elements look good, but we didn't give any attention to the layout—we just put them one after another.
 In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
 
 Vuetify offers a [grid system](https://vuetifyjs.com/en/components/grids) that is useful for layout situations like this. Let's apply it to our form.

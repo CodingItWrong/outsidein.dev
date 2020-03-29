@@ -145,7 +145,7 @@ So now we need to send the request is our backend service. This is missing logic
 - The action will call a function in our API client
 - The API client will make an HTTP `POST` request
 
-Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should call a function prop--which in production will be wired to an action in our store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too. Otherwise we would need to go back through our stack to pass it along.
+Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should call a function prop—which in production will be wired to an action in our store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too. Otherwise we would need to go back through our stack to pass it along.
 
 ## Unit Testing the Component
 
@@ -1019,7 +1019,7 @@ We'll add state to indicate whether it should be shown:
        <TextField
 ```
 
-Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown--that's all. The simplest logic to pass this test is to always show the validation error after saving:
+Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown—that's all. The simplest logic to pass this test is to always show the validation error after saving:
 
 ```diff
  const handleSubmit = e => {
@@ -1394,7 +1394,7 @@ describe('when save fails', () => {
 
 The test passes right away. Because our store returned the promise chain returned from the API, the rejection is passed along to the caller of `store.dispatch()`. But this is part of the contract of the action that the component is relying on, so it's good to document it in a test.
 
-Now let's run our app in the browser and see it handle a server error. As you did in the last chapter, open `src/api.js` and put an incorrect API key in the `baseURL` value. Load up the frontend and you will see the error message for loading the restaurants--but we want to try out what happens when there is an error *saving* the restaurants. Enter a restaurant name and click "Add". You should see another red server error message, this time for saving:
+Now let's run our app in the browser and see it handle a server error. As you did in the last chapter, open `src/api.js` and put an incorrect API key in the `baseURL` value. Load up the frontend and you will see the error message for loading the restaurants—but we want to try out what happens when there is an error *saving* the restaurants. Enter a restaurant name and click "Add". You should see another red server error message, this time for saving:
 
 ![Server error message](./images/5-4-server-error.png)
 
@@ -1409,7 +1409,7 @@ Rerun your E2E tests to make sure they still pass.
 ## Refactoring Visuals
 
 Now that all our tests are passing for the feature, let's think about refactoring.
-We used Material-UI components to make our form elements look good, but we didn't give any attention to the layout--we just put them one after another.
+We used Material-UI components to make our form elements look good, but we didn't give any attention to the layout—we just put them one after another.
 In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
 
 Material-UI offers a `Box` component that can be used for layout and spacing. Let's wrap the `TextField` and `Button` in a `Box`:
