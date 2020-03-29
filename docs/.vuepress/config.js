@@ -9,6 +9,7 @@ module.exports = {
     ['meta', { name: 'theme-color', content: '#00c853' }],
   ],
   themeConfig: {
+    logo: '/logo-36@3x.gif',
     sidebar: [
       '/about-this-guide',
       {
