@@ -446,7 +446,7 @@ Now our test of the initial state passes, but our test for while loading fails. 
 
 Save the file, and all our tests pass. We now have a loading flag that starts `false`, is set to `true` when loading begins, and is set back to `false` when loading ends.
 
-With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our local API is set up with a hard-coded one second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
+With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our API is set up with a hard-coded one-second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
 
 ![Restaurant list with loading spinner](./images/4-1-loading-spinner.png)
 

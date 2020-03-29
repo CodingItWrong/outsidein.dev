@@ -531,7 +531,7 @@ Our unit tests are passing, and all we need to do now is hook up the `loading` s
  });
 ```
 
-With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our local API is set up with a hard-coded one second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
+With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our API is set up with a hard-coded one-second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
 
 ![Restaurant list with loading spinner](./images/4-1-loading-spinner.png)
 
