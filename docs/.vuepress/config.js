@@ -10,6 +10,9 @@ module.exports = {
   ],
   themeConfig: {
     logo: '/logo-36@3x.gif',
+    nav: [
+      { text: 'Chat', link: 'https://gitter.im/outsideindev/community' },
+    ],
     sidebar: [
       '/about-this-guide',
       {
