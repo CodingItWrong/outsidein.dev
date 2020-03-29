@@ -1,0 +1,1 @@
+These images are placed under /public/images because they are displayed using custom <img> tags, rather than markdown images. This means VuePress doesn't include them as part of its build pipeline. Putting them in /public ensures they are copied over as-is.

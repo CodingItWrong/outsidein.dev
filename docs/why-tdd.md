@@ -14,6 +14,10 @@ Test-driven development is the practice of writing a test for functionality befo
 
 Then the cycle repeats again for your next bit of functionality: you write the next test and watch it fail, etc.
 
+These three steps can be visualized as a loop:
+
+<img src="/images/loop-unit.png" alt="Diagram of the TDD Loop" class="centered" />
+
 Why would you want to practice test-driven development? Let's talk about a few extremely common problems in programming that test-driven development addresses in a unique way.
 
 If you'd rather watch a video, [James Shore's Assert(js) 2019 talk "Thinking in Tests"](https://www.youtube.com/watch?v=UOOuW5tqT8M&feature=share) hits a lot of similar points.
