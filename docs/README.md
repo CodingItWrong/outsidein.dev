@@ -2,7 +2,7 @@
 home: true
 heroImage: /logo-280@3x.gif
 heroText: Outside-In Frontend Development
-tagline: Build frontend apps with confidence.
+tagline: Build frontend apps that last.
 actionText: Get Started →
 actionLink: /about-this-guide.html
 features:
