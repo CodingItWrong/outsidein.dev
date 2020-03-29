@@ -1,6 +1,14 @@
 module.exports = {
   title: 'Outside-In Frontend Development',
   description: 'Build frontend apps that last.',
+  plugins: [
+    [
+      '@vuepress/google-analytics',
+      {
+        'ga': 'UA-162142929-1',
+      },
+    ],
+  ],
   head: [
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
     ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }],
