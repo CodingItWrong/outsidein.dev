@@ -16,6 +16,7 @@ Doing agile development with other people provides accountability to stick with 
 - Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software craftsmanship" is a common term for such meetups.
 - Attend a workshop on TDD or refactoring. Two instructors I would recommend are [James Shore](https://www.jamesshore.com/Calendar/) who focuses on JavaScript, and [Sandi Metz](https://www.sandimetz.com/courses) who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
 - The next time you are looking for a new job, look for one that prioritizes agile development practices. Just hearing them say "we do agile" or "we do testing" is not enough: ask them what their agile process is like, and see if they have a thorough understanding of small stories, refactoring, and evolutionary design.
+- Share this guide with someone you think would benefit from it, and talk with them about your experiences with it.
 
 ## Testing Tool Docs
 Just like you learn your framework deeply, it's important to learn your testing tools deeply as well. This will show you what features you can draw from, give you ideas for how to test, and prevent buggy tests due to misunderstanding the test functionality. All of the tools we used have excellent guides, so I would recommend looking through them thoroughly:
