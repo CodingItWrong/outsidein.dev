@@ -1345,9 +1345,11 @@ Save and this test fails: the promise resolves instead of rejecting. Why is this
 
 The tests pass.
 
-Now let's run our app in the browser and see it handle a server error. Make sure your API server is running, then run the frontend and load it up. Next, stop your API server. Then enter a restaurant name and click "Add". You should see a red server error message:
+Now let's run our app in the browser and see it handle a server error. As you did in the last chapter, open `src/api.js` and put an incorrect API key in the `baseURL` value. Load up the frontend and you will see the error message for loading the restaurants--but we want to try out what happens when there is an error *saving* the restaurants. Enter a restaurant name and click "Add". You should see another red server error message, this time for saving:
 
 ![Server error message](./images/5-4-server-error.png)
+
+Restore the correct API key value in `src/api.js`, reload the frontend, and make sure the app is working again.
 
 That was a lot of edge cases, but we've added a lot of robustness to our form!
 
