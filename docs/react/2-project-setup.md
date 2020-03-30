@@ -17,7 +17,7 @@ In this chapter, we'll set up our project and process. This won't involve writin
 That's a lot, but we want to get it in place before we write our first line of production code to ensure we have support in place for our agile process. And it won't take too long because we'll use powerful tools to help us get there. Once that's all in place, we'll be ready to start implementing our application's features.
 
 ## Making a List of Stories
-Agile developers often use the term "stories" to refer to units of work. This term emphasizes the fact that agile developers stay focused on delivering units of work that are useful to the user. Rather than "building out the data model" (which would not make for a very compelling tale!) a story would be more likely to be something like "users can see a list of restaurants they've entered."
+Agile developers often use the term "stories" to refer to units of work. This term emphasizes the fact that agile developers stay focused on delivering units of work that are useful to the user. Rather than "building out the data model" (which would not make for a very compelling tale!), a story would be more likely to be something like "users can see a list of restaurants they've entered."
 
 Before we start our work, we want a way to track it. In this guide it'll just be you working by yourself, so you could just keep a to-do list on paper or a to-do app if you like. But when doing agile development in a team environment, it's a good idea to have a shared tracker. Trello is a great flexible tool that is useful for tracking work.
 
@@ -45,7 +45,7 @@ Here are the tools we'll need to install:
 - An editor
 
 ### Git
-Version control is essential for most developers, but even more so for agile developers. You need to be able to track the small steps you take to make sure they aren't lost. Although we won't get into it in this guide, focused and well-explained commits are essential for communicating to your teammates as well. [Git](https://git-scm.com/) is probably the most popular version control tool right now, and we'll use GitHub for pull requests and CI purposes as well.
+Version control is essential for most developers, but even more so for agile developers. You need to be able to track the small steps you take to make sure they aren't lost. Although we won't get into it in this guide, focused and well-explained commit messages are essential for communicating to your teammates as well. [Git](https://git-scm.com/) is probably the most popular version control tool right now, and we'll use GitHub for pull requests and CI purposes as well.
 
 ### Node
 We'll be using Create React App as our build tool. Like most frontend build tools, it runs on top of [Node.js](https://nodejs.org/en/), so you'll need node installed locally.
@@ -183,7 +183,7 @@ Next is "Set Up Tests on CI"; drag it to "In Progress".
 
 Create React App automatically sets up an example component test for us. Before we run it on CI, let's confirm it works for us locally. Open `src/App.test.js`. Note that it's testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press a to run all tests.
 
- You should see the following:
+You should see the following:
 
 ```
 PASS  src/App.test.js
@@ -264,32 +264,28 @@ $ git add .
 $ git commit -m "Set up Cypress E2E tests"
 ```
 
-When Create React App creates our project, it initializes a git repo and adds our code to it. Let's push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
+When Create React App creates our project, it initializes a git repo and adds our code to it. Let's push it up to GitHub. On [github.com](https://github.com), create a new GitHub repo.
+
+Next, add it as the `origin` remote and push up the repo:
 
 ```sh
 $ git remote add origin https://github.com/your-user-name/your-repo-name.git
 $ git push --set-upstream origin master
 ```
 
-In many development approaches, the next thing we would do would be to start building application functionality. We might go ahead and release. Later we might decide to try to add testing and continuous integration.
+In many development approaches, the next thing we would do would be to start building application functionality. After that, we might release to production. Later we might decide to try to add testing and continuous integration.
 
-We're going to go the opposite route in this guide. We're going to set up CI and deployment from the very start.
+But we're going to go the opposite route in this guide. We're going to set up CI and deployment from the very start, before we write a line of production code.
 
-There are a number of great CI services, including:
+There are a number of great CI services, including [Travis CI](https://travis-ci.com/), [CircleCI](https://circleci.com/), and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
 
-* [Travis CI](https://travis-ci.com/)
-* [CircleCI](https://circleci.com/)
-* [GitHub Actions](https://github.com/features/actions)
-
-We're going to go with GitHub Actions due to the fact that it's already set up in your GitHub repo.
-
-Let's set this up in a pull request to the mirror the usual approach you'll take. Create a new `ci` branch:
+When we start our feature work we'll do it in branches. Let's go ahead and configure GitHub Actions in a branch as well, to get used to the workflow. Create a new `ci` branch:
 
 ```sh
 $ git checkout -b ci
 ```
 
-In your project, create a `.github/workflows` folder, create a `test.yml` file, and add the following contents:
+In your project, create a `.github/workflows` folder, then create a `test.yml` file inside it. Add the following contents:
 
 ```yml
 name: Test
@@ -315,15 +311,15 @@ jobs:
 Here's what's going on in this file:
 
 - We name the workflow "Test".
-- We configure it to run any time code is pushed to the server. This means both PR branches and merges to the master branch will be tested.
+- We configure it to run any time code is pushed to the server. This means both PR branches and merges to the `master` branch will be tested.
 - We configure a single job for the workflow, also named "Test".
-- We configure it to run on a specific version of the Ubuntu distribution of Linux. You can also run on `ubuntu-latest`, but new versions of Ubuntu have broken Cypress in the past, so fixing the version ensures it will continue to keep wroking.
+- We configure it to run on a specific version of the Ubuntu distribution of Linux. You can also run on `ubuntu-latest`, but new versions of Ubuntu have broken Cypress in the past, so fixing the version ensures it will continue to keep working.
 - Now, we define the series of steps to run for the job. First, we use the GitHub Action `actions/checkout` to check out our code.
 - We install our Yarn dependencies. The `--frozen-lockfile` flag is good to use on CI servers: it ensures Yarn won't install versions different from what is in the lockfile.
 - We run our unit tests. The `--watchAll=false` flag ensures they won't continue running and watching for file changes; they just run once.
 - We run our E2E tests. We use a Cypress GitHub action to do it, which we tell to start our development server and to wait until it finishes starting.
 
-Commit the file then push up your changes to GitHub:
+Commit this `test.yml` file, then push up your changes to GitHub:
 
 ```sh
 $ git add .
@@ -391,7 +387,7 @@ Click "< Deploys" to go back to the Deploys tab. If you waited for the deploymen
 
 ![Netlify site automatically assigned name](./images/1-12-site-name.png)
 
-Click the green link in your browser. You should get the Learn React page.
+Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
 
 Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then "Site settings" button. Under General > Site details > Site information, click "Change site name".
 
@@ -441,9 +437,9 @@ Also, if someone uses `npm` instead of `yarn` they won't get the right dependenc
  [Create React App](https://github.com/facebook/create-react-app).
 ```
 
-Commit these README changes to git.
+Commit these README changes to git and push them up to GitHub.
 
-With this, we can drag our next task to "Done" in Trello: "Fill In Readme".
+With this, we can drag "Fill In Readme" to "Done" in Trello.
 
 ## What's Next
 Now all our setup is done and we are ready to work on our first feature! In the next chapter we'll see how to build a feature using the outside-in TDD loop.

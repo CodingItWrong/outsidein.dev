@@ -17,7 +17,7 @@ In this chapter, we'll set up our project and process. This won't involve writin
 That's a lot, but we want to get it in place before we write our first line of production code to ensure we have support in place for our agile process. And it won't take too long because we'll use powerful tools to help us get there. Once that's all in place, we'll be ready to start implementing our application's features.
 
 ## Making a List of Stories
-Agile developers often use the term "stories" to refer to units of work. This term emphasizes the fact that agile developers stay focused on delivering units of work that are useful to the user. Rather than "building out the data model" (which would not make for a very compelling tale!) a story would be more likely to be something like "users can see a list of restaurants they've entered."
+Agile developers often use the term "stories" to refer to units of work. This term emphasizes the fact that agile developers stay focused on delivering units of work that are useful to the user. Rather than "building out the data model" (which would not make for a very compelling tale!), a story would be more likely to be something like "users can see a list of restaurants they've entered."
 
 Before we start our work, we want a way to track it. In this guide it'll just be you working by yourself, so you could just keep a to-do list on paper or a to-do app if you like. But when doing agile development in a team environment, it's a good idea to have a shared tracker. Trello is a great flexible tool that is useful for tracking work.
 
@@ -46,7 +46,7 @@ Here are the tools we'll need to install:
 - Recommended editor: VS Code with Vetur extension
 
 ### Git
-Version control is essential for most developers, but even more so for agile developers. You need to be able to track the small steps you take to make sure they aren't lost. Although we won't get into it in this guide, focused and well-explained commits are essential for communicating to your teammates as well. [Git](https://git-scm.com/) is probably the most popular version control tool right now, and we'll use GitHub for pull requests and CI purposes as well.
+Version control is essential for most developers, but even more so for agile developers. You need to be able to track the small steps you take to make sure they aren't lost. Although we won't get into it in this guide, focused and well-explained commit messages are essential for communicating to your teammates as well. [Git](https://git-scm.com/) is probably the most popular version control tool right now, and we'll use GitHub for pull requests and CI purposes as well.
 
 ### Node
 Like most frontend build tools, Vue CLI runs on top of [Node.js](https://nodejs.org/en/), so you'll need node installed locally.
@@ -67,7 +67,7 @@ $ npm install -g @vue/cli
 
 ### VS Code
 
-You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly, autocompletion, syntax highlighting, and autoformatting in `.vue` files.
+You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly autocompletion, syntax highlighting, and autoformatting in `.vue` files.
 
 With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
 
@@ -93,10 +93,10 @@ You'll be prompted with a list of features to choose. Use the arrow keys and spa
 When you're done, press Return. You'll be given followup questions for some of these. Choose:
 
 * `Pick a linter / formatter config`: choose `ESLint + Prettier`, then `Lint on save`. Prettier automatically formats your code when you save the file. Code consistency is a big help for productivity and catching bugs.
-* `Pick a unit testing solution:` choose `Jest`. Jest has a lot of features built in.
-* `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. Cypress is built from the ground up for rich frontend applications. The tradeoff, as Vue CLI mentions, is that Cypress 3.x runs only in Chrome. But Cypress 4 has added support for testing in Firefox and MS Edge as well! Vue CLI should be updated to use Cypress 4 soon.
+* `Pick a unit testing solution:` choose `Jest`.
+* `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. (Note that Cypress 4 has added support for testing in Firefox and MS Edge as well! Vue CLI should be updated to use Cypress 4 soon.)
 * `Where do you prefer placing config for Babel, ESLint, etc.?` I choose `In dedicated config files`, but it doesn't make a difference for this tutorial.
-* `Save this as a preset for future projects?` You can enter `N`, we shouldn't need it again.
+* `Save this as a preset for future projects?` You can enter `N`; we shouldn't need it again.
 
 Vue CLI will start the installation process, and when it completes, your application will be created and ready to use.
 
@@ -169,7 +169,9 @@ With this, we can drag "Set Up Autoformatting" to "Done".
 
 Next is "Set Up Tests on CI"; drag it to "In Progress".
 
-Vue CLI automatically sets up some example tests for us. Before we run them on CI, let's confirm they work for us locally. Open `tests/unit/example.spec.js`. Note that it's testing the `HelloWorld` component. Now run `yarn test:unit`. You should see the following:
+Vue CLI automatically sets up some example tests for us. Before we run them on CI, let's confirm they work for us locally. Open `tests/unit/example.spec.js`. Note that it's testing the `HelloWorld` component. Now run `yarn test:unit`.
+
+You should see the following:
 
 ```
 yarn run v1.21.1
@@ -186,7 +188,7 @@ Ran all test suites.
 ✨  Done in 4.50s.
 ```
 
-Now we'll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that we are loading the app and confirming we can see a welcome message. Now run `yarn test:e2e`. You'll see the Cypress application launch. Its window will show a list of Integration Tests with just one item: `test.js`.
+Now we'll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that we are loading the app and confirming we can see a welcome message. Now run `yarn test:e2e`. You'll see the Cypress application launch. Its window will show a list of "Integration Tests" with just one item: `test.js`.
 
 ![Cypress window with smoke test](./images/1-2-cypress-smoke-test.png)
 
@@ -196,32 +198,28 @@ Click on `test.js`. A new instance of Chrome will open and you'll see the Cypres
 
 There's one more mode we can run our Cypress tests in: headless mode. Run `yarn test:e2e --headless`. You'll see tests run in the console and say in the end that they passed. This runs our whole test suite without a GUI, and will be useful in a moment.
 
-When Vue CLI creates our project, it initializes a git repo and adds our code to it. Let's push it up to GitHub. Create a new GitHub repo and add it as the `origin` remote. Push up the repo:
+When Vue CLI creates our project, it initializes a git repo and adds our code to it. Let's push it up to GitHub. On [github.com](https://github.com), create a new GitHub repo.
+
+Next, add it as the `origin` remote and push up the repo:
 
 ```sh
 $ git remote add origin https://github.com/your-user-name/your-repo-name.git
 $ git push --set-upstream origin master
 ```
 
-In many development approaches, the next thing we would do would be to start building application functionality. We might go ahead and release. Later we might decide to try to add testing and continuous integration.
+In many development approaches, the next thing we would do would be to start building application functionality. After that, we might release to production. Later we might decide to try to add testing and continuous integration.
 
-We're going to go the opposite route in this guide. We're going to set up CI and deployment from the very start.
+But we're going to go the opposite route in this guide. We're going to set up CI and deployment from the very start, before we write a line of production code.
 
-There are a number of great CI services, including:
+There are a number of great CI services, including [Travis CI](https://travis-ci.com/), [CircleCI](https://circleci.com/), and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
 
-* [Travis CI](https://travis-ci.com/)
-* [CircleCI](https://circleci.com/)
-* [GitHub Actions](https://github.com/features/actions)
-
-We're going to go with GitHub Actions due to the fact that it's already set up in your GitHub repo.
-
-Let's set this up in a pull request to the mirror the usual approach you'll take. Create a new `ci` branch:
+When we start our feature work we'll do it in branches. Let's go ahead and configure GitHub Actions in a branch as well, to get used to the workflow. Create a new `ci` branch:
 
 ```sh
 $ git checkout -b ci
 ```
 
-In your project, create a `.github/workflows` folder, create a `test.yml` file, and add the following contents:
+In your project, create a `.github/workflows` folder, then create a `test.yml` file inside it. Add the following contents:
 
 ```yml
 name: Test
@@ -244,15 +242,15 @@ jobs:
 Here's what's going on in this file:
 
 - We name the workflow "Test".
-- We configure it to run any time code is pushed to the server. This means both PR branches and merges to the master branch will be tested.
+- We configure it to run any time code is pushed to the server. This means both PR branches and merges to the `master` branch will be tested.
 - We configure a single job for the workflow, also named "Test".
-- We configure it to run on a specific version of the Ubuntu distribution of Linux. You can also run on `ubuntu-latest`, but new versions of Ubuntu have broken Cypress in the past, so fixing the version ensures it will continue to keep wroking.
+- We configure it to run on a specific version of the Ubuntu distribution of Linux. You can also run on `ubuntu-latest`, but new versions of Ubuntu have broken Cypress in the past, so fixing the version ensures it will continue to keep working.
 - Now, we define the series of steps to run for the job. First, we use the GitHub Action `actions/checkout` to check out our code.
 - We install our Yarn dependencies. The `--frozen-lockfile` flag is good to use on CI servers: it ensures Yarn won't install versions different from what is in the lockfile.
 - We run our unit tests.
 - We run our E2E tests. We pass the `--headless` flag so Cypress won't attempt to show the GUI or wait for us to choose a test; it will run all the E2E tests.
 
-Commit the file then push up your changes to GitHub:
+Commit this `test.yml` file, then push up your changes to GitHub:
 
 ```sh
 $ git add .
@@ -270,7 +268,7 @@ Click the "Details" link next to it. You'll see our unit and E2E tests running.
 
 ![Actions screen with tests running](./images/1-5-actions-screen-with-test-running.png)
 
-When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you'll see a green "All checks have passed".
+When the test run succeeds, the action will be marked as passed. If you go back to the Conversation tab of your PR, you'll see a green "All checks have passed".
 
 ![PR screen with tests passed](./images/1-6-pr-screen-with-tests-passed.png)
 
@@ -292,7 +290,7 @@ We're going to go ahead and deploy our application to production. Yes, even thou
 
 First let's see how a production build works locally. Run `yarn build`. The files are written to a `dist` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can't just open the HTML file in the browser, but they'll work when deployed to a server.
 
-There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users. You don't need to provide a credit card, but just keep an eye out for emails about approaching your limit of build minutes: if you go over the limit you'll need to pay for more minutes or your sites will be shut down.
+There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users. You don't need to provide a credit card, but just keep an eye out for emails about approaching your monthly limit of build minutes: if you go over the limit you'll need to pay for more minutes or your sites will be shut down.
 
 Create a Netlify account from [Netlify's Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
@@ -356,7 +354,7 @@ Let's add a description of the project and link to production, filling in your N
 +
 +An app for tracking reviews of dishes at different restaurants.
 +
-+Production: https://your-netlify-domain.netlify.com/
++Production: <https://your-netlify-domain.netlify.com>
 
  ## Project setup
 ```
@@ -370,7 +368,7 @@ Also, if someone uses `npm` instead of `yarn` they won't get the right dependenc
 +
 ```
 
-Commit these README changes to git.
+Commit these README changes to git and push them up to GitHub.
 
 With this, we can drag "Fill In Readme" to "Done" in Trello.
 
