@@ -12,11 +12,11 @@ Note that none of the links to products below are affiliate links; I don't make 
 Doing agile development with other people provides accountability to stick with it and insights when it's not clear what to do. Here are some suggestions for how to find others to do agile development with:
 
 - An easy first step is the [Outside-In Frontend Dev chat on Gitter](https://gitter.im/outsideindev/community). You can join there to discuss what we've learned and how to apply it with the author (me, Josh!) and other readers.
-- If you're on twitter, you can <a href="https://twitter.com/intent/tweet?button_hashtag=outsideintdd&ref_src=twsrc%5Etfw" data-show-count="false">tweet #outsideintdd</a> to share your experiences and questions, or <a href="https://twitter.com/search?lang=en&q=(%23outsideintdd)&src=typed_query">search for #outsideintdd</a> to see who else is thinking about this approach.
+- If you're on twitter, you can [tweet #outsideintdd](https://twitter.com/intent/tweet?button_hashtag=outsideintdd&ref_src=twsrc%5Etfw) to share your experiences and questions, or [search for #outsideintdd](https://twitter.com/search?lang=en&q=(%23outsideintdd)&src=typed_query) to see who else is thinking about this approach.
 - Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software craftsmanship" is a common term for such meetups.
 - Attend a workshop on TDD or refactoring. Two instructors I would recommend are [James Shore](https://www.jamesshore.com/Calendar/) who focuses on JavaScript, and [Sandi Metz](https://www.sandimetz.com/courses) who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
 - The next time you are looking for a new job, look for one that prioritizes agile development practices. Just hearing them say "we do agile" or "we do testing" is not enough: ask them what their agile process is like, and see if they have a thorough understanding of small stories, refactoring, and evolutionary design.
-- Share this guide with someone you think would benefit from it, and talk with them about your experiences with it.
+- Share this guide with someone you think would benefit from it, and talk together about your experiences with it.
 
 ## Testing Tool Docs
 Just like you learn your framework deeply, it's important to learn your testing tools deeply as well. This will show you what features you can draw from, give you ideas for how to test, and prevent buggy tests due to misunderstanding the test functionality. All of the tools we used have excellent guides, so I would recommend looking through them thoroughly:
@@ -84,13 +84,15 @@ This book has contained a brief introduction to agile development practices, but
 
 
 ## Epilogue
-We've reached the end of this guide. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And the reason for that is because they solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
+We've reached the end of this guide. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And that's because they solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
 
 New languages and frameworks don't fix this problem, because you can make a mess in any language. More process doesn't fix the problem if the process doesn't account for change. Trying harder doesn't fix the problem, because we're human and have limited capacity.
 
-The reason agile development practices work is that they are based on an accurate view of reality: one where change is inevitable and people have limited capacities. They're the best way I've found to deliver value to my employers and to have a smooth and calm development experience.
+The reason agile development practices work is that they are based on a realistic view of software development: a view that change is inevitable and people have limited capacities. They're the best way I've found to deliver value to my employers and to have a smooth and calm development experience.
 
-And now you have a foundation and a taste of those practices. I hope you'll try putting them into practice in your development work. I think you'll like the results.
+And now you have a foundation and a taste of those practices. I hope you'll try putting them to use in your development work. I think you'll like the results.
+
+Thanks for reading, and keep in touch!
 
 
 [cypress]: https://docs.cypress.io/guides/overview/why-cypress.html
