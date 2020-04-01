@@ -69,7 +69,7 @@ $ npm install -g @vue/cli
 
 You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly autocompletion, syntax highlighting, and autoformatting in `.vue` files.
 
-With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
+With this, we can drag the "Set Up Development Environment" story to the "Done" column in Trello.
 
 ## Creating the App
 Our next story is "Create App"; drag it to "In Progress".
@@ -211,7 +211,7 @@ In many development approaches, the next thing we would do would be to start bui
 
 But we're going to go the opposite route in this guide. We're going to set up CI and deployment from the very start, before we write a line of production code.
 
-There are a number of great CI services, including [Travis CI](https://travis-ci.com/), [CircleCI](https://circleci.com/), and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
+There are a number of great CI services with free starter plans, including [Travis CI](https://travis-ci.com/), [CircleCI](https://circleci.com/), and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
 
 When we start our feature work we'll do it in branches. Let's go ahead and configure GitHub Actions in a branch as well, to get used to the workflow. Create a new `ci` branch:
 
@@ -260,7 +260,7 @@ $ git push -u origin ci
 
 GitHub will give you a URL to create a pull request. Open it in the browser, and click "Create pull request".
 
-Notice the yellow "Some checks haven't completed yet" warning, with "Test/Test" under it. That's our GitHub Action running.
+Notice the yellow "Some checks haven't completed yet" warning, with "Test / Test" under it. That's our GitHub Action running.
 
 ![PR screen with tests running](./images/1-4-pr-screen-with-tests-running.png)
 
@@ -290,7 +290,7 @@ We're going to go ahead and deploy our application to production. Yes, even thou
 
 First let's see how a production build works locally. Run `yarn build`. The files are written to a `dist` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can't just open the HTML file in the browser, but they'll work when deployed to a server.
 
-There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users. You don't need to provide a credit card, but just keep an eye out for emails about approaching your monthly limit of build minutes: if you go over the limit you'll need to pay for more minutes or your sites will be shut down.
+There are many ways to deploy frontend apps. One easy way is a service like Netlify that is set up to run your frontend build process for you. Netlify has a free Starter plan for individual users. You don't need to provide a credit card, but just keep an eye out for emails about approaching your monthly limit of build minutes: if you go over the limit you'll need to pay for more minutes or your sites will be shut down.
 
 Create a Netlify account from [Netlify's Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
@@ -308,7 +308,7 @@ You will be sent to the Overview page for your new site. In yellow you'll see "S
 
 ![Netlify deploy in progress](./images/1-9-deploy-in-progress.png)
 
-Click that text and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: master@HEAD Building":
+Click "Site deploy in progress" and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: master@HEAD Building":
 
 ![Netlify list of deployments](./images/1-10-deploy-list.png)
 
@@ -316,7 +316,7 @@ Click "Production: master@HEAD Building". You'll see a console log of output as 
 
 ![Netlify site is live](./images/1-11-site-is-live.png)
 
-(Your timestamps will be different depending on how unreasonably early you wake up.)
+(Your timestamps will be different depending on how unreasonably early you wake up in the morning.)
 
 Click "< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you'll see the name of your site, with an automatically-assigned set of nonsense words and characters:
 
@@ -324,8 +324,7 @@ Click "< Deploys" to go back to the Deploys tab. If you waited for the deploymen
 
 Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
 
-Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then "Site settings" button. Under General > Site details > Site information, click "Change site name".
-
+Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
 ![Change Site Name button](./images/1-13-change-site-name-button.png)
 
 In the dialog that appears, enter any site name you like and click Save.
@@ -345,7 +344,7 @@ With this, we can drag "Set Up Automatic Deployment" to "Done" in Trello.
 ## Filling In the Readme
 Our final setup task before we begin developing features is "Fill In Readme". Drag it to "In Progress" in Trello.
 
-Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Vue CLI created for us by default. It's a nice minimal readme that lists the NPM scripts available, without a lot of filler text. If these commands weren't in here, I would recommend that we add them: how to install, run, build, and test.
+It's important to write down useful information to help future developers (including yourself) work on the app. Open `README.md` and see what Vue CLI created for us by default. It's a nice minimal readme that lists the NPM scripts available, without a lot of filler text. If these commands weren't in here, I would recommend that we add them: how to install, run, build, and test.
 
 Let's add a description of the project and link to production, filling in your Netlify domain:
 

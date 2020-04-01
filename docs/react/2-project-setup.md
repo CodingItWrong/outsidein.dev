@@ -59,7 +59,7 @@ If you'd prefer to use `npm`, you can still follow this guide, you'll just need 
 
 There are a number of different editors that are good for React development; two popular free ones are [Visual Studio Code](https://code.visualstudio.com/) and [Atom](https://atom.io/).
 
-With this, we can drag the "Set Up Development Environment" to the "Done" column in Trello.
+With this, we can drag the "Set Up Development Environment" story to the "Done" column in Trello.
 
 ## Creating the App
 Our next story is "Create App"; drag it to "In Progress".
@@ -138,7 +138,6 @@ module.exports = {
     'prettier/prettier': 'warn',
   },
 };
-
 ```
 
 Here's what this file is configuring:
@@ -181,7 +180,7 @@ With this, we can drag "Set Up Autoformatting" to "Done".
 
 Next is "Set Up Tests on CI"; drag it to "In Progress".
 
-Create React App automatically sets up an example component test for us. Before we run it on CI, let's confirm it works for us locally. Open `src/App.test.js`. Note that it's testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press a to run all tests.
+Create React App automatically sets up an example component test for us. Before we run it on CI, let's confirm it works for us locally. Open `src/App.test.js`. Note that it's testing the `App` component. Now run `yarn test`. You may get a note "No tests found related to files changed since last commit." If so, press the "A" key to run all tests.
 
 You should see the following:
 
@@ -234,7 +233,7 @@ Now let's tweak these files. In the root of your project should be a `cypress.js
 }
 ```
 
-This configures Cypress to treat all URLs from the root of our local React app.
+This configures Cypress to interpret all relative URLs relative to the root of our local React app.
 
 Now, open the `cypress/integration` folder Cypress created, and see that there is an `examples` child folder under it. Delete the `examples` folder with its child test files. In its place, create a file `cypress/integration/smoke.spec.js` and add the following contents:
 
@@ -257,7 +256,7 @@ Click on `smoke.spec.js`. A new instance of Chrome will open and you'll see the 
 
 ![Cypress window with smoke test](./images/1-3-cypress-smoke-test-run.png)
 
-Add the Cypress tests to git:
+Add the new Cypress files to git:
 
 ```sh
 $ git add .
@@ -277,7 +276,7 @@ In many development approaches, the next thing we would do would be to start bui
 
 But we're going to go the opposite route in this guide. We're going to set up CI and deployment from the very start, before we write a line of production code.
 
-There are a number of great CI services, including [Travis CI](https://travis-ci.com/), [CircleCI](https://circleci.com/), and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
+There are a number of great CI services with free starter plans, including [Travis CI](https://travis-ci.com/), [CircleCI](https://circleci.com/), and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
 
 When we start our feature work we'll do it in branches. Let's go ahead and configure GitHub Actions in a branch as well, to get used to the workflow. Create a new `ci` branch:
 
@@ -329,7 +328,7 @@ $ git push -u origin ci
 
 GitHub will give you a URL to create a pull request. Open it in the browser, and click "Create pull request".
 
-Notice the yellow "Some checks haven't completed yet" warning, with "Test/Test" under it. That's our GitHub Action running.
+Notice the yellow "Some checks haven't completed yet" warning, with "Test / Test" under it. That's our GitHub Action running.
 
 ![PR screen with tests running](./images/1-4-pr-screen-with-tests-running.png)
 
@@ -337,7 +336,7 @@ Click the "Details" link next to it. You'll see our unit and E2E tests running.
 
 ![Actions screen with tests running](./images/1-5-actions-screen-with-test-running.png)
 
-When they pass, the action will be marked as passed. If you go back to the Conversation tab of your PR, you'll see a green "All checks have passed".
+When the test run succeeds, the action will be marked as passed. If you go back to the Conversation tab of your PR, you'll see a green "All checks have passed".
 
 ![PR screen with tests passed](./images/1-6-pr-screen-with-tests-passed.png)
 
@@ -359,11 +358,11 @@ Next we're going to go ahead and deploy our application to production. Yes, even
 
 First let's see how a production build works locally. Run `yarn build`. The files are written to a `build` folder in your project. Open it and see static assets including HTML, JS, and CSS files. Due to the way the file paths work, you can't just open the HTML file in the browser, but they'll work when deployed to a server.
 
-There are many ways to deploy frontend apps. One easy one is services like Netlify that are set up to run your frontend build process for you. Netlify has a free Starter plan for individual users.
+There are many ways to deploy frontend apps. One easy way is a service like Netlify that is set up to run your frontend build process for you. Netlify has a free Starter plan for individual users. You don't need to provide a credit card, but just keep an eye out for emails about approaching your monthly limit of build minutes: if you go over the limit you'll need to pay for more minutes or your sites will be shut down.
 
 Create a Netlify account from [Netlify's Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
-Once you're signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it. Leave "Branch to deploy" as `master`. Under "Basic build settings", you should see "Build command" pre-populated to `yarn build`, and `build/` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
+Once you're signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it. Leave "Branch to deploy" as `master`. Under "Basic build settings", you should see "Build command" pre-populated with `yarn build`, and `build/` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
 
 ![Configuring Netlify build settings](./images/1-8-build-settings.png)
 
@@ -373,7 +372,7 @@ You will be sent to the Overview page for your new site. In yellow you'll see "S
 
 ![Netlify deploy in progress](./images/1-9-deploy-in-progress.png)
 
-Click that text and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: master@HEAD Building":
+Click "Site deploy in progress" and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: master@HEAD Building":
 
 ![Netlify list of deployments](./images/1-10-deploy-list.png)
 
@@ -381,15 +380,15 @@ Click "Production: master@HEAD Building". You'll see a console log of output as 
 
 ![Netlify site is live](./images/1-11-site-is-live.png)
 
-(Your timestamps will be different depending on how unreasonably early you wake up.)
+(Your timestamps will be different depending on how unreasonably early you wake up in the morning.)
 
 Click "< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you'll see the name of your site, with an automatically-assigned set of nonsense words and characters:
 
 ![Netlify site automatically assigned name](./images/1-12-site-name.png)
 
-Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
+Click the green link in your browser. You should get the "Learn React" page.
 
-Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the Overview tab, then "Site settings" button. Under General > Site details > Site information, click "Change site name".
+Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
 
 ![Change Site Name button](./images/1-13-change-site-name-button.png)
 
@@ -410,7 +409,7 @@ With this, we can drag "Set Up Automatic Deployment" to "Done" in Trello.
 ## Filling In the Readme
 Our final setup task before we begin developing features is "Fill In Readme". Drag it to "In Progress" in Trello.
 
-Writing down helpful information to help future developers (including yourself) work on the app is important. Open `README.md` and see what Create React App created for us by default. It's a fairly minimal readme that lists the NPM scripts available, as well as links to learn more about Create React App. If these commands weren't in here, I would recommend that we add them: how to run, build, and test.
+It's important to write down useful information to help future developers (including yourself) work on the app. Open `README.md` and see what Create React App created for us by default. It's a straightforward readme that lists the NPM scripts available, as well as links to learn more about Create React App. If these commands weren't in here, I would recommend that we add them: how to run, build, and test.
 
 Let's add a description of the project and link to production, filling in your Netlify domain:
 
@@ -419,7 +418,7 @@ Let's add a description of the project and link to production, filling in your N
 +
 +An app for tracking reviews of dishes at different restaurants.
 +
-+Production: https://your-netlify-domain.netlify.com/
++Production: <https://your-netlify-domain.netlify.com>
 +
  This project was bootstrapped with
  [Create React App](https://github.com/facebook/create-react-app).
