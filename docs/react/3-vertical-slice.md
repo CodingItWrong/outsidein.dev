@@ -36,7 +36,12 @@ Make the following changes to `src/index.js`:
  import App from './App';
 -import * as serviceWorker from './serviceWorker';
 
- ReactDOM.render(<App />, document.getElementById('root'));
+ ReactDOM.render(
+   <React.StrictMode>
+     <App />
+   </React.StrictMode>,
+   document.getElementById('root')
+ );
 -
 -// If you want your app to work offline and load faster, you can change
 -// unregister() to register() below. Note this comes with some pitfalls.
@@ -88,12 +93,12 @@ Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, f
   {
     "id": 1,
     "name": "Pasta Place",
-    "created_at": "2020-02-27 07:43:58"
+    "created_at": "2020-03-30T23:54:52.000Z"
   },
   {
     "id": 2,
     "name": "Salad Place",
-    "created_at": "2020-02-27 07:43:58"
+    "created_at": "2020-03-30T23:54:52.000Z"
   }
 ]
 ```
@@ -118,8 +123,7 @@ describe('Listing Restaurants', () => {
 
     cy.route({
       method: 'GET',
-      url:
-        'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
+      url: 'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
       response: [
         {id: 1, name: sushiPlace},
         {id: 2, name: pizzaPlace},
@@ -195,7 +199,7 @@ const RestaurantScreen = () => (
 export default RestaurantScreen;
 ```
 
-If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren't any closer to passing the text. What do we do next?
+If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren't any closer to passing the test. What do we do next?
 
 Well, what do we want to do on this screen? For this story, we want to display a restaurant list. But we also have an upcoming story where we want to add new restaurants. Those are two different responsibilities we want this screen to have. So let's create child components for each. For now, we'll just create the restaurant list.
 
@@ -225,16 +229,20 @@ export const RestaurantList = () => <div>RestaurantList</div>;
 export default RestaurantList;
 ```
 
-We do both a named and default export, because later our default export will be the `RestaurantList` connected to Redux, but we will also want the unconnected component for testing.
+This time, in addition to the default export, we also do a named export of the component. This is because later our default export will be the `RestaurantList` connected to Redux, but we will also want access to the unconnected component for testing.
 
 ## Stepping Down to a Unit Test
 
-Now we finally have `RestaurantList` where we'll put our UI for this story. So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. But `RestaurantList` will do more. It needs to:
+Now we finally have `RestaurantList` where we'll put our UI for this story.
+
+So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. This wasn't any significant application *logic*: it was just code *structure*. Because of this, there would have been no real benefit to stepping down to a unit test: unit tests are for driving out *logic*. This is why we wrote this structural code directly under the guidance of the E2E test.
+
+But with `RestaurantList`, we finally have some application *logic* to write. It needs to:
 
 - Request for the restaurants to be loaded
 - Display the restaurants once they're returned
 
-Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
+Instead of adding this logic directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
 
 Before we step down to a unit test, though, let's commit the changes we have. They're a nice, small unit of work: we've added the structure of components that we'll add the behavior to next.
 
@@ -253,7 +261,7 @@ describe('RestaurantList', () => {
 });
 ```
 
-Because we are writing a unit test, we don't want to connect our component to our real Redux store. Instead, we want to create mock functions that are passed in the way Redux dispatch functions will be; then we can run expectations on those mock functions. Our component will ask our store to load the restaurants, so that means we need a `loadRestaurants` function:
+Because we are writing a unit test, we don't want to connect our component to our real Redux store. Instead, we want to create mock functions that are passed in the way Redux dispatch functions will be; then we can run expectations on those mock functions. Our component will ask our store to load the restaurants, so that means we need a `loadRestaurants` function to pass in:
 
 ```diff
  it('loads restaurants on first render', () => {
@@ -279,7 +287,7 @@ Now, we're ready to render our component:
  });
 ```
 
-We import the `RestaurantList` component, making sure to use the named import because that will continue to be the unconnected component. Then we use React Testing Library's `render()` function to render it. We pass the `loadRestaurants` function as a prop.
+We import the `RestaurantList` component, making sure to use the named import because that will continue to be the unconnected component. Then we use React Testing Library's `render()` function to render it. We pass in JSX just like we'd use in production code, and we pass the `loadRestaurants` function as a component prop.
 
 Finally, we're ready to run an expectation to confirm that the component loads restaurants on first render. We just check that our mock function was called:
 
@@ -293,7 +301,7 @@ Finally, we're ready to run an expectation to confirm that the component loads r
  });
 ```
 
-Now we're ready to run our unit test. Run `yarn test` and leave it running for the remainder of this section. Jest will run our unit test, and we'll get the following error:
+Now we're ready to run our unit test. Run `yarn test` and leave it running for the remainder of this chapter. Jest will run our unit test, and we'll get the following error:
 
 ```sh
  FAIL  src/components/__tests__/RestaurantList.spec.js
@@ -388,7 +396,7 @@ Now, instead of running an expectation that `loadRestaurants` was called, we use
 
 `queryByText` finds an element containing the passed-in text. We pass in the name of each of the two restaurants. If found, `queryByText` returns a reference to the element; if not found, it returns `null`. So, to confirm they are found, we check that return result is *not* null.
 
-Why did we split this unit test out from the first one? There is a common unit testing principle to **check one behavior per test in component tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
+Why did we split this unit test out from the first one? There is a common testing principle to **check one behavior per test in unit tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
 
 You may recall that this isn't what we did in the end-to-end test, though. Generally you should **check _multiple_ behaviors per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
 
@@ -462,7 +470,7 @@ Save and now both tests are passing. We've now successfully defined both behavio
 
 Go ahead and commit your changes again. From here on out, we won't remind you to make small commits as we go, but I'd encourage you to do so.
 
-In the TDD cycle, **whenever the tests go green, look for opportunities to refactor.** There's a lot of duplication in our two tests. Now that we see which parts are shared, let's extract that duplication. First, let's set up some shared data:
+In the TDD cycle, **whenever the tests go green, look for opportunities to refactor,** both in production code and test code. Our production code is pretty simple already, but there's a lot of duplication in our two tests. Now that we see which parts are shared, let's extract that duplication. First, let's set up some shared data:
 
 ```diff
  describe('RestaurantList', () => {
@@ -524,7 +532,7 @@ Now we can remove the duplicated code from the individual tests:
  });
 ```
 
-Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
+Save the file and our tests should still pass. With this, our test blocks are much shorter: almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
 ## Stepping Back Up
 
@@ -563,18 +571,19 @@ Next, connect the `RestaurantList` component to the appropriate state. This is w
 ```
 
 ::: tip
-Note that we are using the React-Redux `connect()` function rather than the newer hooks-based API. Redux maintainer Mark Erikson writes about the [tradeoffs between the two React-Redux APIs](https://blog.isquaredsoftware.com/2019/07/blogged-answers-thoughts-on-hooks/), and there is not a strong recommendation to use one or the other. Because our testing approach involves passing props to a component that is unaware of Redux, the `connect()` function is a more natural fit. We could accomplish the same by creating a "connected" component that uses React-Redux hooks and passes the props down to the unconnected component, but there are few benefits to that approach over using `connect()`.
+Note that we are using the React-Redux `connect()` function rather than the newer hooks-based API. Redux maintainer Mark Erikson writes about the [tradeoffs between the two React-Redux APIs](https://blog.isquaredsoftware.com/2019/07/blogged-answers-thoughts-on-hooks/), and there is not a strong recommendation to use one or the other. Because our component testing approach involves passing props to a component that is unaware of Redux, the `connect()` function is a more natural fit. We could accomplish the same by creating a "connected" component that uses React-Redux hooks and passes the props down to the unconnected component, but there are few benefits to that approach over using `connect()`.
 :::
 
 If you've used Redux before you know we have more setup steps to do. But let's rerun the E2E test to let it drive us to do so. The error we get is:
 
 ```sh
-Uncaught Uncaught Error: Could not find "store" in the context of "Connect(RestaurantList)". Either wrap the root component in a <Provider>, or pass a custom React context provider to <Provider> and the corresponding React context consumer to Connect(RestaurantList) in connect options.
+Uncaught Uncaught Error: Could not find "store" in the context of
+"Connect(RestaurantList)".
 ```
 
 ![Cypress error that there is no provided store](./images/2-3-redux-not-hooked-up.png)
 
-This error is because we haven't hooked up our application to a Redux store. Let's do that now:
+This error is because we haven't hooked up our application to a Redux store. Let's do that now, in `App.js`:
 
 ```diff
  import React from 'react';
@@ -598,10 +607,7 @@ import {createStore} from 'redux';
 import {devToolsEnhancer} from 'redux-devtools-extension';
 import rootReducer from './reducers';
 
-const store = createStore(
-  rootReducer,
-  devToolsEnhancer(),
-);
+const store = createStore(rootReducer, devToolsEnhancer());
 
 export default store;
 ```
@@ -615,7 +621,7 @@ import restaurants from './restaurants/reducers';
 export default combineReducers({restaurants});
 ```
 
-Right now it's a bit unnecessary that we're combining a _single_ reducer into a larger one, but this sets our app up for other reducers for the future.
+Right now it's a bit unnecessary that we're combining a _single_ reducer into a larger one, but this sets our app up easily add additional reducers in the future.
 
 Now we need to create that restaurant reducer. Create a `src/store/restaurants` folder, then a `reducers.js` file inside it. Add the following contents:
 
@@ -648,7 +654,8 @@ $ yarn add redux-thunk
 Hook it up in `src/store/index.js`:
 
 ```diff
- import {createStore} from 'redux';
+-import {createStore} from 'redux';
++import {createStore, applyMiddleware, compose} from 'redux';
 +import thunk from 'redux-thunk';
  import {devToolsEnhancer} from 'redux-devtools-extension';
  import rootReducer from './reducers';
@@ -798,22 +805,24 @@ Now that our store is set, we can dispatch the `loadRestaurants` action, then ch
 The test fails, showing an empty array as the received value:
 
 ```sh
-expect(received).toEqual(expected) // deep equality
+● restaurants › loadRestaurants action › stores the restaurants
 
-- Expected
-+ Received
+  expect(received).toEqual(expected) // deep equality
 
-- Array [
--   Object {
--     "id": 1,
--     "name": "Sushi Place",
--   },
--   Object {
--     "id": 2,
--     "name": "Pizza Place",
--   },
-- ]
-+ Array []
+  - Expected
+  + Received
+
+  - Array [
+  -   Object {
+  -     "id": 1,
+  -     "name": "Sushi Place",
+  -   },
+  -   Object {
+  -     "id": 2,
+  -     "name": "Pizza Place",
+  -   },
+  - ]
+  + Array []
 ```
 
 Now we're ready to implement our `loadRestaurants` thunk to retrieve the records from the `api` and dispatch an action to store them.
@@ -826,7 +835,7 @@ First, update the `loadRestaurants` function in `actions.js`:
 +
 +export const loadRestaurants = () => (dispatch, getState, api) => {
 +  api.loadRestaurants().then(records => {
-+    dispatch(storeRestaurants(records))
++    dispatch(storeRestaurants(records));
 +  });
 +};
 +
@@ -836,7 +845,7 @@ First, update the `loadRestaurants` function in `actions.js`:
 +});
 ```
 
-We define a new `STORE_RESTAURANTS` action name. Then, in the function `loadRestaurants()` returns, we call `.loadRestaurants()` on the passed-in `api` that we configured when we set up the store. When it resolves, we dispatch a new `storeRestaurants()` action, passing it the records. We define a `storeRestaurants` action creator to create the correct action object.
+We define a new `STORE_RESTAURANTS` action type. Then, in the function `loadRestaurants()` returns, we call `.loadRestaurants()` on the passed-in `api` that we configured when we set up the store. When it resolves, we dispatch a new `storeRestaurants()` action, passing it the records. We define a `storeRestaurants` action creator to create the correct action object.
 
 Save the file and the test failure is the same, because our reducer doesn't store the restaurants. Update the `records` reducer:
 
@@ -861,7 +870,7 @@ Save the file and the test failure is the same, because our reducer doesn't stor
 
 With this, our test passes.
 
-Now that our test is passing and our code is complete, we can see the benefits that come from testing the store from the outside. Our test interacts with the store the way the rest of our application does: by dispatching async actions and then observing state changes. Just like the rest of our application, our test doesn't know or care about the `STORE_RESTAURANTS` action; it treats it as an implementation detail. This gives us greater flexibility to refactor our store; for example, we could change the way the actions that `loadRestaurants` dispatches are set up. Our tests would continue to pass as long as the action name and state stayed the same, which is fittingly exactly the contract that the rest of our application requires as well.
+Now that our test is passing and our code is complete, we can see the benefits that come from testing the store from the outside. Our test interacts with the store the way the rest of our application does: by dispatching async actions and then observing state changes. Just like the rest of our application, our test doesn't know or care about the `STORE_RESTAURANTS` action type; it treats it as an implementation detail. This gives us greater flexibility to refactor our store; for example, we could change the way the actions that `loadRestaurants` dispatches are set up. Our tests would continue to pass as long as the action type and state stayed the same, which is fittingly exactly the contract that the rest of our application relies on as well.
 
 Another benefit of testing the store from the outside is ensuring that all the pieces work together. If we were testing the `loadRestaurants` async action, `storeRestaurants` action creator, and reducer separately from one another, they might work individually, but not work together. For example, maybe the names of properties in the action object returned by `storeRestaurants` aren't the same names as the properties the reducer looks for in a `STORE_RESTAURANTS` action. Our test exercises the async action, action creator, and reducer in integration, ensuring that if they aren't working together, a unit test will fail. If we weren't testing this way, only an E2E test would catch this problem—and then only if the problem is in one of the main flows that our E2E test covers, not our edge cases.
 
@@ -909,14 +918,14 @@ export default api;
 
 In the `baseURL`, replace `YOUR-API-KEY` with the API key you created earlier.
 
-First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
+First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the API's URL, along with your personal API key. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
 
-Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** The principle applies equally well to using any kind of test doubles for code you don't own. There are a few reasons for this:
+Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** The principle applies equally well to using any kind of test doubles for code you don't own, not just mocks. There are a few reasons for this:
 
 - If you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test.
 - Some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
 
-So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
+So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be very simple, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
 With all that said, we're ready to wire up our API to our store to see if it all works. Update `src/store/index.js`:
 
@@ -943,7 +952,35 @@ You should see the default "Pasta Place" and "Salad Place" records loaded from t
 
 We successfully implemented our first feature with outside-in test-driven development!
 
-If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our next task to "Done" in Trello: "List Restaurants".
+## Pull Request Workflow
+Our feature is working locally, but we need to get it integrated with the rest of our codebase. We'll do this with a pull request.
+
+If you have any uncommitted changes, commit them to git.
+
+Next, push up your branch to the origin:
+
+```
+$ git push -u origin HEAD
+```
+
+Click the link that GitHub provides to open a pull request. Title the pull request "List restaurants". You can leave the description field blank for this exercise; in a real team context you would describe the change you made, how to manually test it, and other important information about decisions or tradeoffs you made.
+
+In a team context, your team members would review the pull request. They can click on lines of code to add comments. When reviewing a pull request, don't just point out things you want changed. Ask questions to better understand the author's intent. Encourage them about decisions they made that you like or have learned from. Make proposals for changes that you don't feel strongly about, so the author can choose which way to go. All of these create a code review culture that feels encouraging and motivating.
+
+When you open the pull request, you can see CI running at the bottom. If it fails, click "Details" and check the output to see what went wrong. Try running the tests locally to see if you get the same problem, then fix it and push up the fixes.
+
+When CI succeeds, merge the pull request.
+
+Now Netlify should automatically be deploying the updated version of our site. Go to <https://app.netlify.com> and check the build progress. When it completes, go to your site and see it successfully listing restaurants. It's exciting to see it live! Some real production systems do deploy on every merge; the test coverage that TDD provides can make this safe. Others will not deploy as often, but an agile team is ready to deploy as often as the business wants, to get feedback on their work as quickly as possible.
+
+Now we can drag our story to "Done" in Trello: "List Restaurants".
+
+Then, locally, switch back to the `master` branch and pull in the the changes that have been merged in from the branch:
+
+```sh
+$ git checkout master
+$ git pull
+```
 
 ## What's Next
 
