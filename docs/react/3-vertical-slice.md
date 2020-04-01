@@ -745,7 +745,7 @@ Instead, we'll delegate to an API object that we pass in. Let's design the inter
  });
 ```
 
-Giving the `api` object a descriptive `loadRestaurants()` methods seems good. We are stubbing out the API here in the test, so we'll just implement that method to return a Promise that resolves to our hard-coded records.
+Giving the `api` object a descriptive `loadRestaurants()` method seems good. We are stubbing out the API here in the test, so we just implement that method to return a Promise that resolves to our hard-coded records.
 
 Now, to set up our Redux store. We'll use a real Redux store to run our tests through. That way we are testing our thunks, action creators, and reducers in integration. MORE ON THIS
 

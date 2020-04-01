@@ -70,12 +70,12 @@ Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, f
   {
     "id": 1,
     "name": "Pasta Place",
-    "created_at": "2020-02-27 07:43:58"
+    "created_at": "2020-03-30T23:54:52.000Z"
   },
   {
     "id": 2,
     "name": "Salad Place",
-    "created_at": "2020-02-27 07:43:58"
+    "created_at": "2020-03-30T23:54:52.000Z"
   }
 ]
 ```
@@ -100,8 +100,7 @@ describe('Listing Restaurants', () => {
 
     cy.route({
       method: 'GET',
-      url:
-        'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
+      url: 'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
       response: [
         {id: 1, name: sushiPlace},
         {id: 2, name: pizzaPlace},
@@ -145,7 +144,7 @@ It's time for us to write the code to make this pass. Let's think about how we w
 - A Vuex module that stores our data and lets us interact with it.
 - An API client that allows us to make requests to the backend.
 
-With outside-in testing, we build the outside first, which in this case is our user interface components. And a common principle is to **write the code you wish you had.** What does that mean in our case? Well, when we created our app, we were given an `<App />` component. Do we want to put our user interface directly in there? No, it's best to save the `<App />` component for app-wide concerns such as a title bar that we'll add soon. Instead, it would be great if we had a `<RestaurantScreen />` component that would contain everything specific to our restaurants. We wish we had it, so let's add it to `App.js`:
+With outside-in testing, we build the outside first, which in this case is our user interface components. And a common principle is to **write the code you wish you had.** What does that mean in our case? Well, when we created our app, we were given an `<App />` component. Do we want to put our user interface directly in there? No, it's best to save the `<App />` component for app-wide concerns such as a title bar that we'll add soon. Instead, it would be great if we had a `<RestaurantScreen />` component that would contain everything specific to our restaurants. We wish we had it, so let's add it to `App.vue`:
 
 ```diff
  <template>
@@ -183,7 +182,7 @@ export default {
 </script>
 ```
 
-If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren't any closer to passing the text. What do we do next?
+If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren't any closer to passing the test. What do we do next?
 
 Well, what do we want to do on this screen? For this story, we want to display a restaurant list. But we also have an upcoming story where we want to add new restaurants. Those are two different responsibilities we want this screen to have. So let's create child components for each. For now, we'll just create the restaurant list.
 
@@ -223,12 +222,16 @@ Then render that component in `RestaurantScreen`:
 
 ## Stepping Down to a Unit Test
 
-Now we finally have `RestaurantList` where we'll put our UI for this story. So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. But `RestaurantList` will do more. It needs to:
+Now we finally have `RestaurantList` where we'll put our UI for this story.
+
+So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. This wasn't any significant application *logic*: it was just code *structure*. Because of this, there would have been no real benefit to stepping down to a unit test: unit tests are for driving out *logic*. This is why we wrote this structural code directly under the guidance of the E2E test.
+
+But with `RestaurantList`, we finally have some application *logic* to write. It needs to:
 
 - Request for the restaurants to be loaded
 - Display the restaurants once they're returned
 
-Instead of adding the behavior directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
+Instead of adding this logic directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. End-to-end testing every edge case would be slow, and make it harder to tell what exactly was being tested.
 
 Before we step down to a unit test, though, let's commit the changes we have. They're a nice, small unit of work: we've added the structure of components that we'll add the behavior to next.
 
@@ -332,7 +335,7 @@ Finally, we're ready to run an expectation to confirm that the component loads r
  });
 ```
 
-Now we're ready to run our unit test. Run `yarn test:unit --watch`. The `--watch` flag means the test runner stays open, watching for changes to our files to rerun the tests. Leave it running for the remainder of this section. Jest will run our unit test, and we'll get the following error:
+Now we're ready to run our unit test. Run `yarn test:unit --watch`. The `--watch` flag means the test runner stays open, watching for changes to our files to rerun the tests. Leave it running for the remainder of this chapter. Jest will run our unit test, and we'll get the following error:
 
 ```sh
  FAIL  tests/unit/components/RestaurantList.spec.js
@@ -443,12 +446,12 @@ Now, instead of running an expectation that `load` was called, we use the `wrapp
 
 This is little verbose, so let's see what's going on:
 
-- We call `wrapper.findAll()` to find all the elements matching a CSS selector. The selector we use is `[data-testid='restaurant']`. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a Test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
+- We call `wrapper.findAll()` to find all the elements matching a CSS selector. The selector we use is `[data-testid="restaurant"]`. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
 - There should be two different restaurants displayed, so we get the element of the first one (index zero) by calling `.at(0)`.
 - We call `.text()` to get the text contents of the element, and assign it to the variable `firstRestaurantName`.
 - We check that the value of `firstRestaurantName` is "Sushi Place".
 
-Why did we split this unit test out from the first one? There is a common unit testing principle to **check one behavior per test in component tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
+Why did we split this unit test out from the first one? There is a common testing principle to **check one behavior per test in unit tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
 
 You may recall that this isn't what we did in the end-to-end test, though. Generally you should **check _multiple_ behaviors per test in end-to-end tests.** Why? End-to-end tests are slower, so the overhead of the repeating the steps would significantly slow down our suite as it grows.
 
@@ -464,15 +467,16 @@ When we save the file, our test runs, and it's red, as we expect. We get the fol
 
     [vue-test-utils]: no item exists at 0
 
-      61 |     const firstRestaurantName = wrapper
-      62 |       .findAll('[data-testid="restaurant"]')
-    > 63 |       .at(0)
+      48 |     const firstRestaurantName = wrapper
+      49 |       .findAll('[data-testid="restaurant"]')
+    > 50 |       .at(0)
          |        ^
-      64 |       .text();
-      65 |     expect(firstRestaurantName).toBe('Sushi Place');
+      51 |       .text();
+      52 |     expect(firstRestaurantName).toBe('Sushi Place');
+      53 |   });
 ```
 
-So no element with `[data-testid='restaurant']` is found. Following the process of fixing the error in the simplest possible way, let's just hard-code an element with that test ID. Since there will be a list of them, let's make it an `li` element inside a `ul`:
+So no element with `[data-testid="restaurant"]` is found. Following the process of fixing the error in the simplest possible way, let's just hard-code an element with that test ID. Since there will be a list of them, let's make it an `li` element inside a `ul`:
 
 ```diff
  <template>
@@ -493,11 +497,12 @@ Our test reruns and we're past that error, on to the next one:
     Expected: "Sushi Place"
     Received: ""
 
-      63 |       .at(0)
-      64 |       .text();
-    > 65 |     expect(firstRestaurantName).toBe('Sushi Place');
+      50 |       .at(0)
+      51 |       .text();
+    > 52 |     expect(firstRestaurantName).toBe('Sushi Place');
          |                                 ^
-      66 |   });
+      53 |   });
+      54 | });
 ```
 
 So we expected the text of the element to be "Sushi Place", but there was no text in it, so we got an empty string instead.
@@ -565,7 +570,7 @@ We've now successfully defined both behaviors of our `RestaurantList`!
 
 Go ahead and commit your changes again. From here on out, we won't remind you to make small commits as we go, but I'd encourage you to do so.
 
-In the TDD cycle, **whenever the tests go green, look for opportunities to refactor.** There's a lot of duplication in our two tests. Now that we see which parts are shared, let's extract that duplication. First, let's set up some shared data:
+In the TDD cycle, **whenever the tests go green, look for opportunities to refactor,** both in production code and test code. Our production code is pretty simple already, but there's a lot of duplication in our two tests. Now that we see which parts are shared, let's extract that duplication. First, let's set up some shared data:
 
 ```diff
  describe('RestaurantList', () => {
@@ -649,7 +654,54 @@ Now we can remove the duplicated code from the individual tests:
  });
 ```
 
-Save the file and our tests should still pass. With this, our tests are much shorter. Almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
+Save the file and our tests should still pass.
+
+Next, look at the following statement from our second test:
+
+```js
+const firstRestaurantName = wrapper
+  .findAll('[data-testid="restaurant"]')
+  .at(0)
+  .text();
+expect(firstRestaurantName).toBe('Sushi Place');
+
+const secondRestaurantName = wrapper
+  .findAll('[data-testid="restaurant"]')
+  .at(1)
+  .text();
+expect(secondRestaurantName).toBe('Pizza Place');
+```
+
+This is both verbose and repetitive. There are a lot of Vue Test Utils details in there to make it hard to see what we are testing at a glance. We just want to say that we get the first or second element with a given test ID. Let's make a helper function at the top of this test file to do that for us:
+
+```js
+const findByTestId = (wrapper, testId, index) =>
+  wrapper.findAll(`[data-testid="${testId}"]`).at(index);
+```
+
+Then we can replace our existing calls:
+
+```diff
+ it('displays the restaurants', () => {
+-  const firstRestaurantName = wrapper
+-    .findAll('[data-testid="restaurant"]')
+-    .at(0)
+-    .text();
+-  expect(firstRestaurantName).toBe('Sushi Place');
+-
+-  const secondRestaurantName = wrapper
+-    .findAll('[data-testid="restaurant"]')
+-    .at(1)
+-    .text();
+-  expect(secondRestaurantName).toBe('Pizza Place');
++  expect(findByTestId(wrapper, 'restaurant', 0).text()).toBe('Sushi Place');
++  expect(findByTestId(wrapper, 'restaurant', 1).text()).toBe('Pizza Place');
+});
+```
+
+Save the file again and the tests still pass.
+
+After this refactoring, our test blocks are much shorter: almost all they contain is the expectations. And the expectations are brief as well. This is good because it keeps our tests focused and very easy to read.
 
 ## Stepping Back Up
 
@@ -719,11 +771,11 @@ const restaurants = {
 export default restaurants;
 ```
 
-Rerun the E2E test. We now no longer get any application code errors; instead, we are back to the failure that the text "Sushi Place" is never shown. But we've made progress. Our component is now dispatching the `restaurants/load` action, and reading the `restaurants` from the store; our action just doesn't exist yet, to load those records from the API. That's logic we need to implement, and that means it's time to step back down to a unit test, this time for our Redux store.
+Rerun the E2E test. We now no longer get any application code errors; instead, we are back to the failure that the text "Sushi Place" is never shown. But we've made progress. Our component is now dispatching the `restaurants/load` action, and reading the `restaurants` from the store; our action just doesn't exist yet, to load those records from the API. That's logic we need to implement, and that means it's time to step back down to a unit test, this time for our Vuex module.
 
 ## Unit Testing the Store
 
-To test our store, we're going to create a real Vuex store, configure it with our store module, then interact with it from the outside. After we write our test, we'll look at the advantages this approach gives us.
+To test our module, we're going to create a real Vuex store, configure it with our store module, then interact with it from the outside. After we write our test, we'll look at the advantages this approach gives us.
 
 Under `tests/unit/`, create a `store` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
 
@@ -778,7 +830,7 @@ Instead, we'll delegate to an API object that we pass in. Let's design the inter
  });
 ```
 
-Giving the `api` object a descriptive `loadRestaurants()` methods seems good. We are stubbing out the API here in the test, so we'll just implement that method to return a Promise that resolves to our hard-coded records.
+Giving the `api` object a descriptive `loadRestaurants()` method seems good. We are stubbing out the API here in the test, so we just implement that method to return a Promise that resolves to our hard-coded records.
 
 Now, to set up our `restaurants` store module. Just like in our component test, we'll use a real `Vuex.Store` instance to test that it all works together. For ease of testing, we can change our `restaurants.js` file to export a function that takes in the `api`, and returns the store module object. Make the following changes in `restaurants.js`:
 
@@ -967,20 +1019,20 @@ export default api;
 
 In the `baseURL`, replace `YOUR-API-KEY` with the API key you created earlier.
 
-First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the default `localhost` URL that our server will run on. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
+First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the API's URL, along with your personal API key. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
 
-Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** The principle applies equally well to using any kind of test doubles for code you don't own. There are a few reasons for this:
+Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** The principle applies equally well to using any kind of test doubles for code you don't own, not just mocks. There are a few reasons for this:
 
 - If you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test.
 - Some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
 
-So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be as simple as possible, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
+So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be very simple, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
 With all that said, we're ready to wire up our store module and API to see if it all works. Update `src/store/index.js`:
 
 ```diff
  import restaurants from './restaurants';
-+import api from '../api';
++import api from '@/api';
 
  Vue.use(Vuex);
 
@@ -1012,22 +1064,43 @@ $ vue-cli-service serve
 
   App running at:
   - Local:   http://localhost:8081/
-  - Network: http://10.0.1.8:8081/
-
-  Note that the development build is not optimized.
-  To create a production build, run yarn build.
 ```
 
-(Your port number may be different if you started the app before the Cypress tests, or if they are not running.)
-
-Now open the URL of your Vue app.
-You should see the default "Pasta Place" and "Salad Place" records.
+You should see the default "Pasta Place" and "Salad Place" records loaded from the API.
 
 ![App with real API](./images/2-5-app-with-real-api.png)
 
 We successfully implemented our first feature with outside-in test-driven development!
 
-If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "List Restaurants".
+## Pull Request Workflow
+Our feature is working locally, but we need to get it integrated with the rest of our codebase. We'll do this with a pull request.
+
+If you have any uncommitted changes, commit them to git.
+
+Next, push up your branch to the origin:
+
+```
+$ git push -u origin HEAD
+```
+
+Click the link that GitHub provides to open a pull request. Title the pull request "List restaurants". You can leave the description field blank for this exercise; in a real team context you would describe the change you made, how to manually test it, and other important information about decisions or tradeoffs you made.
+
+In a team context, your team members would review the pull request. They can click on lines of code to add comments. When reviewing a pull request, don't just point out things you want changed. Ask questions to better understand the author's intent. Encourage them about decisions they made that you like or have learned from. Make proposals for changes that you don't feel strongly about, so the author can choose which way to go. All of these create a code review culture that feels encouraging and motivating.
+
+When you open the pull request, you can see CI running at the bottom. If it fails, click "Details" and check the output to see what went wrong. Try running the tests locally to see if you get the same problem, then fix it and push up the fixes.
+
+When CI succeeds, merge the pull request.
+
+Now Netlify should automatically be deploying the updated version of our site. Go to <https://app.netlify.com> and check the build progress. When it completes, go to your site and see it successfully listing restaurants. It's exciting to see it live! Some real production systems do deploy on every merge; the test coverage that TDD provides can make this safe. Others will not deploy as often, but an agile team is ready to deploy as often as the business wants, to get feedback on their work as quickly as possible.
+
+Now we can drag our story to "Done" in Trello: "List Restaurants".
+
+Then, locally, switch back to the `master` branch and pull in the the changes that have been merged in from the branch:
+
+```sh
+$ git checkout master
+$ git pull
+```
 
 ## What's Next
 
