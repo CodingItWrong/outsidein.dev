@@ -16,7 +16,7 @@ Here's the stack of libraries we'll use for our React application:
 
 * **Build Tooling: [Create React App][create-react-app]**
 
-Create React App allows running our application locally and building it for production. For a production application you might want a more flexible build tool, like Parcel or a custom Webpack config. This tutorial doesn't get into build configuration, though, so Create React App will work fine, and should be familiar to many readers.
+Create React App allows running our application locally and building it for production. Depending on your production needs you might or might not want a more flexible build tool, like Parcel or a custom Webpack config. This tutorial doesn't get into build configuration, though, so Create React App will work fine, and should be familiar to many readers.
 
 * **State Management: [Redux][redux]**
 
@@ -32,7 +32,7 @@ Axios provides a nice simple interface for making web service requests. The brow
 
 * **UI Components: [Material-UI][material-ui]**
 
-Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion, you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with Material-UI, a popular React implementation of Google's Material Design.
+Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with Material-UI, a popular React implementation of Google's Material Design.
 
 * **Test Runner: [Jest]**
 
@@ -40,7 +40,7 @@ Jest has become an extremely popular test runner in many JavaScript circles, but
 
 * **Component Tests: [React Testing Library][react-testing-library]**
 
-RTL will help us write component tests. Unlike other component testing libraries, RTL executes `useEffect()` hooks, so we'll be able to test the full functionality of our components. It's also designed around testing the interface instead of the implementation, which will help us write tests that are resistant to change.
+React Testing Library (RTL) will help us write component tests. It's designed around testing the interface instead of the implementation, which will help us write tests that are resistant to change.
 
 * **End-to-End Tests: [Cypress][cypress]**
 

@@ -28,7 +28,7 @@ Axios provides a nice simple interface for making web service requests. The brow
 
 * **UI Components: [Vuetify][vuetify]**
 
-Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion, you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with Vuetify, a popular Vue implementation of Google's Material Design.
+Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with Vuetify, a popular Vue implementation of Google's Material Design.
 
 * **Test Runner: [Jest]**
 
