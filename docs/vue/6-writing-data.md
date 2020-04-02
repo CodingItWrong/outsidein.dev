@@ -197,7 +197,7 @@ describe('NewRestaurantForm', () => {
 
 A few notes:
 
-- We set up the mock restaurant module with just one action, `create` — this is the one we're going to ensure is called.
+- We set up the mock restaurant module with just one action, `create`—this is the one we're going to ensure is called.
 - We pass an extra option to `mount()` that was not needed for our list test: `attachToDocument: true`. This actually loads the component into the DOM. The reason we need this for this test is so the submit button can trigger the form submission.
 - Because we're attaching the component to the document, we need to call `wrapper.destroy()` afterward to remove the elements from the document again.
 
