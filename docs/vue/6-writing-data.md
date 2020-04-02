@@ -265,7 +265,7 @@ The next error we get is a different missing element:
 ● NewRestaurantForm › when filled in › dispatches the create action
 
   [vue-test-utils]: find did not return
-  [data-testid='new-restaurant-submit-button'], cannot call trigger() on empty
+  [data-testid="new-restaurant-submit-button"], cannot call trigger() on empty
   Wrapper
 ```
 
