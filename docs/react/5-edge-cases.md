@@ -561,7 +561,13 @@ We decide we want to indicate the error state with a flag named `loadError`, so 
 We check for a new loading error element on the page. Our test fails because the element is not found.
 
 Fix it the simplest way possible by hard-coding the error message to show.
-Material-UI's `lab` package has an `Alert` component that will work well:
+Material-UI's `lab` package has an `Alert` component that will work well. Install the package:
+
+```sh
+$ yarn add @material-ui/lab
+```
+
+Then add the alert:
 
 ```diff
  import CircularProgress from '@material-ui/core/CircularProgress';
