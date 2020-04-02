@@ -34,7 +34,7 @@ Press `a` to run all the tests. They should pass. Keep the unit test process run
 In another terminal, run `yarn start`, and in a third, run `yarn cypress`. Click `listing-restaurants.spec.js` and make sure it passes.
 
 Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
-We're going to use Material-UI, a popular React component library that follows Google's Material design.
+We're going to use Material-UI, a popular React component library that follows Google's Material Design.
 
 Create a new branch for this story:
 
@@ -42,13 +42,11 @@ Create a new branch for this story:
 $ git co -b material-design
 ```
 
-Install Material-UI and a related package:
+Install the core Material-UI package:
 
 ```sh
-$ yarn add @material-ui/core @material-ui/lab
+$ yarn add @material-ui/core
 ```
-
-The `core` package provides most of the components, and the `lab` package provides an error alert component we'll use.
 
 Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
 
@@ -58,14 +56,14 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 ```diff
  import React from 'react';
  import {Provider} from 'react-redux';
++import {createMuiTheme} from '@material-ui/core/styles';
++import green from '@material-ui/core/colors/green';
 +import {ThemeProvider} from '@material-ui/styles';
 +import CssBaseline from '@material-ui/core/CssBaseline';
-+import {createMuiTheme} from '@material-ui/core/styles';
 +import AppBar from '@material-ui/core/AppBar';
 +import Toolbar from '@material-ui/core/Toolbar';
 +import Typography from '@material-ui/core/Typography';
 +import Container from '@material-ui/core/Container';
-+import green from '@material-ui/core/colors/green';
  import store from './store';
  import RestaurantScreen from './components/RestaurantScreen';
 
@@ -76,32 +74,29 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 +});
 +
  const App = () => (
--  <div>
-+  <ThemeProvider theme={theme}>
-+    <CssBaseline />
-+    <AppBar position="static">
-+      <Toolbar>
-+        <Typography variant="h6">Opinion Ate</Typography>
-+      </Toolbar>
-+    </AppBar>
-     <Provider store={store}>
--      <RestaurantScreen />
+   <Provider store={store}>
++    <ThemeProvider theme={theme}>
++      <CssBaseline />
++      <AppBar position="static">
++        <Toolbar>
++          <Typography variant="h6">Opinion Ate</Typography>
++        </Toolbar>
++      </AppBar>
 +      <Container>
-+        <RestaurantScreen />
+         <RestaurantScreen />
 +      </Container>
-     </Provider>
--  </div>
-+  </ThemeProvider>
++    </ThemeProvider>
+  </Provider>
  );
 ```
 
-Rerun the E2E test. They still pass, and notice we now have a nice teal toolbar, and there's some padding on the left and right on the content area.
+Rerun the E2E test. They still pass, and notice we now have a nice green toolbar, and there's some padding on the left and right on the content area.
 
 ![App styled with Material-UI](./images/3-1-app-styles.png)
 
 Here's what these Material-UI components do to achieve this look:
 
-- `createMuiTheme()` allows us to configure a theme, including setting the `primary` color of our app to green.
+- `createMuiTheme()` allows us to configure a theme, including setting the `primary` color of our app to `green`.
 - `ThemeProvider` is the root Material-UI component that lets it set up some things that affect your whole app, including taking the `theme`.
 - `CssBaseline` applies default page-wide CSS styles.
 - `AppBar` and `Toolbar` together provide the top title bar.
@@ -120,12 +115,11 @@ Next let's style `RestaurantScreen`. A common UI element in Material Design is a
  const RestaurantScreen = () => (
 -  <div>
 -    <h1>Restaurants</h1>
--    <RestaurantList />
--  </div>
 +  <Card>
 +    <CardContent>
 +      <Typography variant="h5">Restaurants</Typography>
-+      <RestaurantList />
+       <RestaurantList />
+-  </div>
 +    </CardContent>
 +  </Card>
  );
@@ -137,9 +131,9 @@ Reload the E2E test and notice there's a box around the content now.
 
 Here's what the components do:
 
-- `Card` is the wrapper for the card and provides the outline
-- `CardContent` provides appropriate padding around the content area of a card
-- `Typography`  lets us style text; in this case, the correct style for a card title is `h5`
+- `Card` is the wrapper for the card and provides the outline.
+- `CardContent` provides appropriate padding around the content area of a card.
+- We saw `Typography` earlier for styling text. In this case, the correct variant for a card title is `h5`.
 
 Finally, let's style the list of the restaurants. Material Design has a list concept that will look nice:
 

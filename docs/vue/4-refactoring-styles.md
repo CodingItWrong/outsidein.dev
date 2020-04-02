@@ -34,7 +34,7 @@ Press `a` to run all the tests. They should pass. Keep the unit test process run
 In another terminal, run `yarn test:e2e`. Click `listing-restaurants.spec.js` and make sure it passes.
 
 Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
-We're going to use Vuetify, a popular Vue component library that follows Google's Material design.
+We're going to use Vuetify, a popular Vue component library that follows Google's Material Design.
 
 Create a new branch for this story:
 
@@ -50,7 +50,9 @@ $ vue add vuetify
 
 You'll be prompted to choose a preset: choose `Default (recommended)`.
 
-When the installation finishes, Vuetify is set and ready to go. But if you stop and restart `yarn test:e2e` or your app, you'll notice you see something different: a "Welcome to Vuetify" screen.
+When the installation finishes, Vuetify is set and ready to go. Don't commit any changes to git yet, though.
+
+If you stop and restart `yarn test:e2e` or your app, you'll notice you see something different: a "Welcome to Vuetify" screen.
 
 ![Welcome to Vuetify screen](./images/3-1-welcome-to-vuetify.png)
 
@@ -198,7 +200,7 @@ the component correctly? For recursive components, make sure to provide the
       ---> <RestaurantList>
 ```
 
-The Vuetify installer configured Vue to use Vuetify, but we need to do the same in our unit test, similar to how we do with Vuex. But instead of using the `localVue` instance in this case, we need to configure Vuetify on the root Vue instance:
+The Vuetify installer configured our app to use Vuetify, but we need to do the same in our unit test, similar to how we do with Vuex. But instead of using the `localVue` instance in this case, we need to configure Vuetify on the root Vue instance:
 
 ```diff
 +import Vue from 'vue';
