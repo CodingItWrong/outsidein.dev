@@ -16,7 +16,7 @@ Create a new branch for this story:
 $ git co -b edge-cases
 ```
 
-You could theoretically write an E2E test for this functionality, confirming the loading indicator and error message appear at the appropriate times. But if you write too many E2E tests, your application's test suite will get slow. Over time, you'll run it less and less frequently locally, and it will slow down your ability to merge PRs on CI.
+You could theoretically write an E2E test for this functionality, confirming the loading indicator and error message appear at the appropriate times. But if you write too many E2E tests, your application's test suite will get slow. Over time, you'll run it less and less frequently locally, and slow CI runs will slow down your ability to merge PRs.
 
 To prevent this from happening, the Test Pyramid is a concept that recommends writing fewer end-to-end tests and more unit tests. In the case of outside-in TDD, the way this works is you write E2E tests for the main features of your application, as well as the unit tests to help implement them. Then, for more detailed or edge-case functionality, you only write the unit tests. In our case, the loading indicator and error message can be considered more detailed functionality. So we are still going to TDD it, but only at the unit level.
 
@@ -153,7 +153,7 @@ The test passes.
 
 This isn't good, though, right? We don't want the loading indicator to *always* show! Shouldn't we go ahead and put a conditional on it?
 
-No, and here's why: if we add the conditional now, *it's not tested*. Because our tests pass whether or not there is a conditional in place. It's good that we want the conditional. But we also need to implement the tests that will confirm the conditional is working correctly. So after we make the tests pass in the easiest way possible, and we find there is more functionality we need, we should think: what test would confirm the conditional is working properly?
+No, and here's why: if we add the conditional now, *the conditional is not tested*. This is because our tests pass whether or not there is a conditional in place. It's good that we want the conditional, but we also need to implement the tests that will confirm the conditional is working correctly. So after we make the tests pass in the easiest way possible, and we find there is more functionality we need, we should think: what test would drive us to make the conditional work properly?
 
 In our case, we *also* need a test to confirm that the conditional is *not* shown when *not* loading. Let's add that now:
 
@@ -219,15 +219,15 @@ Now our two "when loading succeeds" tests have the same call to `renderWithProps
 +    renderWithProps();
 +  });
 +
- it('does not display the loading indicator while not loading', () => {
--  renderWithProps();
-   const {queryByTestId} = context;
-   expect(queryByTestId('loading-indicator')).toBeNull();
- });
+   it('does not display the loading indicator while not loading', () => {
+-    renderWithProps();
+     const {queryByTestId} = context;
+     expect(queryByTestId('loading-indicator')).toBeNull();
+   });
 
- it('displays the restaurants', () => {
--  renderWithProps();
-   const {queryByText} = context;
+   it('displays the restaurants', () => {
+-    renderWithProps();
+     const {queryByText} = context;
 ```
 
 Save and the tests should pass.
@@ -531,16 +531,16 @@ Our unit tests are passing, and all we need to do now is hook up the `loading` s
  });
 ```
 
-With this, our loading functionality should be complete. Run the app with `yarn serve`, then load it in the browser. Our API is set up with a hard-coded one-second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
+With this, our loading functionality should be complete. Run the app with `yarn start`, then load it in the browser. Our API is set up with a hard-coded one-second delay before returning the restaurant list. So you should see the loading spinner for one second before the results appear. Our loading flag is working!
 
 ![Restaurant list with loading spinner](./images/4-1-loading-spinner.png)
 
 Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the data is eventually shown.
 
 ## Error Flag
-The other edge case we want to handle is displaying an error in case the API call fails. This will be implemented using a very similar process to the loading flag. If you like, you can try to go through the process yourself, then compare your approach and this approach afterward. Just remember to always start with a failing test, and write only the minimum code to pass the test!
+The other edge case we want to handle is displaying an error if the API call fails. This will be implemented using a very similar process to the loading flag. If you like, you can try to go through the process yourself, then compare your approach and this approach afterward. Just remember to always start with a failing test, and write only the minimum code to pass the test!
 
-Note that we listed the loading flag and error flag as separate stories. Instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
+Note that instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
 
 Start with the test for the component. We are describing a new situation, when loading fails, so let's put our test in a new `describe` block:
 
@@ -661,21 +661,6 @@ When we run our test, it fails, but we also get a warning:
 ```sh
 (node:53012) UnhandledPromiseRejectionWarning: undefined
 (node:53012) UnhandledPromiseRejectionWarning: Unhandled promise rejection.
-This error originated either by throwing inside of an async function without a
-catch block, or by rejecting a promise which was not handled with .catch(). To
-terminate the node process on unhandled promise rejection, use the CLI flag
-`--unhandled-rejections=strict` (see https://nodejs.org/api
-cli.html#cli_unhandled_rejections_mode). (rejection id: 2)
-(node:53012) [DEP0018] DeprecationWarning: Unhandled promise rejections are
-deprecated. In the future, promise rejections that are not handled will
-terminate the Node.js process with a non-zero exit code.
- FAIL  src/store/__tests__/restaurants.spec.js
-  ● restaurants › loadRestaurants action › when loading fails › sets an error flag
-
-    expect(received).toEqual(expected) // deep equality
-
-    Expected: true
-    Received: undefine
 ```
 
 So in addition to our expectation not passing, Jest is warning that we have an unhandled promise rejection. Since it's a good practice to handle promise rejections in general, let's set up our action to catch a rejected promise. We won't do anything with the catch for now; maybe our tests will drive us to do something in there later.
@@ -948,13 +933,13 @@ With this, our tests pass. Our code has error state functionality added, and now
  });
 ```
 
-We've now finished adding the error state. To see it in action, in `src/api.js`, in the `baseURL` property for the Axios instance, change the API key to an incorrect value. This will result in the server returning a 404 Not Found response code. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
+We've now finished adding the error state. To see it in action, we need to force the API requests in our running app to fail. Let's do that by putting in an incorrect API key. In `src/api.js`, in the `baseURL` property for the Axios instance, change the API key to an incorrect value. This will result in the server returning a 404 Not Found response code. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
 
 ![Loading error message](./images/4-2-error-message.png)
 
 Restore the correct API key value, then reload the page. You should see the loading spinner, then our results.
 
-Run the E2E test one more time to make sure it's still passing — it should be.
+Run the E2E test one more time to make sure it's still passing—it should be.
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "Show Loading and Error States".
 

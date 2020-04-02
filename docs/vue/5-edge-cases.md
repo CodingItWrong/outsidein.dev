@@ -16,7 +16,7 @@ Create a new branch for this story:
 $ git co -b edge-cases
 ```
 
-You could theoretically write an E2E test for this functionality, confirming the loading indicator and error message appear at the appropriate times. But if you write too many E2E tests, your application's test suite will get slow. Over time, you'll run it less and less frequently locally, and it will slow down your ability to merge PRs on CI.
+You could theoretically write an E2E test for this functionality, confirming the loading indicator and error message appear at the appropriate times. But if you write too many E2E tests, your application's test suite will get slow. Over time, you'll run it less and less frequently locally, and slow CI runs will slow down your ability to merge PRs.
 
 To prevent this from happening, the Test Pyramid is a concept that recommends writing fewer end-to-end tests and more unit tests. In the case of outside-in TDD, the way this works is you write E2E tests for the main features of your application, as well as the unit tests to help implement them. Then, for more detailed or edge-case functionality, you only write the unit tests. In our case, the loading indicator and error message can be considered more detailed functionality. So we are still going to TDD it, but only at the unit level.
 
@@ -87,8 +87,7 @@ Next, let's remove the `beforeEach` block and call `mountWithStore` at the start
 
  it('displays the restaurants', () => {
 +  mountWithStore();
-+
-   const firstRestaurantName = wrapper
+   expect(findByTestId(wrapper, 'restaurant', 0).text()).toBe('Sushi Place');
 ```
 
 Save and confirm the tests pass.
@@ -137,7 +136,7 @@ The test passes.
 
 This isn't good, though, right? We don't want the loading indicator to *always* show! Shouldn't we go ahead and put a conditional on it?
 
-No, and here's why: if we add the conditional now, *it's not tested*. Because our tests pass whether or not there is a conditional in place. It's good that we want the conditional. But we also need to implement the tests that will confirm the conditional is working correctly. So after we make the tests pass in the easiest way possible, and we find there is more functionality we need, we should think: what test would confirm the conditional is working properly?
+No, and here's why: if we add the conditional now, *the conditional is not tested*. This is because our tests pass whether or not there is a conditional in place. It's good that we want the conditional, but we also need to implement the tests that will confirm the conditional is working correctly. So after we make the tests pass in the easiest way possible, and we find there is more functionality we need, we should think: what test would drive us to make the conditional work properly?
 
 In our case, we *also* need a test to confirm that the conditional is *not* shown when *not* loading. Let's add that now:
 
@@ -197,19 +196,18 @@ Now our two "when loading succeeds" tests have the same call to `mountWithStore(
 
 ```diff
  describe('when loading succeeds', () => {
--  it('does not display the loading indicator while not loading', () => {
 +  beforeEach(() => {
-     mountWithStore();
++    mountWithStore();
 +  });
 +
-+  it('does not display the loading indicator while not loading', () => {
+   it('does not display the loading indicator while not loading', () => {
+-    mountWithStore();
      expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
    });
 
    it('displays the restaurants', () => {
 -    mountWithStore();
--
-     const firstRestaurantName = wrapper
+     expect(findByTestId(wrapper, 'restaurant', 0).text()).toBe('Sushi Place');
 ```
 
 Save and the tests should pass.
@@ -360,14 +358,22 @@ Now we can simplify our async code. Since the `beforeEach` function only has one
 ```diff
 -beforeEach(async () => {
 +beforeEach(() => {
-  const api = {
-    loadRestaurants: () => Promise.resolve(records),
-  };
+   const api = {
+     loadRestaurants: () => Promise.resolve(records),
+   };
 ...
 -  await store.dispatch('restaurants/load');
 +  return store.dispatch('restaurants/load');
  });
 ```
+
+::: tip
+If you remove the `await` keyword but don't add the `return` keyword, you'll notice that the tests still pass. As of this writing, it seems like Jest is still waiting for the promise to resolve whether we return it or not. Why is that?
+
+It has to do with the way Jest uses promises internally in running tests. This won't work for just any promise, though: for example, if our promise was really hitting an external service, or was set up with a `setTimeout()`, Jest would move on and not wait for the promise to resolve before running the tests.
+
+The fact that Jest works this way is an implementation detail and isn't documented as a behavior you can rely on; it could change at any time without warning. Because of this, it's safer to rely on the [documented behavior](https://jestjs.io/docs/en/setup-teardown#repeating-setup-for-many-tests) that if we want Jest to wait for a promise in a `beforeEach` block to resolve, we should return it. This is one way to make your tests as robust as possible, and avoid them breaking for mysterious reasons in the future.
+:::
 
 And the test no longer has any asynchrony, so we can remove the `async` keyword from the function as well:
 
@@ -398,7 +404,7 @@ Our test fails, as we expect, and now we need to actually clear the loading flag
 Save the file and our test passes.
 
 Is our implementation complete? Well, the `loading` flag starts as `true`.
-Right now we dispatch the `load` action as soon as our app starts, so that's *almost* true. But it makes more sense for the `load` action to actually start the loading.
+Right now we dispatch the `load` action as soon as our app starts, so that's *almost* correct. But it makes more sense for the `load` action to actually start the loading.
 So it would be best if `loading` starts as `false`. We don't just want to make that change, though—we want to specify it! In this case we want to specify the starting state of the store. Add a new `describe` block directly inside the top-level "restaurants" block:
 
 ```js
@@ -453,9 +459,9 @@ With this, our loading functionality should be complete. Run the app with `yarn 
 Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the data is eventually shown.
 
 ## Error Flag
-The other edge case we want to handle is displaying an error in case the API call fails. This will be implemented using a very similar process to the loading flag. If you like, you can try to go through the process yourself, then compare your approach and this approach afterward. Just remember to always start with a failing test, and write only the minimum code to pass the test!
+The other edge case we want to handle is displaying an error if the API call fails. This will be implemented using a very similar process to the loading flag. If you like, you can try to go through the process yourself, then compare your approach and this approach afterward. Just remember to always start with a failing test, and write only the minimum code to pass the test!
 
-Note that we listed the loading flag and error flag as separate stories. Instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
+Note that instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
 
 Start with the test for the component. We are describing a new situation, when loading fails, so let's put our test in a new `describe` block:
 
@@ -563,21 +569,6 @@ When we run our test, it fails, but we also get a warning:
 ```sh
 (node:53012) UnhandledPromiseRejectionWarning: undefined
 (node:53012) UnhandledPromiseRejectionWarning: Unhandled promise rejection.
-This error originated either by throwing inside of an async function without a
-catch block, or by rejecting a promise which was not handled with .catch(). To
-terminate the node process on unhandled promise rejection, use the CLI flag
-`--unhandled-rejections=strict` (see https://nodejs.org/api
-cli.html#cli_unhandled_rejections_mode). (rejection id: 2)
-(node:53012) [DEP0018] DeprecationWarning: Unhandled promise rejections are
-deprecated. In the future, promise rejections that are not handled will
-terminate the Node.js process with a non-zero exit code.
- FAIL  tests/unit/store/restaurants.spec.js
-  ● restaurants › load action › when loading fails › sets an error flag
-
-    expect(received).toEqual(expected) // deep equality
-
-    Expected: true
-    Received: undefine
 ```
 
 So in addition to our expectation not passing, Jest is warning that we have an unhandled promise rejection. Since it's a good practice to handle promise rejections in general, let's set up our action to catch a rejected promise. We won't do anything with the catch for now; maybe our tests will drive us to do something in there later.
@@ -752,7 +743,7 @@ Using the object spread operator means the other properties are still set as def
 
 Save the file and ensure the tests still pass after this refactoring.
 
-Then, update the call to `restaurants()` in our `beforeEach` block to set `loadError` to `true`:
+Then, update the call to `restaurants()` in the `beforeEach` block of our "while loading" group to set `loadError` to `true`:
 
 ```diff
  store = new Vuex.Store({
@@ -809,13 +800,13 @@ To make it pass, just set the `loading` state in `recordLoadingError`:
 
 With this, our tests pass.
 
-We've now finished adding the error state. To see it in action, in `src/api.js`, in the `baseURL` property for the Axios instance, change the API key to an incorrect value. This will result in the server returning a 404 Not Found response code. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
+We've now finished adding the error state. To see it in action, we need to force the API requests in our running app to fail. Let's do that by putting in an incorrect API key. In `src/api.js`, in the `baseURL` property for the Axios instance, change the API key to an incorrect value. This will result in the server returning a 404 Not Found response code. Reload the web app and you should see a nice red "Restaurants could not be loaded" error box.
 
 ![Loading error message](./images/4-2-error-message.png)
 
 Restore the correct API key value, then reload the page. You should see the loading spinner, then our results.
 
-Run the E2E test one more time to make sure it's still passing — it should be.
+Run the E2E test one more time to make sure it's still passing—it should be.
 
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "Show Loading and Error States".
 
