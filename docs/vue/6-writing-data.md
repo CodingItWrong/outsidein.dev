@@ -9,8 +9,6 @@ In this chapter we'll move on to our next new feature. We'll follow the process 
 
 Our next story in Trello is "Add Restaurants"; drag it to "In Progress".
 
-Now we're on to our next user-facing feature: adding a restaurant. This will give us a chance to go through another outside-in sequence starting from an end-to-end test.
-
 ## End-to-End Test
 
 Create a new branch for this story:
@@ -68,16 +66,16 @@ As in our previous E2E test, we are stubbing the GET request to load the restaur
 
 We also configure Cypress to handle a POST request, which is the request we'll use to create a restaurant. From it, we return an object that is the new restaurant that is created. We also chain a call to `.as()` on it to give it the name `addRestaurant`—we'll see why in a moment.
 
-We visit the home page, and this time we do some interaction with the page:
+We visit the home page, and this time we interact with the page:
 
 - We find an element with a placeholder of "Add Restaurant" (so, presumably a text input), and we type a restaurant name into it.
 - We find an element "Add" and click it.
 
-Next, we call `cy.wait()`. This waits for an HTTP request to be sent. We pass the name of the request we want to wait for, prepending an `@` to it. Specifically, we wait for our `addRestaurant` request to complete. Then we check that the restaurant name is correctly sent in the body of the request. It's not enough to stub out the request: we need to confirm our app is sending the *right* data to the server too.
+Next, we call `cy.wait()`. This waits for an HTTP request to be sent. We aren't doing this because the test would fail if we don't wait for the request; we're just "waiting" for it so we can get access to the request to make an assertion on it. We pass the name of the request we want to wait for, prepending an `@` to it. Specifically, we wait for our `addRestaurant` request to complete. Then we check that the restaurant name is correctly sent in the body of the request. It's not enough to stub out the request: we need to confirm our app is sending the *right* data to the server too.
 
 Finally, we confirm that the restaurant name is shown on the page, showing that the restaurant has been added to the list.
 
-Start Cypress with `yarn test:e2e`, then choose the managing restaurants test.
+Start Cypress with `yarn test:e2e`, then choose the "Creating a Restaurant" test.
 It fails, showing the first bit of functionality we need to implement:
 
 > CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
@@ -145,9 +143,9 @@ So now we need to send the request is our backend service. This is missing logic
 - The store action will call a function in our API client
 - The API client will make an HTTP `POST` request
 
-Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should dispatch an action to the store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too. Otherwise we would need to go back through our stack to pass it along.
-
 ## Unit Testing the Component
+
+Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should dispatch an action to the store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too.
 
 Create the file `tests/unit/components/NewRestaurantForm.spec.js` and start out by setting up the component and Vuex store in a `beforeEach` block:
 
@@ -201,7 +199,7 @@ A few notes:
 - We pass an extra option to `mount()` that was not needed for our list test: `attachToDocument: true`. This actually loads the component into the DOM. The reason we need this for this test is so the submit button can trigger the form submission.
 - Because we're attaching the component to the document, we need to call `wrapper.destroy()` afterward to remove the elements from the document again.
 
-Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even if there's currently only one expectation. Add the following:
+Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even there there will only be one expectation at first. Add the following:
 
 ```js
 describe('when filled in', () => {
@@ -356,7 +354,7 @@ Error: Not implemented: HTMLFormElement.prototype.submit
 
 This is because the HTML form is attempting to submit using the default browser mechanism. By default, HTML forms make their own request to the server when they're submitted, refreshing the page. This is because HTML forms predate using JavaScript to make HTTP requests. This reload restarts our frontend app, losing our progress.
 
-To prevent this page reload from happening, Vue provides a `.prevent` modifier we can add to the action name in the tag to prevent the default browser behavior (analogous to `event.preventDefault()`). Add this:
+To prevent this page reload from happening, Vue provides a `.prevent` modifier we can add to the action name in the tag to prevent the default browser behavior (analogous to the JavaScript `event.preventDefault()` method). Add this:
 
 ```diff
  <template>
@@ -714,9 +712,9 @@ Try out creating a restaurant for real. Reload the page to make sure it's really
 ## Clearing the Text Field
 Now let's look into those edge cases:
 
-* The form should clear out the text field after you save a restaurant
-* If the form is submitted with an empty restaurant name, it should show a validation error, and not submit to the server
-* If the save fails an error message should be shown, and the restaurant name should not be cleared
+* The form should clear out the text field after you save a restaurant.
+* If the form is submitted with an empty restaurant name, it should show a validation error, and not submit to the server.
+* If the save fails an error message should be shown, and the restaurant name should not be cleared.
 
 First, let's implement the form clearing out the text field after saving. In `NewRestaurantForm.spec.js`, add a new test:
 
@@ -813,7 +811,7 @@ Now our component and store should be working together. If you add a new restaur
 
 ## Validation Error
 
-Now let's implement the validation error when the restaurant name is empty. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
+Now let's implement the validation error when the restaurant name is empty. We'll start with the component test. Create a new `describe` block for this situation, below the "when filled in" describe block. We'll start with just one of the expectations, to confirm a validation error is shown:
 
 ```js
 describe('when empty', () => {
@@ -1429,7 +1427,7 @@ If you have any uncommitted changes, commit them to git. Push up your branch to 
 
 ## What's Next
 
-With this we've completed our second feature, including edge cases and styling. We've also reached the end of this exercise! In the next chapter we'll take a look at resources you can use to learn outside-in development more deeply.
+With this we've completed our second feature, including edge cases and styling. We've also reached the end of this exercise! In the next chapter we'll look back at what we did over the course of the exercise and the benefits the outside-in development process gave us.
 
 :::tip
 Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
