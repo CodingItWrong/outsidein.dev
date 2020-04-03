@@ -987,48 +987,21 @@ TypeError: Cannot read property 'loadRestaurants' of undefined
 
 ![Cypress console error showing loadRestaurants property on undefined](./images/2-3-load-restaurants-not-defined.png)
 
-Our component and store are built; now we just need to build our API. You may be surprised to hear that we aren't going to unit test it at all. Let's look at the implementation, then we'll discuss why.
+Our component and store are built; now we just need to build our API. You may be surprised to hear that we aren't going to unit test it at all; instead, we're going to let the E2E test drive the implementation. Let's go through that process first, then we'll discuss why we didn't unit test it.
 
-We'll use the popular `axios` library to make our HTTP requests. Add it to your project:
+To fix the current E2E test failure, we need to create an API object and provide it to our store module. We'll go ahead and create a `loadRestaurants()` method on the object, too, since we can see from the error that we'll need it.
 
-```sh
-$ yarn add axios
-```
-
-::: tip
-One reason to use `axios` is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
-:::
-
-Now create an `api.js` file under `src`, and provide the following implementation:
+Create an `api.js` file under `src`, and add the following code:
 
 ```js
-import axios from 'axios';
-
-const client = axios.create({
-  baseURL: 'https://api.outsidein.dev/YOUR-API-KEY',
-});
-
 const api = {
-  loadRestaurants() {
-    return client.get('/restaurants').then(response => response.data);
-  },
+  loadRestaurants() {},
 };
 
 export default api;
 ```
 
-In the `baseURL`, replace `YOUR-API-KEY` with the API key you created earlier.
-
-First we import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the API's URL, along with your personal API key. Then we create an `api` object that we're going to export with our own interface. We give it a `loadRestaurants()` method. In that method, we call the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL. Axios resolves to a `response` value that has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure. So by returning `response.data` our application will receive the data the server sends.
-
-Now, why aren't we unit testing this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** The principle applies equally well to using any kind of test doubles for code you don't own, not just mocks. There are a few reasons for this:
-
-- If you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test.
-- Some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
-
-So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be very simple, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code. This code is simple enough that we can understand what it does upon inspection. And our Cypress test will test our code in integration with the third party library, ensuring that it successfully makes the HTTP request.
-
-With all that said, we're ready to wire up our store module and API to see if it all works. Update `src/store/index.js`:
+Next, let's wire the API object up our store module. Update `src/store/index.js`:
 
 ```diff
  import restaurants from './restaurants';
@@ -1044,10 +1017,59 @@ With all that said, we're ready to wire up our store module and API to see if it
  });
 ```
 
-Go back into the Chrome instance that's running our Cypress test, or re-open it if it's closed.
-Rerun the test. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
+Rerun the E2E test and we get a new error:
+
+```sh
+TypeError: Cannot read property 'then' of undefined
+```
+
+Our method isn't returning a Promise, so the caller can't chain `.then()` onto it. This is because we still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API.
+
+We'll use the popular `axios` library to make our HTTP requests. Add it to your project:
+
+```sh
+$ yarn add axios
+```
+
+::: tip
+One reason to use `axios` is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+:::
+
+Next, use Axios to make an HTTP request to the correct endpoint:
+
+```diff
++import axios from 'axios';
++
++const client = axios.create({
++  baseURL: 'https://api.outsidein.dev/YOUR-API-KEY',
++});
++
+ const api = {
+-  loadRestaurants() {}
++  loadRestaurants() {
++    return client.get('/restaurants').then(response => response.data);
+  },
+ };
+
+ export default api;
+```
+
+In the `baseURL`, replace `YOUR-API-KEY` with the API key you created earlier.
+
+We import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the API's URL, along with your personal API key. Then we implement our `loadRestaurants()` method by calling the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL.
+
+The promise Axios' `get()` method returns resolves to an Axios response object, which has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure and exposing that under `response.data`. The `response.data` value is what we need, so we resolve to that.
+
+Rerun the E2E test one more time. The test should confirm that "Sushi Place" and "Pizza Place" are loaded and displayed on the page. Our E2E test is passing!
 
 ![Cypress test passing](./images/2-4-cypress-green.png)
+
+Now, why didn't we unit test this API? We could set it up to pass in a fake Axios object and mock out the `get()` method on it. But there is a unit testing principle: **don't mock what you don't own.** The principle applies equally well to using any kind of test doubles for code you don't own, not just mocks. There are a few reasons for this:
+
+- If you mock third party code but you get the functionality wrong, then your tests will pass against your mock, but won't work against the real third-party library. This is especially risky when the behavior of the library changes from how it worked when you first wrote the test.
+- Some of the value of unit tests is in allowing you to design the API of your dependencies, but since you can't control the API of the third-party library, you don't get the opportunity to affect the API. (Pull requests to open-source projects notwithstanding!)
+
+So how can you test code with third-party dependencies if you can't mock them? The alternative is to do what we did here: **wrap the third-party code with your *own* interface that you do control, and mock that.** In our case, we decided that we should expose a `loadRestaurants()` method that returns our array of restaurants directly, not nested in a `response` object. That module that wraps the third-party library should be very simple, with as little logic as possible—ideally without any conditionals. That way, you won't even feel the need to test it. Consider our application here. Yes, we could write a unit test that if Axios is called with the right method, it resolves with an object with a data property, and confirm that our code returns the value of that data property. But at that point the test is almost just repeating the production code, and if Axios changed its expectations our unit test would pass but the code wouldn't work. Instead, it's better to rely on Cypress to test our API code in integration with the third party library, ensuring that it successfully makes the HTTP request.
 
 Now let's see our app working against the real backend.
 In our Vue app's directory, run the app with `yarn serve`:
