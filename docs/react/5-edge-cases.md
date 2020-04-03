@@ -120,7 +120,7 @@ it('displays the loading indicator while loading', () => {
 });
 ```
 
-Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a Test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
+Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
 
 Once we find our loading indicator by test ID, we confirm that it's not null, showing that the element is present.
 
@@ -130,9 +130,9 @@ Sticking with the approach of making the smallest possible change to make the te
 Material-UI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js` with the correct test ID:
 
 ```diff
- import ListItemText from '@material-ui/core/ListItemText';
+ import {connect} from 'react-redux';
 +import CircularProgress from '@material-ui/core/CircularProgress';
- import {loadRestaurants} from '../store/restaurants/actions';
+ import List from '@material-ui/core/List';
 ...
    return (
 +    <>
@@ -535,12 +535,12 @@ With this, our loading functionality should be complete. Run the app with `yarn 
 
 ![Restaurant list with loading spinner](./images/4-1-loading-spinner.png)
 
-Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the data is eventually shown.
+Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the restaurants are eventually shown.
 
 ## Error Flag
 The other edge case we want to handle is displaying an error if the API call fails. This will be implemented using a very similar process to the loading flag. If you like, you can try to go through the process yourself, then compare your approach and this approach afterward. Just remember to always start with a failing test, and write only the minimum code to pass the test!
 
-Note that instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
+Note that instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely before we moved on to the second. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
 
 Start with the test for the component. We are describing a new situation, when loading fails, so let's put our test in a new `describe` block:
 
@@ -570,7 +570,7 @@ $ yarn add @material-ui/lab
 Then add the alert:
 
 ```diff
- import CircularProgress from '@material-ui/core/CircularProgress';
+ import ListItemText from '@material-ui/core/ListItemText';
 +import Alert from '@material-ui/lab/Alert';
  import {loadRestaurants} from '../store/restaurants/actions';
 
@@ -762,9 +762,10 @@ Then add a test for the `loadError` flag:
  });
 ```
 
-The test fails. Make it pass while keeping the other tests passing, by setting the `loadError` to have initial state of `false`, then set to true when a new loading error action is dispatched. In `actions.js`:
+The test fails. Make it pass while keeping the other tests passing by setting the `loadError` to have initial state of `false`, then set to true when a new loading error action is dispatched. In `actions.js`:
 
 ```diff
+ export const START_LOADING = 'START_LOADING';
  export const STORE_RESTAURANTS = 'STORE_RESTAURANTS';
 +export const RECORD_LOADING_ERROR = 'RECORD_LOADING_ERROR';
 
@@ -780,7 +781,10 @@ The test fails. Make it pass while keeping the other tests passing, by setting t
 +      dispatch(recordLoadingError());
 +    });
  };
-…
+
+ const startLoading = () => ({type: START_LOADING});
+
+ const storeRestaurants = records => ({
    type: STORE_RESTAURANTS,
    records,
  });

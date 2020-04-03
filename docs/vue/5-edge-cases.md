@@ -456,12 +456,12 @@ With this, our loading functionality should be complete. Run the app with `yarn 
 
 ![Restaurant list with loading spinner](./images/4-1-loading-spinner.png)
 
-Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the data is eventually shown.
+Run our E2E tests and note that they still pass. They don't care whether or not a loading flag is shown; they just ensure that the restaurants are eventually shown.
 
 ## Error Flag
 The other edge case we want to handle is displaying an error if the API call fails. This will be implemented using a very similar process to the loading flag. If you like, you can try to go through the process yourself, then compare your approach and this approach afterward. Just remember to always start with a failing test, and write only the minimum code to pass the test!
 
-Note that instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
+Note that instead of implementing both flags in the component, then implementing both in the store, we got one flag working entirely before we moved on to the second. This ensures that we could ship the loading flag to our customers even before the error flag is ready.
 
 Start with the test for the component. We are describing a new situation, when loading fails, so let's put our test in a new `describe` block:
 
@@ -657,7 +657,7 @@ Then add a test for the `loadError` flag:
  });
 ```
 
-The test fails. Make it pass while keeping the other tests passing, by setting the flag to `false` initially, and adding a new mutation to handle if the API promise rejects:
+The test fails. Make it pass while keeping the other tests passing by setting the flag to `false` initially, and adding a new mutation to handle if the API promise rejects:
 
 ```diff
  state: {
