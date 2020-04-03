@@ -16,7 +16,7 @@ Now we're on to our next user-facing feature: adding a restaurant. This will giv
 Create a new branch for this story:
 
 ```sh
-$ git co -b creating-a-restaurant
+$ git checkout -b creating-a-restaurant
 ```
 
 Create a file `tests/e2e/specs/creating-a-restaurant.spec.js` and add the following:

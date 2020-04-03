@@ -39,7 +39,7 @@ We're going to use Vuetify, a popular Vue component library that follows Google'
 Create a new branch for this story:
 
 ```sh
-$ git co -b material-design
+$ git checkout -b material-design
 ```
 
 Next, install Vuetify with the Vue CLI:

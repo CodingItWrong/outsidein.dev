@@ -39,7 +39,7 @@ We're going to use Material-UI, a popular React component library that follows G
 Create a new branch for this story:
 
 ```sh
-$ git co -b material-design
+$ git checkout -b material-design
 ```
 
 Install the core Material-UI package:
