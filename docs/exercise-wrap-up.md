@@ -21,6 +21,10 @@ TDD gives me back control over my code, so I can make changes at any time with c
 
 Maybe you're already convinced that TDD, together with the other agile development practices, accomplishes these things. If so, give it a try on your projects! Or maybe you aren't yet sure that TDD will make this much of a difference. If so, do you have an another solution for how to keep your development speed fast, avoiding production bugs and allowing you to keep your code easy to understand in the face of unanticipated changes? If not, I would encourage you to give TDD a try to see if it works for you.
 
+## What's Next
+
+We've now completed our exercise. In the next and final chapter we'll wrap up our guide by taking a look at resources you can use to learn outside-in development more deeply.
+
 :::tip
 Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
 :::
