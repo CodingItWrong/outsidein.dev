@@ -219,6 +219,21 @@ Save the file and when the unit tests rerun the warnings should be gone.
 
 We've successfully styled our app relying on the tests to confirm all the functionality still works.
 
+:::tip
+Some frontend TDD approaches recommend specifying every detail of your markup and styling in your component tests. They argue that because TDD says you shouldn't write any production code without a test driving you to do it, therefore you shouldn't write complex markup and CSS without a test for them.
+
+I think that's a bad idea. Here's why:
+
+- Those tests don't add a lot of value. They are just repeating what is in the production code.
+- Behavioral tests like these aren't well-suited to visuals. Test-driving the markup and CSS won't ensure the component looks right; it just ensures that you typed in the HTML tag you just said in the test you were going to type in.
+- Those tests are incredibly highly-coupled to the production code. Every change to the production code would require a change to the test. That's a sign that they aren't testing the interface, but rather the implementation.
+- Those tests prevent refactoring. You wouldn't be able to do the visual changes we did in this chapter under test; you would need to change the tests at the same time.
+
+All those downsides turn folks off from TDD before they try it, or give people who do try it a bad experience.
+
+Instead, keep your component tests focused on the behavior of the component, and leave the details of the markup and styling as implementation details.
+:::
+
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "Style App with Material Design".
 
 ## What's Next
