@@ -921,14 +921,14 @@ Uncaught Uncaught TypeError: Cannot read property 'then' of undefined
 
 Our method isn't returning a Promise, so the caller can't chain `.then()` onto it. This is because we still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API.
 
-We'll use the popular `axios` library to make our HTTP requests. Add it to your project:
+We'll use the popular Axios library to make our HTTP requests. Add it to your project:
 
 ```sh
 $ yarn add axios
 ```
 
 ::: tip
-One reason to use `axios` is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. `axios` uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+One reason to use Axios is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. Axios uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
 :::
 
 Next, use Axios to make an HTTP request to the correct endpoint:
@@ -952,7 +952,7 @@ Next, use Axios to make an HTTP request to the correct endpoint:
 
 In the `baseURL`, replace `YOUR-API-KEY` with the API key you created earlier.
 
-We import `axios`, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the API's URL, along with your personal API key. Then we implement our `loadRestaurants()` method by calling the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL.
+We import Axios, then call its `create()` method to create a new Axios instance configured with our server's base URL. We provide the API's URL, along with your personal API key. Then we implement our `loadRestaurants()` method by calling the Axios client's `get()` method to make an HTTP `GET` request to the path `/restaurants` under our base URL.
 
 The promise Axios' `get()` method returns resolves to an Axios response object, which has a `data` field on it with the response body. In cases like ours where the response will be JSON data, Axios will handle parsing it to return a JavaScript data structure and exposing that under `response.data`. The `response.data` value is what we need, so we resolve to that.
 
