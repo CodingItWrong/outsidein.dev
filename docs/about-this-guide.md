@@ -130,7 +130,7 @@ It's no exaggeration to say that this guide has no original content and is only 
 * Toran Billups for showing me my first example of outside-in TDD on the front end.
 * The Big Nerd Ranch web team for teaching and exemplifying agile development.
 * Myron Marston and Erin Dees for making outside-in TDD so practical in Ruby.
-* Pratik Patel and Atlanta tech meetup organizers for giving me opportunities to speak publicly about outside-in TDD.
+* Atlanta tech meetup organizers for giving me opportunities to speak publicly about outside-in TDD.
 * Edd Yerburgh, Jack Franklin, Justin Searls, Kent C. Dodds, and Sam Selikoff for informing and challenging my thoughts on frontend testing.
 * James Shore for championing the continued importance of TDD in JavaScript.
 * Matthew Strickland for encouraging me to create content.
