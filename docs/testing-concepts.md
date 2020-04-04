@@ -6,6 +6,19 @@ title: Testing Concepts
 
 Just like programming in general, testing in particular has many concepts and technical terms. Testing terms tend to be used with a variety of different meanings, and often contradictory ones. Before we talk more about testing, then, we need to lay out the terms we'll be using. We'll look at the variety of ways the terms are used in the industry, and define how they will be used in this guide.
 
+## Assertions and Expectations
+One of the most foundational concepts of automated testing is the asserting: checking that something that *should* be the case really *is* the case. A lot of test frameworks have one or more `assert()` functions that do just that.
+
+Jest has a slightly different terminology: it uses an `expect()` function. This allows you to write checks that (arguably, to some people) read more like natural language, like:
+
+```js
+expect(sum).toEqual(42);
+```
+
+Checks that use an `expect()` function are often referred to as "expectations". In this guide you'll see the terms "assertions" and "expectations" used interchangeably. There's no practical difference, other than that grammatically it's a bit easier to say "In this test we *assert* that X is true".
+
+In our Cypress tests, and many real-world Cypress tests, there are no explicit "assertions" or "expectations". Instead, you just run a command to find an element on the page that `.contains()` certain content, and if it's not found, the test will fail. This is still functioning as an assertion.
+
 ## Unit Tests
 The term "unit test" refers to an automated test of a portion, or unit, of your code. The difference in use of the term involves what can constitute a "unit".
 
