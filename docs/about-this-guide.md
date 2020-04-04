@@ -131,10 +131,12 @@ It's no exaggeration to say that this guide has no original content and is only 
 * The Big Nerd Ranch web team for teaching and exemplifying agile development.
 * Myron Marston and Erin Dees for making outside-in TDD so practical in Ruby.
 * Atlanta tech meetup organizers for giving me opportunities to speak publicly about outside-in TDD.
-* Edd Yerburgh, Jack Franklin, Justin Searls, and Kent C. Dodds for informing and challenging my thoughts on frontend testing.
+* Edd Yerburgh, Kent C. Dodds, and the Cypress team for creating great frontend test tooling.
+* Jack Franklin and Justin Searls for informing and challenging my thoughts on frontend testing.
 * James Shore for championing the continued importance of TDD in JavaScript.
 * Matthew Strickland for encouraging me to create content.
 * Jonathan Martin for inspiring me to write a book.
+* The creators of VuePress for creating a great platform for hosting content like this.
 * My wife Jennifer and my three children, for supporting me in my passion for programming, and for making me look forward to taking a break from programming on nights and weekends.
 
 ## What's Next
