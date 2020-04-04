@@ -135,6 +135,7 @@ It's no exaggeration to say that this guide has no original content and is only 
 * James Shore for championing the continued importance of TDD in JavaScript.
 * Matthew Strickland for encouraging me to create content.
 * Jonathan Martin for inspiring me to write a book.
+* My wife Jennifer and my three children, for supporting me in my passion for programming, and for making me look forward to taking a break from programming on nights and weekends.
 
 ## What's Next
 
