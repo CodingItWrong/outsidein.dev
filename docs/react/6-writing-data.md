@@ -17,6 +17,7 @@ Create a new branch for this story:
 $ git checkout -b creating-a-restaurant
 ```
 
+To follow the outside-in TDD loop, we start by creating an E2E test that specifies our feature.
 Create a file `cypress/integration/creating-a-restaurant.spec.js` and add the following:
 
 ```js
@@ -139,9 +140,9 @@ Rerun the E2E tests and we get this failure:
 
 So now we need to send the request is our backend service. This is missing logic, so we will want to step down to unit tests to add it. How will it work?
 
-- The `NewRestarantForm` component will dispatch an asynchronous Redux action
-- The action will call a function in our API client
-- The API client will make an HTTP `POST` request
+- The `NewRestarantForm` component will dispatch an asynchronous Redux action.
+- The action will call a function in our API client.
+- The API client will make an HTTP `POST` request.
 
 ## Unit Testing the Component
 
@@ -151,7 +152,8 @@ Create the file `src/components/__tests__/NewRestaurantForm.spec.js` and start o
 
 ```js
 import React from 'react';
-import {render, fireEvent} from '@testing-library/react';
+import {render} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {NewRestaurantForm} from '../NewRestaurantForm';
 
 describe('NewRestaurantForm', () => {
@@ -171,13 +173,14 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
 
 ```js
 describe('when filled in', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     const {getByPlaceholderText, getByTestId} = context;
 
-    fireEvent.change(getByPlaceholderText('Add Restaurant'), {
-      target: {value: restaurantName},
-    });
-    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    await userEvent.type(
+      getByPlaceholderText('Add Restaurant'),
+      restaurantName,
+    );
+    userEvent.click(getByTestId('new-restaurant-submit-button'));
   });
 
   it('calls createRestaurant with the name', () => {
@@ -186,7 +189,7 @@ describe('when filled in', () => {
 });
 ```
 
-We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click the submit button.
+We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click the submit button. Note that `userEvent.type()` requires `await`ing afterward, but `userEvent.click()` does not.
 
 Note that instead of finding the submit button by text, we find it by test ID. If we had a plain HTML `<button>` element, we could retrieve it either by text or test ID. But using Material-UI's `<Button>` component, using `getByText` will retrieve a `<span>` element instead, and clicking it does not seem to result in submitting the form. So in this case, we use the test ID, which retrieves the underlying `<button>` instead.
 
@@ -737,9 +740,10 @@ Where in the component should we clear the text field? Well, we have another sto
 Make this change in `NewRestaurantForm.js`:
 
 ```diff
- handleSave() {
--  this.createRestaurant(this.name);
-+  this.createRestaurant(this.name).then(() => {
+ const handleSubmit = e => () {
+   e.preventDefault();
+-  createRestaurant(name);
++  createRestaurant(name).then(() => {
 +    setName('');
 +  });
  },
@@ -757,7 +761,7 @@ Our mocked `api.createRestaurant` doesn't return a promise; let's update it to r
  beforeEach(() => {
 +  createRestaurant.mockResolvedValue();
 +
-   const {getByPlaceholderText, getByText} = context;
+   const {getByPlaceholderText, getByTestId} = context;
 ```
 
 Save and the test now passes; what's left is a warning:
@@ -788,12 +792,13 @@ Then add it to your test:
 
 ```diff
  import React from 'react';
--import {render, fireEvent} from '@testing-library/react';
-+import {render, fireEvent, act} from '@testing-library/react';
+-import {render} from '@testing-library/react';
++import {render, act} from '@testing-library/react';
+ import userEvent from '@testing-library/user-event';
 +import flushPromises from 'flush-promises';
  import {NewRestaurantForm} from '../NewRestaurantForm';
 ...
-       fireEvent.click(getByTestId('new-restaurant-submit-button'));
+       userEvent.click(getByTestId('new-restaurant-submit-button'));
 +
 +      return act(flushPromises);
      });
@@ -802,40 +807,6 @@ Then add it to your test:
 We call `act()` at the end of our `beforeEach` block, passing it the `flushPromises` function. This means that React will call that function and wait for it to resolve, responding to component changes that may have happened appropriately. We return the result of `act`, so that Jest will wait on *that* before running individual tests.
 
 Save the file and our test finally passes cleanly!
-
-Before we proceed, let's think about some refactoring. Look at the following statement from our test:
-
-```js
-fireEvent.change(getByPlaceholderText('Add Restaurant'), {
-  target: {value: restaurantName},
-});
-```
-
-This is pretty verbose. There are a lot of details in there about the structure of browser events. Our test isn't really thinking in those terms; we just want to say that we fill in a field with a value. Let's make a helper function at the top of this test file to do that for us:
-
-```js
-const fillIn = (element, value) => fireEvent.change(element, {target: {value}});
-```
-
-Then we can replace our existing call:
-
-```diff
- beforeEach(() => {
-   createRestaurant.mockResolvedValue();
-
-   const {getByPlaceholderText, getByTestId} = context;
-
--  fireEvent.change(getByPlaceholderText('Add Restaurant'), {
--    target: {value: restaurantName},
--  });
-+  fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-   fireEvent.click(getByTestId('new-restaurant-submit-button'));
-
-   return act(flushPromises);
- });
-```
-
-This reads a lot more nicely: "fill in the field with placeholder "Name", with restaurantName". By contrast, `fireEvent.click()` reads pretty simply as-is; we don't need to make a helper for it.
 
 We have a little bit to unit test in the store as well: `NewRestaurantForm` is relying on the `create` action returning a promise that resolves when the server request completes. To test this, first let's add a test to the "when save succeeds" block:
 
@@ -907,12 +878,12 @@ Now let's implement the validation error when the restaurant name is empty. We'l
 
 ```js
 describe('when empty', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     createRestaurant.mockResolvedValue();
 
     const {getByPlaceholderText, getByTestId} = context;
-    fillIn(getByPlaceholderText('Add Restaurant'), '');
-    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    await userEvent.type(getByPlaceholderText('Add Restaurant'), '');
+    userEvent.click(getByTestId('new-restaurant-submit-button'));
 
     return act(flushPromises);
   });
@@ -1057,14 +1028,19 @@ Now, is there any other time we would want to hide or show the validation error?
 
 ```js
 describe('when correcting a validation error', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     createRestaurant.mockResolvedValue();
 
-    const {getByPlaceholderText, getByText} = context;
-    fillIn(getByPlaceholderText('Add Restaurant'), '');
-    fireEvent.click(getByTestId('new-restaurant-submit-button'));
-    fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    const {getByPlaceholderText, getByTestId} = context;
+
+    await userEvent.type(getByPlaceholderText('Add Restaurant'), '');
+    userEvent.click(getByTestId('new-restaurant-submit-button'));
+
+    await userEvent.type(
+      getByPlaceholderText('Add Restaurant'),
+      restaurantName,
+    );
+    userEvent.click(getByTestId('new-restaurant-submit-button'));
 
     return act(flushPromises);
   });
@@ -1078,7 +1054,29 @@ describe('when correcting a validation error', () => {
 
 Note that we repeat both sets of `beforeEach` steps from the other groups, submitting the empty form and then submitting the filled-in one. We want our unit tests to be independent, so they can be run without depending on the result of other tests. If this repeated code got too tedious we could extract it to helper functions that we could call in each `describe` block.
 
-Save the test file and our new test fails:
+Save the test file and we get the `act()` warning again:
+
+```sh
+Warning: An update to NewRestaurantForm inside a test was not wrapped in act(...).
+```
+
+This usually happens when we move on from interacting with our component too early. In this case, it's because after the first time we click our submit button, we start interacting with the component again right away. Instead, we need to add another `await act(flushPromises)` at that point:
+
+```diff
+ await userEvent.type(getByPlaceholderText('Add Restaurant'), '');
+ userEvent.click(getByTestId('new-restaurant-submit-button'));
++await act(flushPromises);
+
+ await userEvent.type(
+   getByPlaceholderText('Add Restaurant'),
+   restaurantName,
+ );
+ userEvent.click(getByTestId('new-restaurant-submit-button'));
+
+ return act(flushPromises);
+```
+
+Save the test file and the warning is gone, and we just have a test failure:
 
 ```sh
   ● NewRestaurantForm › when correcting a validation error › clears the
@@ -1168,13 +1166,16 @@ Since this is a new situation, let's set this up as yet another new `describe` b
 
 ```js
 describe('when the store action rejects', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     createRestaurant.mockRejectedValue();
 
     const {getByPlaceholderText, getByTestId} = context;
 
-    fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    await userEvent.type(
+      getByPlaceholderText('Add Restaurant'),
+      restaurantName,
+    );
+    userEvent.click(getByTestId('new-restaurant-submit-button'));
 
     return act(flushPromises);
   });
@@ -1302,13 +1303,16 @@ We also want to hide the server error message each time we retry saving the form
 
 ```js
 describe('when retrying after a server error', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
     const {getByPlaceholderText, getByTestId} = context;
-    fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-    fireEvent.click(getByTestId('new-restaurant-submit-button'));
-    fireEvent.click(getByTestId('new-restaurant-submit-button'));
+    await userEvent.type(
+        getByPlaceholderText('Add Restaurant'),
+        restaurantName,
+      );
+    userEvent.click(getByTestId('new-restaurant-submit-button'));
+    userEvent.click(getByTestId('new-restaurant-submit-button'));
     return act(flushPromises);
   });
 
@@ -1349,21 +1353,17 @@ Save the file, but surprisingly, the test failure doesn't change! Why is that? I
 We can fix this by waiting for promises to flush after the first click, as well as after the second:
 
 ```diff
--beforeEach(() => {
-+beforeEach(async () => {
-   createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
-
-   const {getByPlaceholderText, getByText} = context;
-   fillIn(getByPlaceholderText('Add Restaurant'), restaurantName);
-   fireEvent.click(getByTestId('new-restaurant-submit-button'));
+   const {getByPlaceholderText, getByTestId} = context;
+   await userEvent.type(
+       getByPlaceholderText('Add Restaurant'),
+       restaurantName,
+     );
+   userEvent.click(getByTestId('new-restaurant-submit-button'));
 +  await act(flushPromises);
 +
-   fireEvent.click(getByTestId('new-restaurant-submit-button'));
+   userEvent.click(getByTestId('new-restaurant-submit-button'));
    return act(flushPromises);
- });
 ```
-
-Note that we need to make the `beforeEach` function `async`, so we can `await` the call to `flushPromises()`. This ensures the results of the first click will complete before we start the second.
 
 Save and the test should pass.
 
@@ -1406,16 +1406,16 @@ Rerun your E2E tests to make sure they still pass.
 
 ## Refactoring Visuals
 
-Now that all our tests are passing for the feature, let's think about refactoring.
+Now that all our functionality has been driven out for the feature, let's think about refactoring.
 We used Material-UI components to make our form elements look good, but we didn't give any attention to the layout—we just put them one after another.
 In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
 
 Material-UI offers a `Box` component that can be used for layout and spacing. Let's wrap the `TextField` and `Button` in a `Box`:
 
 ```diff
- import Alert from '@material-ui/lab/Alert';
+ import {connect} from 'react-redux';
 +import Box from '@material-ui/core/Box';
- import {createRestaurant} from '../store/restaurants/actions';
+ import TextField from '@material-ui/core/TextField';
 ...
    {validationError && <Alert severity="error">Name is required</Alert>}
 +  <Box display="flex">
@@ -1444,11 +1444,13 @@ Pull up your app and see how it looks.
 
 ![Form elements in a row](./images/5-5-form-row.png)
 
-This helps, but there is no spacing between the text input and button. To add that margin is actually a little trickier in Material-UI; here's how we do it:
+This helps, but there is no spacing between the text input and button. To add that margin is actually a little tricky in Material-UI; here's how we do it:
 
 ```diff
- import Box from '@material-ui/core/Box';
+ import {connect} from 'react-redux';
 +import {makeStyles} from '@material-ui/core/styles';
+ import Box from '@material-ui/core/Box';
+...
  import {createRestaurant} from '../store/restaurants/actions';
 
 +const useStyles = makeStyles(theme => ({
@@ -1460,20 +1462,16 @@ This helps, but there is no spacing between the text input and button. To add th
 +}));
 
  export const NewRestaurantForm = ({createRestaurant}) => {
-   const [name, setName] = useState('');
-   const [validationError, setValidationError] = useState(false);
-   const [serverError, setServerError] = useState(false);
 +  const classes = useStyles();
-
-   const handleSubmit = e => {
+   const [name, setName] = useState('');
 ...
- {validationError && <Alert severity="error">Name is required</Alert>}
--<Box display="flex">
-+<Box display="flex" className={classes.root}>
-   <TextField
+   {validationError && <Alert severity="error">Name is required</Alert>}
+-    <Box display="flex">
++    <Box display="flex" className={classes.root}>
+       <TextField
 ```
 
-`makeStyles()` allows creating and applying CSS styles to an element. The style we specify is that for every element (`*`) directly under (`>`) the element the style is applied to (`&`), add a margin of the smallest spacing increment the theme provides (`margin: theme.spacing(1)`). This creates a set of styles we named `root`. `makeStyles()` returns a hook function, that we can then call inside the component to get some `classes`. We apply the `root` class we created to the `Box` component. Reload the page, and you'll see some nice spacing in between the elements.
+`makeStyles()` allows creating and applying CSS styles to an element. The style we specify is that for every element (`*`) directly under (`>`) the element the style is applied to (`&`), add a margin of the smallest spacing increment the theme provides (`margin: theme.spacing(1)`). This creates a set of styles we named `root`. `makeStyles()` returns a hook function, that we can then call inside the component to get some `classes`. We apply the `root` class we created to the `Box` component. Save the file, and your app should automatically reload and display some nice spacing in between the elements.
 
 ![Form elements with padding](./images/5-6-form-padding.png)
 

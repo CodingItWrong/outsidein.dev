@@ -17,6 +17,7 @@ Create a new branch for this story:
 $ git checkout -b creating-a-restaurant
 ```
 
+To follow the outside-in TDD loop, we start by creating an E2E test that specifies our feature.
 Create a file `tests/e2e/specs/creating-a-restaurant.spec.js` and add the following:
 
 ```js
@@ -139,9 +140,9 @@ Rerun the E2E tests and we get this failure:
 
 So now we need to send the request is our backend service. This is missing logic, so we will want to step down to unit tests to add it. How will it work?
 
-- The `NewRestarantForm` component will dispatch an action to the store
-- The store action will call a function in our API client
-- The API client will make an HTTP `POST` request
+- The `NewRestarantForm` component will dispatch an action to the store.
+- The store action will call a function in our API client.
+- The API client will make an HTTP `POST` request.
 
 ## Unit Testing the Component
 
@@ -1357,7 +1358,7 @@ Rerun your E2E tests to make sure they still pass.
 
 ## Refactoring Visuals
 
-Now that all our tests are passing for the feature, let's think about refactoring.
+Now that all our functionality has been driven out for the feature, let's think about refactoring.
 We used Vuetify components to make our form elements look good, but we didn't give any attention to the layout—we just put them one after another.
 In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
 
