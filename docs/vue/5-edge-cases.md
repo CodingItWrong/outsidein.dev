@@ -18,7 +18,7 @@ $ git checkout -b edge-cases
 
 You could theoretically write an E2E test for this functionality, confirming the loading indicator and error message appear at the appropriate times. But if you write too many E2E tests, your application's test suite will get slow. Over time, you'll run it less and less frequently locally, and slow CI runs will slow down your ability to merge PRs.
 
-To prevent this from happening, the Test Pyramid is a concept that recommends writing fewer end-to-end tests and more unit tests. In the case of outside-in TDD, the way this works is you write E2E tests for the main features of your application, as well as the unit tests to help implement them. Then, for more detailed or edge-case functionality, you only write the unit tests. In our case, the loading indicator and error message can be considered more detailed functionality. So we are still going to TDD it, but only at the unit level.
+To prevent this from happening, it's best to write fewer E2E tests and more unit tests—and outside-in TDD provides guidance in how many of each to write. You write an E2E test for each main flow of your application, as well as the unit tests to help implement it. Then, for more detailed or edge-case functionality, you only write the unit tests. In our case, the loading indicator and error message can be considered more detailed functionality. So we are still going to TDD them, but only at the unit level.
 
 ## Loading Indicator
 First, the loading indicator. Although we aren't writing an E2E test, we can still start from the "outside" in a sense: our `RestaurantList` component. Let's write a test of the loading indicator functionality for it.
