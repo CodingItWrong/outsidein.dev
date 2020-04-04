@@ -35,7 +35,7 @@ Unit tests of our data layer code will run it in integration with the data layer
 ## End-to-End Tests
 The tests we're referring to here generally simulate a user interacting with your application. There are a number of different names for this type of test that have similar but not quite identical meanings.
 
-The terms "browser automation tests" and "UI automation tests" focus on the mechanics of the test: that it is automating UI interactions. These terms are broader than just the kinds of tests we as developers will write while building the application functionality: they can also be used to refer to tests QA engineers write to run against the application after the functionality is delivered.
+The terms "browser automation tests" and "UI automation tests" focus on the mechanics of the test: that it is automating UI interactions. These terms are broader than just the kinds of tests developers write while building the application functionality: they can also refer to tests QA engineers write to run after the functionality is delivered.
 
 The terms "acceptance tests" and "feature tests" refer to tests in this category that cover a single feature, a user-facing bit of functionality. These tests are written in terms a user could understand, so that once it passes the user could accept the feature as working. Interestingly, these types of tests are not *always* written to operate at the UI level; a feature can also be tested by making requests directly to your business logic code. But in this guide, as is typical in frontend development, we will run our feature tests through the UI of our app.
 
