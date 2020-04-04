@@ -20,6 +20,7 @@ module.exports = {
   themeConfig: {
     logo: '/logo-36@3x.gif',
     nav: [
+      { text: 'Contact', link: '/contact' },
       { text: 'Chat', link: 'https://gitter.im/outsideindev/community' },
     ],
     sidebar: [
