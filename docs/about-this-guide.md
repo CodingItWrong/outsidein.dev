@@ -110,6 +110,8 @@ These `+`s and `-`s aren't part of the code for you to type in; they just highli
 
 ## About the Author
 
+<img src="/josh.jpg" class="author" title="photo of the author, Josh Justice" />
+
 I'm Josh Justice, and I've worked in software development for 16 years as of this writing. For the first 10 years I worked in server-rendered web applications (the only kind of web applications most of us had back then). And I wasn't doing any automated testing. Every change I made required manually retesting everything in the browser. As you might imagine, that resulted in a lot of builds sent back from QA that delayed releases, and a lot of bugs that made it to production anyway. I usually wasn't working into nights or weekends to get features shipped, but there was always the very real likelihood I'd get an evening phone call about a production issue I needed to fix urgently. I attempted to make my apps more reliable by trying different programming languages and frameworks, but the problems persisted.
 
 Eventually I was introduced to unit testing and browser automation testing, and I saw a glimmer of hope. But the language ecosystem and companies I was working in didn't have much experience at testing, so we were all trying to figure it out together. That all changed when I moved to Ruby on Rails. In Ruby, the testing paths are well-trod. I was able to learn from experienced testers and see the kinds of tests they wrote. I saw them (and myself!) ship code to production as soon as the pull request was merged—we knew it would work because the tests passed. I saw security patches applied in a matter of minutes instead of weeks because, as long as the tests passed after we updated, we knew we could release.
