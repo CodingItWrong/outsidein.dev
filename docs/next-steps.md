@@ -4,14 +4,16 @@ title: "Next Steps"
 
 # Next Steps
 
-You've completed this guide and gotten a taste of outside-in test-driven development on the frontend. But this is just the beginning of your journey. Here are some more suggestions to take your learning further.
+You've completed this guide and gotten a taste of outside-in test-driven development on the frontend. I published this guide for free because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you! You can reach me at [@CodingItWrong](https://twitter.com/codingitwrong) on Twitter, josh[at]outsidein[dot]dev, or on the [Outside-In Frontend Dev Gitter](https://gitter.im/outsideindev/community). 
+
+This guide was just the beginning of your journey. Here are some more suggestions to take your learning further.
 
 Note that none of the links to products below are affiliate links; I don't make any money off of them. These are just resources that have helped me that I want to pass along. For published books, I link to Pragmatic Bookshelf and InformIT because they offer DRM-free ebooks. They are all available through other channels as well.
 
 ## A Community of Practice
 Doing agile development with other people provides accountability to stick with it and insights when it's not clear what to do. Here are some suggestions for how to find others to do agile development with:
 
-- An easy first step is the [Outside-In Frontend Dev chat on Gitter](https://gitter.im/outsideindev/community). You can join there to discuss what we've learned and how to apply it with the author (me, Josh!) and other readers.
+- An easy first step is to chat on the [Outside-In Frontend Dev Gitter](https://gitter.im/outsideindev/community). You can join there to discuss what we've learned and how to apply it with the author (me, Josh!) and other readers.
 - If you're on twitter, you can [tweet #outsideintdd](https://twitter.com/intent/tweet?button_hashtag=outsideintdd&ref_src=twsrc%5Etfw) to share your experiences and questions, or [search for #outsideintdd](https://twitter.com/search?lang=en&q=(%23outsideintdd)&src=typed_query) to see who else is thinking about this approach.
 - Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software craftsmanship" is a common term for such meetups.
 - Attend a workshop on TDD or refactoring. Two instructors I would recommend are [James Shore](https://www.jamesshore.com/Calendar/) who focuses on JavaScript, and [Sandi Metz](https://www.sandimetz.com/courses) who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
