@@ -140,13 +140,13 @@ Rerun the E2E tests and we get this failure:
 
 So now we need to send the request is our backend service. This is missing logic, so we will want to step down to unit tests to add it. How will it work?
 
-- The `NewRestarantForm` component will dispatch an action to the store.
+- The `NewRestaurantForm` component will dispatch an action to the store.
 - The store action will call a function in our API client.
 - The API client will make an HTTP `POST` request.
 
 ## Unit Testing the Component
 
-Starting from the outside as usual, we'll start with the `NewRestarantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should dispatch an action to the store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too.
+Starting from the outside as usual, we'll start with the `NewRestaurantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should dispatch an action to the store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too.
 
 Create the file `tests/unit/components/NewRestaurantForm.spec.js` and start out by setting up the component and Vuex store in a `beforeEach` block:
 

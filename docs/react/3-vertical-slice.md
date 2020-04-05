@@ -235,7 +235,7 @@ This time, in addition to the default export, we also do a named export of the c
 
 Now we finally have `RestaurantList` where we'll put our UI for this story.
 
-So far our components haven't done much: `App` just renders `RestarauntScreen`, and `RestaurantScreen` just renders `RestaurantList`. This wasn't any significant application *logic*: it was just code *structure*. Because of this, there would have been no real benefit to stepping down to a unit test: unit tests are for driving out *logic*. This is why we wrote this structural code directly under the guidance of the E2E test.
+So far our components haven't done much: `App` just renders `RestaurantScreen`, and `RestaurantScreen` just renders `RestaurantList`. This wasn't any significant application *logic*: it was just code *structure*. Because of this, there would have been no real benefit to stepping down to a unit test: unit tests are for driving out *logic*. This is why we wrote this structural code directly under the guidance of the E2E test.
 
 But with `RestaurantList`, we finally have some application *logic* to write. It needs to:
 
