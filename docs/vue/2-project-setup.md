@@ -67,7 +67,7 @@ $ npm install -g @vue/cli
 
 ### VS Code
 
-You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its Vetur extension has a bunch of useful Vue features: particularly autocompletion, syntax highlighting, and autoformatting in `.vue` files.
+You can build Vue applications with any editor you like, but some have more facilities for working with Vue than others. [Visual Studio Code](https://code.visualstudio.com/) is popular for JavaScript development in general, and its [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur) extension has a bunch of useful Vue features: particularly autocompletion, syntax highlighting, and autoformatting in `.vue` files.
 
 With this, we can drag the "Set Up Development Environment" story to the "Done" column in Trello.
 
