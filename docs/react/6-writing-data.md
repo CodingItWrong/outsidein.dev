@@ -356,7 +356,7 @@ Save the file and the test passes.
 
 ## Stepping Back Up
 
-We'll circle back to test-drive edge case functionality to the form later. But now that we have completed the functionaity the E2E test drove us to, let's step back up to the E2E test to see what functionality we need to implement next. Rerun the E2E test and see the following failure:
+We'll circle back to test-drive edge case functionality to the form later. But now that we have completed the functionality the E2E test drove us to, let's step back up to the E2E test to see what functionality we need to implement next. Rerun the E2E test and see the following failure:
 
 ```sh
 Uncaught Uncaught TypeError: createRestaurant is not a function
@@ -684,7 +684,7 @@ Cypress confirms we're sending the `POST` request to the server correctly, and w
 
 > CypressError: Timed out retrying: Expected to find content: 'Sushi Place' but never did.
 
-We aren't displaying the restaurant on the page. This is because we aren't yet returning it properly from the resolved value. The Axios promise resolves to the Axios response object, but we want to return a promise that resolves to the record. We can do this by getting the response body:
+We aren't displaying the restaurant on the page. This is because we aren't yet returning it properly from the resolved value. The Axios promise resolves to an Axios response object, but we want to resolve to the record. We can do this by getting the response body:
 
 ```diff
  createRestaurant(name) {
