@@ -19,6 +19,10 @@ module.exports = {
   ],
   themeConfig: {
     logo: '/logo-36@3x.gif',
+    algolia: {
+      apiKey: '30df05c1e8043a8edec5be04c10ef8dd',
+      indexName: 'outsidein',
+    },
     nav: [
       { text: 'Contact', link: '/contact' },
       { text: 'Chat', link: 'https://gitter.im/outsideindev/community' },
