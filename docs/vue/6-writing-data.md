@@ -868,8 +868,8 @@ Add a new `describe` above the "when filled in" one:
 describe('initially', () => {
   it('does not display a validation error', () => {
     expect(
-      wrapper.find('[data-testid="new-restaurant-name-error"]').element,
-    ).not.toBeDefined();
+      wrapper.find('[data-testid="new-restaurant-name-error"]').exists(),
+    ).toBe(false);
   });
 });
 ```
@@ -879,20 +879,18 @@ The test fails because we are always showing the error right now:
 ```sh
   ● NewRestaurantForm › initially › does not display a validation error
 
-    expect(received).not.toBeDefined()
+  expect(received).toBe(expected) // Object.is equality
 
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
-    restaurant-name-error" role="alert"><div class="v-alert__wrapper"><i aria-
-    hidden="true" class="v-icon notranslate v-alert__icon material-icons theme-
-    -dark">$error</i><div class="v-alert__content">
-        Name is required.
-      </div></div></div>
+  Expected: false
+  Received: true
 
-      34 |       expect(
-      35 |         wrapper.find('[data-testid="new-restaurant-name-error"]')
-                          .element,
-    > 36 |       ).not.toBeDefined();
-         |             ^
+    44 |       expect(
+    45 |         wrapper.find('[data-testid="new-restaurant-name-error"]').exists(),
+  > 46 |       ).toBe(false);
+       |         ^
+    47 |     });
+    48 |   });
+    49 |
 ```
 
 Time to add some logic around this error.
@@ -940,8 +938,8 @@ It may feel obvious to you that this is not the correct final logic, so this sho
 ```js
 it('does not display a validation error', () => {
   expect(
-    wrapper.find('[data-testid="new-restaurant-name-error"]').element,
-  ).not.toBeDefined();
+    wrapper.find('[data-testid="new-restaurant-name-error"]').exists(),
+  ).toBe(false);
 });
 ```
 
@@ -976,35 +974,15 @@ describe('when correcting a validation error', () => {
 
   it('clears the validation error', () => {
     expect(
-      wrapper.find('[data-testid="new-restaurant-name-error"]').element,
-    ).not.toBeDefined();
+      wrapper.find('[data-testid="new-restaurant-name-error"]').exists(),
+    ).toBe(false);
   });
 });
 ```
 
 Note that we repeat both sets of `beforeEach` steps from the other groups, submitting the empty form and then submitting the filled-in one. We want our unit tests to be independent, so they can be run without depending on the result of other tests. If this repeated code got too tedious we could extract it to helper functions that we could call in each `describe` block.
 
-Save the test file and our new test fails:
-
-```sh
-  ● NewRestaurantForm › when correcting a validation error › clears the
-  validation error
-
-    expect(received).not.toBeDefined()
-
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
-    restaurant-name-error" role="alert"><div class="v-alert__wrapper"><i aria-
-    hidden="true" class="v-icon notranslate v-alert__icon material-icons theme-
-    -dark">$error</i><div class="v-alert__content">
-        Name is required.
-      </div></div></div>
-
-      90 |       expect(
-      91 |         wrapper.find('[data-testid="new-restaurant-name-error"]')
-                          .element,
-    > 92 |       ).not.toBeDefined();
-         |             ^
-```
+Save the test file and our new test fails.
 
 We can fix this by clearing the `validationError` flag upon a successful submission:
 
@@ -1139,31 +1117,12 @@ Save and the test passes. Now, when do we want that message to *not* show? For o
 ```js
 it('does not display a server error', () => {
   expect(
-    wrapper.find('[data-testid="new-restaurant-server-error"]').element,
-  ).not.toBeDefined();
+    wrapper.find('[data-testid="new-restaurant-server-error"]').exists(),
+  ).toBe(false);
 });
 ```
 
-Save and the test fails:
-
-```sh
-  ● NewRestaurantForm › initially › does not display a server error
-
-    expect(received).not.toBeDefined()
-
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
-    restaurant-server-error" role="alert"><div class="v-alert__wrapper"><i
-    aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons
-    theme--dark">$error</i><div class="v-alert__content">
-        The restaurant could not be saved. Please try again.
-      </div></div></div>
-
-      40 |       expect(
-      41 |         wrapper.find('[data-testid="new-restaurant-server-error"]')
-                          .element,
-    > 42 |       ).not.toBeDefined();
-         |             ^
-```
+Save and the test fails.
 
 We'll add another flag to the data to track whether the error should show, starting hidden, and shown if the store action rejects:
 
@@ -1203,8 +1162,8 @@ Let's also write a test to confirm that the server error is not shown after the 
 ```js
 it('does not display a server error', () => {
   expect(
-    wrapper.find('[data-testid="new-restaurant-server-error"]').element,
-  ).not.toBeDefined();
+    wrapper.find('[data-testid="new-restaurant-server-error"]').exists(),
+  ).toBe(false);
 });
 ```
 
@@ -1232,32 +1191,13 @@ describe('when retrying after a server error', () => {
 
   it('clears the server error', () => {
     expect(
-      wrapper.find('[data-testid="new-restaurant-server-error"]').element,
-    ).not.toBeDefined();
+      wrapper.find('[data-testid="new-restaurant-server-error"]').exists(),
+    ).toBe(false);
   });
 });
 ```
 
-Save the file and you'll get the expected test failure:
-
-```sh
-  ● NewRestaurantForm › when retrying after a server error › clears the server error
-
-    expect(received).not.toBeDefined()
-
-    Received: <div class="v-alert v-sheet theme--dark error" data-testid="new-
-    restaurant-server-error" role="alert"><div class="v-alert__wrapper"><i
-    aria-hidden="true" class="v-icon notranslate v-alert__icon material-icons
-    theme--dark">$error</i><div class="v-alert__content">
-        The restaurant could not be saved. Please try again.
-      </div></div></div>
-
-      147 |       expect(
-      148 |         wrapper.find('[data-testid="new-restaurant-server-error"]')
-                           .element,
-    > 149 |       ).not.toBeDefined();
-          |             ^
-```
+Save the file and you'll get the expected test failure.
 
 We should be able to make this test pass by just clearing the `serverError` flag when attempting to save:
 
