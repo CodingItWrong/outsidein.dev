@@ -111,11 +111,11 @@ Now we're ready to write our new test for when the store is in a loading state. 
 ```js
 it('displays the loading indicator while loading', () => {
   mountWithStore({loading: true});
-  expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(true);
+  expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(true);
 });
 ```
 
-Note that instead of calling `wrapper.findAll()` here, we call `wrapper.contains()`. We don't actually need the element returned to us, we just need to know if it's present or not. We confirm that it's true, showing that the element is present.
+Note that instead of calling `wrapper.findAll()` here, we call `wrapper.find()`, since at most only one element should be found. We just need to know if the element is present or not, so we confirm that it exists.
 
 In good TDD style, our test fails, because the element isn't present.
 
@@ -143,7 +143,7 @@ In our case, we *also* need a test to confirm that the conditional is *not* show
 ```js
 it('does not display the loading indicator while not loading', () => {
   mountWithStore({loading: false});
-  expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
+  expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(false);
 });
 ```
 
@@ -202,7 +202,7 @@ Now our two "when loading succeeds" tests have the same call to `mountWithStore(
 +
    it('does not display the loading indicator while not loading', () => {
 -    mountWithStore();
-     expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
+     expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(false);
    });
 
    it('displays the restaurants', () => {
@@ -472,7 +472,7 @@ describe('when loading fails', () => {
   });
 
   it('displays the error message', () => {
-    expect(wrapper.contains('[data-testid="loading-error"]')).toBe(true);
+    expect(wrapper.find('[data-testid="loading-error"]').exists()).toBe(true);
   });
 });
 ```
@@ -506,11 +506,11 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
    });
 
    it('does not display the loading indicator while not loading', () => {
-     expect(wrapper.contains('[data-testid="loading-indicator"]')).toBe(false);
+     expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(false);
    });
 
 +  it('does not display the error message', () => {
-+    expect(wrapper.contains('[data-testid="loading-error"]')).toBe(false);
++    expect(wrapper.find('[data-testid="loading-error"]').exists()).toBe(false);
 +  });
 +
    it('displays the restaurants', () => {
