@@ -181,10 +181,12 @@ describe('NewRestaurantForm', () => {
       },
     });
 
+    const div = document.createElement('div');
+    document.body.appendChild(div);
     wrapper = mount(NewRestaurantForm, {
       localVue,
       store,
-      attachToDocument: true,
+      attachTo: div,
     });
   });
 
@@ -197,7 +199,7 @@ describe('NewRestaurantForm', () => {
 A few notes:
 
 - We set up the mock restaurant module with just one action, `create`—this is the one we're going to ensure is called.
-- We pass an extra option to `mount()` that was not needed for our list test: `attachToDocument: true`. This actually loads the component into the DOM. The reason we need this for this test is so the submit button can trigger the form submission.
+- We pass an extra option to `mount()` that was not needed for our list test: `attachTo: div`, pointing to a `div` element we've added to the document. This actually loads the component into the DOM. The reason we need this for this test is so the submit button can trigger the form submission.
 - Because we're attaching the component to the document, we need to call `wrapper.destroy()` afterward to remove the elements from the document again.
 
 Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even there there will only be one expectation at first. Add the following:
