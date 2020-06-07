@@ -108,8 +108,7 @@ Create React App includes a built-in ESLint config to check your code for issues
 Add this rather lengthy list of packages:
 
 ```sh
-$ yarn add --dev eslint \
-                 eslint-config-prettier \
+$ yarn add --dev eslint-config-prettier \
                  eslint-plugin-cypress \
                  eslint-plugin-jest \
                  eslint-plugin-prettier \
