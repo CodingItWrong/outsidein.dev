@@ -11,7 +11,7 @@
     "wordcount": "wc -w `find docs/*.md docs/**/*.md`"
   },
   "devDependencies": {
-    "@vuepress/plugin-google-analytics": "^1.5.3",
+    "@vuepress/plugin-google-analytics": "^1.5.4",
     "vuepress": "^1.5.4"
   }
 }
