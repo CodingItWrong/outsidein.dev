@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@vuepress/plugin-google-analytics": "^1.5.4",
+    "serialize-javascript": "^4.0.0",
     "vuepress": "^1.5.4"
   }
 }
