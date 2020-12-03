@@ -8,7 +8,7 @@ You've completed this guide and gotten a taste of outside-in test-driven develop
 
 This guide was just the beginning of your journey. Here are some more suggestions to take your learning further.
 
-Note that none of the links to products below are affiliate links; I don't make any money off of them. These are just resources that have helped me that I want to pass along. For published books, I link to Pragmatic Bookshelf and InformIT because they offer DRM-free ebooks. They are all available through other channels as well.
+*Some of the links to book below are affiliate links: if you purchase through them I make a little money without any cost to you. If you’d rather not use these links, feel free to search for these books at your preferred bookseller. I recommend InformIT and Pragmatic Programmers for DRM-free ebooks.*
 
 ## A Community of Practice
 Doing agile development with other people provides accountability to stick with it and insights when it's not clear what to do. Here are some suggestions for how to find others to do agile development with:
@@ -54,9 +54,9 @@ Just like you learn your framework deeply, it's important to learn your testing 
 ## Outside-In TDD
 
 <div class="media">
-  <a href="https://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626" target="_blank"><img src="/images/growing-object-oriented-software.jpg" title="Growing Object-Oriented Software, Guided by Tests book cover" class="media-image" /></a>
+  <img src="/images/growing-object-oriented-software.jpg" title="Growing Object-Oriented Software, Guided by Tests book cover" class="media-image" />
   <p class="media-description">
-    <a href="https://www.informit.com/store/growing-object-oriented-software-guided-by-tests-9780321503626" target="_blank"><em>Growing Object-Oriented Software, Guided by Tests</em></a> by Steve Freeman and Nat Pryce is the book that introduced outside-in test-driven development. It's written by the inventors of mock objects, and shows how mocking is intended to be used to isolate parts of your code, as we've done in our tutorial. This book has a more thorough description of the way outside-in TDD addresses change in software by producing code that has both high external and internal quality.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.681793&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321503626"><em>Growing Object-Oriented Software, Guided by Tests</em></a><IMG border=0 width=1 height=1 src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.681793&type=2&subid=0" /> by Steve Freeman and Nat Pryce is the book that introduced outside-in test-driven development. It's written by the inventors of mock objects, and shows how mocking is intended to be used to isolate parts of your code, as we've done in our tutorial. This book has a more thorough description of the way outside-in TDD addresses change in software by producing code that has both high external and internal quality.
   </p>
 </div>
 
@@ -65,7 +65,7 @@ Just like you learn your framework deeply, it's important to learn your testing 
 <div class="media">
   <a href="https://www.informit.com/store/xunit-test-patterns-refactoring-test-code-9780131495050" target="_blank"><img src="/images/xunit-test-patterns.jpg" title="xUnit Test Patterns book cover" class="media-image" /></a>
   <p class="media-description">
-    As we went through the tutorial, we made a lot of decisions about how to organize our tests. Most of these decisions were informed by <a href="https://www.informit.com/store/xunit-test-patterns-refactoring-test-code-9780131495050" target="_blank"><em>xUnit Test Patterns</em></a> by Gerard Meszaros. This is a programming-language-agnostic guide to how to create high-quality tests, and the principles apply directly to frontend JavaScript tests. In addition to providing ideas for how to arrange your tests, the book also provides a <em>language</em> for talking about test patterns and their tradeoffs. This can be helpful when guiding others, or when making a case to a team for changing unhelpful patterns.
+    As we went through the tutorial, we made a lot of decisions about how to organize our tests. Most of these decisions were informed by <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.1694771&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780132800051"><em>xUnit Test Patterns: Refactoring Test Code</em></a><IMG border=0 width=1 height=1 src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.1694771&type=2&subid=0" /> by Gerard Meszaros. This is a programming-language-agnostic guide to how to create high-quality tests, and the principles apply directly to frontend JavaScript tests. In addition to providing ideas for how to arrange your tests, the book also provides a <em>language</em> for talking about test patterns and their tradeoffs. This can be helpful when guiding others, or when making a case to a team for changing unhelpful patterns.
   </p>
 </div>
 
@@ -78,7 +78,7 @@ The functionality we wrote in this guide was pretty straightforward, so there wa
 <div class="media">
   <a href="https://www.informit.com/store/refactoring-improving-the-design-of-existing-code-9780134757711" target="_blank"><img src="/images/refactoring.jpg" title="Refactoring book cover" class="media-image" /></a>
   <p class="media-description">
-    <a href="https://www.informit.com/store/refactoring-improving-the-design-of-existing-code-9780134757711" target="_blank"><em>Refactoring</em></a> by Martin Fowler is the original book that presented refactoring as a disciplined process. It includes a comprehensive reference of different kinds of refactorings that will equip you with options to consider and clear steps to take. The second edition of the book was rewritten in JavaScript, so it's extremely accessible to frontend developers.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.2754839&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780134757599"><em>Refactoring: Improving the Design of Existing Code</em></a><IMG border=0 width=1 height=1 src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.2754839&type=2&subid=0" /> by Martin Fowler is the original book that presented refactoring as a disciplined process. It includes a comprehensive reference of different kinds of refactorings that will equip you with options to consider and clear steps to take. The second edition of the book was rewritten in JavaScript, so it's extremely accessible to frontend developers.
   </p>
 </div>
 
@@ -95,7 +95,7 @@ This book has contained a brief introduction to agile development practices, but
 <div class="media">
   <a href="https://www.informit.com/store/extreme-programming-explained-embrace-change-9780321278654" target="_blank"><img src="/images/extreme-programming-explained.jpg" title="Extreme Programming Explained book cover" class="media-image" /></a>
   <p class="media-description">
-    <a href="https://www.informit.com/store/extreme-programming-explained-embrace-change-9780321278654" target="_blank"><em>Extreme Programming Explained</em></a> is by Kent Beck, the creator of Extreme Programming, one of the early agile methodologies. Beck is also the creator of test-driven development. Unlike some other agile methodologies, Extreme Programming is not agnostic about technical practices. This is important because you can't deliver reliable software on a regular basis without technical processes to keep the software reliable and development speed consistent. *Extreme Programming Explained* also gets into the big-picture values behind Extreme Programming, such as the fact that humans have limited capacities and we should design software practices that acknowledge and support that, rather than deny it.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.173981&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321278654"><em>Extreme Programming Explained: Embrace Change</em></a><IMG border=0 width=1 height=1 src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.173981&type=2&subid=0" /> is by Kent Beck, the creator of Extreme Programming, one of the early agile methodologies. Beck is also the creator of test-driven development. Unlike some other agile methodologies, Extreme Programming is not agnostic about technical practices. This is important because you can't deliver reliable software on a regular basis without technical processes to keep the software reliable and development speed consistent. *Extreme Programming Explained* also gets into the big-picture values behind Extreme Programming, such as the fact that humans have limited capacities and we should design software practices that acknowledge and support that, rather than deny it.
   </p>
 </div>
 
