@@ -112,15 +112,12 @@ Open your `package.json` and note the scripts we have available:
 Let's try it out. Run `yarn serve`. You'll see something like the following:
 
 ```
- DONE  Compiled successfully in 2578ms
+App running at:
+- Local:   http://localhost:8080/
+- Network: http://192.168.1.71:8080/
 
-
-  App running at:
-  - Local:   http://localhost:8080/
-  - Network: http://10.0.1.16:8080/
-
-  Note that the development build is not optimized.
-  To create a production build, run yarn build.
+Note that the development build is not optimized.
+To create a production build, run yarn build.
 ```
 
 Open the `Local` URL in the browser and you should see a page welcoming you to your Vue app.
