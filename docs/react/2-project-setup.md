@@ -309,14 +309,14 @@ Next, add it as the `origin` remote and push up the repo:
 
 ```sh
 $ git remote add origin https://github.com/your-user-name/your-repo-name.git
-$ git push --set-upstream origin master
+$ git push --set-upstream origin main
 ```
 
 In many development approaches, the next thing we would do would be to start building application functionality. After that, we might release to production. Later we might decide to try to add testing and continuous integration.
 
 But we're going to go the opposite route in this guide. We're going to set up CI and deployment from the very start, before we write a line of production code.
 
-There are a number of great CI services with free starter plans, including [Travis CI](https://travis-ci.com/), [CircleCI](https://circleci.com/), and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
+There are a number of great CI services with free starter plans, including [CircleCI](https://circleci.com/) and [GitHub Actions](https://github.com/features/actions). We're going to go with GitHub Actions due to the fact that every GitHub repo is set up for Actions automatically.
 
 When we start our feature work we'll do it in branches. Let's go ahead and configure GitHub Actions in a branch as well, to get used to the workflow. Create a new `ci` branch:
 
