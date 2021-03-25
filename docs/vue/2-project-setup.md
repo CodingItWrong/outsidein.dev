@@ -227,7 +227,7 @@ jobs:
     name: Test
     runs-on: ubuntu-16.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
       - name: Unit Tests
