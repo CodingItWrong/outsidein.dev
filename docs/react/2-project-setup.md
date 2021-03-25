@@ -164,7 +164,47 @@ Now, set up ESLint integration with your editor. For example:
 - Atom: [linter-eslint](https://atom.io/packages/linter-eslint)
 - VS Code: [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-After enabling this integration, open `App.test.js`. Notice warnings on line 2 and 6 inside the curly brackets: Prettier is suggesting removing the spaces inside the curlies. If you've enabled autoformatting on save, which I recommend, when you save the file those spaces will be removed automatically.
+After enabling this integration, restart your editor to make sure it picks up the latest config changes. Then open `App.test.js`. Notice the warning on line 1 inside the curly brackets: Prettier is suggesting removing the spaces inside the curlies. If you've enabled autoformatting on save, which I recommend, when you save the file those spaces will be removed automatically.
+
+To make sure our app builds correctly, we need to make sure there are no lint warnings in any of the default JavaScript files created in our app. Create React App will let the app run locally with warnings, which is helpful as you work. But it will fail the production build if there are any lint warnings, which is good to make sure we've handed any code style issues.
+
+To help find and correct any lint issues in our app, let's set up an npm script to run the lint command. Add the following to `package.json`:
+
+```diff
+ "scripts": {
+   "start": "react-scripts start",
+   "build": "react-scripts build",
+   "test": "react-scripts test",
++  "lint": "eslint src",
+   "eject": "react-scripts eject"
+ }
+```
+
+This command will run ESLint on all JavaScript files in our `src/` directory.
+
+Let's try it. Run `yarn lint`. Depending on your version of Create React App you will likely get a few warnings. Here's what I got:
+
+```bash
+$ yarn lint
+yarn run v1.22.10
+$ eslint src
+
+/Users/josh/apps/opinion-ate/src/index.js
+  11:34  warning  Insert `,`  prettier/prettier
+
+/Users/josh/apps/opinion-ate/src/reportWebVitals.js
+  3:33  warning  Replace `·getCLS,·getFID,·getFCP,·getLCP,·getTTFB·` with
+  `getCLS,·getFID,·getFCP,·getLCP,·getTTFB`  prettier/prettier
+
+✖ 2 problems (0 errors, 2 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+
+✨  Done in 1.55s.
+```
+
+Notice the message that says "2 warnings potentially fixable with the `--fix` option". We saw autofix functionality earlier when we saved our file in the editor. The `--fix` flag is how to use this functionality from the command line.
+
+Run `yarn lint --fix`. If all the warnings you got were autofixable, the command should complete without any warnings. Run `git status` and you should see all the files that you got warnings about have changes applied.
 
 Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. Create React App initializes our app with a git repo, so we can just add the changes:
 
@@ -212,6 +252,7 @@ When it completes, in your `package.json`, add a new script:
    "build": "react-scripts build",
    "test": "react-scripts test",
 +  "cypress": "cypress open",
+   "lint": "eslint src",
    "eject": "react-scripts eject"
  }
 ```
