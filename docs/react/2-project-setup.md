@@ -428,7 +428,7 @@ Click "< Deploys" to go back to the Deploys tab. If you waited for the deploymen
 
 Click the green link in your browser. You should get the "Learn React" page.
 
-Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
+Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Site Overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
 
 ![Change Site Name button](./images/1-13-change-site-name-button.png)
 
@@ -454,12 +454,13 @@ It's important to write down useful information to help future developers (inclu
 Let's add a description of the project and link to production, filling in your Netlify domain:
 
 ```diff
+-# Getting Started with Create React App
 +# opinion-ate
 +
 +An app for tracking reviews of dishes at different restaurants.
 +
-+Production: <https://your-netlify-domain.netlify.com>
-+
++Production: <https://your-netlify-domain.netlify.app>
+
  This project was bootstrapped with
  [Create React App](https://github.com/facebook/create-react-app).
 ```
