@@ -92,9 +92,10 @@ You'll be prompted with a list of features to choose. Use the arrow keys and spa
 
 When you're done, press Return. You'll be given followup questions for some of these. Choose:
 
+* `Choose a version of Vue.js that you want to start the project with`: choose `2.x`
 * `Pick a linter / formatter config`: choose `ESLint + Prettier`, then `Lint on save`. Prettier automatically formats your code when you save the file. Code consistency is a big help for productivity and catching bugs.
 * `Pick a unit testing solution:` choose `Jest`.
-* `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. (Note that Cypress 4 has added support for testing in Firefox and MS Edge as well! Vue CLI should be updated to use Cypress 4 soon.)
+* `Pick a E2E testing solution:` choose `Cypress (Chrome only)`. (Note that versions of Cypress newer than the one Vue CLI installs have added support for testing in Firefox and MS Edge as well.)
 * `Where do you prefer placing config for Babel, ESLint, etc.?` I choose `In dedicated config files`, but it doesn't make a difference for this tutorial.
 * `Save this as a preset for future projects?` You can enter `N`; we shouldn't need it again.
 
