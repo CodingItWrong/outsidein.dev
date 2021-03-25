@@ -350,7 +350,7 @@ Let's add a description of the project and link to production, filling in your N
 +
 +An app for tracking reviews of dishes at different restaurants.
 +
-+Production: <https://your-netlify-domain.netlify.com>
++Production: <https://your-netlify-domain.netlify.app>
 
  ## Project setup
 ```
