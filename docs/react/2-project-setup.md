@@ -335,13 +335,13 @@ jobs:
     name: Test
     runs-on: ubuntu-16.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
       - name: Unit Tests
         run: yarn test --watchAll=false
       - name: E2E Tests
-        uses: cypress-io/github-action@v1
+        uses: cypress-io/github-action@v2
         with:
           start: yarn start
           wait-on: 'http://localhost:3000'
