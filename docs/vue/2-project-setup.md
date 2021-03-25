@@ -145,14 +145,11 @@ These options configure Prettier with some helpful options to match common JavaS
 
 Now, set up ESLint integration with your editor by installing the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
-To confirm it works, open `src/App.vue`. You should see yellow underlines at a few different places:
-
-- Double quotes should be replaced with single quotes
-- Inside object literals, every property on its own line should have a comma after it, even the last one
+To confirm it works, open `src/App.vue`. You should see yellow underlines at a few different places, where double quotes should be replaced with single quotes.
 
 Save the file, and these changes should be made for you automatically.
 
-We can update all our files to be formatted this way by running `yarn lint --fix`.
+We can update all our files to be formatted this way by running `yarn lint`.
 
 Let's go ahead and commit these configuration changes to linting and formatting. Small, focused commits make it easier for other developers to review, and keep us accountable to really understanding what is changing in our code. Vue CLI initializes our app with a git repo, so we can just add the changes:
 
