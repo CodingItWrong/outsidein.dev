@@ -183,7 +183,9 @@ Ran all test suites.
 ✨  Done in 4.50s.
 ```
 
-Now we'll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that we are loading the app and confirming we can see a welcome message. Now run `yarn test:e2e`. You'll see the Cypress application launch. Its window will show a list of "Integration Tests" with just one item: `test.js`.
+Now we'll try our end-to-end tests. Open `tests/e2e/specs/test.js`. Note that we are loading the app and confirming we can see a welcome message. Now run `yarn test:e2e`. A Cypress window will open, with a modal that says "To help you get started", claiming that Cypress created some sample files. This is actually not correct; Vue CLI creates different sample files for you instead. Scroll down and click "OK, got it!" to dismiss the modal.
+
+The Cypress window will show a list of "Integration Tests" with just one item: `test.js`.
 
 ![Cypress window with smoke test](./images/1-2-cypress-smoke-test.png)
 
