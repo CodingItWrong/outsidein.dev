@@ -201,7 +201,7 @@ Next, add it as the `origin` remote and push up the repo:
 
 ```sh
 $ git remote add origin https://github.com/your-user-name/your-repo-name.git
-$ git push --set-upstream origin master
+$ git push --set-upstream origin main
 ```
 
 In many development approaches, the next thing we would do would be to start building application functionality. After that, we might release to production. Later we might decide to try to add testing and continuous integration.
@@ -239,7 +239,7 @@ jobs:
 Here's what's going on in this file:
 
 - We name the workflow "Test".
-- We configure it to run any time code is pushed to the server. This means both PR branches and merges to the `master` branch will be tested.
+- We configure it to run any time code is pushed to the server. This means both PR branches and merges to the `main` branch will be tested.
 - We configure a single job for the workflow, also named "Test".
 - We configure it to run on a specific version of the Ubuntu distribution of Linux. You can also run on `ubuntu-latest`, but new versions of Ubuntu have broken Cypress in the past, so fixing the version ensures it will continue to keep working.
 - Now, we define the series of steps to run for the job. First, we use the GitHub Action `actions/checkout` to check out our code.
@@ -271,10 +271,10 @@ When the test run succeeds, the action will be marked as passed. If you go back 
 
 Go ahead and click "Merge pull request", then "Confirm merge", then "Delete branch".
 
-In your local project, switch back to `master` and pull down the latest changes that we merged in from the branch:
+In your local project, switch back to `main` and pull down the latest changes that we merged in from the branch:
 
 ```sh
-$ git checkout master
+$ git checkout main
 $ git pull
 ```
 
@@ -295,21 +295,21 @@ Once you're signed in, click "New site from Git". Click the "GitHub" button. A l
 
 ![Choosing repo for a new site in Netlify](./images/1-7-searching-for-site.png)
 
-Leave "Branch to deploy" as `master`. Under "Basic build settings", for the "Build command", enter `yarn build` just like we ran locally. Then enter `dist` for the Publish directory. This means that Netlify will run that command, then take the files in that directory and deploy them.
+Leave "Branch to deploy" as `main`. Under "Basic build settings", you should see "Build command" pre-populated with `yarn build`, and `dist/` for the "Publish directory". Netlify has automatically detected that we're using Vue CLI and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
 
 ![Configuring Netlify build settings](./images/1-8-build-settings.png)
 
 That's all we need to configure, so click "Deploy site".
 
-You will be sent to the Overview page for your new site. In yellow you'll see "Site deploy in progress".
+You will be sent to the Site Overview page for your new site. In orange you'll see "Site deploy in progress".
 
 ![Netlify deploy in progress](./images/1-9-deploy-in-progress.png)
 
-Click "Site deploy in progress" and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: master@HEAD Building":
+Click "Site deploy in progress" and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: main@HEAD Building":
 
 ![Netlify list of deployments](./images/1-10-deploy-list.png)
 
-Click "Production: master@HEAD Building". You'll see a console log of output as the site is being built. Eventually you'll see "Site is live":
+Click "Production: main@HEAD Building". You'll see a console log of output as the site is being built. Eventually you'll see "Site is live":
 
 ![Netlify site is live](./images/1-11-site-is-live.png)
 
@@ -319,9 +319,9 @@ Click "< Deploys" to go back to the Deploys tab. If you waited for the deploymen
 
 ![Netlify site automatically assigned name](./images/1-12-site-name.png)
 
-Click the green link in your browser. You should get the "Welcome to your Vue.js App" page.
+Click the green link in your browser. You should get the "Welcome to Your Vue.js App" page.
 
-Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
+Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Site Overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
 ![Change Site Name button](./images/1-13-change-site-name-button.png)
 
 In the dialog that appears, enter any site name you like and click Save.

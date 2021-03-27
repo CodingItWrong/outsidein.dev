@@ -998,10 +998,10 @@ Now Netlify should automatically be deploying the updated version of our site. G
 
 Now we can drag our story to "Done" in Trello: "List Restaurants".
 
-Then, locally, switch back to the `master` branch and pull in the the changes that have been merged in from the branch:
+Then, locally, switch back to the `main` branch and pull in the the changes that have been merged in from the branch:
 
 ```sh
-$ git checkout master
+$ git checkout main
 $ git pull
 ```
 
