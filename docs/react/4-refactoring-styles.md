@@ -54,7 +54,6 @@ Now we're ready to begin styling our app. We'll begin by styling the `App` compo
 In `App.js`, keep the `<RestaurantScreen />` component but wrap it with different Material-UI components:
 
 ```diff
- import React from 'react';
  import {Provider} from 'react-redux';
 +import {createMuiTheme} from '@material-ui/core/styles';
 +import green from '@material-ui/core/colors/green';
@@ -106,7 +105,6 @@ Here's what these Material-UI components do to achieve this look:
 Next let's style `RestaurantScreen`. A common UI element in Material Design is a card, a box around some content. Let's style the `RestaurantScreen` to be a card:
 
 ```diff
- import React from 'react';
 +import Card from '@material-ui/core/Card';
 +import CardContent from '@material-ui/core/CardContent';
 +import Typography from '@material-ui/core/Typography';
@@ -138,7 +136,7 @@ Here's what the components do:
 Finally, let's style the list of the restaurants. Material Design has a list concept that will look nice:
 
 ```diff
- import React, {useEffect} from 'react';
+ import {useEffect} from 'react';
  import {connect} from 'react-redux';
 +import List from '@material-ui/core/List';
 +import ListItem from '@material-ui/core/ListItem';

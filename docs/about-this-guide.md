@@ -76,8 +76,6 @@ Interestingly, our end-to-end test framework, Cypress, uses Mocha under the hood
 When we are displaying whole new blocks of code, they'll be syntax highlighted like this:
 
 ```jsx
-import React from 'react';
-
 const RestaurantScreen = () => (
   <div>
     <h1>Restaurants</h1>
@@ -92,7 +90,6 @@ If you haven't used Vue or React before, you may be surprised to see that they e
 Because we'll be using test-driven development, we'll be spending less time writing large chunks of code and more time making tiny changes to existing code. When that happens, we'll use diff syntax, where lines that are added have a `+` to the left of them, and lines that are removed have a `-`. Those lines will also be colored to draw attention to them:
 
 ```diff
- import React from 'react';
 +import {Provider} from 'react-redux';
 +import store from './store';
  import RestaurantScreen from './components/RestaurantScreen';

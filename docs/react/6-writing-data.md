@@ -83,7 +83,6 @@ We need an "Add Restaurant" text input. What component should it be in? We discu
 Create the file `src/components/NewRestaurantForm.js`, and add the following:
 
 ```js
-import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
 export const NewRestaurantForm = () => {
@@ -151,7 +150,6 @@ Starting from the outside as usual, we'll start with the `NewRestaurantForm` com
 Create the file `src/components/__tests__/NewRestaurantForm.spec.js` and start out by setting up the component and a mock function in a `beforeEach` block:
 
 ```js
-import React from 'react';
 import {render} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {NewRestaurantForm} from '../NewRestaurantForm';
@@ -314,8 +312,7 @@ Save the file and the test failure has changed:
 The function didn't receive the argument it expected: it wanted "Sushi Place", but it didn't receive any arguments. To pass the restaurant name, first we're going to need to set up a state item for the name:
 
 ```diff
--import React from 'react';
-+import React, {useState} from 'react';
++import {useState} from 'react';
  import TextField from '@material-ui/core/TextField';
  import Button from '@material-ui/core/Button';
 
@@ -377,7 +374,7 @@ src/components/NewRestaurantForm.js:10
 We want the `createRestaurant` prop to be passed in by Redux as an action, so let's wire it up:
 
 ```diff
- import React, {useState} from 'react';
+ import {useState} from 'react';
 +import {connect} from 'react-redux';
  import TextField from '@material-ui/core/TextField';
  import Button from '@material-ui/core/Button';
@@ -791,7 +788,6 @@ $ yarn add --dev flush-promises
 Then add it to your test:
 
 ```diff
- import React from 'react';
 -import {render} from '@testing-library/react';
 +import {render, act} from '@testing-library/react';
  import userEvent from '@testing-library/user-event';

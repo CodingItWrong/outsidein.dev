@@ -25,7 +25,7 @@ To get a clean start, let's delete out the sample content Create React App creat
 - `src/App.test.js`
 - `src/index.css`
 - `src/logo.svg`
-- `src/serviceWorker.js`
+- `src/reportWebVitals.js`
 
 Make the following changes to `src/index.js`:
 
@@ -34,7 +34,7 @@ Make the following changes to `src/index.js`:
  import ReactDOM from 'react-dom';
 -import './index.css';
  import App from './App';
--import * as serviceWorker from './serviceWorker';
+-import reportWebVitals from './reportWebVitals';
 
  ReactDOM.render(
    <React.StrictMode>
@@ -43,17 +43,15 @@ Make the following changes to `src/index.js`:
    document.getElementById('root')
  );
 -
--// If you want your app to work offline and load faster, you can change
--// unregister() to register() below. Note this comes with some pitfalls.
--// Learn more about service workers: https://bit.ly/CRA-PWA
--serviceWorker.unregister();
+-// If you want to start measuring performance in your app, pass a function
+-// to log results (for example: reportWebVitals(console.log))
+-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+-reportWebVitals();
 ```
 
 Replace the contents of `App.js` with the following minimal content:
 
 ```jsx
-import React from 'react';
-
 const App = () => (
   <div>
     Hello, world.
@@ -170,7 +168,6 @@ It's time for us to write the code to make this pass. Let's think about how we w
 With outside-in testing, we build the outside first, which in this case is our user interface components. And a common principle is to **write the code you wish you had.** What does that mean in our case? Well, when we created our app, we were given an `<App />` component. Do we want to put our user interface directly in there? No, it's best to save the `<App />` component for app-wide concerns such as a title bar that we'll add soon. Instead, it would be great if we had a `<RestaurantScreen />` component that would contain everything specific to our restaurants. We wish we had it, so let's add it to `App.js`:
 
 ```diff
- import React from 'react';
 +import RestaurantScreen from './components/RestaurantScreen';
 
  const App = () => (
@@ -188,8 +185,6 @@ In `src`, create a `components` folder, then inside it create a `RestaurantScree
 For the moment let's add just enough content to make it a valid component. Add the following:
 
 ```jsx
-import React from 'react';
-
 const RestaurantScreen = () => (
   <div>
     <h1>Restaurants</h1>
@@ -206,7 +201,6 @@ Well, what do we want to do on this screen? For this story, we want to display a
 Let's start by writing the code we wish we had again. In `RestaurantScreen.js`:
 
 ```diff
- import React from 'react';
 +import RestaurantList from './RestaurantList';
 
  const RestaurantScreen = () => (
@@ -222,8 +216,6 @@ Let's start by writing the code we wish we had again. In `RestaurantScreen.js`:
 Now let's implement that component. Create a `RestaurantList.js` file in `src/components` and again add the minimal content:
 
 ```js
-import React from 'react';
-
 export const RestaurantList = () => <div>RestaurantList</div>;
 
 export default RestaurantList;
@@ -274,7 +266,6 @@ We use `jest.fn()` to create a Jest mock function, which will allow us to check 
 Now, we're ready to render our component:
 
 ```diff
-+import React from 'react';
 +import {render} from '@testing-library/react';
 +import {RestaurantList} from '../RestaurantList';
 
@@ -338,8 +329,7 @@ To call a function once when our component renders, we'll use an effect. First, 
 Now, we run the `loadRestaurants` prop in a `useEffect`:
 
 ```diff
--import React from 'react';
-+import React, {useEffect} from 'react';
++import {useEffect} from 'react';
 
 -export const RestaurantList = () => {
 +export const RestaurantList = ({loadRestaurants}) => {
@@ -555,7 +545,7 @@ $ yarn add redux react-redux redux-devtools-extension
 Next, connect the `RestaurantList` component to the appropriate state. This is what will ultimately fix our Cypress error:
 
 ```diff
- import React, {useEffect} from 'react';
+ import {useEffect} from 'react';
 +import {connect} from 'react-redux';
 
  export const RestaurantList = ({loadRestaurants, restaurants}) => {
@@ -586,7 +576,6 @@ Uncaught Uncaught Error: Could not find "store" in the context of
 This error is because we haven't hooked up our application to a Redux store. Let's do that now, in `App.js`:
 
 ```diff
- import React from 'react';
 +import {Provider} from 'react-redux';
 +import store from './store';
  import RestaurantScreen from './components/RestaurantScreen';
