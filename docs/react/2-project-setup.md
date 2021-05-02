@@ -164,7 +164,7 @@ Now, set up ESLint integration with your editor. For example:
 - Atom: [linter-eslint](https://atom.io/packages/linter-eslint)
 - VS Code: [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-After enabling this integration, restart your editor to make sure it picks up the latest config changes. Then open `App.test.js`. Notice the warning on line 1 inside the curly brackets: Prettier is suggesting removing the spaces inside the curlies. If you've enabled autoformatting on save, which I recommend, when you save the file those spaces will be removed automatically.
+After enabling this integration, restart your editor to make sure it picks up the latest config changes. Then open `src/App.test.js`. Notice the warning on line 1 inside the curly brackets: Prettier is suggesting removing the spaces inside the curlies. If you've enabled autoformatting on save, which I recommend, when you save the file those spaces will be removed automatically.
 
 To make sure our app builds correctly, we need to make sure there are no lint warnings in any of the default JavaScript files created in our app. Create React App will let the app run locally with warnings, which is helpful as you work. But it will fail the production build if there are any lint warnings, which is good to make sure we've handed any code style issues.
 
