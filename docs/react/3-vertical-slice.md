@@ -143,6 +143,10 @@ Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. 
 
 Then, we call `cy.route()` to stub a specific backend request; in this case, the `https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` or `updated_at` fields, because our app won't be using them.
 
+::: tip
+The Cypress methods `cy.server()` and `cy.route()` we use here are actually deprecated in favor of a newer `cy.intercept()` API. For now I'm still using the deprecated APIs because `cy.server()`'s `force404` option is a simple way to prevent any of our E2E tests from accidentally hitting a backend server. Cypress has said that once these deprecated methods are removed from Cypress itself, they'll still be available in a plugin.
+:::
+
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
 After we've created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be "red") at first because we haven't yet implemented the functionality.
