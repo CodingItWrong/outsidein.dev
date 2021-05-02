@@ -921,7 +921,7 @@ $ yarn add axios
 ```
 
 ::: tip
-One reason to use Axios is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. Axios uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+Instead of Axios, we could have used the browser's built-in `fetch()` function. But there are still users on older iPhones and IE 11 whose browsers don't have `fetch()`, and Axios provides some nice interface improvements over `fetch()` in my opinion. Also note that `cy.route()` does not support stubbing `fetch()` calls, so if we had gone with `fetch()` we would need to use the newer `cy.intercept()` API.
 :::
 
 Next, use Axios to make an HTTP request to the correct endpoint:
