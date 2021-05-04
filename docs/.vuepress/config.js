@@ -25,8 +25,7 @@ module.exports = {
     },
     nav: [
       { text: 'Contact', link: '/contact' },
-      { text: 'Chat', link: 'https://gitter.im/outsideindev/community' },
-      { text: 'Twitter', link: 'https://twitter.com/outsideindev' },
+      { text: 'Chat', link: 'https://gitter.im/outsideindev/community' }
     ],
     sidebar: [
       '/about-this-guide',
