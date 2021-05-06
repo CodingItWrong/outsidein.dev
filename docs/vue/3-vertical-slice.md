@@ -1028,7 +1028,9 @@ $ yarn add axios
 ```
 
 ::: tip
-One reason to use Axios is that Cypress's network request stubbing doesn't currently work for `fetch()` requests, only for the older `XMLHttpRequest` API. Axios uses `XMLHttpRequest` under the hood while providing a nicer interface than either it or `fetch()` in my opinion, so it's a great choice for any web application, but especially one tested with Cypress.
+One reason to use Axios is that the version of Cypress that Vue CLI installs doesn't stub `fetch()` requests, only the older `XMLHttpRequest` API, which Axios uses.
+
+Even if we were to update Cypress, another reason to use Axios is that there are still users on older iPhones and IE 11 whose browsers don't have `fetch()`, and Axios provides some nice interface improvements over `fetch()` in my opinion.
 :::
 
 Next, use Axios to make an HTTP request to the correct endpoint:
