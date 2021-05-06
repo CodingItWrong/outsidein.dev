@@ -1083,7 +1083,7 @@ $ vue-cli-service serve
 
 
   App running at:
-  - Local:   http://localhost:8081/
+  - Local:   http://localhost:8080/
 ```
 
 You should see the default "Pasta Place" and "Salad Place" records loaded from the API.
