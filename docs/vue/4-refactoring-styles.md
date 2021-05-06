@@ -200,7 +200,7 @@ the component correctly? For recursive components, make sure to provide the
       ---> <RestaurantList>
 ```
 
-The Vuetify installer configured our app to use Vuetify, but we need to do the same in our unit test, similar to how we do with Vuex. But instead of using the `localVue` instance in this case, we need to configure Vuetify on the root and local Vue instance, following the instructions in the Vuetify docs:
+The Vuetify installer configured our app to use Vuetify, but we need to do the same in our unit test, similar to how we do with Vuex. In the case of Vuetify, we need to make a configuration change on both the root and local Vue instances. Make the following changes as described in the Vuetify docs:
 
 ```diff
 +import Vue from 'vue';
