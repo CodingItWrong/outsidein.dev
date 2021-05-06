@@ -497,7 +497,9 @@ Vuetify has a `v-alert` component that will work well:
 
 Note that we aren't asserting the text of the message in our test. This way, the copy can be changed, and our test still passes. We are just confirming that whatever the error message is, that it is displayed.
 
-Save the file and our test passes. Now, specify that the error does _not_ show when loading succeeds:
+Save the file and our test should pass. If you get errors about "Cannot read property '…' of undefined", check the instructions in [the last chapter](/vue/4-refactoring-styles.html) and make sure you added the `vuetify` instance to the call to `mount()`.
+
+Now, specify that the error does _not_ show when loading succeeds:
 
 ```diff
  describe('when loading succeeds', () => {

@@ -200,7 +200,7 @@ the component correctly? For recursive components, make sure to provide the
       ---> <RestaurantList>
 ```
 
-The Vuetify installer configured our app to use Vuetify, but we need to do the same in our unit test, similar to how we do with Vuex. But instead of using the `localVue` instance in this case, we need to configure Vuetify on the root Vue instance:
+The Vuetify installer configured our app to use Vuetify, but we need to do the same in our unit test, similar to how we do with Vuex. But instead of using the `localVue` instance in this case, we need to configure Vuetify on the root and local Vue instance, following the instructions in the Vuetify docs:
 
 ```diff
 +import Vue from 'vue';
@@ -213,7 +213,18 @@ The Vuetify installer configured our app to use Vuetify, but we need to do the s
 +  Vue.use(Vuetify);
 +
    const records = [
+     {id: 1, name: 'Sushi Place'},
+     {id: 2, name: 'Pizza Place'},
+   ];
+
++  const vuetify = new Vuetify();
+   const localVue = createLocalVue();
+...
+-  wrapper = mount(RestaurantList, {localVue, store});
++  wrapper = mount(RestaurantList, {localVue, store, vuetify});
 ```
+
+**Make sure to add the `vuetify` instance to the call to `mount()`;** if you don't, the current tests will pass, but a new test in a later chapter will fail with an unhelpful error message.
 
 Save the file and when the unit tests rerun the warnings should be gone.
 
