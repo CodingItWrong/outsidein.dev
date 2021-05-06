@@ -1043,10 +1043,10 @@ Next, use Axios to make an HTTP request to the correct endpoint:
 +});
 +
  const api = {
--  loadRestaurants() {}
+-  loadRestaurants() {},
 +  loadRestaurants() {
 +    return client.get('/restaurants').then(response => response.data);
-  },
++  },
  };
 
  export default api;
