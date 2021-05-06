@@ -852,21 +852,15 @@ Now, to set up our `restaurants` store module. Just like in our component test, 
 Now use it in your test like so:
 
 ```diff
- import Vuex from 'vuex';
- import {createLocalVue} from '@vue/test-utils';
-+import restaurants from '@/store/restaurants';
-
- describe('restaurants', () => {
-...
-       const api = {
-         loadRestaurants: () => Promise.resolve(records),
-       };
-+      const store = new Vuex.Store({
-+        modules: {
-+          restaurants: restaurants(api),
-+        },
-+      });
-     });
+   const api = {
+     loadRestaurants: () => Promise.resolve(records),
+   };
++  const store = new Vuex.Store({
++    modules: {
++      restaurants: restaurants(api),
++    },
++  });
+ });
 ```
 
 Now that our store is set, we can dispatch the `load` action, then check the state of the store afterward:
