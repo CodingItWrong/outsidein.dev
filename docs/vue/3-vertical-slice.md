@@ -207,7 +207,7 @@ Then render that component in `RestaurantScreen`:
 ```diff
  <template>
    <div>
-     <h1>RestaurantScreen</h1>
+     <h1>Restaurants</h1>
 +    <RestaurantList />
    </div>
  </template>
