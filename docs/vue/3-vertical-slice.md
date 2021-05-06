@@ -68,14 +68,16 @@ Next, go to `https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants` 
 ```json
 [
   {
-    "id": 1,
+    "id": 788,
     "name": "Pasta Place",
-    "created_at": "2020-03-30T23:54:52.000Z"
+    "created_at": "2021-03-30T23:54:52.000Z",
+    "updated_at": "2021-03-30T23:54:52.000Z"
   },
   {
-    "id": 2,
+    "id": 789,
     "name": "Salad Place",
-    "created_at": "2020-03-30T23:54:52.000Z"
+    "created_at": "2021-03-30T23:54:52.000Z",
+    "updated_at": "2021-03-30T23:54:52.000Z"
   }
 ]
 ```
