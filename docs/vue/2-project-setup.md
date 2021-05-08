@@ -84,6 +84,7 @@ You'll be asked for a preset; choose "Manually select features".
 
 You'll be prompted with a list of features to choose. Use the arrow keys and spacebar to select:
 
+* Choose Vue version
 * Babel
 * Vuex
 * Linter / Formatter
