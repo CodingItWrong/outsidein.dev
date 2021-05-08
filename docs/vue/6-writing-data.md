@@ -162,6 +162,7 @@ Vue.use(Vuetify);
 describe('NewRestaurantForm', () => {
   const restaurantName = 'Sushi Place';
 
+  const vuetify = new Vuetify();
   const localVue = createLocalVue();
   localVue.use(Vuex);
 
@@ -186,6 +187,7 @@ describe('NewRestaurantForm', () => {
     wrapper = mount(NewRestaurantForm, {
       localVue,
       store,
+      vuetify,
       attachTo: div,
     });
   });
