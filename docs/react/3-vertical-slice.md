@@ -282,7 +282,11 @@ Now, we're ready to render our component:
  });
 ```
 
-We import the `RestaurantList` component, making sure to use the named import because that will continue to be the unconnected component. Then we use React Testing Library's `render()` function to render it. We pass in JSX just like we'd use in production code, and we pass the `loadRestaurants` function as a component prop.
+::: danger
+Be sure to use the named import `import {RestaurantList}` with curly braces, not the default import `import RestaurantList`. The named import will continue to be the component that is not connected to Redux, which is the one we want to unit test. If you use the default import, then once we connect it to Redux your unit test will begin failing.
+:::
+
+We import the `RestaurantList` component, then we use React Testing Library's `render()` function to render it. We pass in JSX just like we'd use in production code, and we pass the `loadRestaurants` function as a component prop.
 
 Finally, we're ready to run an expectation to confirm that the component loads restaurants on first render. We just check that our mock function was called:
 
