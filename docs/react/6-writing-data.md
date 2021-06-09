@@ -629,7 +629,11 @@ Save and all unit tests pass. Now our store should be set.
 
 ## Creating the API Method
 
-Let's step back up to the E2E level and see if the E2E test has progressed. Rerun it and the console says:
+Let's step back up to the E2E level and see if the E2E test has progressed. Rerun it and we still get the same failure:
+
+> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
+
+What's the cause this time? Open the browser tools in Cypress and check the console tab. You should see an error:
 
 ```sh
 TypeError: api.createRestaurant is not a function
