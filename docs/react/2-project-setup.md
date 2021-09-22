@@ -263,9 +263,9 @@ Now run that command:
 $ yarn cypress
 ```
 
-A Cypress window will open, with a modal that says "To help you get started", informing us Cypress created some sample files. Click "OK, got it!"
+A Cypress window will open. You'll see a blue message that says "We've created some sample test files…". Click "No thanks, delete example files", then "Yes, delete files". Then quit Cypress and rerun `yarn cypress` to restart it.
 
-Now let's tweak these files. In the root of your project should be a `cypress.json` file. Open it and replace the contents with:
+Now let's tweak some other files Cypress created. In the root of your project should be a `cypress.json` file. Open it and replace the contents with:
 
 ```json
 {
@@ -275,7 +275,7 @@ Now let's tweak these files. In the root of your project should be a `cypress.js
 
 This configures Cypress to interpret all relative URLs relative to the root of our local React app.
 
-Now, open the `cypress/integration` folder Cypress created, and see that there is an `examples` child folder under it. Delete the `examples` folder with its child test files. In its place, create a file `cypress/integration/smoke.spec.js` and add the following contents:
+Now, open the `cypress/integration` folder Cypress created. Create a file `smoke.spec.js` and add the following contents:
 
 ```js
 describe('Smoke Test', () => {
