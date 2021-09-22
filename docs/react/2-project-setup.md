@@ -333,7 +333,7 @@ on: [push]
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: Install Dependencies
