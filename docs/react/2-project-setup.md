@@ -111,7 +111,7 @@ Add this rather lengthy list of packages:
 $ yarn add --dev eslint-config-prettier \
                  eslint-plugin-cypress \
                  eslint-plugin-jest \
-                 eslint-plugin-prettier \
+                 "eslint-plugin-prettier@^3.4.1" \
                  prettier
 ```
 
