@@ -24,3 +24,7 @@ $ yarn start
 ```bash
 $ yarn deploy
 ```
+
+## Copyright
+
+Copyright © 2020-present Josh Justice. Down arrow icon by Mega Agustina from the Noun Project
