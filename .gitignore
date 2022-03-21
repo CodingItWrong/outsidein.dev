@@ -107,3 +107,6 @@ dist
 .vscode-test
 
 .DS_Store
+
+# Local Netlify folder
+.netlify
