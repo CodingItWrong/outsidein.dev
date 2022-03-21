@@ -27,4 +27,4 @@ $ yarn deploy
 
 ## Copyright
 
-Copyright © 2020-present Josh Justice. Down arrow icon by Mega Agustina from the Noun Project
+Copyright © 2020-present Josh Justice. [Down arrow icon](https://thenounproject.com/icon/down-arrow-3213803/) by Mega Agustina from the Noun Project
