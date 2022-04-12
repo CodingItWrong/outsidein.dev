@@ -32,9 +32,9 @@ Redux-Thunk is the recommended way to add asynchrony to a Redux data layer for m
 
 Axios provides a nice simple interface for making web service requests. The browser's built-in `fetch()` function is close, but still has some repetitive parts. Plus, our E2E testing tool can't stub backend requests when `fetch()` is used.
 
-* **UI Components: [Material-UI][material-ui]**
+* **UI Components: [MUI][mui]**
 
-Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with Material-UI, a popular React implementation of Google's Material Design.
+Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with MUI, a popular React implementation of Google's Material Design.
 
 * **Test Runner: [Jest]**
 
@@ -65,7 +65,7 @@ Now that we've reviewed the tech stack we'll be using, it's time to get our app 
 [cypress]: https://www.cypress.io/
 [github-actions]: https://github.com/features/actions
 [jest]: https://jestjs.io/
-[material-ui]: https://material-ui.com/
+[mui]: https://mui.com/
 [netlify]: https://www.netlify.com/
 [react-testing-library]: https://testing-library.com/react
 [redux]: https://redux.js.org/
