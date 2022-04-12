@@ -60,7 +60,7 @@ For deploying frontend applications there's no service simpler than Netlify. Cho
 
 Now that we've reviewed the tech stack we'll be using, it's time to get our app set up. In the next chapter we'll create our application, the environment it runs in, and do some setup for our development process.
 
-[axios]: https://github.com/axios/axios
+[axios]: https://axios-http.com/
 [create-react-app]: https://create-react-app.dev/
 [cypress]: https://www.cypress.io/
 [github-actions]: https://github.com/features/actions
