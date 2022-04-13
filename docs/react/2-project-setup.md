@@ -52,6 +52,8 @@ As of the time of writing, the latest version of git is 2.35.1 -- you can run `g
 ### Node
 We'll be using Create React App as our build tool. Like most frontend build tools, it runs on top of [Node.js](https://nodejs.org/en/), so you'll need node installed locally.
 
+Node's "LTS" (long-term support) version is recommended for most users. As of the time of writing, the LTS version is 16.14.2 -- you can run `node -v` to check your version.
+
 ### Yarn
 [Yarn](https://yarnpkg.com/) is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
 
