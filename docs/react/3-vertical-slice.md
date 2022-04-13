@@ -368,9 +368,7 @@ it('displays the restaurants', () => {
     {id: 2, name: 'Pizza Place'},
   ];
 
-  const {queryByText} = render(
-    <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
-  );
+  render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
 });
 ```
 
@@ -378,21 +376,22 @@ So far it's pretty similar to our previous test. There are just a few difference
 
 - Instead of a Jest mock function, we set up a `noop` function that does nothing ("no operation").
 - We define a `restaurants ` variable that contains an array of two restaurant objects.
-- We destructure the property `queryByText` from the return value of `render()`, because we'll need it in a moment.
 
-Now, instead of running an expectation that `loadRestaurants` was called, we use the destructured `queryByText` function to check what is rendered out:
+Now, instead of running an expectation that `loadRestaurants` was called, we use the `screen.queryByText` function to check what is rendered out:
 
 ```diff
-   const {queryByText} = render(
-     <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
-   );
+-import {render} from '@testing-library/react';
++import {render, screen} from '@testing-library/react';
+ import {RestaurantList} from '../RestaurantList';
+...
+   render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
 +
-+  expect(queryByText('Sushi Place')).not.toBeNull();
-+  expect(queryByText('Pizza Place')).not.toBeNull();
++  expect(screen.queryByText('Sushi Place')).not.toBeNull();
++  expect(screen.queryByText('Pizza Place')).not.toBeNull();
  });
 ```
 
-`queryByText` finds an element containing the passed-in text. We pass in the name of each of the two restaurants. If found, `queryByText` returns a reference to the element; if not found, it returns `null`. So, to confirm they are found, we check that return result is *not* null.
+`screen.queryByText` finds an element containing the passed-in text. We pass in the name of each of the two restaurants. If found, `queryByText` returns a reference to the element; if not found, it returns `null`. So, to confirm they are found, we check that return result is *not* null.
 
 Why did we split this unit test out from the first one? There is a common testing principle to **check one behavior per test in unit tests.** In our first test we checked the loading behavior, and in this test we are checking the restaurant-display behavior. Having separate test cases for each behavior of the component makes it easy to understand what it does, and easy to see what went wrong if one of the assertions fails. This principle is sometimes phrased "run one expectation per test", but in this test we have two expectations. We're following the spirit of the principle, though, because those two expectations are very closely related: they're checking for two analogous bits of text on the page.
 
@@ -407,9 +406,9 @@ When we save the file, our test runs, and it's red, as we expect. We get the fol
 
     Received: null
 
-      23 |     );
-      24 |
-    > 25 |     expect(queryByText('Sushi Place')).not.toBeNull();
+      20 |     render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
+      21 |
+    > 22 |     expect(screen.queryByText('Sushi Place')).not.toBeNull();
          |                                            ^
 ```
 
@@ -477,12 +476,11 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +    {id: 2, name: 'Pizza Place'},
 +  ];
 +  let loadRestaurants;
-+  let context;
 +
 +  beforeEach(() => {
 +    loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
-+    context = render(
++    render(
 +      <RestaurantList
 +        loadRestaurants={loadRestaurants}
 +        restaurants={restaurants}
@@ -523,14 +521,12 @@ Now we can remove the duplicated code from the individual tests:
 -    <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
 -  );
 -
-+  const {queryByText} = context;
-+
    expect(queryByText('Sushi Place')).not.toBeNull();
    expect(queryByText('Pizza Place')).not.toBeNull();
  });
 ```
 
-Save the file and our tests should still pass. With this, our test blocks are much shorter: almost all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
+Save the file and our tests should still pass. With this, our test blocks are much shorter: all they contain is the expectations. This is good because it keeps our tests focused and very easy to read.
 
 ## Stepping Back Up
 
