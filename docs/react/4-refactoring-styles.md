@@ -45,7 +45,7 @@ $ git checkout -b material-design
 Install the core Material-UI package:
 
 ```sh
-$ yarn add @material-ui/core
+$ yarn add @material-ui/core@4.12.4
 ```
 
 Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
