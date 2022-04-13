@@ -533,7 +533,7 @@ Save the file and our tests should still pass. With this, our test blocks are mu
 We've now specified the behavior of our `RestaurantList` component, and our unit test is complete. The next step in outside-in TDD is to **step back up to the end-to-end test and see our next failure.** Rerun the test in Chrome and we see:
 
 ```sh
-Uncaught Uncaught TypeError: Cannot read property 'map' of undefined
+TypeError: Cannot read properties of undefined
 ```
 
 ![Cypress failing because map is undefined](./images/2-2-map-undefined.png)
@@ -571,7 +571,7 @@ Note that we are using the React-Redux `connect()` function rather than the newe
 If you've used Redux before you know we have more setup steps to do. But let's rerun the E2E test to let it drive us to do so. The error we get is:
 
 ```sh
-Uncaught Uncaught Error: Could not find "store" in the context of
+Error: Could not find "store" in the context of
 "Connect(RestaurantList)".
 ```
 
@@ -633,7 +633,7 @@ We go ahead and use `combineReducers` since we will ultimately have multiple res
 This should fix our E2E test error, so rerun the Cypress test. Now we get a new error:
 
 ```sh
-Uncaught Uncaught TypeError: loadRestaurants is not a function
+TypeError: loadRestaurants is not a function
 ```
 
 ![Cypress failure that loadRestaurants is not a function](./images/2-4-redux-action-not-defined.png)
@@ -872,10 +872,8 @@ Another benefit of testing the store from the outside is ensuring that all the p
 Now that our unit test is passing, it's time to step back up to the E2E test. It fails with a new error:
 
 ```sh
-Uncaught Uncaught TypeError: Cannot read property 'loadRestaurants' of undefined
+Cannot read properties of undefined (reading 'loadRestaurants')
 ```
-
-Scroll down in the application window and you'll see that it's actually the `api.loadRestaurants()` method call that's undefined:
 
 ![Cypress failure showing loadRestaurants property on undefined](./images/2-5-api-load-restaurants-undefined.png)
 
@@ -909,7 +907,7 @@ Next, let's wire the API object up our store. Update `src/store/index.js`:
 Rerun the E2E test and we get a new error:
 
 ```sh
-Uncaught Uncaught TypeError: Cannot read property 'then' of undefined
+Cannot read properties of undefined (reading 'then')
 ```
 
 Our method isn't returning a Promise, so the caller can't chain `.then()` onto it. This is because we still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API.
