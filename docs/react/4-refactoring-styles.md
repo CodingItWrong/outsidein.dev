@@ -34,7 +34,7 @@ Press `a` to run all the tests. They should pass. Keep the unit test process run
 In another terminal, run `yarn start`, and in a third, run `yarn cypress`. Click `listing-restaurants.spec.js` and make sure it passes.
 
 Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
-We're going to use Material-UI, a popular React component library that follows Google's Material Design.
+We're going to use Material-UI 4, a popular React component library that follows Google's Material Design.
 
 Create a new branch for this story:
 
