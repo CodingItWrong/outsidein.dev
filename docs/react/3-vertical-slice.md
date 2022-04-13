@@ -540,10 +540,11 @@ TypeError: Cannot read properties of undefined
 
 This should make sense from what we just built: we called the `map` function on the `restaurants` array, but in our application code we aren't yet passing a `restaurants` array. How do we want our component to get that array? We want it to be provided by the Redux store. It's time to write the code we wish we had, and hook our restaurant list up to Redux.
 
-Add `redux` and `react-redux` dependencies. We'll go ahead and add `redux-devtools-extension` too:
+Add `redux` and `react-redux` dependencies:
 
 ```sh
-$ yarn add redux react-redux redux-devtools-extension
+$ yarn add redux@4.1.2 \
+    react-redux@7.2.8
 ```
 
 Next, connect the `RestaurantList` component to the appropriate state. This is what will ultimately fix our Cypress error:
@@ -597,10 +598,9 @@ We'll need to define that store as well. Under `src/`, create a `store` folder, 
 
 ```js
 import {createStore} from 'redux';
-import {devToolsEnhancer} from 'redux-devtools-extension';
 import rootReducer from './reducers';
 
-const store = createStore(rootReducer, devToolsEnhancer());
+const store = createStore(rootReducer);
 
 export default store;
 ```
@@ -641,23 +641,19 @@ TypeError: loadRestaurants is not a function
 How do we want the `loadRestaurants` function to be provided to the component? We want it to be an asynchronous Redux action. To make that work, it's time to add `redux-thunk`:
 
 ```sh
-$ yarn add redux-thunk
+$ yarn add redux-thunk@2.4.1
 ```
 
 Hook it up in `src/store/index.js`:
 
 ```diff
 -import {createStore} from 'redux';
-+import {createStore, applyMiddleware, compose} from 'redux';
++import {createStore, applyMiddleware} from 'redux';
 +import thunk from 'redux-thunk';
- import {devToolsEnhancer} from 'redux-devtools-extension';
  import rootReducer from './reducers';
 
--const store = createStore(rootReducer, devToolsEnhancer());
-+const store = createStore(
-+  rootReducer,
-+  compose(applyMiddleware(thunk), devToolsEnhancer()),
-+);
+-const store = createStore(rootReducer);
++const store = createStore(rootReducer, applyMiddleware(thunk));
 
  export default store;
 ```
@@ -897,11 +893,11 @@ Next, let's wire the API object up our store. Update `src/store/index.js`:
  import rootReducer from './reducers';
 +import api from '../api';
 
- const store = createStore(
-   rootReducer,
--  compose(applyMiddleware(thunk), devToolsEnhancer()),
-+  compose(applyMiddleware(thunk.withExtraArgument(api)), devToolsEnhancer()),
- );
+-const store = createStore(rootReducer, applyMiddleware(thunk));
++const store = createStore(
++  rootReducer,
++  applyMiddleware(thunk.withExtraArgument(api)),
++);
 ```
 
 Rerun the E2E test and we get a new error:
