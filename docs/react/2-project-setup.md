@@ -412,11 +412,11 @@ There are many ways to deploy frontend apps. One easy way is a service like Netl
 
 Create a Netlify account from [Netlify's Sign Up page](https://app.netlify.com/signup). Since we will need to give it access to GitHub anyway, it might make sense to sign up with your GitHub account.
 
-Once you're signed in, click "New site from Git". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it.
+Once you're signed in, click "Add new site", then "Import an existing project". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it.
 
 ![Choosing repo for a new site in Netlify](./images/1-7-searching-for-site.png)
 
-Leave "Branch to deploy" as `main`. Under "Basic build settings", you should see "Build command" pre-populated with `yarn build`, and `build/` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
+Leave "Branch to deploy" as `main`. Under "Basic build settings", leave "Base directory" empty. You should see "Build command" pre-populated with `yarn build`, and `build` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
 
 ![Configuring Netlify build settings](./images/1-8-build-settings.png)
 
@@ -442,7 +442,7 @@ Click "< Deploys" to go back to the Deploys tab. If you waited for the deploymen
 
 Click the green link in your browser. You should get the "Learn React" page.
 
-Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Site Overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
+Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Site overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
 
 ![Change Site Name button](./images/1-13-change-site-name-button.png)
 
