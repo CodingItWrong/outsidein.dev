@@ -47,6 +47,8 @@ Here are the tools we'll need to install:
 ### Git
 Version control is essential for most developers, but even more so for agile developers. You need to be able to track the small steps you take to make sure they aren't lost. Although we won't get into it in this guide, focused and well-explained commit messages are essential for communicating to your teammates as well. [Git](https://git-scm.com/) is probably the most popular version control tool right now, and we'll use GitHub for pull requests and CI purposes as well.
 
+As of the time of writing, the latest version of git is 2.35.1 -- you can run `git --version` to check your version. But as we're using only the most basic git features, if you're running an older version, it's unlikely to cause problems.
+
 ### Node
 We'll be using Create React App as our build tool. Like most frontend build tools, it runs on top of [Node.js](https://nodejs.org/en/), so you'll need node installed locally.
 
