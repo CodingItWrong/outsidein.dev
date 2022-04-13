@@ -131,7 +131,7 @@ Then create a file `.eslintrc.js` at the root of your project and add the follow
 module.exports = {
   extends: ['react-app', 'prettier'],
   plugins: ['prettier', 'jest', 'cypress'],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   env: {
     browser: true,
     'cypress/globals': true,
