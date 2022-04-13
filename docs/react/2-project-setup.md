@@ -196,7 +196,7 @@ Let's try it. Run `yarn lint`. Depending on your version of Create React App you
 
 ```bash
 $ yarn lint
-yarn run v1.22.10
+yarn run v1.22.18
 $ eslint src
 
 /Users/josh/apps/opinion-ate/src/index.js
