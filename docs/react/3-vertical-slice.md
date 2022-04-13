@@ -911,7 +911,7 @@ Our method isn't returning a Promise, so the caller can't chain `.then()` onto i
 We'll use the popular Axios library to make our HTTP requests. Add it to your project:
 
 ```sh
-$ yarn add axios
+$ yarn add axios@0.26.1
 ```
 
 ::: tip
