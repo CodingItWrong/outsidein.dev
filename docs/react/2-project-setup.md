@@ -73,8 +73,10 @@ Our next story is "Create App"; drag it to "In Progress".
 Create a new React app:
 
 ```sh
-$ npx create-react-app opinion-ate
+$ yarn create react-app --scripts-version 5.0.1 opinion-ate
 ```
+
+(The `--scripts-version` option should ensure you get the same version of the `react-scripts` package as this guide, to minimize the chances of incompatibilities.)
 
 Create React App will start the installation process, and when it completes, your application will be created and ready to use.
 
