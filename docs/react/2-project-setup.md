@@ -55,7 +55,9 @@ We'll be using Create React App as our build tool. Like most frontend build tool
 Node's "LTS" (long-term support) version is recommended for most users. As of the time of writing, the LTS version is 16.14.2 -- you can run `node -v` to check your version.
 
 ### Yarn
-[Yarn](https://yarnpkg.com/) is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
+[Yarn 1.x](https://classic.yarnpkg.com/en/docs/install) is an alternative `npm` client. Generally I find it to be faster, more predictable, and more reliable than using the default `npm` client. I use `yarn` for all my projects.
+
+The lastest major version of Yarn is 2.x. It is a significant architectural change, and many Node ecosystem tools don't yet support it. This guide uses Yarn 1.x. If you install Yarn via the instructions linked above, you will have Yarn 1.x available. The latest version as of time of writing is 1.22.18 -- you can run `yarn -v` to check your version.
 
 If you'd prefer to use `npm`, you can still follow this guide, you'll just need to replace any `yarn` commands with the equivalent `npm` commands.
 
