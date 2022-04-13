@@ -802,8 +802,8 @@ The test fails, showing an empty array as the received value:
 
   expect(received).toEqual(expected) // deep equality
 
-  - Expected
-  + Received
+  - Expected  - 10
+  + Received  + 1
 
   - Array [
   -   Object {
