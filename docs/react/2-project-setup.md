@@ -91,7 +91,7 @@ Let's try it out. Run `yarn start`. Your app should automatically open in your d
 
 ![React app intro screen](./images/1-1-hello-react.png)
 
-In the console you'll see something like the following:
+In the console you'll see output like the following:
 
 ```
 Compiled successfully!
@@ -103,6 +103,8 @@ You can now view opinion-ate in the browser.
 
 Note that the development build is not optimized.
 To create a production build, use yarn build.
+
+webpack compiled successfully
 ```
 
 With this, we can move our "Create App" task in Trello to "Done".
