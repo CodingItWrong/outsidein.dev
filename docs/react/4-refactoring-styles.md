@@ -55,7 +55,7 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 
 ```diff
  import {Provider} from 'react-redux';
-+import {createMuiTheme} from '@material-ui/core/styles';
++import {createTheme} from '@material-ui/core/styles';
 +import green from '@material-ui/core/colors/green';
 +import {ThemeProvider} from '@material-ui/styles';
 +import CssBaseline from '@material-ui/core/CssBaseline';
@@ -66,7 +66,7 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
  import store from './store';
  import RestaurantScreen from './components/RestaurantScreen';
 
-+const theme = createMuiTheme({
++const theme = createTheme({
 +  palette: {
 +    primary: green,
 +  },
@@ -95,7 +95,7 @@ Rerun the E2E test. They still pass, and notice we now have a nice green toolbar
 
 Here's what these Material-UI components do to achieve this look:
 
-- `createMuiTheme()` allows us to configure a theme, including setting the `primary` color of our app to `green`.
+- `createTheme()` allows us to configure a theme, including setting the `primary` color of our app to `green`.
 - `ThemeProvider` is the root Material-UI component that lets it set up some things that affect your whole app, including taking the `theme`.
 - `CssBaseline` applies default page-wide CSS styles.
 - `AppBar` and `Toolbar` together provide the top title bar.
