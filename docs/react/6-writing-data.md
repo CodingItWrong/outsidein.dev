@@ -1365,84 +1365,11 @@ Imagine if we had tried to handle all of these cases in E2E tests. We either wou
 
 Rerun your E2E tests to make sure they still pass.
 
-## Refactoring Visuals
-
-Now that all our functionality has been driven out for the feature, let's think about refactoring.
-We used Material-UI components to make our form elements look good, but we didn't give any attention to the layout—we just put them one after another.
-In single-text-input forms like this one, it can look nice to put the submit button to the right of the text area.
-
-Material-UI offers a `Box` component that can be used for layout and spacing. Let's wrap the `TextField` and `Button` in a `Box`:
-
-```diff
- import {connect} from 'react-redux';
-+import Box from '@material-ui/core/Box';
- import TextField from '@material-ui/core/TextField';
-...
-   {validationError && <Alert severity="error">Name is required</Alert>}
-+  <Box display="flex">
-     <TextField
-       value={name}
-       onChange={e => setName(e.target.value)}
-       placeholder="Add Restaurant"
-       fullWidth
-       variant="filled"
-     />
-     <Button
-       type="submit"
-       variant="contained"
-       color="primary"
-       data-testid="new-restaurant-submit-button"
-     >
-       Add
-     </Button>
-+  </Box>
- </form>
-```
-
-This applies flexbox layout to the `Box`, organizing its contents in a row by default.
-
-Pull up your app and see how it looks.
-
-![Form elements in a row](./images/5-5-form-row.png)
-
-This helps, but there is no spacing between the text input and button. To add that margin is actually a little tricky in Material-UI; here's how we do it:
-
-```diff
- import {connect} from 'react-redux';
-+import {makeStyles} from '@material-ui/core/styles';
- import Box from '@material-ui/core/Box';
-...
- import {createRestaurant} from '../store/restaurants/actions';
-
-+const useStyles = makeStyles(theme => ({
-+  root: {
-+    '& > *': {
-+      margin: theme.spacing(1),
-+    },
-+  },
-+}));
-
- export const NewRestaurantForm = ({createRestaurant}) => {
-+  const classes = useStyles();
-   const [name, setName] = useState('');
-...
-   {validationError && <Alert severity="error">Name is required</Alert>}
--    <Box display="flex">
-+    <Box display="flex" className={classes.root}>
-       <TextField
-```
-
-`makeStyles()` allows creating and applying CSS styles to an element. The style we specify is that for every element (`*`) directly under (`>`) the element the style is applied to (`&`), add a margin of the smallest spacing increment the theme provides (`margin: theme.spacing(1)`). This creates a set of styles we named `root`. `makeStyles()` returns a hook function, that we can then call inside the component to get some `classes`. We apply the `root` class we created to the `Box` component. Save the file, and your app should automatically reload and display some nice spacing in between the elements.
-
-![Form elements with padding](./images/5-6-form-padding.png)
-
-Most importantly, rerun the E2E tests and confirm that our app still works.
-
 If you have any uncommitted changes, commit them to git. Push up your branch to the origin and open a pull request. Wait for CI to complete, then merge the pull request. Now we can drag our story to "Done" in Trello: "Add Restaurants".
 
 ## What's Next
 
-With this we've completed our second feature, including edge cases and styling. We've also reached the end of this exercise! In the next chapter we'll look back at what we did over the course of the exercise and the benefits the outside-in development process gave us.
+With this we've completed our second feature, including edge cases. We've also reached the end of this exercise! In the next chapter we'll look back at what we did over the course of the exercise and the benefits the outside-in development process gave us.
 
 :::tip
 Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
