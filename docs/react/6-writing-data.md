@@ -743,7 +743,7 @@ Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'then')
 Our mocked `api.createRestaurant` doesn't return a promise; let's update it to return a resolved one:
 
 ```diff
- beforeEach(() => {
+ beforeEach(async () => {
 +  createRestaurant.mockResolvedValue();
    await userEvent.type(
 ```
