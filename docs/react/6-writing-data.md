@@ -226,9 +226,9 @@ Now we get an assertion failure:
 
     Number of calls: 0
 
-      25 |
-      26 |     it('calls createRestaurant with the name', () => {
-    > 27 |       expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
+      23 |
+      24 |     it('calls createRestaurant with the name', () => {
+    > 25 |       expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
          |                                ^
 ```
 
