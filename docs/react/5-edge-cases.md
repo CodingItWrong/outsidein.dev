@@ -290,8 +290,8 @@ Our test fails, as we expect:
     Expected: true
     Received: undefined
 
-      22 |         );
-      23 |         await store.dispatch(loadRestaurants());
+      22 |         await store.dispatch(loadRestaurants());
+      23 |
     > 24 |         expect(store.getState().loading).toEqual(true);
          |                                          ^
 ```
