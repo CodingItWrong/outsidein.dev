@@ -30,11 +30,11 @@ Redux-Thunk is the recommended way to add asynchrony to a Redux data layer for m
 
 * **HTTP Client: [Axios][axios]**
 
-Axios provides a nice simple interface for making web service requests. The browser's built-in `fetch()` function is close, but still has some repetitive parts. Plus, our E2E testing tool can't stub backend requests when `fetch()` is used.
+Axios provides a nice simple interface for making web service requests. The browser's built-in `fetch()` function is close, but Axios removes some repetitive parts and improves on the API.
 
-* **UI Components: [Material UI][material-ui]**
+* **UI Components: [Material-UI][material-ui]**
 
-Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with MUI, a popular React implementation of Google's Material Design.
+Agile development is all about minimizing unnecessary work. For tutorials like this, side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with Material-UI, a popular React implementation of Google's Material Design.
 
 * **Test Runner: [Jest]**
 
@@ -42,7 +42,7 @@ Jest has become an extremely popular test runner in many JavaScript circles, but
 
 * **Component Tests: [React Testing Library][react-testing-library]**
 
-React Testing Library (RTL) will help us write component tests. It's designed around testing the interface instead of the implementation, which will help us write tests that are resistant to change.
+React Testing Library (RTL) will help us write component tests. It's designed around testing the interface instead of the implementation, which will help us write tests that are not fragile to change.
 
 * **End-to-End Tests: [Cypress][cypress]**
 
@@ -50,7 +50,7 @@ Cypress is an end-to-end testing tool that was written with test-driven developm
 
 * **Continuous Integration: [GitHub Actions][github-actions]**
 
-GitHub is extremely popular for source control, and now it has a CI service built in as well. There are other great CI options too, but the GitHub integration means that all we need to do is add an Actions config file and we're set to run our tests on every pull request.
+GitHub is extremely popular for source control, and it has a CI service built in as well. There are other great CI options too, but the GitHub integration means that all we need to do is add an Actions config file and we're set to run our tests on every pull request.
 
 * **Deployment: [Netlify][netlify]**
 
