@@ -875,7 +875,7 @@ describe('when empty', () => {
 });
 ```
 
-We don't actually need the line that sets the value of the text field to the empty string, because right now it starts out empty. But explicitly adding that line make the intention of the test more clear. And that way, if we did decide in the future to start the form out with default text, we would be sure this test scenario still worked. It's a judgment call whether to add it or not.
+Note that we don't type into the text field; this ensures it will keep the default value, which is the empty string.
 
 Save the file and the test fails, because the validation error message is not found:
 
@@ -1037,7 +1037,6 @@ Warning: An update to NewRestaurantForm inside a test was not wrapped in act(...
 This usually happens when we move on from interacting with our component too early. In this case, it's because after the first time we click our submit button, we start interacting with the component again right away. Instead, we need to add another `await act(flushPromises)` at that point:
 
 ```diff
- await userEvent.type(getByPlaceholderText('Add Restaurant'), '');
  userEvent.click(getByTestId('new-restaurant-submit-button'));
 +await act(flushPromises);
 
