@@ -1159,30 +1159,6 @@ describe('when the store action rejects', () => {
 
 This is the same as the successful submission case, but in the setup we call the `mockRejectedValue()` method of the mock function `restaurantsModule.actions.create`. This means that when this function is called, it will reject. In our case we don't actually care about what error it rejects with, so we don't have to provide a rejected value.
 
-Save the file and we get an expectation failure:
-
-```sh
-  ● NewRestaurantForm › when the store action rejects › displays an error message
-
-    expect(received).not.toBeNull()
-
-    Received: null
-
-      104 |       expect(queryByText(serverError)).not.toBeNull();
-          |                                            ^
-```
-
-As usual, we'll first solve this by hard-coding the element into the component:
-
-```diff
- return (
-   <form onSubmit={handleSubmit}>
-+    <Alert severity="error">
-+      The restaurant could not be saved. Please try again.
-+    </Alert>
-     {validationError && <Alert severity="error">Name is required</Alert>}
-```
-
 Save and we get a bit of a strange error:
 
 ```sh
@@ -1205,6 +1181,30 @@ The message isn't very helpful, but "thrown" is a clue. What's happening is that
 +    })
 +    .catch(() => {});
  } else {
+```
+
+Save the file and the "thrown" error goes away. Now we get an expectation failure:
+
+```sh
+  ● NewRestaurantForm › when the store action rejects › displays an error message
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      102 |       expect(screen.queryByText(serverError)).not.toBeNull();
+          |                                            ^
+```
+
+As usual, we'll first solve this by hard-coding the element into the component:
+
+```diff
+ return (
+   <form onSubmit={handleSubmit}>
++    <Alert severity="error">
++      The restaurant could not be saved. Please try again.
++    </Alert>
+     {validationError && <Alert severity="error">Name is required</Alert>}
 ```
 
 Save and the test passes. Now, when do we want that message to *not* show? For one thing, when the component first renders. Add another test to the "initially" describe block:
