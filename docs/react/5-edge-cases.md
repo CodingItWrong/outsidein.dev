@@ -653,8 +653,11 @@ We decide that when an API call fails, the promise `api.loadRestaurants()` retur
 When we run our test, it fails, but we also get a warning:
 
 ```sh
-(node:53012) UnhandledPromiseRejectionWarning: undefined
-(node:53012) UnhandledPromiseRejectionWarning: Unhandled promise rejection.
+[UnhandledPromiseRejection: This error originated either by throwing inside of
+an async function without a catch block, or by rejecting a promise which was
+not handled with .catch(). The promise rejected with the reason "undefined".] {
+  code: 'ERR_UNHANDLED_REJECTION'
+}
 ```
 
 So in addition to our expectation not passing, Jest is warning that we have an unhandled promise rejection. Since it's a good practice to handle promise rejections in general, let's set up our action to catch a rejected promise. We won't do anything with the catch for now; maybe our tests will drive us to do something in there later.
