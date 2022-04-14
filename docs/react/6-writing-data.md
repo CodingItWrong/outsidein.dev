@@ -77,7 +77,7 @@ Finally, we confirm that the restaurant name is shown on the page, showing that 
 Start your app with `yarn start`, then start Cypress with `yarn cypress`. Choose the "Creating a Restaurant" test.
 It fails, showing the first bit of functionality we need to implement:
 
-> CypressError: Timed out retrying: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
+> CypressError: Timed out retrying after 4000ms: Expected to find element: '[placeholder="Add Restaurant"]', but never found it.
 
 We need an "Add Restaurant" text input. What component should it be in? We discussed earlier that `RestaurantScreen` would hold both the restaurant list and new restaurant form. The text input should live on the New Restaurant Form, so it's time to create that component.
 Create the file `src/components/NewRestaurantForm.js`, and add the following:
@@ -114,7 +114,7 @@ Next, add the form to the `RestaurantScreen` component:
 
 Rerun the E2E tests and they should get past finding and typing into the Add Restaurant input. The next error is:
 
-> CypressError: Timed out retrying: Expected to find content: 'Add' but never did.
+> CypressError: Timed out retrying after 4000ms: Expected to find content: 'Add' but never did.
 
 To fix this error, we add a button to `NewRestaurantForm` but don't wire it up to anything yet:
 
@@ -135,7 +135,7 @@ To fix this error, we add a button to `NewRestaurantForm` but don't wire it up t
 
 Rerun the E2E tests and we get this failure:
 
-> CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
+> CypressError: Timed out retrying after 5000ms: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
 
 So now we need to send the request is our backend service. This is missing logic, so we will want to step down to unit tests to add it. How will it work?
 
@@ -399,10 +399,7 @@ export const createRestaurant = () => () => {};
 
 Rerun the E2E test, and it fails on a new error:
 
-```sh
-CypressError: Timed out retrying: cy.wait() timed out waiting 5000ms for the
-1st request to the route: 'addRestaurant'. No request ever occurred.
-```
+> CypressError: Timed out retrying after 5000ms: cy.wait() timed out waiting 5000ms for the 1st request to the route: 'addRestaurant'. No request ever occurred.
 
 Now our component is correctly calling our `createRestaurant` async action, but that function isn't doing anything. We need it to make the appropriate call to the API, then dispatch an action that results in the reducer adding the new restaurant to the list. That's a logic error, so it's time to step down to a unit test to drive out our store functionality.
 
