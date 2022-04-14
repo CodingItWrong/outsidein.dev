@@ -11,7 +11,7 @@ If you've been linked directly to this part of the guide, and you'd like to lear
 
 The app we'll begin building is for rating dishes at restaurants. We'll call it Opinion Ate. Note that we won't get anywhere near finishing the app as part of this guide: we'll only get it started.
 
-The completed project code is temporarily unavailable while I redo it for the latest version of React. But even if it were available now, I would highly encourage you to write the code through the exercise yourself anyway. Maybe even more so than programming in general, test-driven development requires practice to get into the habit of how to do it.
+If you'd like to download the completed project, you can do so from the [Opinion Ate React repo](https://github.com/CodingItWrong/opinion-ate-react). But I would highly encourage you to write the code through the exercise yourself. Maybe even more so than programming in general, test-driven development requires practice to get into the habit of how to do it.
 
 ## Tech Stack
 Here's the stack of libraries we'll use for our React application:
