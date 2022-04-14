@@ -32,12 +32,12 @@ First, start the unit tests with `yarn test` and keep them running for the durat
 Next, let's extract all the contents of the `beforeEach` into a new function, called `renderWithProps`:
 
 ```diff
- let context;
+ let loadRestaurants;
 
 +const renderWithProps = () => {
 +  loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
-+  context = render(
++  render(
 +    <RestaurantList
 +      loadRestaurants={loadRestaurants}
 +      restaurants={restaurants}
@@ -48,7 +48,7 @@ Next, let's extract all the contents of the `beforeEach` into a new function, ca
  beforeEach(() => {
 -  loadRestaurants = jest.fn().mockName('loadRestaurants');
 -
--  context = render(
+-  render(
 -    <RestaurantList
 -      loadRestaurants={loadRestaurants}
 -      restaurants={restaurants}
@@ -74,7 +74,7 @@ Next, let's remove the `beforeEach` block and call `renderWithProps` at the star
 
  it('displays the restaurants', () => {
 +  renderWithProps();
-   const {queryByText} = context;
+   expect(screen.queryByText('Sushi Place')).not.toBeNull();
 ```
 
 Save and confirm the tests pass.
@@ -85,7 +85,7 @@ As our final refactoring, let's change the `renderWithProps` function to allow p
 -const renderWithProps = () => {
 -  loadRestaurants = jest.fn().mockName('loadRestaurants');
 -
--  context = render(
+-  render(
 -    <RestaurantList
 -      loadRestaurants={loadRestaurants}
 -      restaurants={restaurants}
@@ -99,7 +99,7 @@ As our final refactoring, let's change the `renderWithProps` function to allow p
 +  };
 +  loadRestaurants = props.loadRestaurants;
 +
-+  context = render(<RestaurantList {...props} />);
++  render(<RestaurantList {...props} />);
  };
 ```
 
@@ -115,8 +115,7 @@ Now we're ready to write our new test for when the store is in a loading state. 
 ```js
 it('displays the loading indicator while loading', () => {
   renderWithProps({loading: true});
-  const {queryByTestId} = context;
-  expect(queryByTestId('loading-indicator')).not.toBeNull();
+  expect(screen.queryByTestId('loading-indicator')).not.toBeNull();
 });
 ```
 
@@ -160,7 +159,6 @@ In our case, we *also* need a test to confirm that the conditional is *not* show
 ```js
 it('does not display the loading indicator while not loading', () => {
   renderWithProps({loading: false});
-  const {queryByTestId} = context;
   expect(queryByTestId('loading-indicator')).toBeNull();
 });
 ```
@@ -221,13 +219,12 @@ Now our two "when loading succeeds" tests have the same call to `renderWithProps
 +
    it('does not display the loading indicator while not loading', () => {
 -    renderWithProps();
-     const {queryByTestId} = context;
-     expect(queryByTestId('loading-indicator')).toBeNull();
+     expect(screen.queryByTestId('loading-indicator')).toBeNull();
    });
 
    it('displays the restaurants', () => {
 -    renderWithProps();
-     const {queryByText} = context;
+     expect(screen.queryByText('Sushi Place')).not.toBeNull();
 ```
 
 Save and the tests should pass.
@@ -551,8 +548,7 @@ describe('when loading fails', () => {
   });
 
   it('displays the error message', () => {
-    const {queryByText} = context;
-    expect(queryByText('Restaurants could not be loaded.')).not.toBeNull();
+    expect(screen.queryByText('Restaurants could not be loaded.')).not.toBeNull();
   });
 });
 ```
@@ -592,13 +588,11 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
    });
 
    it('does not display the loading indicator while not loading', () => {
-     const {queryByTestId} = context;
-     expect(queryByTestId('loading-indicator')).toBeNull();
+     expect(screen.queryByTestId('loading-indicator')).toBeNull();
    });
 
 +  it('does not display the error message', () => {
-+    const {queryByText} = context;
-+    expect(queryByText('Restaurants could not be loaded.')).toBeNull();
++    expect(screen.queryByText('Restaurants could not be loaded.')).toBeNull();
 +  });
 +
    it('displays the restaurants', () => {
