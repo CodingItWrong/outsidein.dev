@@ -150,7 +150,7 @@ Starting from the outside as usual, we'll start with the `NewRestaurantForm` com
 Create the file `src/components/__tests__/NewRestaurantForm.spec.js` and start out by setting up the component and a mock function in a `beforeEach` block:
 
 ```js
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {NewRestaurantForm} from '../NewRestaurantForm';
 
@@ -158,11 +158,10 @@ describe('NewRestaurantForm', () => {
   const restaurantName = 'Sushi Place';
 
   let createRestaurant;
-  let context;
 
   beforeEach(() => {
     createRestaurant = jest.fn().mockName('createRestaurant');
-    context = render(<NewRestaurantForm createRestaurant={createRestaurant} />);
+    render(<NewRestaurantForm createRestaurant={createRestaurant} />);
   });
 });
 ```
@@ -172,13 +171,11 @@ Next, let's try to proactively organize our test file. Since we're taking the ap
 ```js
 describe('when filled in', () => {
   beforeEach(async () => {
-    const {getByPlaceholderText, getByTestId} = context;
-
     await userEvent.type(
-      getByPlaceholderText('Add Restaurant'),
+      screen.getByPlaceholderText('Add Restaurant'),
       restaurantName,
     );
-    userEvent.click(getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
   });
 
   it('calls createRestaurant with the name', () => {
@@ -712,8 +709,7 @@ First, let's implement the form clearing out the text field after saving. In `Ne
    });
 +
 +  it('clears the name', () => {
-+    const {getByPlaceholderText} = context;
-+    expect(getByPlaceholderText('Add Restaurant').value).toEqual('');
++    expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual('');
 +  });
  });
 ```
@@ -728,10 +724,10 @@ Save the test, and we get a test failure confirming that the text field is not y
     Expected: ""
     Received: "Sushi Place"
 
-      30 |     it('clears the name', () => {
-      31 |       const {getByPlaceholderText} = context;
-    > 32 |       expect(getByPlaceholderText('Add Restaurant').value).toEqual('');
-         |                                                  ^
+      27 |
+      28 |     it('clears the name', () => {
+    > 29 |       expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual('');
+         |                                                                 ^
 ```
 
 Where in the component should we clear the text field? Well, we have another story that the name should _not_ be cleared if the web service call fails. If that's the case, then we should not clear the text field until the store action resolves successfully.
@@ -758,8 +754,7 @@ Our mocked `api.createRestaurant` doesn't return a promise; let's update it to r
 ```diff
  beforeEach(() => {
 +  createRestaurant.mockResolvedValue();
-+
-   const {getByPlaceholderText, getByTestId} = context;
+   await userEvent.type(
 ```
 
 Save and the test now passes; what's left is a warning:
@@ -783,14 +778,14 @@ What exactly is going on here is complex and beyond the scope of this tutorial. 
 In this specific case, the easiest fix is to use the `flush-promises` npm package. Add it to your project:
 
 ```sh
-$ yarn add --dev flush-promises
+$ yarn add --dev flush-promises@1.0.2
 ```
 
 Then add it to your test:
 
 ```diff
--import {render} from '@testing-library/react';
-+import {render, act} from '@testing-library/react';
+-import {render, screen} from '@testing-library/react';
++import {act, render, screen} from '@testing-library/react';
  import userEvent from '@testing-library/user-event';
 +import flushPromises from 'flush-promises';
  import {NewRestaurantForm} from '../NewRestaurantForm';
@@ -878,16 +873,13 @@ describe('when empty', () => {
   beforeEach(async () => {
     createRestaurant.mockResolvedValue();
 
-    const {getByPlaceholderText, getByTestId} = context;
-    await userEvent.type(getByPlaceholderText('Add Restaurant'), '');
-    userEvent.click(getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
 
     return act(flushPromises);
   });
 
   it('displays a validation error', () => {
-    const {queryByText} = context;
-    expect(queryByText('Name is required')).not.toBeNull();
+    expect(screen.queryByText('Name is required')).not.toBeNull();
   });
 });
 ```
@@ -947,8 +939,7 @@ Next, add a new `describe` above the "when filled in" one:
 ```js
 describe('initially', () => {
   it('does not display a validation error', () => {
-    const {queryByText} = context;
-    expect(queryByText(requiredError)).toBeNull();
+    expect(screen.queryByText(requiredError)).toBeNull();
   });
 });
 ```
@@ -1000,8 +991,7 @@ It may feel obvious to you that this is not the correct final logic, so this sho
 
 ```js
 it('does not display a validation error', () => {
-  const {queryByText} = context;
-  expect(queryByText(requiredError)).toBeNull();
+  expect(screen.queryByText(requiredError)).toBeNull();
 });
 ```
 
@@ -1028,23 +1018,19 @@ describe('when correcting a validation error', () => {
   beforeEach(async () => {
     createRestaurant.mockResolvedValue();
 
-    const {getByPlaceholderText, getByTestId} = context;
-
-    await userEvent.type(getByPlaceholderText('Add Restaurant'), '');
-    userEvent.click(getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
 
     await userEvent.type(
-      getByPlaceholderText('Add Restaurant'),
+      screen.getByPlaceholderText('Add Restaurant'),
       restaurantName,
     );
-    userEvent.click(getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
 
     return act(flushPromises);
   });
 
   it('clears the validation error', () => {
-    const {queryByText} = context;
-    expect(queryByText(requiredError)).toBeNull();
+    expect(screen.queryByText(requiredError)).toBeNull();
   });
 });
 ```
@@ -1166,20 +1152,17 @@ describe('when the store action rejects', () => {
   beforeEach(async () => {
     createRestaurant.mockRejectedValue();
 
-    const {getByPlaceholderText, getByTestId} = context;
-
     await userEvent.type(
-      getByPlaceholderText('Add Restaurant'),
+      screen.getByPlaceholderText('Add Restaurant'),
       restaurantName,
     );
-    userEvent.click(getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
 
     return act(flushPromises);
   });
 
   it('displays a server error', () => {
-    const {queryByText} = context;
-    expect(queryByText(serverError)).not.toBeNull();
+    expect(screen.queryByText(serverError)).not.toBeNull();
   });
 });
 ```
@@ -1243,8 +1226,7 @@ Save and the test passes. Now, when do we want that message to *not* show? For o
 
 ```js
 it('does not display a server error', () => {
-  const {queryByText} = context;
-  expect(queryByText(serverError)).toBeNull();
+  expect(screen.queryByText(serverError)).toBeNull();
 });
 ```
 
@@ -1289,8 +1271,7 @@ Let's also write a test to confirm that the server error is not shown after the 
 
 ```js
 it('does not display a server error', () => {
-  const {queryByText} = context;
-  expect(queryByText(serverError)).toBeNull();
+  expect(screen.queryByText(serverError)).toBeNull();
 });
 ```
 
@@ -1303,19 +1284,17 @@ describe('when retrying after a server error', () => {
   beforeEach(async () => {
     createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
-    const {getByPlaceholderText, getByTestId} = context;
     await userEvent.type(
-        getByPlaceholderText('Add Restaurant'),
+        screen.getByPlaceholderText('Add Restaurant'),
         restaurantName,
       );
-    userEvent.click(getByTestId('new-restaurant-submit-button'));
-    userEvent.click(getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
     return act(flushPromises);
   });
 
   it('clears the server error', () => {
-    const {queryByText} = context;
-    expect(queryByText(serverError)).toBeNull();
+    expect(screen.queryByText(serverError)).toBeNull();
   });
 });
 ```
@@ -1330,10 +1309,10 @@ Save the file and you'll get the expected test failure:
     Received: <div class="MuiAlert-message">The restaurant could not be saved. Pleas
 e try again.</div>
 
-      133 |     it('clears the server error', () => {
-      134 |       const {queryByText} = context;
-    > 135 |       expect(queryByText(serverError)).toBeNull();
-          |                                        ^
+      126 |
+      127 |     it('clears the server error', () => {
+    > 128 |       expect(screen.queryByText(serverError)).toBeNull();
+          |                                             ^
 ```
 
 We should be able to make this test pass by just clearing the `serverError` flag when attempting to save:
@@ -1350,15 +1329,14 @@ Save the file, but surprisingly, the test failure doesn't change! Why is that? I
 We can fix this by waiting for promises to flush after the first click, as well as after the second:
 
 ```diff
-   const {getByPlaceholderText, getByTestId} = context;
    await userEvent.type(
-       getByPlaceholderText('Add Restaurant'),
+       screen.getByPlaceholderText('Add Restaurant'),
        restaurantName,
      );
-   userEvent.click(getByTestId('new-restaurant-submit-button'));
+   userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
 +  await act(flushPromises);
 +
-   userEvent.click(getByTestId('new-restaurant-submit-button'));
+   userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
    return act(flushPromises);
 ```
 
@@ -1368,8 +1346,9 @@ Now we have just one more component test to make: that the restaurant name is no
 
 ```js
 it('does not clear the name', () => {
-  const {getByPlaceholderText} = context;
-  expect(getByPlaceholderText('Add Restaurant').value).toEqual(restaurantName);
+  expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual(
+    restaurantName,
+  );
 });
 ```
 
