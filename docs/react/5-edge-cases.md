@@ -159,7 +159,7 @@ In our case, we *also* need a test to confirm that the conditional is *not* show
 ```js
 it('does not display the loading indicator while not loading', () => {
   renderWithProps({loading: false});
-  expect(queryByTestId('loading-indicator')).toBeNull();
+  expect(screen.queryByTestId('loading-indicator')).toBeNull();
 });
 ```
 

@@ -887,9 +887,8 @@ Save the file and the test fails, because the validation error message is not fo
     Received: null
 
       50 |     it('displays a validation error', () => {
-      51 |       const {queryByText} = context;
-    > 52 |       expect(queryByText('Name is required')).not.toBeNull();
-         |                                                   ^
+    > 51 |       expect(screen.queryByText('Name is required')).not.toBeNull();
+         |                                                    ^
 ```
 
 Let's fix this error in the simplest way possible by adding the validation error unconditionally:
@@ -917,9 +916,8 @@ In preparation, let's move the validation error text we're searching for to a co
    let createRestaurant;
 ...
      it('displays a validation error', () => {
-       const {queryByText} = context;
--      expect(queryByText('Name is required')).not.toBeNull();
-+      expect(queryByText(requiredError)).not.toBeNull();
+-      expect(screen.queryByText('Name is required')).not.toBeNull();
++      expect(screen.queryByText(requiredError)).not.toBeNull();
      });
 ```
 
@@ -945,8 +943,7 @@ The test fails because we are always showing the error right now:
     Received: <div class="MuiAlert-message">Name is required</div>
 
       20 |     it('does not display a validation error', () => {
-      21 |       const {queryByText} = context;
-    > 22 |       expect(queryByText(requiredError)).toBeNull();
+    > 21 |       expect(screen.queryByText(requiredError)).toBeNull();
          |                                          ^
 ```
 
@@ -1061,8 +1058,7 @@ Save the test file and the warning is gone, and we just have a test failure:
 
       80 |     it('clears the validation error', () => {
 
-      81 |       const {queryByText} = context;
-    > 82 |       expect(queryByText(requiredError)).toBeNull();
+    > 81 |       expect(screen.queryByText(requiredError)).toBeNull();
          |                                          ^
 ```
 

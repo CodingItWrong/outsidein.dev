@@ -517,12 +517,10 @@ Now we can remove the duplicated code from the individual tests:
 -    {id: 2, name: 'Pizza Place'},
 -  ];
 -
--  const {queryByText} = render(
--    <RestaurantList loadRestaurants={noop} restaurants={restaurants} />,
--  );
+-  render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
 -
-   expect(queryByText('Sushi Place')).not.toBeNull();
-   expect(queryByText('Pizza Place')).not.toBeNull();
+   expect(screen.queryByText('Sushi Place')).not.toBeNull();
+   expect(screen.queryByText('Pizza Place')).not.toBeNull();
  });
 ```
 
