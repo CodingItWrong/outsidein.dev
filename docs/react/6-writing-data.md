@@ -195,7 +195,8 @@ Save the file and we get a failing test, as we expect:
 ```sh
 ● NewRestaurantForm › when filled in › calls createRestaurant with the name
 
-  Unable to find an element by: [data-testid="new-restaurant-submit-button"]
+  TestingLibraryElementError: Unable to find an element by:
+  [data-testid="new-restaurant-submit-button"]
 ```
 
 Add the test ID to the button to find it:
@@ -353,17 +354,7 @@ Save the file and the test passes.
 We'll circle back to test-drive edge case functionality to the form later. But now that we have completed the functionality the E2E test drove us to, let's step back up to the E2E test to see what functionality we need to implement next. Rerun the E2E test and see the following failure:
 
 ```sh
-Uncaught Uncaught TypeError: createRestaurant is not a function
-
-src/components/NewRestaurantForm.js:10
-   7 |
-   8 | const handleSubmit = e => {
-   9 |   e.preventDefault();
-> 10 |   createRestaurant(name);
-     | ^
-  11 | };
-  12 | return (
-  13 |   <form onSubmit={handleSubmit}>
+TypeError: createRestaurant is not a function
 ```
 
 `createRestaurant` is not defined because we aren't passing it in to `NewRestaurantForm` as a prop. This is just a structural error, not a logic error, so let's fix this error directly instead of stepping down to a unit test yet.
@@ -538,8 +529,8 @@ returned restaurant in the store
 
   expect(received).toEqual(expected) // deep equality
 
-  - Expected
-  + Received
+  - Expected  - 4
+  + Received  + 0
 
     Array [
       Object {
@@ -600,7 +591,7 @@ This makes our latest test pass, but our previous "saves the restaurant to the s
 ```sh
 ● restaurants › createRestaurant action › saves the restaurant to the server
 
-  TypeError: Cannot read property 'then' of undefined
+  TypeError: Cannot read properties of undefined (reading 'then')
 
     13 |
     14 | export const createRestaurant = name => (dispatch, getState, api) => {
@@ -647,7 +638,7 @@ Our component is successfully dispatching the action to the store, which is succ
 Now we get another console error:
 
 ```sh
-TypeError: Cannot read property 'then' of undefined
+TypeError: Cannot read properties of undefined (reading 'then')
 ```
 
 We still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API:
@@ -746,7 +737,7 @@ Make this change in `NewRestaurantForm.js`:
 Save the file and the test fails, and we get a lot of scary console output. Let's handle one thing at a time. The easier one to fix is:
 
 ```sh
-Error: Uncaught [TypeError: Cannot read property 'then' of undefined]
+Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'then')]
 ```
 
 Our mocked `api.createRestaurant` doesn't return a promise; let's update it to return a resolved one:
@@ -1199,11 +1190,6 @@ Save and we get a bit of a strange error:
   ● NewRestaurantForm › when the store action rejects › displays an error message
 
     thrown: undefined
-
-      100 |     });
-      101 |
-    > 102 |     it('displays an error message', () => {
-          |     ^
 ```
 
 The message isn't very helpful, but "thrown" is a clue. What's happening is that our call to `createRestaurants()` is rejecting, but we aren't handling it. Let's handle it with an empty `catch()` function, just to silence this warning; we'll add behavior to that `catch()` function momentarily.
