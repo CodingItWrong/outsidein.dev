@@ -560,7 +560,7 @@ Fix it the simplest way possible by hard-coding the error message to show.
 Material-UI's `lab` package has an `Alert` component that will work well. Install the package:
 
 ```sh
-$ yarn add @material-ui/lab
+$ yarn add @material-ui/lab@4.0.0-alpha.61
 ```
 
 Then add the alert:
