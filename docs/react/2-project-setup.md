@@ -378,17 +378,11 @@ $ git push -u origin ci
 
 GitHub will give you a URL to create a pull request. Open it in the browser, and click "Create pull request".
 
-Notice the yellow "Some checks haven't completed yet" warning, with "Test / Test" under it. That's our GitHub Action running.
+Underneath the PR description box and your commit, you should see a yellow "Some checks haven't completed yet" warning; this box shows the continuous integration checks that are running on your PR. Right now we only have one check, our GitHub Action, represented by the line that says "Test / Test (push)".
 
-![PR screen with tests running](./images/1-4-pr-screen-with-tests-running.png)
+Next to the "Test / Test (push)" line, click the "Details" link. You'll see an outline showing our GitHub Action steps running.
 
-Click the "Details" link next to it. You'll see our unit and E2E tests running.
-
-![Actions screen with tests running](./images/1-5-actions-screen-with-test-running.png)
-
-When the test run succeeds, the action will be marked as passed. If you go back to the Conversation tab of your PR, you'll see a green "All checks have passed".
-
-![PR screen with tests passed](./images/1-6-pr-screen-with-tests-passed.png)
+When the test run succeeds, the action will be marked as passed. If you go back to the Conversation tab of your PR, in the checks box you'll see a green "All checks have passed" message.
 
 Go ahead and click "Merge pull request", then "Confirm merge", then "Delete branch".
 
