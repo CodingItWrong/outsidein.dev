@@ -408,47 +408,29 @@ Create a Netlify account from [Netlify's Sign Up page](https://app.netlify.com/s
 
 Once you're signed in, click "Add new site", then "Import an existing project". Click the "GitHub" button. A list of all your repos will appear. Search for your repo and click it.
 
-![Choosing repo for a new site in Netlify](./images/1-7-searching-for-site.png)
+Next you'll be shown a "Site settings" screen allowing you to configure the build for the project. Use the following settings:
 
-Leave "Branch to deploy" as `main`. Under "Basic build settings", leave "Base directory" empty. You should see "Build command" pre-populated with `yarn build`, and `build` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
+- Leave "Owner" and "Branch to deploy" with their default values.
+- Under "Basic build settings", leave "Base directory" empty.
+- You should see "Build command" pre-populated with `yarn build`, and `build` for the "Publish directory". Netlify has automatically detected that we're using Create React App and entered the settings for us. This means that Netlify will run that command, then take the files in that directory and deploy them.
 
-![Configuring Netlify build settings](./images/1-8-build-settings.png)
-
-That's all we need to configure, so click "Deploy site".
+Once those values are configured, click "Deploy site".
 
 You will be sent to the Site Overview page for your new site. In orange you'll see "Site deploy in progress".
 
-![Netlify deploy in progress](./images/1-9-deploy-in-progress.png)
+Click the "Site deploy in progress" link and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: main@HEAD Building".
 
-Click "Site deploy in progress" and you'll be taken to the Deploys page. In a list at the bottom you'll see "Production: main@HEAD Building":
+Click "Production: main@HEAD Building". You'll see a console log of output as the site is being built. Eventually you'll see a "Site is live" message.
 
-![Netlify list of deployments](./images/1-10-deploy-list.png)
-
-Click "Production: main@HEAD Building". You'll see a console log of output as the site is being built. Eventually you'll see "Site is live":
-
-![Netlify site is live](./images/1-11-site-is-live.png)
-
-(Your timestamps will be different depending on how unreasonably early you wake up in the morning.)
-
-Click "< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you'll see the name of your site, with an automatically-assigned set of nonsense words and characters:
-
-![Netlify site automatically assigned name](./images/1-12-site-name.png)
+Click "< Deploys" to go back to the Deploys tab. If you waited for the deployment to complete, at the top in green you'll see the name of your site, with an automatically-assigned set of nonsense words and characters. For example, mine was `kind-hodgkin-4b86e5`.
 
 Click the green link in your browser. You should get the "Learn React" page.
 
 Now let's rename that site to be a bit easier to remember. Go back to Netlify, then click the "Site overview" tab, then "Site settings" button. Under "General" > "Site details" > "Site information", click "Change site name".
 
-![Change Site Name button](./images/1-13-change-site-name-button.png)
+In the dialog that appears, enter any site name you like and click Save. For example, I changed mine to `opinion-ate-react`
 
-In the dialog that appears, enter any site name you like and click Save.
-
-![Change Site Name dialog](./images/1-14-change-site-name-dialog.png)
-
-At the top of this screen, under "Settings for", your site URL appears in gray.
-
-![New site name link](./images/1-15-new-site-name.png)
-
-Click on your new site URL to confirm your site is working at that URL.
+At the top of this screen, under "Settings for", your updated site URL will appear in gray. Mine is `opinion-ate-react.netlify.app`. Click on your new site URL to be taken there, and confirm your site is working at that URL.
 
 We're now set to run our app's tests on CI and deploy to production. We had a little setup to do, but the defaults provided by Create React App, GitHub Actions, and Netlify went a long way toward simplifying the process.
 
