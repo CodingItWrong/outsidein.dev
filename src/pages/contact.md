@@ -14,4 +14,4 @@ If you'd like to contact me for any reason, you can reach me at:
 
 If you'd like to receive occasional updates on OutsideIn.dev and other agile and TDD projects from me, you can sign up for the mailing list:
 
-<iframe src="/mailchimp.html" width="100%" height="60" />
+<iframe src="/mailchimp.html" width="100%" height="70" />

@@ -22,7 +22,7 @@ Doing agile development with other people provides accountability to stick with 
 - Share this guide with someone you think would benefit from it, and talk together about your experiences with it.
 - Sign up to receive email updates from OutsideIn.dev and other agile and TDD projects from the author, Josh Justice:
 
-<iframe src="/mailchimp.html" width="100%" height="60" />
+<iframe src="/mailchimp.html" width="100%" height="70" />
 
 ## Testing Tool Docs
 Just like you learn your framework deeply, it's important to learn your testing tools deeply as well. This will show you what features you can draw from, give you ideas for how to test, and prevent buggy tests due to misunderstanding the test functionality. All of the tools we used have excellent guides, so I would recommend looking through them thoroughly:
