@@ -70,3 +70,7 @@ img.author {
     margin: 1em 0 1em 1em;
   }
 }
+
+.hero img {
+  max-height:  280px;
+}
