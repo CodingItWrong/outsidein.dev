@@ -1,6 +1,7 @@
 ---
 title: "Exercise Wrap-Up"
 sidebar_position: 6
+pagination_prev: null
 ---
 
 # Exercise Wrap-Up
