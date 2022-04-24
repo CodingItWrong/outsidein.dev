@@ -7,7 +7,7 @@ prev: /exercise-intro.html
 
 This is the beginning of a six-part exercise building a React application using outside-in test-driven development (TDD) and other agile development practices.
 
-If you've been linked directly to this part of the guide, and you'd like to learn about the concepts behind outside-in TDD and agile development, you can go to [About This Guide](/about-this-guide.html), start from there, and continue with this exercise when you get back to it. Or, you can jump right in to the exercise, then go back to learn more about the concepts when you're done.
+If you've been linked directly to this part of the guide, and you'd like to learn about the concepts behind outside-in TDD and agile development, you can go to [About This Guide](/book/about-this-guide), start from there, and continue with this exercise when you get back to it. Or, you can jump right in to the exercise, then go back to learn more about the concepts when you're done.
 
 The app we'll begin building is for rating dishes at restaurants. We'll call it Opinion Ate. Note that we won't get anywhere near finishing the app as part of this guide: we'll only get it started.
 

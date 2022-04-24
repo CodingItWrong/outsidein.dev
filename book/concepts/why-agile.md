@@ -49,7 +49,7 @@ The practices above are mostly *development* practices involving how individuals
 - Who is part of the team and how their roles work
 - Coordinating design, frontend, and backend work for the same user-facing functionality
 
-For more information on agile methodology in general, check out [Agile Methodology Resources](/next-steps.html#agile-methodology).
+For more information on agile methodology in general, check out [Agile Methodology Resources](/book/next-steps#agile-methodology).
 
 ## What's Next
 

@@ -5,7 +5,7 @@ sidebar_position: 7
 
 # Next Steps
 
-You've completed this guide and gotten a taste of outside-in test-driven development on the frontend. I published this guide for free because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact.html)!
+You've completed this guide and gotten a taste of outside-in test-driven development on the frontend. I published this guide for free because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
 
 This guide was just the beginning of your journey. Here are some more suggestions to take your learning further.
 
