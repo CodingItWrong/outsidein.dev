@@ -69,14 +69,14 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 
 ```diff
  import {Provider} from 'react-redux';
-+import {createTheme} from '@material-ui/core/styles';
-+import green from '@material-ui/core/colors/green';
-+import {ThemeProvider} from '@material-ui/styles';
-+import CssBaseline from '@material-ui/core/CssBaseline';
-+import AppBar from '@material-ui/core/AppBar';
-+import Toolbar from '@material-ui/core/Toolbar';
-+import Typography from '@material-ui/core/Typography';
-+import Container from '@material-ui/core/Container';
++import {createTheme} from '@mui/material/styles';
++import {green} from '@mui/material/colors';
++import {ThemeProvider} from '@mui/material/styles';
++import CssBaseline from '@mui/material/CssBaseline';
++import AppBar from '@mui/material/AppBar';
++import Toolbar from '@mui/material/Toolbar';
++import Typography from '@mui/material/Typography';
++import Container from '@mui/material/Container';
  import store from './store';
  import RestaurantScreen from './components/RestaurantScreen';
 
@@ -119,9 +119,9 @@ Here's what these MUI components do to achieve this look:
 Next let's style `RestaurantScreen`. A common UI element in Material Design is a card, a box around some content. Let's style the `RestaurantScreen` to be a card:
 
 ```diff
-+import Card from '@material-ui/core/Card';
-+import CardContent from '@material-ui/core/CardContent';
-+import Typography from '@material-ui/core/Typography';
++import Card from '@mui/material/Card';
++import CardContent from '@mui/material/CardContent';
++import Typography from '@mui/material/Typography';
  import RestaurantList from './RestaurantList';
 
  const RestaurantScreen = () => (
@@ -152,9 +152,9 @@ Finally, let's style the list of the restaurants. Material Design has a list con
 ```diff
  import {useEffect} from 'react';
  import {connect} from 'react-redux';
-+import List from '@material-ui/core/List';
-+import ListItem from '@material-ui/core/ListItem';
-+import ListItemText from '@material-ui/core/ListItemText';
++import List from '@mui/material/List';
++import ListItem from '@mui/material/ListItem';
++import ListItemText from '@mui/material/ListItemText';
  import {loadRestaurants} from '../store/restaurants/actions';
 
  export const RestaurantList = ({loadRestaurants, restaurants}) => {
