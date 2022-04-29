@@ -231,7 +231,7 @@ $ git add .
 $ git commit -m "Add RestaurantScreen and RestaurantList"
 ```
 
-Now, to write the unit test. In `src/components`, create a `__tests__` folder, then inside that create a file `RestaurantList.spec.js`.
+Now, to write the unit test. In `src/components`, create a file `RestaurantList.spec.js`.
 Now, we'll write a test for the first bit of functionality we need, to load the restaurants. We'll start with the structure of the test suite:
 
 ```js
@@ -703,7 +703,7 @@ Rerun the E2E test. We now no longer get any application code errors; instead, w
 
 To test our store, we're going to create a real Redux store, configure it with our reducer, then dispatch our actions against it. After we write our test, we'll look at the advantages this approach gives us.
 
-Under `src/store/`, create a `__tests__` folder. Inside it, create a `restaurants.spec.js` file. Add the following structure:
+Under `src/store/`, create a `restaurants.spec.js` file. Add the following structure:
 
 ```js
 describe('restaurants', () => {
@@ -771,7 +771,7 @@ Now we'll create the store itself. Unlike in the full application, we will only 
 ```diff
 +import {createStore, applyMiddleware} from 'redux';
 +import thunk from 'redux-thunk';
-+import restaurantsReducer from '../restaurants/reducers';
++import restaurantsReducer from './restaurants/reducers';
 +
  describe('restaurants', () => {
 ...
@@ -792,8 +792,8 @@ We didn't use the `.withExtraArgument()` method for `redux-thunk` earlier. It al
 Now that our store is set, we can dispatch the `loadRestaurants` action, then check the state of the store afterward:
 
 ```diff
- import restaurantsReducer from '../restaurants/reducers';
-+import {loadRestaurants} from '../restaurants/actions';
+ import restaurantsReducer from './restaurants/reducers';
++import {loadRestaurants} from './restaurants/actions';
 
  describe('restaurants', () => {
 ...
