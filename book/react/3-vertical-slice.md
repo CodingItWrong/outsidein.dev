@@ -442,7 +442,7 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +  ];
 +  let loadRestaurants;
 +
-+  beforeEach(() => {
++  function renderComponent() {
 +    loadRestaurants = jest.fn().mockName('loadRestaurants');
 +
 +    render(
@@ -451,14 +451,14 @@ In the TDD cycle, **whenever the tests go green, look for opportunities to refac
 +        restaurants={restaurants}
 +      />,
 +    );
-+  });
++  }
 +
    it('loads restaurants on first render', () => {
 ```
 
 Although not *all* of these variables are needed for *both* tests, it's okay to set them up for both. This sets up a component in a good default state, so each test can stay focused on what it wants to assert.
 
-Now we can remove the duplicated code from the individual tests:
+Now we can replace the duplicated code from the individual tests with a call the `renderComponent()` function:
 
 ```diff
  it('loads restaurants on first render', () => {
@@ -472,6 +472,7 @@ Now we can remove the duplicated code from the individual tests:
 -    />,
 -  );
 -
++  renderComponent();
    expect(loadRestaurants).toHaveBeenCalled();
  });
 
@@ -484,8 +485,9 @@ Now we can remove the duplicated code from the individual tests:
 -
 -  render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
 -
-   expect(screen.queryByText('Sushi Place')).not.toBeNull();
-   expect(screen.queryByText('Pizza Place')).not.toBeNull();
++  renderComponent();
+   expect(screen.getByText('Sushi Place')).toBeInTheDocument();
+   expect(screen.getByText('Pizza Place')).toBeInTheDocument();
  });
 ```
 
