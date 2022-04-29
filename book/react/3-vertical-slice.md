@@ -914,7 +914,7 @@ $ yarn add axios@0.27.2
 ```
 
 :::tip
-Instead of Axios, we could have used the browser's built-in `fetch()` function. But there are still users on older iPhones and IE 11 whose browsers don't have `fetch()`, and Axios provides some nice interface improvements over `fetch()` in my opinion. Also note that `cy.route()` does not support stubbing `fetch()` calls, so if we had gone with `fetch()` we would need to use the newer `cy.intercept()` API.
+Instead of Axios, we could have used the browser's built-in `fetch()` function. But there are still users on older iPhones and IE 11 whose browsers don't have `fetch()`, and Axios provides some nice interface improvements over `fetch()` in my opinion.
 :::
 
 Next, use Axios to make an HTTP request to the correct endpoint:
