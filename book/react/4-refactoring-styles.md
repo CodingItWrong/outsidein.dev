@@ -34,7 +34,7 @@ Press `a` to run all the tests. They should pass. Keep the unit test process run
 In another terminal, run `yarn start`, and in a third, run `yarn cypress`. Click `listing-restaurants.spec.js` and make sure it passes.
 
 Now that we know all our tests pass, we're ready to update the look-and-feel of the app.
-We're going to use Material-UI 4, a popular React component library that follows Google's Material Design.
+We're going to use MUI, a popular React component library that follows Google's Material Design.
 
 Create a new branch for this story:
 
@@ -42,7 +42,7 @@ Create a new branch for this story:
 $ git checkout -b material-design
 ```
 
-Install the core Material-UI package:
+Install the MUI packages:
 
 ```sh
 $ yarn add @material-ui/core@4.12.4
@@ -91,12 +91,12 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 
 Rerun the E2E test. They still pass, and notice we now have a nice green toolbar, and there's some padding on the left and right on the content area.
 
-![App styled with Material-UI](./images/3-1-app-styles.png)
+![App styled with MUI](./images/3-1-app-styles.png)
 
-Here's what these Material-UI components do to achieve this look:
+Here's what these MUI components do to achieve this look:
 
 - `createTheme()` allows us to configure a theme, including setting the `primary` color of our app to `green`.
-- `ThemeProvider` is the root Material-UI component that lets it set up some things that affect your whole app, including taking the `theme`.
+- `ThemeProvider` is the optional root MUI component that lets you set up some things that affect your whole app, including taking the `theme`.
 - `CssBaseline` applies default page-wide CSS styles.
 - `AppBar` and `Toolbar` together provide the top title bar.
 - `Typography` provides proper styling for the text at certain spots in the app, including in the toolbar. Material-UI components relate to one another like this, so it's always best to check the docs for full examples of what components to nest inside one another.
