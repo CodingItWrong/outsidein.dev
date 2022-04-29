@@ -325,8 +325,8 @@ Now, we run the `loadRestaurants` prop in a `useEffect`:
 ```diff
 +import {useEffect} from 'react';
 
--export const RestaurantList = () => {
-+export const RestaurantList = ({loadRestaurants}) => {
+-export default function RestaurantList() {
++export default function RestaurantList({loadRestaurants}) {
 +  useEffect(() => {
 +    loadRestaurants();
 +  }, [loadRestaurants]);
