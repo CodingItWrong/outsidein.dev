@@ -52,13 +52,9 @@ root.render(
 Replace the contents of `App.js` with the following minimal content:
 
 ```jsx
-const App = () => (
-  <div>
-    Hello, world.
-  </div>
-);
-
-export default App;
+export default function App() {
+  return <div>Hello, world.</div>;
+}
 ```
 
 In `public/index.html`, find the `<title>` tag and see that the page has the default title "React App". Update it:
@@ -174,14 +170,14 @@ With outside-in testing, we build the outside first, which in this case is our u
 ```diff
 +import RestaurantScreen from './components/RestaurantScreen';
 
- const App = () => (
-   <div>
--    Hello, world.
-+    <RestaurantScreen />
-   </div>
- );
-
- export default App;
+ export default function App() {
+-  return <div>Hello, world.</div>;
++  return (
++    <div>
++      <RestaurantScreen />
++    </div>
++  );
+ }
 ```
 
 Next, let's actually create the `RestaurantScreen` component we used here.
@@ -189,13 +185,13 @@ In `src`, create a `components` folder, then inside it create a `RestaurantScree
 For the moment let's add just enough content to make it a valid component. Add the following:
 
 ```jsx
-const RestaurantScreen = () => (
-  <div>
-    <h1>Restaurants</h1>
-  </div>
-);
-
-export default RestaurantScreen;
+export default function RestaurantScreen() {
+  return (
+    <div>
+      <h1>Restaurants</h1>
+    </div>
+  );
+}
 ```
 
 If we rerun our E2E test we'll see the "Restaurants" text displayed, but we aren't any closer to passing the test. What do we do next?
@@ -207,22 +203,22 @@ Let's start by writing the code we wish we had again. In `RestaurantScreen.js`:
 ```diff
 +import RestaurantList from './RestaurantList';
 
- const RestaurantScreen = () => (
-   <div>
-     <h1>Restaurants</h1>
-+    <RestaurantList />
-   </div>
- );
-
- export default RestaurantScreen;
+ export default function RestaurantScreen() {
+   return (
+     <div>
+       <h1>Restaurants</h1>
++      <RestaurantList />
+     </div>
+   );
+ }
 ```
 
 Now let's implement that component. Create a `RestaurantList.js` file in `src/components` and again add the minimal content:
 
-```js
-export const RestaurantList = () => <div>RestaurantList</div>;
-
-export default RestaurantList;
+```jsx
+export default function RestaurantList() {
+  return <div>RestaurantList</div>;
+}
 ```
 
 This time, in addition to the default export, we also do a named export of the component. This is because later our default export will be the `RestaurantList` connected to Redux, but we will also want access to the unconnected component for testing.
@@ -346,7 +342,7 @@ Now, we run the `loadRestaurants` prop in a `useEffect`:
 +  }, [loadRestaurants]);
 +
    return <div>RestaurantList</div>;
- };
+ }
 ```
 
 The dependency array we pass to `useEffect` consists only of `loadRestaurants`, so the effect will run once each time `loadRestaurants` changes. In our test (and in our real application) it will never change, so the effect just runs once when the component first renders.
@@ -551,15 +547,16 @@ Next, connect the `RestaurantList` component to the appropriate state. This is w
  import {useEffect} from 'react';
 +import {connect} from 'react-redux';
 
- export const RestaurantList = ({loadRestaurants, restaurants}) => {
+-export default function RestaurantList({loadRestaurants, restaurants}) {
++function RestaurantList({loadRestaurants, restaurants}) {
+  useEffect(() => {
 ...
- };
+ }
 
 +const mapStateToProps = state => ({
 +  restaurants: state.restaurants.records,
 +});
 +
--export default RestaurantList;
 +export default connect(mapStateToProps)(RestaurantList);
 ```
 
@@ -583,13 +580,15 @@ This error is because we haven't hooked up our application to a Redux store. Let
 +import store from './store';
  import RestaurantScreen from './components/RestaurantScreen';
 
- const App = () => (
--  <div>
-+  <Provider store={store}>
-     <RestaurantScreen />
--  </div>
-+  </Provider>
- );
+ export default function App() {
+   return (
+-    <div>
++    <Provider store={store}>
+       <RestaurantScreen />
+-    </div>
++    </Provider>
+   );
+ )
 ```
 
 We'll need to define that store as well. Under `src/`, create a `store` folder, then an `index.js` inside it. Add the following contents:
@@ -619,7 +618,9 @@ Now we need to create that restaurant reducer. Create a `src/store/restaurants` 
 ```js
 import {combineReducers} from 'redux';
 
-const records = () => [];
+function records() {
+  return [];
+}
 
 export default combineReducers({
   records,
@@ -662,7 +663,7 @@ In `RestaurantList.js`, map the action into the component:
  import {connect} from 'react-redux';
 +import {loadRestaurants} from '../store/restaurants/actions';
 
- export const RestaurantList = ({loadRestaurants, restaurants}) => {
+ function RestaurantList({loadRestaurants, restaurants}) {
 ...
  const mapStateToProps = state => ({
    restaurants: state.restaurants.records,
@@ -840,8 +841,8 @@ Save the file and the test failure is the same, because our reducer doesn't stor
  import {combineReducers} from 'redux';
 +import {STORE_RESTAURANTS} from './actions';
 
--const records = () => [];
-+const records = (state = [], action) => {
+-function records() {
++function records(state = [], action) {
 +  switch (action.type) {
 +    case STORE_RESTAURANTS:
 +      return action.records;
