@@ -120,7 +120,6 @@ Add this rather lengthy list of packages:
 ```sh
 $ yarn add --dev eslint-config-prettier@8.5.0 \
                  eslint-plugin-cypress@2.12.1 \
-                 eslint-plugin-jest@26.1.4 \
                  eslint-plugin-prettier@4.0.0 \
                  prettier@2.6.2
 ```
