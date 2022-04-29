@@ -248,7 +248,7 @@ Press ctrl-C to leave the test runner.
 Now we need to install Cypress for end-to-end tests. Run:
 
 ```sh
-$ yarn add --dev cypress@9.5.4
+$ yarn add --dev cypress@9.6.0
 ```
 
 When it completes, in your `package.json`, add a new script:
