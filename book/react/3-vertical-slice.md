@@ -113,16 +113,14 @@ describe('Listing Restaurants', () => {
     const sushiPlace = 'Sushi Place';
     const pizzaPlace = 'Pizza Place';
 
-    cy.server({force404: true});
-
-    cy.route({
-      method: 'GET',
-      url: 'https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants',
-      response: [
+    cy.intercept(
+      'GET',
+      'https://outside-in-dev-api.herokuapp.com/*/restaurants',
+      [
         {id: 1, name: sushiPlace},
         {id: 2, name: pizzaPlace},
       ],
-    });
+    );
 
     cy.visit('/');
     cy.contains(sushiPlace);
@@ -131,17 +129,9 @@ describe('Listing Restaurants', () => {
 });
 ```
 
-As before, fill in your API key in place of `YOUR-API-KEY`.
-
 First, we create variables with a few restaurant names, because we'll use them several times.
 
-Then, we call `cy.server()`. This sets up Cypress to stub calls to the backend. By default Cypress will allow any calls that are *not* stubbed through to the backend, but the `force404: true` option means that Cypress will return a `404 Not Found` status for them instead. We don't want our E2E tests to ever hit the real backend, so this option is good.
-
-Then, we call `cy.route()` to stub a specific backend request; in this case, the `https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants` we just tested out. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` or `updated_at` fields, because our app won't be using them.
-
-:::tip
-The Cypress methods `cy.server()` and `cy.route()` we use here are actually deprecated in favor of a newer `cy.intercept()` API. For now I'm still using the deprecated APIs because `cy.server()`'s `force404` option is a simple way to prevent any of our E2E tests from accidentally hitting a backend server. Cypress has said that once these deprecated methods are removed from Cypress itself, they'll still be available in a plugin.
-:::
+Then, we call `cy.intercept()` to stub a backend request; in this case, the `https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants` we just tested out. Note that we don't hard-code your API key here; we use a `*` to match any value in the API key spot of the path. When the app sends a `GET` request to it, we will return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Notice that we don't need to include the `created_at` or `updated_at` fields, because our app won't be using them.
 
 Next, we visit the root of our app at `/`. We confirm that the page contains both restaurant names. This will show that the app successfully retrieved them from the backend and displayed them.
 
