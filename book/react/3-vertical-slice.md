@@ -211,8 +211,6 @@ export default function RestaurantList() {
 }
 ```
 
-This time, in addition to the default export, we also do a named export of the component. This is because later our default export will be the `RestaurantList` connected to Redux, but we will also want access to the unconnected component for testing.
-
 ## Stepping Down to a Unit Test
 
 Now we finally have `RestaurantList` where we'll put our UI for this story.
@@ -257,7 +255,7 @@ Now, we're ready to render our component:
 
 ```diff
 +import {render} from '@testing-library/react';
-+import {RestaurantList} from '../RestaurantList';
++import RestaurantList from './RestaurantList';
 
  describe('RestaurantList', () => {
    it('loads restaurants on first render', () => {
@@ -267,10 +265,6 @@ Now, we're ready to render our component:
    });
  });
 ```
-
-:::danger
-Be sure to use the named import `import {RestaurantList}` with curly braces, not the default import `import RestaurantList`. The named import will continue to be the component that is not connected to Redux, which is the one we want to unit test. If you use the default import, then once we connect it to Redux your unit test will begin failing.
-:::
 
 We import the `RestaurantList` component, then we use React Testing Library's `render()` function to render it. We pass in JSX just like we'd use in production code, and we pass the `loadRestaurants` function as a component prop.
 
@@ -553,6 +547,38 @@ Next, connect the `RestaurantList` component to the appropriate state. This is w
 :::tip
 Note that we are using the React-Redux `connect()` function rather than the newer hooks-based API. Redux maintainer Mark Erikson writes about the [tradeoffs between the two React-Redux APIs](https://blog.isquaredsoftware.com/2019/07/blogged-answers-thoughts-on-hooks/), and there is not a strong recommendation to use one or the other. Because our component testing approach involves passing props to a component that is unaware of Redux, the `connect()` function is a more natural fit. We could accomplish the same by creating a "connected" component that uses React-Redux hooks and passes the props down to the unconnected component, but there are few benefits to that approach over using `connect()`.
 :::
+
+Save `RestaurantList.js`. If you haven't left your Jest tests running, run `yarn test`. Notice that we are now getting a failure:
+
+```sh
+● RestaurantList › loads restaurants on first render
+
+  Could not find "store" in the context of "Connect(RestaurantList)". Either wrap the root component in a <Provider>, or pass a custom React context provider to <Provider> and the corresponding React context consumer to Connect(RestaurantList) in connect options.
+```
+
+How do we want to provide the Redux store in our component test? Well, we don't. That integration will be tested as part of our E2E test. For our component test, we want to test the component in isolation: assuming Redux passes in the correct data to the component, does it behave correctly?
+
+To test this, we can follow a technique where in addition to the default export of the Redux-connected component, you also do a named export of the unconnected component, and use that for testing:
+
+```diff
+ import {loadRestaurants} from '../store/restaurants/actions';
+
+-function RestaurantList({loadRestaurants, restaurants}) {
++export function RestaurantList({loadRestaurants, restaurants}) {
+   useEffect(() => {
+```
+
+Next, update the test to use the named import:
+
+```diff
+ import {render, screen} from '@testing-library/react';
+-import RestaurantList from './RestaurantList';
++import {RestaurantList} from './RestaurantList';
+
+ describe('RestaurantList', () => {
+```
+
+The tests should automatically rerun and pass again.
 
 If you've used Redux before you know we have more setup steps to do. But let's rerun the E2E test to let it drive us to do so. The error we get is:
 
