@@ -45,7 +45,21 @@ $ git checkout -b material-design
 Install the MUI packages:
 
 ```sh
-$ yarn add @material-ui/core@4.12.4
+$ yarn add @mui/material@5.6.3 \
+           @emotion/react@11.9.0 \
+           @emotion/styled@11.8.1
+```
+
+Then, in `public/index.html`, add the following `link` tag to make the Roboto font available:
+
+```diff
+   Learn how to configure a non-root public URL by running `npm run build`.
+ -->
++<link
++  rel="stylesheet"
++  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
++/>
+ <title>Opinion Ate</title>
 ```
 
 Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
