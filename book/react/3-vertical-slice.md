@@ -295,26 +295,15 @@ Now we're ready to run our unit test. Run `yarn test` and leave it running for t
     Expected number of calls: >= 1
     Received number of calls:    0
 
-       9 |     render(<RestaurantList loadRestaurants={loadRestaurants} />);
-      10 |
-    > 11 |     expect(loadRestaurants).toHaveBeenCalled();
+       8 |     render(<RestaurantList loadRestaurants={loadRestaurants} />);
+       9 |
+    > 10 |     expect(loadRestaurants).toHaveBeenCalled();
          |                             ^
-      12 |   });
-      13 | });
 ```
 
 Our test says we expected the `loadRestaurants()` function to have been called at least once, but it wasn't called. This makes sense: we haven't hooked up the first-render functionality yet. Now that our test is red, it's time to make it green.
 
-To call a function once when our component renders, we'll use an effect. First, let's adjust the `RestaurantList` function to use a block:
-
-```diff
--export const RestaurantList = () => <div>RestaurantList</div>;
-+export const RestaurantList = () => {
-+  return <div>RestaurantList</div>;
-+}
-```
-
-Now, we run the `loadRestaurants` prop in a `useEffect`:
+To call a function once when our component renders, we'll use an effect. Run the `loadRestaurants` prop in a `useEffect`:
 
 ```diff
 +import {useEffect} from 'react';
