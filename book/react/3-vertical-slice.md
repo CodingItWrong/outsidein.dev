@@ -824,10 +824,9 @@ First, update the `loadRestaurants` function in `actions.js`:
 -export const loadRestaurants = () => () => {};
 +export const STORE_RESTAURANTS = 'STORE_RESTAURANTS';
 +
-+export const loadRestaurants = () => (dispatch, getState, api) => {
-+  api.loadRestaurants().then(records => {
-+    dispatch(storeRestaurants(records));
-+  });
++export const loadRestaurants = () => async (dispatch, getState, api) => {
++  const records = await api.loadRestaurants();
++  dispatch(storeRestaurants(records));
 +};
 +
 +const storeRestaurants = records => ({
@@ -904,11 +903,9 @@ Next, let's wire the API object up our store. Update `src/store/index.js`:
 
 Rerun the E2E test and we get a new error:
 
-```sh
-Cannot read properties of undefined (reading 'then')
-```
+> When called with an action of type "STORE_RESTAURANTS", the slice reducer for key "records" returned undefined.
 
-Our method isn't returning a Promise, so the caller can't chain `.then()` onto it. This is because we still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API.
+What's going on here? The return value of `records()` for action `STORE_RESTAURANTS` is undefined. We're returning the `action.records` field, so this means `action.records` is undefined. This is because we still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API.
 
 We'll use the popular Axios library to make our HTTP requests. Add it to your project:
 
@@ -931,8 +928,9 @@ Next, use Axios to make an HTTP request to the correct endpoint:
 +
  const api = {
 -  loadRestaurants() {}
-+  loadRestaurants() {
-+    return client.get('/restaurants').then(response => response.data);
++  async loadRestaurants() {
++    const response = await client.get('/restaurants');
++    return response.data;
    },
  };
 
