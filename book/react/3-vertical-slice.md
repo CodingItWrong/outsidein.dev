@@ -508,8 +508,8 @@ This should make sense from what we just built: we called the `map` function on 
 Add `redux` and `react-redux` dependencies:
 
 ```sh
-$ yarn add redux@4.1.2 \
-    react-redux@7.2.8
+$ yarn add redux@4.2.0 \
+    react-redux@8.0.1
 ```
 
 Next, connect the `RestaurantList` component to the appropriate state. This is what will ultimately fix our Cypress error:
@@ -913,7 +913,7 @@ Our method isn't returning a Promise, so the caller can't chain `.then()` onto i
 We'll use the popular Axios library to make our HTTP requests. Add it to your project:
 
 ```sh
-$ yarn add axios@0.26.1
+$ yarn add axios@0.27.2
 ```
 
 :::tip
