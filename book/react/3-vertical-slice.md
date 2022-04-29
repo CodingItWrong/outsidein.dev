@@ -355,8 +355,8 @@ Now, instead of running an expectation that `loadRestaurants` was called, we use
 ...
    render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
 +
-+  expect(screen.queryByText('Sushi Place')).not.toBeNull();
-+  expect(screen.queryByText('Pizza Place')).not.toBeNull();
++  expect(screen.getByText('Sushi Place')).toBeInTheDocument();
++  expect(screen.getByText('Pizza Place')).toBeInTheDocument();
  });
 ```
 
@@ -371,14 +371,10 @@ When we save the file, our test runs, and it's red, as we expect. We get the fol
 ```sh
   ● RestaurantList › displays the restaurants
 
-    expect(received).not.toBeNull()
-
-    Received: null
-
-      20 |     render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
-      21 |
-    > 22 |     expect(screen.queryByText('Sushi Place')).not.toBeNull();
-         |                                            ^
+    TestingLibraryElementError: Unable to find an element with the text: Sushi
+    Place. This could be because the text is broken up by multiple elements. In
+    this case, you can provide a function for your text matcher to make your
+    matcher more flexible.
 ```
 
 So no element with the text "Sushi Place" is found. At this point, we could hard-code an element with that text, but it's better to go ahead and pull it from the props:
