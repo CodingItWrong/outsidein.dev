@@ -86,21 +86,23 @@ In `App.js`, keep the `<RestaurantScreen />` component but wrap it with differen
 +  },
 +});
 +
- const App = () => (
-   <Provider store={store}>
-+    <ThemeProvider theme={theme}>
-+      <CssBaseline />
-+      <AppBar position="static">
-+        <Toolbar>
-+          <Typography variant="h6">Opinion Ate</Typography>
-+        </Toolbar>
-+      </AppBar>
-+      <Container>
-         <RestaurantScreen />
-+      </Container>
-+    </ThemeProvider>
-  </Provider>
- );
+ export default function App() {
+   return (
+     <Provider store={store}>
++      <ThemeProvider theme={theme}>
++        <CssBaseline />
++        <AppBar position="static">
++          <Toolbar>
++            <Typography variant="h6">Opinion Ate</Typography>
++          </Toolbar>
++        </AppBar>
++        <Container>
+           <RestaurantScreen />
++        </Container>
++      </ThemeProvider>
+    </Provider>
+   );
+ }
 ```
 
 Rerun the E2E test. They still pass, and notice we now have a nice green toolbar, and there's some padding on the left and right on the content area.
@@ -124,17 +126,19 @@ Next let's style `RestaurantScreen`. A common UI element in Material Design is a
 +import Typography from '@mui/material/Typography';
  import RestaurantList from './RestaurantList';
 
- const RestaurantScreen = () => (
--  <div>
--    <h1>Restaurants</h1>
-+  <Card>
-+    <CardContent>
-+      <Typography variant="h5">Restaurants</Typography>
-       <RestaurantList />
--  </div>
-+    </CardContent>
-+  </Card>
- );
+ export default function RestaurantScreen() {
+   return (
+-    <div>
+-      <h1>Restaurants</h1>
++    <Card>
++      <CardContent>
++        <Typography variant="h5">Restaurants</Typography>
+         <RestaurantList />
+-    </div>
++      </CardContent>
++    </Card>
+   );
+ }
 ```
 
 Reload the E2E test and notice there's a box around the content now.
@@ -157,7 +161,7 @@ Finally, let's style the list of the restaurants. Material Design has a list con
 +import ListItemText from '@mui/material/ListItemText';
  import {loadRestaurants} from '../store/restaurants/actions';
 
- export const RestaurantList = ({loadRestaurants, restaurants}) => {
+ export function RestaurantList({loadRestaurants, restaurants}) {
 ...
    return (
 -    <ul>
