@@ -124,46 +124,44 @@ $ yarn add --dev eslint-config-prettier@8.5.0 \
                  prettier@2.6.2
 ```
 
-Then create a file `.eslintrc.js` at the root of your project and add the following:
+Then open `package.json` and update the `"eslintConfig"` key to match the following:
 
-```js
-module.exports = {
-  extends: ['react-app', 'prettier'],
-  plugins: ['prettier', 'jest', 'cypress'],
-  parser: '@babel/eslint-parser',
-  env: {
-    browser: true,
-    'cypress/globals': true,
-    es6: true,
-    'jest/globals': true,
+```json
+"eslintConfig": {
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier",
+    "cypress"
+  ],
+  "env": {
+    "cypress/globals": true
   },
-  settings: {
-    react: {
-      version: 'detect',
-    },
-  },
-  rules: {
-    'prettier/prettier': 'warn',
-  },
-};
+  "rules": {
+    "prettier/prettier": "warn"
+  }
+},
 ```
 
-Here's what this file is configuring:
+Here's what this is configuring:
 
 - Sets up with Create React App's default linting rules, adding in Prettier for autoformatting.
-- Makes ESLint aware of global variables provided by the ECMAScript 6 version of the language, the browser, Jest, and Cypress.
+- Makes ESLint aware of global variables provided by Cypress.
 
 Next, let's tweak the autoformatting setup. Prettier doesn't have a lot of configuration options, but you can adjust a little.
 
-And another file `.prettierrc.js` and add the following:
+Add another entry to `package.json` called `"prettier"` and add the following:
 
-```js
-module.exports = {
-  arrowParens: 'avoid',
-  bracketSpacing: false,
-  singleQuote: true,
-  trailingComma: 'all',
-};
+```json
+"prettier": {
+  "arrowParens": "avoid",
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all"
+},
 ```
 
 These options configure Prettier with some helpful options to match common JavaScript practice. It also makes our diffs a bit simpler to read, which is not only helpful for this guide, but is also helpful for code reviews in your own projects.
