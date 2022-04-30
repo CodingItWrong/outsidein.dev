@@ -703,78 +703,18 @@ Then add it to your test:
 +import {act, render, screen} from '@testing-library/react';
  import userEvent from '@testing-library/user-event';
 +import flushPromises from 'flush-promises';
- import {NewRestaurantForm} from '../NewRestaurantForm';
+ import {NewRestaurantForm} from './NewRestaurantForm';
 ...
        userEvent.click(getByTestId('new-restaurant-submit-button'));
 +
 +      return act(flushPromises);
-     });
+     }
 ```
 
 We call `act()` at the end of our `beforeEach` block, passing it the `flushPromises` function. This means that React will call that function and wait for it to resolve, responding to component changes that may have happened appropriately. We return the result of `act`, so that Jest will wait on *that* before running individual tests.
 
 Save the file and our test finally passes cleanly!
 
-We have a little bit to unit test in the store as well: `NewRestaurantForm` is relying on the `create` action returning a promise that resolves when the server request completes. To test this, first let's add a test to the "when save succeeds" block:
-
-```diff
- describe('createRestaurant action', () => {
-...
-   let api;
-   let store;
-+  let promise;
-
-   beforeEach(() => {
-...
-   describe('when save succeeds', () => {
-     beforeEach(() => {
-       api.createRestaurant.mockResolvedValue(responseRestaurant);
--      store.dispatch(createRestaurant(newRestaurantName));
-+      promise = store.dispatch(createRestaurant(newRestaurantName));
-     });
-
-     it('stores the returned restaurant in the store', () => {
-       expect(store.getState().records).toEqual([
-         existingRestaurant,
-         responseRestaurant,
-       ]);
-     });
-
-+    it('resolves', () => {
-+      return expect(promise).resolves.toBeUndefined();
-+    });
-```
-
-Here's what's going on in this test:
-
-- We use the `.resolves` helper to confirm that the promise resolves instead of rejecting.
-- Although we don't care about the value the promise resolves with, Jest requires a matcher to be used after `.resolves`. To allow us to resolve without a value, we check that the resolved value is `undefined`.
-- We need Jest to wait on the promise to settle before it considers the test complete, so, as elsewhere, we return the promise we want Jest to wait on.
-
-The test fails:
-
-```sh
-● restaurants › createRestaurant action › when save succeeds › resolves
-
-  expect(received).resolves.toBeUndefined()
-
-  Matcher error: received value must be a promise
-
-  Received has value: undefined
-```
-
-So right now the return value of `store.dispatch()` is `undefined`. But if we return the promise chain from our async action function, Redux will return that from `store.dispatch()`. Let's do that:
-
-```diff
- export const createRestaurant = name => (dispatch, getState, api) => {
--  api.createRestaurant(name).then(record => {
-+  return api.createRestaurant(name).then(record => {
-     dispatch(addRestaurant(record)));
-   });
- };
-```
-
-Save and the test passes. Our component and store should now be set to work together to clear the name field.
 If you add a new restaurant in the browser, now you'll see the name field cleared out afterward:
 
 ![Name field cleared after submission](./images/5-2-name-field-cleared.png)
