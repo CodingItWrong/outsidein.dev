@@ -356,7 +356,7 @@ Now our component is correctly calling our `createRestaurant` async action, but 
 
 ## Unit Testing the Store
 
-In `src/store/__tests__/restaurants.spec.js`, below the "loadRestaurants action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
+In `src/store/restaurants.spec.js`, below the "loadRestaurants action" group, add a "createRestaurant action" group, and write a test to confirm the API is called:
 
 ```js
 describe('createRestaurant action', () => {
