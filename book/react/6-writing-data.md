@@ -79,13 +79,13 @@ Create the file `src/components/NewRestaurantForm.js`, and add the following:
 ```js
 import TextField from '@mui/material/TextField';;
 
-export const NewRestaurantForm = () => {
+export function NewRestaurantForm() {
   return (
     <form>
       <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
     </form>
   );
-};
+}
 
 export default NewRestaurantForm;
 ```
@@ -101,12 +101,13 @@ Next, add the form to the `RestaurantScreen` component:
  import RestaurantList from './RestaurantList';
 +import NewRestaurantForm from './NewRestaurantForm';
 
- const RestaurantScreen = () => (
-   <Card>
-     <CardContent>
-       <Typography variant="h5">Restaurants</Typography>
-+      <NewRestaurantForm />
-       <RestaurantList />
+ export default function RestaurantScreen() {
+   return (
+     <Card>
+       <CardContent>
+         <Typography variant="h5">Restaurants</Typography>
++        <NewRestaurantForm />
+         <RestaurantList />
 ```
 
 Rerun the E2E tests and they should get past finding and typing into the Add Restaurant input. The next error is:
@@ -119,7 +120,7 @@ To fix this error, we add a button to `NewRestaurantForm` but don't wire it up t
  import TextField from '@mui/material/TextField';
 +import Button from '@mui/material/Button';
 
- export const NewRestaurantForm = () => {
+ export function NewRestaurantForm() {
    return (
      <form>
        <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
@@ -250,8 +251,8 @@ Now, write just enough production code to get past the current test failure, let
 ```diff
  import Button from '@material-ui/core/Button';
 
--export const NewRestaurantForm = () => {
-+export const NewRestaurantForm = ({createRestaurant}) => {
+-export function NewRestaurantForm() {
++export function NewRestaurantForm({createRestaurant}) {
    return (
 -    <form>
 +    <form onSubmit={() => createRestaurant()}>
@@ -274,10 +275,10 @@ To prevent this page reload from happening, we need to call the `preventDefault(
 
 ```diff
  export const NewRestaurantForm = ({createRestaurant}) => {
-+  const handleSubmit = e => {
++  function handleSubmit(e) {
 +    e.preventDefault();
 +    createRestaurant();
-+  };
++  }
 +
    return (
 -    <form onSubmit={() => createRestaurant(name)}>
@@ -311,10 +312,10 @@ The function didn't receive the argument it expected: it wanted "Sushi Place", b
  import TextField from '@material-ui/core/TextField';
  import Button from '@material-ui/core/Button';
 
- export const NewRestaurantForm = ({createRestaurant}) => {
+ export function NewRestaurantForm({createRestaurant}) {
 +  const [name, setName] = useState('');
 +
-   const handleSubmit = e => {
+   function handleSubmit(e) {
 ```
 
 Then, we'll make `TextField` a controlled component, reading its value from the `name` state item and writing changes back using `setName`:
@@ -365,9 +366,9 @@ We want the `createRestaurant` prop to be passed in by Redux as an action, so le
  import Button from '@material-ui/core/Button';
 +import {createRestaurant} from '../store/restaurants/actions';
 
- export const NewRestaurantForm = ({createRestaurant}) => {
+ export function NewRestaurantForm({createRestaurant}) {
 ...
- };
+ }
 
 -export default NewRestaurantForm;
 +const mapStateToProps = null;
@@ -569,7 +570,7 @@ After `createRestaurant()` resolves, we take the record the API returns to us an
 +  ADD_RESTAURANT,
  } from './actions';
 ...
- const records = (state = [], action) => {
+ function records(state = [], action) {
    switch (action.type) {
      case STORE_RESTAURANTS:
        return action.records;
