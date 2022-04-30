@@ -704,7 +704,7 @@ Then add it to your test:
 +import flushPromises from 'flush-promises';
  import {NewRestaurantForm} from './NewRestaurantForm';
 ...
-       userEvent.click(getByTestId('new-restaurant-submit-button'));
+       userEvent.click(screen.getByText('Add'));
 +
 +      return act(flushPromises);
      }
