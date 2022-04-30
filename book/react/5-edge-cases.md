@@ -225,11 +225,6 @@ Our test fails, as we expect:
 
     Expected: true
     Received: undefined
-
-      22 |         await store.dispatch(loadRestaurants());
-      23 |
-    > 24 |         expect(store.getState().loading).toEqual(true);
-         |                                          ^
 ```
 
 The `loading` flag isn't even defined yet.
