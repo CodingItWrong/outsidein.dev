@@ -540,7 +540,10 @@ Save `RestaurantList.js`. If you haven't left your Jest tests running, run `yarn
 ```sh
 ● RestaurantList › loads restaurants on first render
 
-  Could not find "store" in the context of "Connect(RestaurantList)". Either wrap the root component in a <Provider>, or pass a custom React context provider to <Provider> and the corresponding React context consumer to Connect(RestaurantList) in connect options.
+  Could not find "store" in the context of "Connect(RestaurantList)". Either
+  wrap the root component in a <Provider>, or pass a custom React context
+  provider to <Provider> and the corresponding React context consumer to
+  Connect(RestaurantList) in connect options.
 ```
 
 How do we want to provide the Redux store in our component test? Well, we don't. That integration will be tested as part of our E2E test. For our component test, we want to test the component in isolation: assuming Redux passes in the correct data to the component, does it behave correctly?
