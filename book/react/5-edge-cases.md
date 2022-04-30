@@ -23,29 +23,16 @@ To prevent this from happening, it's best to write fewer E2E tests and more unit
 ## Loading Indicator
 First, the loading indicator. Although we aren't writing an E2E test, we can still start from the "outside" in a sense: our `RestaurantList` component. Let's write a test of the loading indicator functionality for it.
 
-Right now in `RestaurantList.spec.js` we are rendering our component in a `beforeEach` block. This has worked so far, but now we need to set up the props slightly differently for different tests. We want a test where a loading flag is set.
+Right now in `RestaurantList.spec.js` we are rendering our component in a `renderComponent()` helper function. This has worked so far, but now we need to set up the props slightly differently for different tests. We want a test where a loading flag is set.
 
 To do this, let's refactor our tests for more flexibility.
 
 First, start the unit tests with `yarn test` and keep them running for the duration of this chapter.
 
-Next, let's extract all the contents of the `beforeEach` into a new function, called `renderWithProps`:
+Next, let's change the `renderComponent` function to allow passing in the props the component should use, with defaults:
 
 ```diff
- let loadRestaurants;
-
-+const renderWithProps = () => {
-+  loadRestaurants = jest.fn().mockName('loadRestaurants');
-+
-+  render(
-+    <RestaurantList
-+      loadRestaurants={loadRestaurants}
-+      restaurants={restaurants}
-+    />,
-+  );
-+};
-+
- beforeEach(() => {
+-function renderComponent() {
 -  loadRestaurants = jest.fn().mockName('loadRestaurants');
 -
 -  render(
@@ -54,58 +41,22 @@ Next, let's extract all the contents of the `beforeEach` into a new function, ca
 -      restaurants={restaurants}
 -    />,
 -  );
-+  renderWithProps();
- });
-```
-
-Save the file and the tests should still pass. When refactoring like this, we want to run the tests after each small step, so that if something breaks we know right away.
-
-Next, let's remove the `beforeEach` block and call `renderWithProps` at the start of each our our tests instead:
-
-```diff
--beforeEach(() => {
--  renderWithProps();
--});
--
- it('loads restaurants on first render', () => {
-+  renderWithProps();
-   expect(loadRestaurants).toHaveBeenCalled();
- });
-
- it('displays the restaurants', () => {
-+  renderWithProps();
-   expect(screen.queryByText('Sushi Place')).not.toBeNull();
-```
-
-Save and confirm the tests pass.
-
-As our final refactoring, let's change the `renderWithProps` function to allow passing in the props the component should use, with defaults:
-
-```diff
--const renderWithProps = () => {
--  loadRestaurants = jest.fn().mockName('loadRestaurants');
--
--  render(
--    <RestaurantList
--      loadRestaurants={loadRestaurants}
--      restaurants={restaurants}
--    />,
--  );
-+const renderWithProps = (propOverrides = {}) => {
++function renderComponent(propOverrides = {}) {
 +  const props = {
-+    loadRestaurants: jest.fn().mockName('loadRestaurants'),
++    loadRestaurants: jest.fn().mockName('loadRestaurants')
+,
 +    restaurants,
 +    ...propOverrides,
 +  };
 +  loadRestaurants = props.loadRestaurants;
 +
 +  render(<RestaurantList {...props} />);
- };
+ }
 ```
 
 Here's what's going on:
 
-- `renderWithProps` takes an optional `propOverrides` argument.
+- `renderComponent` now takes an optional `propOverrides` argument.
 - We set a `props` variable to an object, providing default values for the `loadRestaurants` and `restaurants` properties, but using the object spread operator to set any passed-in properties, overriding the defaults.
 - Whatever the final value of the `loadRestaurants` property is, we set that in a variable so it can be accessed in the tests.
 - We `render` the component, passing it all the props.
@@ -114,8 +65,8 @@ Now we're ready to write our new test for when the store is in a loading state. 
 
 ```js
 it('displays the loading indicator while loading', () => {
-  renderWithProps({loading: true});
-  expect(screen.queryByTestId('loading-indicator')).not.toBeNull();
+  renderComponent({loading: true});
+  expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
 });
 ```
 
