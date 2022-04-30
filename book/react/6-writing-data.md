@@ -302,12 +302,11 @@ Then, we'll make `TextField` a controlled component, reading its value from the 
 Finally, now that the entered text is stored in `name`, we'll pass that as the argument to `createRestaurant()`:
 
 ```diff
- export const NewRestaurantForm = ({createRestaurant}) => {
-   const handleSubmit = e => {
-     e.preventDefault();
--    createRestaurant();
-+    createRestaurant(name);
-   };
+ function handleSubmit(e) {
+   e.preventDefault();
+-  createRestaurant();
++  createRestaurant(name);
+ };
 ```
 
 Save the file and the test passes.
