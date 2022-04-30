@@ -755,9 +755,9 @@ Save the file and the test fails, because the validation error message is not fo
 Let's fix this error in the simplest way possible by adding the validation error unconditionally:
 
 ```diff
- import Button from '@material-ui/core/Button';
-+import Alert from '@material-ui/lab/Alert';
- import {createRestaurant} from '../store/restaurants/actions';
+ import Button from '@mui/material/Button';
++import Alert from '@mui/material/Alert';
+ import {createRestaurant} from './store/restaurants/actions';
 ...
    return (
      <form onSubmit={handleSubmit}>
