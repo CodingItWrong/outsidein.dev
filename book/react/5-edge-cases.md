@@ -70,7 +70,7 @@ it('displays the loading indicator while loading', () => {
 });
 ```
 
-Note that instead of calling `queryByText()` here, we call `queryByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
+Note that instead of calling `getByText()` here, we call `getByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
 
 Once we find our loading indicator by test ID, we confirm that it's not null, showing that the element is present.
 
@@ -109,10 +109,12 @@ In our case, we *also* need a test to confirm that the conditional is *not* show
 
 ```js
 it('does not display the loading indicator while not loading', () => {
-  renderWithProps({loading: false});
-  expect(screen.queryByTestId('loading-indicator')).toBeNull();
+  renderComponent({loading: false});
+  expect(screen.queryByTestId('loading-indicator')).not.toBeInTheDocument();
 });
 ```
+
+Note that we used `queryByTestId` instead of `getByTestId` here. `query` methods return a `null` if an element is not found, whereas `get` methods throw an error. Because we _expect_ to not find the element here, a `query` method is necessary for our assertion to succeed.
 
 This test fails, of course. And now that we have two tests, this will force us to implement the conditional to get them both to pass:
 
@@ -494,12 +496,11 @@ Start with the test for the component. We are describing a new situation, when l
 
 ```js
 describe('when loading fails', () => {
-  beforeEach(() => {
-    renderWithProps({loadError: true});
-  });
-
   it('displays the error message', () => {
-    expect(screen.queryByText('Restaurants could not be loaded.')).not.toBeNull();
+    renderComponent({loadError: true});
+    expect(
+      screen.getByText('Restaurants could not be loaded.'),
+    ).toBeInTheDocument();
   });
 });
 ```
@@ -534,16 +535,14 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
 
 ```diff
  describe('when loading succeeds', () => {
-   beforeEach(() => {
-     renderWithProps();
-   });
-
    it('does not display the loading indicator while not loading', () => {
-     expect(screen.queryByTestId('loading-indicator')).toBeNull();
+     renderComponent();
+     expect(screen.queryByTestId('loading-indicator')).not.toBeInTheDocument();
    });
 
 +  it('does not display the error message', () => {
-+    expect(screen.queryByText('Restaurants could not be loaded.')).toBeNull();
++    renderComponent();
++    expect(screen.queryByText('Restaurants could not be loaded.')).not.toBeInTheDocument();
 +  });
 +
    it('displays the restaurants', () => {
