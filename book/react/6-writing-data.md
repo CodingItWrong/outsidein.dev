@@ -1181,7 +1181,7 @@ Now we need to add one more store test as well: `NewRestaurantForm` is relying o
 describe('when save fails', () => {
   it('rejects', () => {
     api.createRestaurant.mockRejectedValue();
-    promise = store.dispatch(createRestaurant(newRestaurantName));
+    const promise = store.dispatch(createRestaurant(newRestaurantName));
     return expect(promise).rejects.toBeUndefined();
   });
 });
