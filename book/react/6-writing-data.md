@@ -1020,14 +1020,10 @@ What's happening is that our call to `createRestaurants()` is rejecting, but we 
  }
 ```
 
-Save the file and the "thrown" error goes away. Now we get an expectation failure:
+Save the file and the "thrown" error goes away, leaving only the expectation failure:
 
 ```sh
-  ● NewRestaurantForm › when the store action rejects › displays an error message
-
-    expect(received).not.toBeNull()
-
-    Received: null
+  ● NewRestaurantForm › when the store action rejects › displays a server error
 
     TestingLibraryElementError: Unable to find an element with the text: The
     restaurant could not be saved.
