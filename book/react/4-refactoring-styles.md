@@ -65,7 +65,7 @@ Then, in `public/index.html`, add the following `link` tag to make the Roboto fo
 Now we're ready to begin styling our app. We'll begin by styling the `App` component to give it a title bar and some theme-standard layout.
 
 
-In `App.js`, keep the `<RestaurantScreen />` component but wrap it with different Material-UI components:
+In `App.js`, keep the `<RestaurantScreen />` component but wrap it with different MUI components:
 
 ```diff
  import {Provider} from 'react-redux';
@@ -115,7 +115,7 @@ Here's what these MUI components do to achieve this look:
 - `ThemeProvider` is the optional root MUI component that lets you set up some things that affect your whole app, including taking the `theme`.
 - `CssBaseline` applies default page-wide CSS styles.
 - `AppBar` and `Toolbar` together provide the top title bar.
-- `Typography` provides proper styling for the text at certain spots in the app, including in the toolbar. Material-UI components relate to one another like this, so it's always best to check the docs for full examples of what components to nest inside one another.
+- `Typography` provides proper styling for the text at certain spots in the app, including in the toolbar. MUI components relate to one another like this, so it's always best to check the docs for full examples of what components to nest inside one another.
 - `Container` centers your content horizontally to provide some padding, as well as keeping the content from getting too wide in really wide browser windows.
 
 Next let's style `RestaurantScreen`. A common UI element in Material Design is a card, a box around some content. Let's style the `RestaurantScreen` to be a card:
@@ -143,7 +143,7 @@ Next let's style `RestaurantScreen`. A common UI element in Material Design is a
 
 Reload the E2E test and notice there's a box around the content now.
 
-![Card styled with Material-UI](./images/3-2-card-styles.png)
+![Card styled with MUI](./images/3-2-card-styles.png)
 
 Here's what the components do:
 
@@ -179,7 +179,7 @@ Finally, let's style the list of the restaurants. Material Design has a list con
 
 Rerun the E2E test to see the changes:
 
-![Card styled with Material-UI](./images/3-3-list-styles.png)
+![List styled with MUI](./images/3-3-list-styles.png)
 
 Here's what the components do:
 

@@ -220,7 +220,7 @@ The test failure reports the action wasn't called at all. This is because our bu
 Now, write just enough production code to get past the current test failure, let's just call the action without any arguments:
 
 ```diff
- import Button from '@material-ui/core/Button';
+ import Button from '@mui/material/Button';
 
 -export function NewRestaurantForm() {
 +export function NewRestaurantForm({createRestaurant}) {
@@ -274,8 +274,8 @@ The function didn't receive the argument it expected: it wanted "Sushi Place", b
 
 ```diff
 +import {useState} from 'react';
- import TextField from '@material-ui/core/TextField';
- import Button from '@material-ui/core/Button';
+ import TextField from '@mui/material/TextField';
+ import Button from '@mui/material/Button';
 
  export function NewRestaurantForm({createRestaurant}) {
 +  const [name, setName] = useState('');
