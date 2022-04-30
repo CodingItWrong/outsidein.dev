@@ -143,7 +143,7 @@ describe('when loading succeeds', () => {
 
 Save and confirm the tests still pass.
 
-Now, for the "does not display the loading indicator" test, we pass `loading: false` to the store. But conceptually that's the default state of the store, so let's set up `renderWithProps` to pass that as a default prop:
+Now, for the "does not display the loading indicator" test, we pass `loading: false` to the store. But conceptually that's the default state of the store, so let's set up `renderComponent` to pass that as a default prop:
 
 ```diff
  const props = {
@@ -158,31 +158,13 @@ Now we don't need to pass a prop override in the test of the loading indicator h
 
 ```diff
  it('does not display the loading indicator while not loading', () => {
--  renderWithProps({loading: false});
-+  renderWithProps();
-```
-
-Now our two "when loading succeeds" tests have the same call to `renderWithProps()`. It's small, so we could leave it in the individual tests. But we could also pull it out to a `beforeEach`. Let's do that now:
-
-```diff
- describe('when loading succeeds', () => {
-+  beforeEach(() => {
-+    renderWithProps();
-+  });
-+
-   it('does not display the loading indicator while not loading', () => {
--    renderWithProps();
-     expect(screen.queryByTestId('loading-indicator')).toBeNull();
-   });
-
-   it('displays the restaurants', () => {
--    renderWithProps();
-     expect(screen.queryByText('Sushi Place')).not.toBeNull();
+-  renderComponent({loading: false});
++  renderComponent();
 ```
 
 Save and the tests should pass.
 
-Note that we have one more test that calls `renderWithProps()` with no argument: the test that it "loads restaurants on first render."
+Note that we have one more test that calls `renderComponent()` with no argument: the test that it "loads restaurants on first render."
 Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
 
 Now we need to drive out the loading flag in the store itself.
