@@ -168,7 +168,7 @@ Note that we have one more test that calls `renderComponent()` with no argument:
 Should we group that test together to remove duplication? I wouldn't recommend it. Although the call is the same, conceptually the situation is different. That test is considering when loading restaurants is kicked off, and the other is considering what happens when the loading completes. It just so happens that the state of the store is the same in both cases. But conceptually it's describing a different situation.
 
 Now we need to drive out the loading flag in the store itself.
-Open `src/store/__tests__/restaurants.spec.js`.
+Open `src/store/restaurants.spec.js`.
 We'll have the same separation of tests during loading, so let's proactively group our existing "stores the restaurants" test in a describe:
 
 ```js
