@@ -546,7 +546,7 @@ Save `RestaurantList.js`. If you haven't left your Jest tests running, run `yarn
   Connect(RestaurantList) in connect options.
 ```
 
-How do we want to provide the Redux store in our component test? Well, we don't. That integration will be tested as part of our E2E test. For our component test, we want to test the component in isolation: assuming Redux passes in the correct data to the component, does it behave correctly?
+How do we want to provide the Redux store in our component test? Well, we don't; that integration will be tested as part of our E2E test. For our component test, we want to test the component in isolation: assuming Redux passes in the correct data to the component, does it behave correctly?
 
 To test this, we can follow a technique where in addition to the default export of the Redux-connected component, you also do a named export of the unconnected component, and use that for testing:
 
