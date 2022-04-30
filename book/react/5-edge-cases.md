@@ -119,10 +119,10 @@ Note that we used `queryByTestId` instead of `getByTestId` here. `query` methods
 This test fails, of course. And now that we have two tests, this will force us to implement the conditional to get them both to pass:
 
 ```diff
- import ListItemText from '@material-ui/core/ListItemText';
+ import {loadRestaurants} from '../store/restaurants/actions';
 
--export const RestaurantList = ({loadRestaurants, restaurants}) => {
-+export const RestaurantList = ({loadRestaurants, restaurants, loading}) => {
+-export default function RestaurantList({loadRestaurants, restaurants}) {
++export default function RestaurantList({loadRestaurants, restaurants, loading}) {
 ...
    return (
      <>
@@ -256,8 +256,10 @@ Following the principle of making the test green in the easiest way possible, we
 ```diff
  };
 
-+const loading = () => true;
-+
++function loading() {
++  return true;
++}
+
  export default combineReducers({
    records,
 +  loading,
@@ -394,15 +396,16 @@ it('clears the loading flag', () => {
 Our test fails, as we expect, and now we need to actually clear the loading flag. We can do this in the `loading` reducer:
 
 ```diff
--const loading = () => true;
-+const loading = (state = true, action) => {
+-function loading() {
+-  return true;
++function loading(state = true, action) {
 +  switch (action.type) {
 +    case STORE_RESTAURANTS:
 +      return false;
 +    default:
 +      return state;
 +  }
-+};
+ }
 ```
 
 Save the file and our test passes.
@@ -432,8 +435,8 @@ In this case we don't need to pass an `api` to `thunk` at all, because we won't 
 Our test fails, as we expect. Let's change the initial `loading` flag:
 
 ```diff
--const loading = (state = true, action) => {
-+const loading = (state = false, action) => {
+-function loading(state = true, action) {
++function loading(state = false, action) {
    switch (action.type) {
 ```
 
@@ -462,7 +465,7 @@ Then, in the `loading` reducer, returning a state of `true` when `START_LOADING`
 -import {STORE_RESTAURANTS} from './actions';
 +import {START_LOADING, STORE_RESTAURANTS} from './actions';
 ...
- const loading = (state = false, action) => {
+ function loading(state = false, action) {
    switch (action.type) {
 +    case START_LOADING:
 +      return true;
@@ -543,13 +546,13 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
 Make this test pass by making the display of the error alert conditional on the `loadError` prop that we set up in our test:
 
 ```diff
--export const RestaurantList = ({loadRestaurants, restaurants, loading}) => {
-+export const RestaurantList = ({
+-export function RestaurantList({loadRestaurants, restaurants, loading}) {
++export function RestaurantList({
 +  loadRestaurants,
 +  restaurants,
 +  loading,
 +  loadError,
-+}) => {
++}) {
    useEffect(() => {
 ...
        {loading && <CircularProgress data-testid="loading-indicator" />}
@@ -644,7 +647,9 @@ We fix this failing test the simplest way possible, adding a `loadError` reducer
    }
  };
 
-+const loadError = () => true;
++function loadError() {
++  return true;
++}
 +
  export default combineReducers({
    records,
@@ -741,8 +746,9 @@ And in `reducers.js`:
 +  RECORD_LOADING_ERROR,
 +} from './actions';
 ...
--const loadError = () => true;
-+const loadError = (state = false, action) => {
+-function loadError() {
+-  return true;
++function loadError(state = false, action) {
 +  switch (action.type) {
 +    case RECORD_LOADING_ERROR:
 +      return true;
@@ -823,7 +829,7 @@ Save the file and the new test should fail.
 Fix it by updating the `loadError` reducer to return `false` upon the `START_LOADING` action:
 
 ```diff
- const loadError = (state = false, action) => {
+ function loadError(state = false, action) {
    switch (action.type) {
 +    case START_LOADING:
 +      return false;
@@ -832,7 +838,7 @@ Fix it by updating the `loadError` reducer to return `false` upon the `START_LOA
      default:
        return state;
    }
- };
+ }
 ```
 
 Now that we are handling the error state, there's one more bit of functionality we could add: currently the `loading` flag is not cleared when the request errors. Let's add a test for that:
@@ -853,7 +859,7 @@ Now that we are handling the error state, there's one more bit of functionality 
 To make it pass, just return `false` from the `loading` reducer upon `RECORD_LOADING_ERROR`:
 
 ```diff
- const loading = (state = false, action) => {
+ function loading(state = false, action) {
    switch (action.type) {
      case START_LOADING:
        return true;
@@ -863,7 +869,7 @@ To make it pass, just return `false` from the `loading` reducer upon `RECORD_LOA
      default:
        return state;
    }
- };
+ }
 ```
 
 With this, our tests pass. Our code has error state functionality added, and now we just need to wire up our `RestaurantList` component to our new Redux state value:
