@@ -362,8 +362,8 @@ We want the `createRestaurant` prop to be passed in by Redux as an action, so le
 ```diff
  import {useState} from 'react';
 +import {connect} from 'react-redux';
- import TextField from '@material-ui/core/TextField';
- import Button from '@material-ui/core/Button';
+ import TextField from '@mui/material/TextField';
+ import Button from '@mui/material/Button';
 +import {createRestaurant} from '../store/restaurants/actions';
 
  export function NewRestaurantForm({createRestaurant}) {
