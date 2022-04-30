@@ -268,12 +268,6 @@ Save the file and the test failure has changed:
     Received: called with 0 arguments
 
     Number of calls: 1
-
-
-      25 |
-      26 |     it('calls createRestaurant with the name', () => {
-    > 27 |       expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
-         |                                ^
 ```
 
 The function didn't receive the argument it expected: it wanted "Sushi Place", but it didn't receive any arguments. To pass the restaurant name, first we're going to need to set up a state item for the name:
