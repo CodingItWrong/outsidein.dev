@@ -145,12 +145,12 @@ So now we need to send the request is our backend service. This is missing logic
 
 Starting from the outside as usual, we'll start with the `NewRestaurantForm` component. We want to reproduce the failure from the E2E test at the unit level. We should specify, when you click the send button, it should call a function prop—which in production will be wired to an action in our store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that that should be passed to the store, too.
 
-Create the file `src/components/__tests__/NewRestaurantForm.spec.js` and start out by setting up the component and a mock function in a `beforeEach` block:
+Create the file `src/components/NewRestaurantForm.spec.js` and start out by setting up the component and a mock function in a `renderComponent` helper function:
 
 ```js
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {NewRestaurantForm} from '../NewRestaurantForm';
+import {NewRestaurantForm} from './NewRestaurantForm';
 
 describe('NewRestaurantForm', () => {
   const restaurantName = 'Sushi Place';
