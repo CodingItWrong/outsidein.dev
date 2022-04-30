@@ -888,28 +888,7 @@ describe('when correcting a validation error', () => {
 
 Note that we repeat both sets of helper function steps from the other groups, submitting the empty form and then submitting the filled-in one. We want our unit tests to be independent, so they can be run without depending on the result of other tests.
 
-Save the test file and we get the `act()` warning again:
-
-```sh
-Warning: An update to NewRestaurantForm inside a test was not wrapped in act(...).
-```
-
-This usually happens when we move on from interacting with our component too early. In this case, it's because after the first time we click our submit button, we start interacting with the component again right away. Instead, we need to add another `await act(flushPromises)` at that point:
-
-```diff
- userEvent.click(getByTestId('new-restaurant-submit-button'));
-+await act(flushPromises);
-
- await userEvent.type(
-   getByPlaceholderText('Add Restaurant'),
-   restaurantName,
- );
- userEvent.click(getByTestId('new-restaurant-submit-button'));
-
- return act(flushPromises);
-```
-
-Save the test file and the warning is gone, and we just have a test failure:
+Save the test file and we get an assertion failure:
 
 ```sh
   ● NewRestaurantForm › when correcting a validation error › clears the
