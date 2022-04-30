@@ -627,11 +627,13 @@ Now let's look into those edge cases:
 First, let's implement the form clearing out the text field after saving. In `NewRestaurantForm.spec.js`, add a new test:
 
 ```diff
-   it('calls createRestaurant with the name', () => {
+   it('calls createRestaurant with the name', async () => {
+     await fillInForm();
      expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
    });
 +
-+  it('clears the name', () => {
++  it('clears the name', async () => {
++    await fillInForm();
 +    expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual('');
 +  });
  });
@@ -793,16 +795,18 @@ Now let's implement the validation error when the restaurant name is empty. We'l
 
 ```js
 describe('when empty', () => {
-  beforeEach(async () => {
+  async function submitEmptyForm() {
+    renderComponent();
     createRestaurant.mockResolvedValue();
 
-    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByText('Add'));
 
     return act(flushPromises);
-  });
+  }
 
-  it('displays a validation error', () => {
-    expect(screen.queryByText('Name is required')).not.toBeNull();
+  it('displays a validation error', async () => {
+    await submitEmptyForm();
+    expect(screen.getByText('Name is required')).toBeInTheDocument();
   });
 });
 ```
@@ -847,9 +851,10 @@ In preparation, let's move the validation error text we're searching for to a co
 +
    let createRestaurant;
 ...
-     it('displays a validation error', () => {
--      expect(screen.queryByText('Name is required')).not.toBeNull();
-+      expect(screen.queryByText(requiredError)).not.toBeNull();
+     it('displays a validation error', async () => {
+       await submitEmptyForm();
+-      expect(screen.getByText('Name is required')).toBeInTheDocument();
++      expect(screen.getByText(requiredError)).toBeInTheDocument();
      });
 ```
 
@@ -860,7 +865,8 @@ Next, add a new `describe` above the "when filled in" one:
 ```js
 describe('initially', () => {
   it('does not display a validation error', () => {
-    expect(screen.queryByText(requiredError)).toBeNull();
+    renderComponent();
+    expect(screen.queryByText(requiredError)).not.toBeInTheDocument();
   });
 });
 ```
@@ -935,7 +941,8 @@ Now, is there any other time we would want to hide or show the validation error?
 
 ```js
 describe('when correcting a validation error', () => {
-  beforeEach(async () => {
+  async function fixValidationError() {
+    renderComponent();
     createRestaurant.mockResolvedValue();
 
     userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
@@ -949,8 +956,9 @@ describe('when correcting a validation error', () => {
     return act(flushPromises);
   });
 
-  it('clears the validation error', () => {
-    expect(screen.queryByText(requiredError)).toBeNull();
+  it('clears the validation error', async () => {
+    await fixValidationError();
+    expect(screen.queryByText(requiredError)).not.toBeInTheDocument();
   });
 });
 ```
@@ -1021,7 +1029,8 @@ Save and the tests should still pass.
 Now we can handle the other expectation for when we submit an empty form: it should not dispatch the action to save the restaurant to the server. Add a new test in the "when empty" `describe` block:
 
 ```js
-it('does not call createRestaurant', () => {
+it('does not call createRestaurant', async () => {
+  await submitEmptyForm();
   expect(createRestaurant).not.toHaveBeenCalled();
 });
 ```
@@ -1139,7 +1148,8 @@ Save and the test passes. Now, when do we want that message to *not* show? For o
 
 ```js
 it('does not display a server error', () => {
-  expect(screen.queryByText(serverError)).toBeNull();
+  renderComponent();
+  expect(screen.queryByText(serverError)).not.toBeInTheDocument();
 });
 ```
 
@@ -1180,11 +1190,12 @@ We'll add another bit of state to track whether the error should show, starting 
 
 Save and the tests pass.
 
-Let's also write a test to confirm that the server error is not shown after the server request returns successfully. In the "when filled in" describe block, add an identical test:
+Let's also write a test to confirm that the server error is not shown after the server request returns successfully. In the "when filled in" describe block, add a similar test:
 
 ```js
-it('does not display a server error', () => {
-  expect(screen.queryByText(serverError)).toBeNull();
+it('does not display a server error', async () => {
+  await fillInForm();
+  expect(screen.queryByText(serverError)).not.toBeInTheDocument();
 });
 ```
 
@@ -1194,7 +1205,8 @@ We also want to hide the server error message each time we retry saving the form
 
 ```js
 describe('when retrying after a server error', () => {
-  beforeEach(async () => {
+  async function retrySubmittingForm() {
+    renderComponent();
     createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
     await userEvent.type(
@@ -1204,10 +1216,11 @@ describe('when retrying after a server error', () => {
     userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
     userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
     return act(flushPromises);
-  });
+  }
 
-  it('clears the server error', () => {
-    expect(screen.queryByText(serverError)).toBeNull();
+  it('clears the server error', async () => {
+    await retrySubmittingForm();
+    expect(screen.queryByText(serverError)).not.toBeInTheDocument();
   });
 });
 ```
