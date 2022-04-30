@@ -877,7 +877,7 @@ describe('when correcting a validation error', () => {
     userEvent.click(screen.getByText('Add'));
 
     return act(flushPromises);
-  });
+  }
 
   it('clears the validation error', async () => {
     await fixValidationError();
@@ -886,7 +886,7 @@ describe('when correcting a validation error', () => {
 });
 ```
 
-Note that we repeat both sets of `beforeEach` steps from the other groups, submitting the empty form and then submitting the filled-in one. We want our unit tests to be independent, so they can be run without depending on the result of other tests. If this repeated code got too tedious we could extract it to helper functions that we could call in each `describe` block.
+Note that we repeat both sets of helper function steps from the other groups, submitting the empty form and then submitting the filled-in one. We want our unit tests to be independent, so they can be run without depending on the result of other tests.
 
 Save the test file and we get the `act()` warning again:
 
@@ -997,7 +997,8 @@ Since this is a new situation, let's set this up as yet another new `describe` b
 
 ```js
 describe('when the store action rejects', () => {
-  beforeEach(async () => {
+  async function fillInForm() {
+    renderComponent();
     createRestaurant.mockRejectedValue();
 
     await userEvent.type(
@@ -1007,10 +1008,11 @@ describe('when the store action rejects', () => {
     userEvent.click(screen.getByText('Add'));
 
     return act(flushPromises);
-  });
+  }
 
-  it('displays a server error', () => {
-    expect(screen.queryByText(serverError)).not.toBeNull();
+  it('displays a server error', async () => {
+    await fillInForm();
+    expect(screen.getByText(serverError)).toBeInTheDocument();
   });
 });
 ```
