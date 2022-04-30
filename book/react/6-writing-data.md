@@ -648,11 +648,6 @@ Save the test, and we get a test failure confirming that the text field is not y
 
     Expected: ""
     Received: "Sushi Place"
-
-      27 |
-      28 |     it('clears the name', () => {
-    > 29 |       expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual('');
-         |                                                                 ^
 ```
 
 Where in the component should we clear the text field? Well, we have another story that the name should _not_ be cleared if the web service call fails. If that's the case, then we should not clear the text field until the store action resolves successfully.
