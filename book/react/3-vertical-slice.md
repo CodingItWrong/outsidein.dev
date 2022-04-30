@@ -283,7 +283,7 @@ Finally, we're ready to run an expectation to confirm that the component loads r
 Now we're ready to run our unit test. Run `yarn test` and leave it running for the remainder of this chapter. Jest will run our unit test, and we'll get the following error:
 
 ```sh
- FAIL  src/components/__tests__/RestaurantList.spec.js
+ FAIL  src/components/RestaurantList.spec.js
   RestaurantList
     ✕ loads restaurants on first render (19ms)
 
