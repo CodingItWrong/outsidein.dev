@@ -868,13 +868,13 @@ describe('when correcting a validation error', () => {
     renderComponent();
     createRestaurant.mockResolvedValue();
 
-    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByText('Add'));
 
     await userEvent.type(
       screen.getByPlaceholderText('Add Restaurant'),
       restaurantName,
     );
-    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByText('Add'));
 
     return act(flushPromises);
   });
@@ -1004,7 +1004,7 @@ describe('when the store action rejects', () => {
       screen.getByPlaceholderText('Add Restaurant'),
       restaurantName,
     );
-    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByText('Add'));
 
     return act(flushPromises);
   });
@@ -1133,8 +1133,9 @@ describe('when retrying after a server error', () => {
         screen.getByPlaceholderText('Add Restaurant'),
         restaurantName,
       );
-    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
-    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+    userEvent.click(screen.getByText('Add'));
+    userEvent.click(screen.getByText('Add'));
+
     return act(flushPromises);
   }
 
@@ -1176,10 +1177,10 @@ We can fix this by waiting for promises to flush after the first click, as well 
        screen.getByPlaceholderText('Add Restaurant'),
        restaurantName,
      );
-   userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+   userEvent.click(screen.getByText('Add'));
 +  await act(flushPromises);
 +
-   userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
+   userEvent.click(screen.getByText('Add'));
    return act(flushPromises);
 ```
 
