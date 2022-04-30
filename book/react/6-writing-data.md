@@ -748,13 +748,8 @@ Save the file and the test fails, because the validation error message is not fo
 ```sh
   ● NewRestaurantForm › when empty › displays a validation error
 
-    expect(received).not.toBeNull()
-
-    Received: null
-
-      50 |     it('displays a validation error', () => {
-    > 51 |       expect(screen.queryByText('Name is required')).not.toBeNull();
-         |                                                    ^
+    TestingLibraryElementError: Unable to find an element with the text: Name
+    is required.
 ```
 
 Let's fix this error in the simplest way possible by adding the validation error unconditionally:
@@ -806,13 +801,11 @@ The test fails because we are always showing the error right now:
 ```sh
   ● NewRestaurantForm › initially › does not display a validation error
 
-    expect(received).toBeNull()
+    expect(element).not.toBeInTheDocument()
 
-    Received: <div class="MuiAlert-message">Name is required</div>
-
-      20 |     it('does not display a validation error', () => {
-    > 21 |       expect(screen.queryByText(requiredError)).toBeNull();
-         |                                          ^
+    expected document not to contain element, found
+    <div class="MuiAlert-message css-acap47-MuiAlert-message">Name is required</div>
+    instead
 ```
 
 Time to add some logic around this error.
@@ -922,14 +915,11 @@ Save the test file and the warning is gone, and we just have a test failure:
   ● NewRestaurantForm › when correcting a validation error › clears the
   validation error
 
-    expect(received).toBeNull()
+    expect(received).not.toBeInTheDocument()
 
-    Received: <div class="MuiAlert-message">Name is required</div>
-
-      80 |     it('clears the validation error', () => {
-
-    > 81 |       expect(screen.queryByText(requiredError)).toBeNull();
-         |                                          ^
+    expected document not to contain element, found
+    <div class="MuiAlert-message css-acap47-MuiAlert-message">Name is required</div>
+    instead
 ```
 
 We can fix this by clearing the `validationError` flag upon a successful submission:
@@ -1058,8 +1048,8 @@ Save the file and the "thrown" error goes away. Now we get an expectation failur
 
     Received: null
 
-      102 |       expect(screen.queryByText(serverError)).not.toBeNull();
-          |                                            ^
+    TestingLibraryElementError: Unable to find an element with the text: The
+    restaurant could not be saved.
 ```
 
 As usual, we'll first solve this by hard-coding the element into the component:
@@ -1160,15 +1150,11 @@ Save the file and you'll get the expected test failure:
 ```sh
   ● NewRestaurantForm › when retrying after a server error › clears the server error
 
-    expect(received).toBeNull()
+    expect(element).not.toBeInTheDocument()
 
-    Received: <div class="MuiAlert-message">The restaurant could not be saved. Pleas
-e try again.</div>
-
-      126 |
-      127 |     it('clears the server error', () => {
-    > 128 |       expect(screen.queryByText(serverError)).toBeNull();
-          |                                             ^
+    expected document not to contain element, found
+    <div class="MuiAlert-message css-acap47-MuiAlert-message">The restaurant could not be saved. Please try again.</div>
+    instead
 ```
 
 We should be able to make this test pass by just clearing the `serverError` flag when attempting to save:
