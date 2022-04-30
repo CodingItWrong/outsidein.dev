@@ -43,8 +43,7 @@ Next, let's change the `renderComponent` function to allow passing in the props 
 -  );
 +function renderComponent(propOverrides = {}) {
 +  const props = {
-+    loadRestaurants: jest.fn().mockName('loadRestaurants')
-,
++    loadRestaurants: jest.fn().mockName('loadRestaurants'),
 +    restaurants,
 +    ...propOverrides,
 +  };
