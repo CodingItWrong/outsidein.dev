@@ -77,7 +77,7 @@ We need an "Add Restaurant" text input. What component should it be in? We discu
 Create the file `src/components/NewRestaurantForm.js`, and add the following:
 
 ```js
-import TextField from '@mui/material/TextField';;
+import TextField from '@mui/material/TextField';
 
 export function NewRestaurantForm() {
   return (
