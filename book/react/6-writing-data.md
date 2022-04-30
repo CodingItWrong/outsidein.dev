@@ -710,7 +710,7 @@ Then add it to your test:
      }
 ```
 
-We call `act()` at the end of our `beforeEach` block, passing it the `flushPromises` function. This means that React will call that function and wait for it to resolve, responding to component changes that may have happened appropriately. We return the result of `act`, so that Jest will wait on *that* before running individual tests.
+We call `act()` at the end of our `fillInForm()` helper, passing it the `flushPromises` function. This means that React will call that function and wait for it to resolve, responding to component changes that may have happened appropriately. We return the result of `act`, so that Jest will wait on *that* before running individual tests.
 
 Save the file and our test finally passes cleanly!
 
