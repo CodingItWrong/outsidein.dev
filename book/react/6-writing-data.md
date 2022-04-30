@@ -1106,9 +1106,9 @@ describe('when retrying after a server error', () => {
     createRestaurant.mockRejectedValueOnce().mockResolvedValueOnce();
 
     await userEvent.type(
-        screen.getByPlaceholderText('Add Restaurant'),
-        restaurantName,
-      );
+      screen.getByPlaceholderText('Add Restaurant'),
+      restaurantName,
+    );
     userEvent.click(screen.getByText('Add'));
     userEvent.click(screen.getByText('Add'));
 
@@ -1150,9 +1150,9 @@ We can fix this by waiting for promises to flush after the first click, as well 
 
 ```diff
    await userEvent.type(
-       screen.getByPlaceholderText('Add Restaurant'),
-       restaurantName,
-     );
+     screen.getByPlaceholderText('Add Restaurant'),
+     restaurantName,
+   );
    userEvent.click(screen.getByText('Add'));
 +  await act(flushPromises);
 +
