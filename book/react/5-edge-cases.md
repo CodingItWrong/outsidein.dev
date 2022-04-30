@@ -77,12 +77,12 @@ Once we find our loading indicator by test ID, we confirm that it's not null, sh
 In good TDD style, our test fails, because the element isn't present.
 
 Sticking with the approach of making the smallest possible change to make the test pass, let's just add the loading indicator to show *all* the time.
-Material-UI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js` with the correct test ID:
+MUI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js` with the correct test ID:
 
 ```diff
  import {connect} from 'react-redux';
-+import CircularProgress from '@material-ui/core/CircularProgress';
- import List from '@material-ui/core/List';
++import CircularProgress from '@mui/material/CircularProgress';
+ import List from '@mui/material/List';
 ...
    return (
 +    <>
@@ -509,20 +509,12 @@ We decide we want to indicate the error state with a flag named `loadError`, so 
 We check for a new loading error element on the page. Our test fails because the element is not found.
 
 Fix it the simplest way possible by hard-coding the error message to show.
-Material-UI's `lab` package has an `Alert` component that will work well. Install the package:
-
-```sh
-$ yarn add @material-ui/lab@4.0.0-alpha.61
-```
-
-Then add the alert:
+MUI has an `Alert` component that will work well. Add it:
 
 ```diff
- import ListItemText from '@material-ui/core/ListItemText';
-+import Alert from '@material-ui/lab/Alert';
- import {loadRestaurants} from '../store/restaurants/actions';
-
- export const RestaurantList = ({loadRestaurants, restaurants, loading}) => {
+ import {connect} from 'react-redux';
++import Alert from '@mui/material/Alert';
+ import CircularProgress from '@mui/material/CircularProgress';
 ...
        {loading && <CircularProgress data-testid="loading-indicator" />}
 +      <Alert severity="error">Restaurants could not be loaded.</Alert>
