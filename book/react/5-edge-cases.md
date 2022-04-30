@@ -65,18 +65,20 @@ Now we're ready to write our new test for when the store is in a loading state. 
 ```js
 it('displays the loading indicator while loading', () => {
   renderComponent({loading: true});
-  expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
+  expect(screen.getByRole('progressbar')).toBeInTheDocument();
 });
 ```
 
-Note that instead of calling `getByText()` here, we call `getByTestId()`. Our element, a loading indicator, won't have text content, so instead we use a test ID to identify it. Test IDs are a helpful way to pull up elements in your tests, because they're specific to testing. If you find elements by an ID or CSS class name, those values might change for other reasons in your application, resulting in tests breaking. But since a test ID is specifically used for testing, it should be more stable and less likely to change for reasons unrelated to the test.
+Note that instead of calling `getByText()` here, we call `getByRole()`. Our element, a loading indicator, won't have text content that we can use to get it. How do we find an element in this case?
 
-Once we find our loading indicator by test ID, we confirm that it's not null, showing that the element is present.
+This is a problem for more than just tests: it's also a problem for screen readers, which allow visually impaired users to interact with software. Screen readers will read out textual content, but how do they decide what out when there's an element with no textual content? One way they do so is using [ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles), which are descriptions of what an element is meant to represent. One such role is "progressbar", which fits what we want here. MUI's `CircularProgress` component, which we can use, automatically sets a role of "progressbar", which will work great for us.
+
+Once we find our loading indicator by the "progressbar" role, we confirm that it's in the document.
 
 In good TDD style, our test fails, because the element isn't present.
 
 Sticking with the approach of making the smallest possible change to make the test pass, let's just add the loading indicator to show *all* the time.
-MUI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js` with the correct test ID:
+As we mentioned above, MUI has a `CircularProgress` spinner that will work great. Add it to `RestaurantList.js`:
 
 ```diff
  import {connect} from 'react-redux';
@@ -85,7 +87,7 @@ MUI has a `CircularProgress` spinner that will work great. Add it to `Restaurant
 ...
    return (
 +    <>
-+      <CircularProgress data-testid="loading-indicator" />
++      <CircularProgress />
        <List>
          {restaurants.map(restaurant => (
            <ListItem key={restaurant.id}>
@@ -109,11 +111,11 @@ In our case, we *also* need a test to confirm that the conditional is *not* show
 ```js
 it('does not display the loading indicator while not loading', () => {
   renderComponent({loading: false});
-  expect(screen.queryByTestId('loading-indicator')).not.toBeInTheDocument();
+  expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
 });
 ```
 
-Note that we used `queryByTestId` instead of `getByTestId` here. `query` methods return a `null` if an element is not found, whereas `get` methods throw an error. Because we _expect_ to not find the element here, a `query` method is necessary for our assertion to succeed.
+Note that we used `queryByRole` instead of `getByRole` here. `query` methods return a `null` if an element is not found, whereas `get` methods throw an error. Because we _expect_ to not find the element here, a `query` method is necessary for our assertion to succeed.
 
 This test fails, of course. And now that we have two tests, this will force us to implement the conditional to get them both to pass:
 
@@ -125,8 +127,8 @@ This test fails, of course. And now that we have two tests, this will force us t
 ...
    return (
      <>
--      <CircularProgress data-testid="loading-indicator" />
-+      {loading && <CircularProgress data-testid="loading-indicator" />}
+-      <CircularProgress />
++      {loading && <CircularProgress />}
        <List>
 ```
 
@@ -499,7 +501,7 @@ MUI has an `Alert` component that will work well. Add it:
 +import Alert from '@mui/material/Alert';
  import CircularProgress from '@mui/material/CircularProgress';
 ...
-       {loading && <CircularProgress data-testid="loading-indicator" />}
+       {loading && <CircularProgress />}
 +      <Alert severity="error">Restaurants could not be loaded.</Alert>
        <List>
 ```
@@ -512,7 +514,7 @@ Save the file and our test passes. Now, specify that the error does _not_ show w
  describe('when loading succeeds', () => {
    it('does not display the loading indicator while not loading', () => {
      renderComponent();
-     expect(screen.queryByTestId('loading-indicator')).not.toBeInTheDocument();
+     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
    });
 
 +  it('does not display the error message', () => {
@@ -535,7 +537,7 @@ Make this test pass by making the display of the error alert conditional on the 
 +}) {
    useEffect(() => {
 ...
-       {loading && <CircularProgress data-testid="loading-indicator" />}
+       {loading && <CircularProgress />}
 -      <Alert severity="error">Restaurants could not be loaded.</Alert>
 +      {loadError && (
 +        <Alert severity="error">Restaurants could not be loaded.</Alert>
