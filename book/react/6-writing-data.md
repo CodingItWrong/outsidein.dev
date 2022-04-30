@@ -174,8 +174,8 @@ describe('when filled in', () => {
       screen.getByPlaceholderText('Add Restaurant'),
       restaurantName,
     );
-    userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
-  });
+    userEvent.click(screen.getByText('Add'));
+  }
 
   it('calls createRestaurant with the name', async () => {
     await fillInForm();
@@ -186,36 +186,9 @@ describe('when filled in', () => {
 
 We describe the situation when the form is filled in. We enter a restaurant name into a text field, then click the submit button. Note that `userEvent.type()` requires `await`ing afterward, but `userEvent.click()` does not.
 
-Note that instead of finding the submit button by text, we find it by test ID. If we had a plain HTML `<button>` element, we could retrieve it either by text or test ID. But using Material-UI's `<Button>` component, using `getByText` will retrieve a `<span>` element instead, and clicking it does not seem to result in submitting the form. So in this case, we use the test ID, which retrieves the underlying `<button>` instead.
-
 In `RestaurantList` we didn't pass any additional data with our action, so we just had to confirm that the action function was called. But here, we need to ensure the restaurant name is passed as an argument to the action function, so we need to use the `.toHaveBeenCalledWith()` matcher. We pass one argument to it, confirming that the correct `restaurantName` is passed through.
 
-Save the file and we get a failing test, as we expect:
-
-```sh
-● NewRestaurantForm › when filled in › calls createRestaurant with the name
-
-  TestingLibraryElementError: Unable to find an element by:
-  [data-testid="new-restaurant-submit-button"]
-```
-
-Add the test ID to the button to find it:
-
-```diff
- <form>
-   <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
--  <Button variant="contained" color="primary">
-+  <Button
-+    variant="contained"
-+    color="primary"
-+    data-testid="new-restaurant-submit-button"
-+  >
-     Add
-   </Button>
- </form>
-```
-
-Now we get an assertion failure:
+Save the file and we get an assertion failure:
 
 ```sh
   ● NewRestaurantForm › when filled in › calls createRestaurant with the name
@@ -237,12 +210,8 @@ The test failure reports the action wasn't called at all. This is because our bu
 ```diff
  <form>
    <TextField placeholder="Add Restaurant" fullWidth variant="filled" />
-   <Button
-+    type="submit"
-     variant="contained"
-     color="primary"
-     data-testid="new-restaurant-submit-button"
-   >
+-  <Button variant="contained" color="primary">
++  <Button type="submit" variant="contained" color="primary">
      Add
    </Button>
  </form>
@@ -333,7 +302,7 @@ Then, we'll make `TextField` a controlled component, reading its value from the 
 +      fullWidth
 +      variant="filled"
 +    />
-    <Button
+    <Button type="submit" variant="contained" color="primary">
 ```
 
 Finally, now that the entered text is stored in `name`, we'll pass that as the argument to `createRestaurant()`:
