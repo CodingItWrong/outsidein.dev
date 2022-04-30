@@ -77,7 +77,7 @@ We need an "Add Restaurant" text input. What component should it be in? We discu
 Create the file `src/components/NewRestaurantForm.js`, and add the following:
 
 ```js
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';;
 
 export const NewRestaurantForm = () => {
   return (
@@ -90,7 +90,10 @@ export const NewRestaurantForm = () => {
 export default NewRestaurantForm;
 ```
 
-Note the use of Material-UI's `TextField` component. Also note that we're using the block form of the arrow function. We will need other statements in there besides the returned JSX.
+Note a few things:
+
+- We're using MUI's `TextField` component instead of a plain `<input type="text" />`
+- We're exporting the form both as a named and default export. This is because we'll be connecting the default export to Redux, and we know we'll want the unconnected component for testing
 
 Next, add the form to the `RestaurantScreen` component:
 
@@ -113,8 +116,8 @@ Rerun the E2E tests and they should get past finding and typing into the Add Res
 To fix this error, we add a button to `NewRestaurantForm` but don't wire it up to anything yet:
 
 ```diff
- import TextField from '@material-ui/core/TextField';
-+import Button from '@material-ui/core/Button';
+ import TextField from '@mui/material/TextField';
++import Button from '@mui/material/Button';
 
  export const NewRestaurantForm = () => {
    return (
