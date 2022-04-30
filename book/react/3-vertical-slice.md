@@ -847,6 +847,7 @@ Save the file and the test failure is the same, because our reducer doesn't stor
 +import {STORE_RESTAURANTS} from './actions';
 
 -function records() {
+-  return [];
 +function records(state = [], action) {
 +  switch (action.type) {
 +    case STORE_RESTAURANTS:
@@ -854,7 +855,7 @@ Save the file and the test failure is the same, because our reducer doesn't stor
 +    default:
 +      return state;
 +  }
-+};
+ }
 
  export default combineReducers({
    records,
