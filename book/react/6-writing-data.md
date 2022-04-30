@@ -812,7 +812,7 @@ Time to add some logic around this error.
 We'll add state to indicate whether it should be shown:
 
 ```diff
- export const NewRestaurantForm = ({createRestaurant}) => {
+ export function NewRestaurantForm({createRestaurant}) {
    const [name, setName] = useState('');
 +  const [validationError, setValidationError] = useState(false);
 
@@ -1077,7 +1077,7 @@ Save and the test fails.
 We'll add another bit of state to track whether the error should show, starting hidden, and shown if the store action rejects:
 
 ```diff
- export const NewRestaurantForm = ({createRestaurant}) => {
+ export function NewRestaurantForm({createRestaurant}) {
    const [name, setName] = useState('');
    const [validationError, setValidationError] = useState(false);
 +  const [serverError, setServerError] = useState(false);
