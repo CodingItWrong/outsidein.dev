@@ -414,8 +414,8 @@ Update the `createRestaurant` thunk to call it:
 
 ```diff
 -export const createRestaurant = () => () => {};
-+export const createRestaurant = () => (dispatch, getState, api) => {
-+  api.createRestaurant();
++export const createRestaurant = () => async (dispatch, getState, api) => {
++  await api.createRestaurant();
 +};
 ```
 
@@ -435,11 +435,11 @@ This changes the test failure. Now the method is called, but not with the right 
 Our restaurant name is passed in as the first argument of the action, so we can pass it along to the API method:
 
 ```diff
--export const createRestaurant = () => (dispatch, getState, api) => {
-+export const createRestaurant = name => (dispatch, getState, api) => {
--  api.createRestaurant();
-+  api.createRestaurant(name);
- };
+-export const createRestaurant = () => async (dispatch, getState, api) => {
++export const createRestaurant = name => async (dispatch, getState, api) => {
+-  await api.createRestaurant();
++  await api.createRestaurant(name);
+};
 ```
 
 Save the file and the test passes. Now we need to specify one more thing that happens when the `create` action is dispatched: the returned restaurant from the API, including the ID that the API gives the record, is appended to the restaurant list in the state. To write that test, we're going to need to add a little to the setup as well:
@@ -513,13 +513,12 @@ The store only contains the restaurant it was initialized with, not the new one 
  export const RECORD_LOADING_ERROR = 'RECORD_LOADING_ERROR';
 +export const ADD_RESTAURANT = 'ADD_RESTAURANT';
 
- export const loadRestaurants = () => (dispatch, getState, api) => {
+ export const loadRestaurants = () => async (dispatch, getState, api) => {
 ...
- export const createRestaurant = name => (dispatch, getState, api) => {
--  api.createRestaurant(name);
-+  api.createRestaurant(name).then(record => {
-+    dispatch(addRestaurant(record));
-+  });
+ export const createRestaurant = name => async (dispatch, getState, api) => {
+-  await api.createRestaurant(name);
++  const record = await api.createRestaurant(name);
++  dispatch(addRestaurant(record));
  };
 +
 +const addRestaurant = record => ({
@@ -549,30 +548,6 @@ After `createRestaurant()` resolves, we take the record the API returns to us an
 
 When `ADD_RESTAURANT` is dispatched we set records to a new array including the previous array, plus the new record on the end.
 
-This makes our latest test pass, but our previous "saves the restaurant to the server" test now fails:
-
-```sh
-● restaurants › createRestaurant action › saves the restaurant to the server
-
-  TypeError: Cannot read properties of undefined (reading 'then')
-
-    13 |
-    14 | export const createRestaurant = name => (dispatch, getState, api) => {
-  > 15 |   api.createRestaurant(name).then(record => dispatch(addRestaurant(record)));
-       |   ^
-    16 | };
-```
-
-Now that we are chaining `.then()` onto the call to `api.createRestaurant()`, our previous test fails because we didn't configure the mock function to resolve. Do that:
-
-```diff
- it('saves the restaurant to the server', () => {
-+  api.createRestaurant.mockResolvedValue(responseRestaurant);
-   store.dispatch(createRestaurant(newRestaurantName));
-   expect(api.createRestaurant).toHaveBeenCalledWith(newRestaurantName);
- });
-```
-
 Save and all unit tests pass. Now our store should be set.
 
 ## Creating the API Method
@@ -591,26 +566,28 @@ Our component is successfully dispatching the action to the store, which is succ
 
 ```diff
  const api = {
-   loadRestaurants() {
-     return client.get('/restaurants').then(response => response.data);
+   async loadRestaurants() {
+     const response = await client.get('/restaurants');
+     return response.data;
    },
-+  createRestaurant() {},
++  async createRestaurant() {},
  };
 ```
 
 Now we get another console error:
 
 ```sh
-TypeError: Cannot read properties of undefined (reading 'then')
+TypeError: Cannot read properties of undefined (reading 'name')
 ```
 
-We still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API:
+We aren't getting a name value back from the function, because we still aren't making the HTTP request that kicked off this whole sequence. Fixing this will move us forward better, so let's actually make the HTTP request in the API:
 
 ```diff
    },
--  createRestaurant() {},
-+  createRestaurant() {
-+    return client.post('/restaurants', {});
+-  async createRestaurant() {},
++  async createRestaurant() {
++    const response = await client.post('/restaurants', {});
++    return response.data;
 +  },
  };
 ```
@@ -622,23 +599,15 @@ Now the `POST` request is made, and we get an error on the assertion we made abo
 So we aren't passing the restaurant name in the `POST` body. That's easy to fix by passing it along from the argument to the method:
 
 ```diff
--createRestaurant() {
-+createRestaurant(name) {
--  return client.post('/restaurants', {});
-+  return client.post('/restaurants', {name});
+ async createRestaurant() {
+   const response = await client.post('/restaurants', {});
+   return response.data;
  },
-```
-
-Cypress confirms we're sending the `POST` request to the server correctly, and we've finally moved on to the next E2E assertion failure:
-
-> CypressError: Timed out retrying: Expected to find content: 'Sushi Place' but never did.
-
-We aren't displaying the restaurant on the page. This is because we aren't yet returning it properly from the resolved value. The Axios promise resolves to an Axios response object, but we want to resolve to the record. We can do this by getting the response body:
-
-```diff
- createRestaurant(name) {
--  return client.post('/restaurants', {name});
-+  return client.post('/restaurants', {name}).then(response => response.data);
+-async createRestaurant() {
++async createRestaurant(name) {
+-  const response = await client.post('/restaurants', {});
++  const response = await client.post('/restaurants', {name});
+   return response.data;
  },
 ```
 
