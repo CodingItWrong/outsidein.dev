@@ -998,7 +998,7 @@ describe('when the store action rejects', () => {
 
 This is the same as the successful submission case, but in the setup we call the `mockRejectedValue()` method of the mock function `restaurantsModule.actions.create`. This means that when this function is called, it will reject. In our case we don't actually care about what error it rejects with, so we don't have to provide a rejected value.
 
-Save and we get a bit of a strange error:
+Save and, in addition to an assertion failure, we also get an additional error:
 
 ```sh
   ● NewRestaurantForm › when the store action rejects › displays an error message
@@ -1006,7 +1006,7 @@ Save and we get a bit of a strange error:
     thrown: undefined
 ```
 
-The message isn't very helpful, but "thrown" is a clue. What's happening is that our call to `createRestaurants()` is rejecting, but we aren't handling it. Let's handle it with an empty `catch()` function, just to silence this warning; we'll add behavior to that `catch()` function momentarily.
+What's happening is that our call to `createRestaurants()` is rejecting, but we aren't handling it. Let's handle it with an empty `catch` block, just to silence this warning; we'll add behavior to that `catch()` function momentarily.
 
 ```diff
  if (name) {
