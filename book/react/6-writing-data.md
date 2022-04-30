@@ -654,22 +654,16 @@ Where in the component should we clear the text field? Well, we have another sto
 Make this change in `NewRestaurantForm.js`:
 
 ```diff
- const handleSubmit = e => () {
+-function handleSubmit(e) {
++async function handleSubmit(e) {
    e.preventDefault();
 -  createRestaurant(name);
-+  createRestaurant(name).then(() => {
-+    setName('');
-+  });
- },
++  await createRestaurant(name);
++  setName('');
+ }
 ```
 
-Save the file and the test fails, and we get a lot of scary console output. Let's handle one thing at a time. The easier one to fix is:
-
-```sh
-Error: Uncaught [TypeError: Cannot read properties of undefined (reading 'then')]
-```
-
-Our mocked `api.createRestaurant` doesn't return a promise; let's update it to return a resolved one:
+Save the file but notice that the assertion failure doesn't change. The reason is because our mocked `api.createRestaurant` isn't configured to resolve, so `setName('')` is never reached. Let's fix this:
 
 ```diff
  async function fillInForm() {
@@ -889,7 +883,7 @@ We'll add state to indicate whether it should be shown:
    const [name, setName] = useState('');
 +  const [validationError, setValidationError] = useState(false);
 
-   const handleSubmit = e => {
+   async function handleSubmit(e) {
 ...
    return (
      <form onSubmit={handleSubmit}>
@@ -901,10 +895,10 @@ We'll add state to indicate whether it should be shown:
 Now, what logic should we use to set the `validationError` flag? Our tests just specify that initially the error is not shown, and after submitting an invalid form it's shown—that's all. The simplest logic to pass this test is to always show the validation error after saving:
 
 ```diff
- const handleSubmit = e => {
+ async function handleSubmit(e) {
    e.preventDefault();
 +  setValidationError(true);
-   createRestaurant(name).then(() => {
+   await createRestaurant(name);
 ```
 
 Save the file and all tests pass.
@@ -912,23 +906,23 @@ Save the file and all tests pass.
 It may feel obvious to you that this is not the correct final logic, so this should drive us to consider what test we are missing. What should behave differently? Well, when we submit a form with a name filled in, the validation error should not appear. Let's add that test to the "when filled in" `describe` block:
 
 ```js
-it('does not display a validation error', () => {
-  expect(screen.queryByText(requiredError)).toBeNull();
+it('does not display a validation error', async () => {
+  await fillInForm();
+  expect(screen.queryByText(requiredError)).not.toBeInTheDocument();
 });
 ```
 
 We can pass this test by adding a conditional around setting the `validationError` flag:
 
 ```diff
- const handleSubmit = e => {
+ async function handleSubmit(e) {
    e.preventDefault();
--  setValidationError(true);
 +
 +  if (!name) {
-+    setValidationError(true);
+     setValidationError(true);
 +  }
 +
-   createRestaurant(name).then(() => {
+   await createRestaurant(name);
 ```
 
 Save the file and all tests pass.
@@ -1034,19 +1028,20 @@ it('does not call createRestaurant', async () => {
 We can fix this error by moving the call to `createRestaurant()` inside the true branch of the conditional:
 
 ```diff
+ async function handleSubmit(e) {
+   e.preventDefault();
+
    if (name) {
      setValidationError(false);
-+    createRestaurant(name).then(() => {
-+      setName('');
-+    });
++    await createRestaurant(name);
++    setName('');
    } else {
      setValidationError(true);
    }
--
--  createRestaurant(name).then(() => {
--    setName('');
--  });
- };
+
+-  await createRestaurant(name);
+-  setName('');
+ }
 ```
 
 Save the file and the test passes. If you try to submit the form with an empty restaurant name in the browser, you'll see:
@@ -1105,15 +1100,13 @@ The message isn't very helpful, but "thrown" is a clue. What's happening is that
 ```diff
  if (name) {
    setValidationError(false);
--  createRestaurant(name).then(() => {
--    setName('');
--  });
-+  createRestaurant(name)
-+    .then(() => {
-+      setName('');
-+    })
-+    .catch(() => {});
++  try {
+     await createRestaurant(name);
+     setName('');
++  } catch {}
  } else {
+   setValidationError(true);
+ }
 ```
 
 Save the file and the "thrown" error goes away. Now we get an expectation failure:
@@ -1159,16 +1152,17 @@ We'll add another bit of state to track whether the error should show, starting 
    const [validationError, setValidationError] = useState(false);
 +  const [serverError, setServerError] = useState(false);
 
-   const handleSubmit = e => {
+   async function handleSubmit(e) {
 ...
-       createRestaurant(name)
-         .then(() => {
-           setName('');
-         })
--        .catch(() => {});
-+        .catch(() => {
-+          setServerError(true);
-+        });
+     if (name) {
+       setValidationError(false);
+       try {
+         await createRestaurant(name);
+-      } catch {}
++      } catch {
++        setServerError(true);
++      }
+       setName('');
      } else {
 ...
    return (
@@ -1243,7 +1237,8 @@ We should be able to make this test pass by just clearing the `serverError` flag
  if (name) {
    setValidationError(false);
 +  setServerError(false);
-   createRestaurant(name)
+   try {
+     await createRestaurant(name);
 ```
 
 Save the file, but surprisingly, the test failure doesn't change! Why is that? It turns out the culprit is clicking the submit button twice in a row. We want to wait for the first web request to return and update the state, _then_ send the second one.
