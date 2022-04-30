@@ -579,7 +579,7 @@ Error: Could not find "store" in the context of
 
 ![Cypress error that there is no provided store](./images/2-3-redux-not-hooked-up.png)
 
-This error is because we haven't hooked up our application to a Redux store. Let's do that now, in `App.js`:
+This is the same error we saw in our Jest tests when our component wasn't hooked up to a Redux store. But this is in our real application code now, so we _do_ want to hook it up. Let's do that now, in `App.js`:
 
 ```diff
 +import {Provider} from 'react-redux';
