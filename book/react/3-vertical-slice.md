@@ -351,7 +351,7 @@ Now, instead of running an expectation that `loadRestaurants` was called, we use
 ```diff
 -import {render} from '@testing-library/react';
 +import {render, screen} from '@testing-library/react';
- import {RestaurantList} from '../RestaurantList';
+ import {RestaurantList} from './RestaurantList';
 ...
    render(<RestaurantList loadRestaurants={noop} restaurants={restaurants} />);
 +
@@ -551,8 +551,6 @@ How do we want to provide the Redux store in our component test? Well, we don't;
 To test this, we can follow a technique where in addition to the default export of the Redux-connected component, you also do a named export of the unconnected component, and use that for testing:
 
 ```diff
- import {loadRestaurants} from '../store/restaurants/actions';
-
 -function RestaurantList({loadRestaurants, restaurants}) {
 +export function RestaurantList({loadRestaurants, restaurants}) {
    useEffect(() => {

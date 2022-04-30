@@ -391,9 +391,9 @@ We'll need to add a second expectation shortly so we go ahead and set up the tes
 We also need to import `createRestaurant`:
 
 ```diff
- import restaurantsReducer from '../restaurants/reducers';
--import {loadRestaurants} from '../restaurants/actions';
-+import {loadRestaurants, createRestaurant} from '../restaurants/actions';
+ import restaurantsReducer from './restaurants/reducers';
+-import {loadRestaurants} from './restaurants/actions';
++import {loadRestaurants, createRestaurant} from './restaurants/actions';
 
  describe('restaurants', () => {
 ```
