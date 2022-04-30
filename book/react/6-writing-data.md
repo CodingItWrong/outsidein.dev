@@ -157,18 +157,19 @@ describe('NewRestaurantForm', () => {
 
   let createRestaurant;
 
-  beforeEach(() => {
+  function renderComponent() {
     createRestaurant = jest.fn().mockName('createRestaurant');
     render(<NewRestaurantForm createRestaurant={createRestaurant} />);
-  });
+  }
 });
 ```
 
-Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a `beforeEach`, even there there will only be one expectation at first. Add the following:
+Next, let's try to proactively organize our test file. Since we're taking the approach of having one behavior per test, it's likely that we will ultimately have multiple tests for each situation. So let's group situations with a `describe` block with a situation-specific setup helper function, even there there will only be one expectation at first. Add the following:
 
 ```js
 describe('when filled in', () => {
-  beforeEach(async () => {
+  async function fillInForm() {
+    renderComponent();
     await userEvent.type(
       screen.getByPlaceholderText('Add Restaurant'),
       restaurantName,
@@ -176,7 +177,8 @@ describe('when filled in', () => {
     userEvent.click(screen.getByTestId('new-restaurant-submit-button'));
   });
 
-  it('calls createRestaurant with the name', () => {
+  it('calls createRestaurant with the name', async () => {
+    await fillInForm();
     expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
   });
 });
@@ -224,9 +226,9 @@ Now we get an assertion failure:
 
     Number of calls: 0
 
-      23 |
-      24 |     it('calls createRestaurant with the name', () => {
-    > 25 |       expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
+      26 |     it('calls createRestaurant with the name', async () => {
+      27 |       await fillInForm();
+    > 28 |       expect(createRestaurant).toHaveBeenCalledWith(restaurantName);
          |                                ^
 ```
 
