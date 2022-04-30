@@ -428,11 +428,10 @@ Now our test of the initial state passes, but our test for while loading fails. 
 +export const START_LOADING = 'START_LOADING';
  export const STORE_RESTAURANTS = 'STORE_RESTAURANTS';
 
- export const loadRestaurants = () => (dispatch, getState, api) => {
+ export const loadRestaurants = () => async (dispatch, getState, api) => {
 +  dispatch(startLoading());
-   api.loadRestaurants().then(records => {
-     dispatch(storeRestaurants(records));
-   });
+   const records = await api.loadRestaurants();
+   dispatch(storeRestaurants(records));
  };
 
 +const startLoading = () => ({type: START_LOADING});
@@ -577,34 +576,25 @@ describe('when loading fails', () => {
 
 We decide that when an API call fails, the promise `api.loadRestaurants()` returns will reject. This is common practice for JavaScript HTTP clients.
 
-When we run our test, it fails, but we also get a warning:
+When we run our test, it fails with the following error:
 
 ```sh
-[UnhandledPromiseRejection: This error originated either by throwing inside of
-an async function without a catch block, or by rejecting a promise which was
-not handled with .catch(). The promise rejected with the reason "undefined".] {
-  code: 'ERR_UNHANDLED_REJECTION'
-}
+thrown: undefined
 ```
 
-So in addition to our expectation not passing, Jest is warning that we have an unhandled promise rejection. Since it's a good practice to handle promise rejections in general, let's set up our action to catch a rejected promise. We won't do anything with the catch for now; maybe our tests will drive us to do something in there later.
+This is because our async `loadRestaurants` function doesn't catch an error thrown by `api.loadRestaurants()`. Since it's a good practice to handle promise rejections in general, let's set up our action to catch a rejected promise. We won't do anything with the catch for now; maybe our tests will drive us to do something in there later.
 
 ```diff
- export const loadRestaurants = () => (dispatch, getState, api) => {
-   dispatch(startLoading());
--   api.loadRestaurants().then(records => {
--     dispatch(storeRestaurants(records));
--   });
-+   api
-+     .loadRestaurants()
-+     .then(records => {
-+       dispatch(storeRestaurants(records));
-+     })
-+     .catch(() => {});
+ export const loadRestaurants = () => async (dispatch, getState, api) => {
++  try {
+     dispatch(startLoading());
+     const records = await api.loadRestaurants();
+     dispatch(storeRestaurants(records));
++  } catch {}
  };
 ```
 
-This fixes the warning, and now we just have the failing expectation:
+This fixes the error, and now we see a failing expectation:
 
 ```sh
   ● restaurants › loadRestaurants action › when loading fails › sets an error flag
@@ -695,17 +685,15 @@ The test fails. Make it pass while keeping the other tests passing by setting th
  export const STORE_RESTAURANTS = 'STORE_RESTAURANTS';
 +export const RECORD_LOADING_ERROR = 'RECORD_LOADING_ERROR';
 
- export const loadRestaurants = () => (dispatch, getState, api) => {
-   dispatch(startLoading());
-   api
-     .loadRestaurants()
-     .then(records => {
-       dispatch(storeRestaurants(records));
-     })
--    .catch(() => {});
-+    .catch(() => {
-+      dispatch(recordLoadingError());
-+    });
+ export const loadRestaurants = () => async (dispatch, getState, api) => {
+   try {
+     dispatch(startLoading());
+     const records = await api.loadRestaurants();
+     dispatch(storeRestaurants(records));
+-  } catch {}
++  } catch {
++    dispatch(recordLoadingError());
++  }
  };
 
  const startLoading = () => ({type: START_LOADING});
