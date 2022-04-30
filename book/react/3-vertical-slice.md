@@ -509,7 +509,7 @@ Add `redux` and `react-redux` dependencies:
 
 ```sh
 $ yarn add redux@4.2.0 \
-    react-redux@8.0.1
+           react-redux@8.0.1
 ```
 
 Next, connect the `RestaurantList` component to the appropriate state. This is what will ultimately fix our Cypress error:
