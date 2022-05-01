@@ -25,7 +25,7 @@ These steps can be visualized as a two-level loop:
 
 <img src="/images/loop-e2e.png" alt="Diagram of the outside-in TDD Loop" class="centered" />
 
-This style of TDD is called outside-in because you start from the outside of your application (the E2E test), and you step inward to implement only the functionality that's needed from the outside.
+This style of TDD is called "outside-in" because you start from the outside of your application (the E2E test), and you step inward to implement only the functionality that's needed from the outside.
 
 ## The Role of End-to-End Tests
 In outside-in TDD, end-to-end tests work together with unit tests, covering the same main functionality in a complementary way. Each type of test provides a different value.
