@@ -23,7 +23,7 @@ Outside-in TDD addresses all of these problems by adding end-to-end tests that a
 
 These steps can be visualized as a two-level loop:
 
-<img src="/images/loop-e2e.png" alt="Diagram of the outside-in TDD Loop" class="centered" />
+<img src="/images/loop-e2e.png" alt="Diagram of the outside-in TDD Loop" className="centered" />
 
 This style of TDD is called "outside-in" because you start from the outside of your application (the E2E test), and you step inward to implement only the functionality that's needed from the outside.
 

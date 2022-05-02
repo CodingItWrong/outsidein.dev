@@ -17,7 +17,7 @@ Then the cycle repeats again for your next bit of functionality: you write the n
 
 These three steps can be visualized as a loop:
 
-<img src="/images/loop-unit.png" alt="Diagram of the TDD Loop" class="centered" />
+<img src="/images/loop-unit.png" alt="Diagram of the TDD Loop" className="centered" />
 
 Why would you want to practice test-driven development? Let's talk about a few extremely common problems in programming that test-driven development addresses in a unique way.
 

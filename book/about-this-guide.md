@@ -102,7 +102,7 @@ These `+`s and `-`s aren't part of the code for you to type in; they just highli
 
 ## About the Author
 
-<img src="/josh.jpg" class="author" title="photo of the author, Josh Justice" />
+<img src="/josh.jpg" className="author" title="photo of the author, Josh Justice" />
 
 I'm Josh Justice, and I've worked as a professional software developer since 2004. For the first 10 years I worked in server-rendered web applications (the only kind of web applications most of us had back then). And I wasn't doing any automated testing. Every change I made required manually retesting everything in the browser. As you might imagine, that resulted in a lot of builds sent back from QA, a lot of delayed releases, and a lot of bugs that made it to production anyway. I was fortunate enough not to have to work too many nights or weekends, but there was always the very real threat of an evening phone call about a production issue I needed to fix urgently. I tried to make my apps more reliable by experimenting with different programming languages and frameworks, but none made much of a difference.
 
