@@ -118,21 +118,21 @@ This book is the culmination of all that I've learned and discovered about front
 
 It's no exaggeration to say that this book has no original content and is only an arrangement of the good ideas of others. I'd like to thank the following people for playing a role in the ideas or the process of writing it.
 
-* Kent Beck for creating and writing about TDD and Extreme Programming.
+* Kent Beck for creating and writing about TDD, Extreme Programming, and other practices that help geeks feel safe in the world.
 * Nat Pryce and Steve Freeman for creating and writing about mock objects and outside-in TDD.
 * Jeffrey Way for introducing me to TDD and object-oriented design.
-* Toran Billups for showing me my first example of outside-in TDD on the front end.
-* The Big Nerd Ranch web team for teaching and exemplifying agile development.
+* Toran Billups for helping me see the possibilities of outside-in TDD on the front end.
+* The Big Nerd Ranch web team, past and present, for teaching and exemplifying agile development.
 * Myron Marston and Erin Dees for making outside-in TDD so practical in Ruby.
-* Atlanta tech meetup organizers for giving me opportunities to speak publicly about outside-in TDD.
-* Edd Yerburgh, Kent C. Dodds, and the Cypress team for creating great frontend test tooling.
+* Kent C. Dodds, Edd Yerburgh, and the Cypress team for creating great frontend test tooling.
+* Atlanta tech meetup organizers, connect.tech, and Chain React for opportunities to speak and teach about testing.
 * Jack Franklin and Justin Searls for informing and challenging my thoughts on frontend testing.
-* James Shore for championing the continued importance of TDD in JavaScript.
-* Matthew Strickland for encouraging me to create content.
-* Jonathan Martin for inspiring me to write a book.
-* The creators of VuePress for creating a great platform for hosting content like this.
-* My wife Jennifer and my three children, for supporting me in my passion for programming, and for making me look forward to taking a break from programming on nights and weekends.
+* James Shore for consistently championing the importance of TDD in JavaScript.
+* Matthew Strickland and Jonathan Martin for encouraging and inspiring me to write and create other content.
+* The creators of Docusaurus and VuePress for creating great platforms for publishing online content.
+* Graham Lee, Brian Marick, Ron Jeffries, Noel Rappin, and Elisabeth Hendrickson for being generous enough to field my out-of-the-blue questions.
+* My wife Jennifer and my three children, Emily, Katherine, and James, for supporting me in my passion for programming, and for making me look forward to finishing work for the day.
 
 ## What's Next
 
-With that, we're ready to get started learning about outside-in frontend development. We begin looking at the problem that agile development practices are intended to solve.
+With that, we're ready to get started learning about the concepts behind outside-in frontend development. We begin by looking at the problem that agile development practices are intended to solve.
