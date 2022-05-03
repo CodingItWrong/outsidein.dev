@@ -1165,7 +1165,8 @@ Save and the test should pass.
 Now we have just one more component test to make: that the restaurant name is not cleared when the server rejects. This should already be working because of how we implemented the code, but it would be frustrating for the user if they lost their data, so this is an especially important case to test. Add another expectation to the "when the store action rejects" `describe` block:
 
 ```js
-it('does not clear the name', () => {
+it('does not clear the name', async () => {
+  await fillInForm();
   expect(screen.getByPlaceholderText('Add Restaurant').value).toEqual(
     restaurantName,
   );
