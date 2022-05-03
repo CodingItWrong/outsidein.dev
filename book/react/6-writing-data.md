@@ -900,7 +900,7 @@ Save the test file and we get an assertion failure:
     instead
 ```
 
-We can fix this by clearing the `validationError` flag upon a successful submission:
+We can fix this by clearing the `validationError` flag when the name is filled in:
 
 ```diff
  if (!name) {
