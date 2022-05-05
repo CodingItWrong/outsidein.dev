@@ -7,15 +7,15 @@ sidebar_position: 1
 
 ## The Problem
 
-Few software projects go as smoothly as we would like. We plan how they will go, but what happens next? Nobody says it better than Sandi Metz:
+Software projects rarely go as smoothly as we would like. We make our project plans, but how often does reality end up following them? Nobody says it better than Sandi Metz:
 
 > Unfortunately, something will change. It always does. The customers didn’t know what they wanted, they didn’t say what they meant. You didn’t understand their needs, you’ve learned how to do something better. Even applications that are perfect in every way are not stable. The application was a huge success, now everyone wants more. Change is unavoidable. It is ubiquitous, omnipresent, and inevitable.
 >
 > — Sandi Metz, *Practical Object-Oriented Design*
 
-When we first start building a new software system, things go smoothly and it's easy for us to add new functionality. We feel so productive! But as time goes on, that feeling of progress wanes. You change a bit of code, and something seemingly-unrelated breaks. You need to make dozens of changes throughout a codebase just to add one new feature.
+When you first start building a new software system, things go smoothly and it's easy for you to add new functionality. You feel so productive! But as time goes on, that feeling of progress wanes. When you change a bit of code, something seemingly-unrelated breaks. To add one new feature, you need to make dozens of changes throughout a codebase.
 
-Maybe you don't have any automated tests, so you have to manually test your app when it changes. But as your feature set grows, you either need to take longer to manually test, hire more testers, or retest less and less of your codebase on each release. Or maybe you do have automated tests, but changing one feature causes lots of tests to break, so most of your development time goes toward maintaining tests that don't seem to be helping you. Worse, maybe those tests don't actually catch the kinds of bugs your app tends to have, so you *still* have to do just as much manual testing in addition to maintaining the test suite!
+To make sure your app continues to work as it changes, you need some kind of testing. Maybe you don't have any automated tests, so you have to fully rely on manually testing. But as your feature set grows, you either need to take longer to manually test, hire more testers, or retest less and less of your codebase on each release. Or maybe you do have automated tests, but changing one feature causes lots of tests to break, so most of your development time goes toward maintaining tests that don't seem to be helping you. Worse, maybe those tests don't actually catch the kinds of bugs your app tends to have, so you *still* have to do just as much manual testing in addition to maintaining the test suite!
 
 The ultimate effect of this trend is described by Martin Fowler's [design stamina hypothesis](https://www.martinfowler.com/bliki/DesignStaminaHypothesis.html): projects come to a point where more and more effort is needed to get less and less results.
 
