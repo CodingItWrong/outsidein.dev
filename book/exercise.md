@@ -1,10 +1,10 @@
 ---
-title: Exercise Intro
+title: Exercise
 sidebar_position: 3
 pagination_next: null
 ---
 
-# Exercise Intro
+# Exercise
 
 To see outside-in frontend development in action, we're going to walk through creating a few features in a simple frontend application. We'll build an app for rating dishes at restaurants, called Opinion Ate. Note that we won't get anywhere near finishing the app as part of this guide: we'll only get it started.
 

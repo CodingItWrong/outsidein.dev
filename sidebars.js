@@ -25,7 +25,6 @@ const sidebars = {
     {
       type: 'category',
       label: 'Concepts',
-      link: {type: 'doc', id: 'concepts/why-agile'},
       items: [
         'concepts/why-agile',
         'concepts/testing-concepts',
@@ -36,15 +35,13 @@ const sidebars = {
     {
       type: 'category',
       label: 'Exercise',
-      link: {type: 'doc', id: 'exercise-intro'},
+      link: {type: 'doc', id: 'exercise'},
       items: [
-        'exercise-intro',
         {
           type: 'category',
           label: 'React',
           link: {type: 'doc', id: 'react/index'},
           items: [
-            'react/index',
             'react/project-setup',
             'react/vertical-slice',
             'react/refactoring-styles',
@@ -57,7 +54,6 @@ const sidebars = {
           label: 'Vue',
           link: {type: 'doc', id: 'vue/index'},
           items: [
-            'vue/index',
             'vue/project-setup',
             'vue/vertical-slice',
             'vue/refactoring-styles',

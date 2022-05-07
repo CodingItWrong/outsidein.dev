@@ -1,6 +1,6 @@
 ---
 title: 1 - About This Exercise
-pagination_prev: exercise-intro
+pagination_prev: exercise
 ---
 
 # Outside-In Vue Development

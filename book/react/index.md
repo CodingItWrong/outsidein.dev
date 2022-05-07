@@ -1,6 +1,6 @@
 ---
 title: 1 - About This Exercise
-prev: /exercise-intro.html
+pagination_prev: exercise
 ---
 
 # Outside-In React Development
