@@ -27,7 +27,7 @@ const config = {
         },
         docs: {
           path: 'book',
-          routeBasePath: 'book',
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // editUrl:
@@ -58,7 +58,7 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'about-this-guide',
+            docId: 'about-this-book',
             position: 'left',
             label: 'Book',
           },
@@ -82,7 +82,7 @@ const config = {
             items: [
               {
                 label: 'Book',
-                to: '/book/about-this-guide',
+                to: '/about-this-book',
               },
             ],
           },
