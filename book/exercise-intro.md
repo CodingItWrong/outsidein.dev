@@ -33,8 +33,8 @@ If you use a different frontend library or state management layer, don't worry: 
 ## Pick Your Framework
 To get started, pick the version of the exercise you'd like to go through:
 
-- [React Exercise](/book/react/)
-- [Vue Exercise](/book/vue/)
+- [React Exercise](/react/)
+- [Vue Exercise](/vue/)
 
 :::tip
 Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!

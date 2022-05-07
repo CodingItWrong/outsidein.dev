@@ -7,6 +7,8 @@ sidebar_position: 1
 
 ## The Problem
 
+Hello!
+
 Software projects rarely go as smoothly as we would like. We make our project plans, but how often does reality end up following them? Nobody says it better than Sandi Metz:
 
 > Unfortunately, something will change. It always does. The customers didn’t know what they wanted, they didn’t say what they meant. You didn’t understand their needs, you’ve learned how to do something better. Even applications that are perfect in every way are not stable. The application was a huge success, now everyone wants more. Change is unavoidable. It is ubiquitous, omnipresent, and inevitable.
@@ -49,7 +51,7 @@ The practices above are mostly *development* practices involving how individuals
 - Who is part of the team and how their roles work
 - Coordinating design, frontend, and backend work for the same user-facing functionality
 
-For more information on agile methodology in general, check out [Agile Methodology Resources](/book/next-steps#agile-methodology).
+For more information on agile methodology in general, check out [Agile Methodology Resources](/next-steps#agile-methodology).
 
 ## What's Next
 

@@ -20,7 +20,7 @@ const sidebars = {
   bookSidebar: [
     {
       type: 'doc',
-      id: 'about-this-guide',
+      id: 'about-this-book',
     },
     {
       type: 'category',
