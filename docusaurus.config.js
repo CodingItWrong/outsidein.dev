@@ -49,11 +49,6 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      docs: {
-        sidebar: {
-          autoCollapseCategories: true,
-        },
-      },
       navbar: {
         title: 'Outside-In Frontend Development',
         logo: {
