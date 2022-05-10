@@ -3,6 +3,7 @@ title: Exercise
 sidebar_position: 3
 pagination_next: null
 ---
+import Chat from './_chat.mdx';
 
 # Exercise
 
@@ -36,6 +37,4 @@ To get started, pick the version of the exercise you'd like to go through:
 - [React Exercise](./react/index.md)
 - [Vue Exercise](./vue/index.md)
 
-:::tip
-Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

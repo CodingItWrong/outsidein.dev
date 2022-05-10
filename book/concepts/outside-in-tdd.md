@@ -2,6 +2,7 @@
 title: Overview of Outside-In TDD
 sidebar_position: 4
 ---
+import Chat from '../_chat.mdx';
 
 # Overview of Outside-In TDD
 
@@ -59,6 +60,4 @@ There are a number of criticisms of mocking in tests, usually referring to conce
 
 In this chapter we summarized what outside-in test-driven development is and how it works. This completes our survey of agile development practices. Next, we'll put these practices into use in an exercise where we build an app using the frontend framework of your choice.
 
-:::tip
-Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

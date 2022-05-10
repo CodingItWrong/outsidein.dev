@@ -2,6 +2,7 @@
 title: 1 - About This Exercise
 pagination_prev: exercise
 ---
+import Chat from '../_chat.mdx';
 
 # Outside-In React Development
 
@@ -60,6 +61,8 @@ For deploying frontend applications there's no service simpler than Netlify. Cho
 
 Now that we've reviewed the tech stack we'll be using, it's time to get our app set up. In the next chapter we'll create our application, the environment it runs in, and do some setup for our development process.
 
+<Chat />
+
 [axios]: https://axios-http.com/
 [create-react-app]: https://create-react-app.dev/
 [cypress]: https://www.cypress.io/
@@ -70,7 +73,3 @@ Now that we've reviewed the tech stack we'll be using, it's time to get our app 
 [react-testing-library]: https://testing-library.com/react
 [redux]: https://redux.js.org/
 [redux-thunk]: https://github.com/reduxjs/redux-thunk
-
-:::tip
-Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::

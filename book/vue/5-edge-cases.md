@@ -1,6 +1,7 @@
 ---
 title: 5 - Edge Cases
 ---
+import Chat from '../_chat.mdx';
 
 # 5 - Edge Cases
 
@@ -816,6 +817,4 @@ If you have any uncommitted changes, commit them to git. Push up your branch to 
 
 With these edge cases handled there's nothing else for us to do for our restaurant-loading feature. In the next chapter we'll apply what we've learned to a second feature, creating a new restaurant.
 
-:::tip
-Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

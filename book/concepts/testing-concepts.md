@@ -2,6 +2,7 @@
 title: Testing Concepts
 sidebar_position: 2
 ---
+import Chat from '../_chat.mdx';
 
 # Testing Concepts
 
@@ -56,6 +57,4 @@ In the exercise we work through in this guide, we'll take advantage of both stub
 ## What's Next
 Now that we've gotten our testing terms straight, let's look at the testing aspect of this guide's agile development approach: test-driven development. In the next chapter we'll show what TDD means in more detail, and we'll explain how the unintuitive practice of writing your tests first leads to a number of benefits.
 
-:::tip
-Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

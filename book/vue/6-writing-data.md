@@ -2,6 +2,7 @@
 title: 6 - Writing Data
 next: /exercise-wrap-up.html
 ---
+import Chat from '../_chat.mdx';
 
 # 6 - Writing Data
 
@@ -1378,6 +1379,4 @@ If you have any uncommitted changes, commit them to git. Push up your branch to 
 
 With this we've completed our second feature, including edge cases and styling. We've also reached the end of this exercise! In the next chapter we'll look back at what we did over the course of the exercise and the benefits the outside-in development process gave us.
 
-:::tip
-Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

@@ -2,6 +2,7 @@
 title: "Why Agile?"
 sidebar_position: 1
 ---
+import Chat from '../_chat.mdx';
 
 # Why Agile?
 
@@ -55,6 +56,4 @@ To learn more about this broader scope of agile practices, check out [Agile Meth
 
 In this guide we'll examine and practice most of the agile technical practices described above, with a particular emphasis on test-driven development. Next, as a step toward that goal, we'll lay a foundation of core testing concepts and define terms as we'll use them in this guide.
 
-:::tip
-Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

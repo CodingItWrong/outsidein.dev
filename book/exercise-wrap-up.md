@@ -3,6 +3,7 @@ title: "Exercise Wrap-Up"
 sidebar_position: 6
 pagination_prev: null
 ---
+import Chat from './_chat.mdx';
 
 # Exercise Wrap-Up
 
@@ -26,6 +27,4 @@ Maybe you're already convinced that TDD, together with the other agile developme
 
 We've now completed our exercise. In the next and final chapter we'll wrap up our guide by taking a look at resources you can use to learn outside-in development more deeply.
 
-:::tip
-Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

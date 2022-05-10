@@ -1,6 +1,7 @@
 ---
 title: 2 - Project Setup
 ---
+import Chat from '../_chat.mdx';
 
 # 2 - Project Setup
 
@@ -471,6 +472,4 @@ With this, we can drag "Fill In Readme" to "Done" in Trello.
 ## What's Next
 Now all our setup is done and we are ready to work on our first feature! In the next chapter we'll see how to build a feature using the outside-in TDD loop.
 
-:::tip
-Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

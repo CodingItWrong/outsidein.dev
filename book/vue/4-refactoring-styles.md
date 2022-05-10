@@ -1,6 +1,7 @@
 ---
 title: 4 - Refactoring Styles
 ---
+import Chat from '../_chat.mdx';
 
 # 4 - Refactoring Styles
 
@@ -250,6 +251,4 @@ If you have any uncommitted changes, commit them to git. Push up your branch to 
 ## What's Next
 In this chapter we improved the look-and-feel of our first feature. But there are some functionality improvements it could benefit from as well. In the next chapter we'll add support for edge cases related to loading and error states.
 
-:::tip
-Questions about this chapter? Running into trouble? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />

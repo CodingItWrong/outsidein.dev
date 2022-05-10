@@ -2,6 +2,7 @@
 title: "Why Test-Driven Development?"
 sidebar_position: 3
 ---
+import Chat from '../_chat.mdx';
 
 # Why Test-Driven Development?
 
@@ -81,6 +82,4 @@ Programming allows us to create incredibly powerful software with relative ease.
 
 We've just seen how test-driven development works and the benefits it provides. This guide will follow a particular kind of TDD approach called outside-in TDD. In the next chapter, we'll see how outside-in TDD adds to the TDD practice we've just seen to provide extra confidence and benefits.
 
-:::tip
-Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
-:::
+<Chat />
