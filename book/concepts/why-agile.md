@@ -34,26 +34,26 @@ Escaping development slowdown as systems grow is one of the main goals of agile 
 - **Test-Driven Development:** as we build our stories, we write the test first, and we only write production code in response to a failing test. This ensures that every bit of our logic is covered by test, so that as we adjust the functionality of our system for new stories we will know that nothing's broken. This level of test coverage significantly reduces the need for manual testing, which means our application can grow without the manual testing time increasing indefinitely. TDD also helps us identify and fix design issues in our code that could cause future development slowdown.
 - **Refactoring:** at several different moments during the agile process, we refactor, improving the arrangement of the code without changing its functionality. As part of the TDD cycle, we refactor our code as the third step to remove duplication and make other simplifications. When we're preparing to add new functionality, we consider if we can rearrange the code so that the new functionality fits in more naturally.
 - **Code Review:** we ensure that the person who wrote a bit of code isn't the only one who is familiar with it. This way another set of eyes can find bugs and look for improvements. Pull requests are a common way to do code review, and they can work well as long as reviewers are focusing on thoroughly understanding the code and not just giving a cursory glance.
-- **Continuous Integration:** when a pull request is opened, a Continuous Integration service runs our tests on the branch of code to ensure that our entire suite passes. This means that even if we forget to run the tests ourselves, they will still be run before the PR can be merged. It also ensures the application can run in a new environment, and is not dependent on something implicit in our development environment.
-- **Continuous Delivery:** agile teams have the ability to release their system at any moment. To accomplish this, they ensure the main source control branch runs successfully and doesn't include incomplete work. In the rare cases when one of these problems happen, fixing it is the highest priority. It also means that the steps to release are automated. This doesn't mean that the team necessarily *does* release to production every time a new feature is completed, but they have the means to do so.
-- **Abstractions:** agile teams are more interested in delivering business value than custom designing every piece of their application. They use abstractions and shared libraries when they meet the app's needs rather than rewriting them unnecessarily. The abstractions they reach for might include community standard build setups, UI libraries, full-stack backend frameworks, and hosting solutions like Netlify and Heroku. When the team finds that an abstraction doesn't meet their needs, then and only then do they write lower-level code themselves.
+- **Continuous Integration (CI):** when the term "continuous integration" was coined it meant integrating team members' work together at least daily instead of leaving branches in parallel use for a long time. One key part of the practice of CI is an integration machine that will automatically build and test the app to ensure that integrated code stays fully functional in a standard environment. Today we have cloud services referred to as "continuous integration" services that handle that building and testing on both main branches and pull request branches. But to truly be practicing CI, an agile team doesn't just leave pull request branches open for a long time, but ensures they're merged in frequently.
+- **Continuous Delivery (CD):** agile teams have the ability to release their system at any moment. To accomplish this, they ensure the main source control branch runs successfully and doesn't include incomplete work. In the rare cases when one of these problems happen, fixing it is the highest priority. It also means that the steps to release are automated. This doesn't mean that the team necessarily *does* release to production every time a new feature is completed, but they have the means to do so.
+- **Abstractions:** agile teams order their work to deliver the most important user-facing functionality first. One key strategy they apply is to reach for shared solutions and libraries rather than always writing the equivalent functionality from scratch. Shared solutions include community standard build systems, UI libraries, full-stack backend frameworks, and hosting solutions like Netlify and Heroku. Every day you spend custom-building an implementation detail of your tech stack is a day you aren't delivering features to the user. When the team finds that an abstraction is slowing down their delivery of business functionality, then and only then do they write lower-level code themselves.
 
 ## Agile Team Practices
 
-The practices above are mostly *development* practices involving how individuals work with their code. But there is a broader scope of agile practices around how teams work together, and these practices are equally important. They aren't addressed in this guide, but an effective agile team will be intentional about their approach to:
+Most of the practices above are *technical* practices involving how individuals work with their code. There are also agile practices that are less technical and more focused on how individuals within a team interact. Although such practices aren't addressed in this guide, they are equally important. An effective agile team will be intentional about their approach to:
 
+- Deciding what roles should be included on the team and how they should interact
 - Eliciting needs and feedback from business users
-- Coming up with and organizing stories
-- Whether and how to estimate stories
-- Velocity or other measures of the effectiveness of their process
-- Who is part of the team and how their roles work
-- Coordinating design, frontend, and backend work for the same user-facing functionality
+- Writing and organizing stories
+- Deciding whether or not estimation would provide any value, and deciding how to do so
+- Coordinating work for a bit of user-facing functionality across multiple disciplines such as design, frontend, backend, infrastructure
+- Measuring their progress in terms of velocity or other metrics
 
-For more information on agile methodology in general, check out [Agile Methodology Resources](../next-steps.md#agile-methodology).
+To learn more about this broader scope of agile practices, check out [Agile Methodology Resources](../next-steps.md#agile-methodology).
 
 ## What's Next
 
-In this guide we'll examine and try out most of these agile development practices, but we will have a particular emphasis on test-driven development. Before we get into it, though, first we'll look at some core testing concepts and define terms as we'll use them in this guide.
+In this guide we'll examine and practice most of the agile technical practices described above, with a particular emphasis on test-driven development. Next, as a step toward that goal, we'll lay a foundation of core testing concepts and define terms as we'll use them in this guide.
 
 :::tip
 Questions about this chapter? Come chat with us on the [Gitter Community for Outside-In Dev](https://gitter.im/outsideindev/community)!
