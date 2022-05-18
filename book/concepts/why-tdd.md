@@ -6,7 +6,7 @@ import Chat from '../_chat.mdx';
 
 # Why Test-Driven Development?
 
-This guide will walk us through a number of agile development practices, but with a particular focus on test-driven development.
+This book will walk us through a number of agile development practices, but with a particular focus on test-driven development.
 
 Test-driven development is the practice of writing a test for functionality before you write the functionality itself. It follows a three-step process, "Red-Green-Refactor":
 
@@ -80,6 +80,6 @@ Programming allows us to create incredibly powerful software with relative ease.
 
 ## What's Next
 
-We've just seen how test-driven development works and the benefits it provides. This guide will follow a particular kind of TDD approach called outside-in TDD. In the next chapter, we'll see how outside-in TDD adds to the TDD practice we've just seen to provide extra confidence and benefits.
+We've just seen how test-driven development works and the benefits it provides. This book will follow a particular kind of TDD approach called outside-in TDD. In the next chapter, we'll see how outside-in TDD adds to the TDD practice we've just seen to provide extra confidence and benefits.
 
 <Chat />
