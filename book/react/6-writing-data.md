@@ -1,5 +1,5 @@
 ---
-title: 6 - Writing Data
+title: 6 - Writing Data | React
 pagination_next: exercise-wrap-up
 ---
 import Chat from '../_chat.mdx';

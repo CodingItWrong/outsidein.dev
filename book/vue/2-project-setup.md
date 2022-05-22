@@ -1,5 +1,5 @@
 ---
-title: 2 - Project Setup
+title: 2 - Project Setup | Vue
 ---
 import Chat from '../_chat.mdx';
 

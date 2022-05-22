@@ -1,5 +1,5 @@
 ---
-title: 3 - Vertical Slice
+title: 3 - Vertical Slice | React
 ---
 import Chat from '../_chat.mdx';
 

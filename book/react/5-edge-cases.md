@@ -1,5 +1,5 @@
 ---
-title: 5 - Edge Cases
+title: 5 - Edge Cases | React
 ---
 import Chat from '../_chat.mdx';
 

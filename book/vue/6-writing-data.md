@@ -1,5 +1,5 @@
 ---
-title: 6 - Writing Data
+title: 6 - Writing Data | Vue
 next: /exercise-wrap-up.html
 ---
 import Chat from '../_chat.mdx';

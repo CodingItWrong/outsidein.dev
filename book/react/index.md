@@ -1,5 +1,5 @@
 ---
-title: 1 - About This Exercise
+title: 1 - About This Exercise | React
 pagination_prev: exercise
 ---
 import Chat from '../_chat.mdx';

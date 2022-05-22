@@ -1,5 +1,5 @@
 ---
-title: 4 - Refactoring Styles
+title: 4 - Refactoring Styles | Vue
 ---
 import Chat from '../_chat.mdx';
 

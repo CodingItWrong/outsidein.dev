@@ -1,5 +1,5 @@
 ---
-title: 4 - Refactoring Styles
+title: 4 - Refactoring Styles | React
 ---
 import Chat from '../_chat.mdx';
 
