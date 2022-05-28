@@ -9,7 +9,7 @@ Hi, I'm Josh Justice. I published this guide for free because I hope it helps pe
 If you'd like to contact me for any reason, you can reach me at:
 
 - josh[at]outsidein[dot]dev
-- On the [Outside-In Frontend Dev Gitter](https://gitter.im/outsideindev/community).
+- On the [#outside-in-dev channel](https://discord.gg/k8e8ZSuQr6) on CodingItWrong's Server for React and Testing.
 - On Mastodon, an open-source social network, at [@codingitwrong@mastodon.technology](https://mastodon.technology/@codingitwrong)
 
 If you'd like to receive occasional updates on OutsideIn.dev and other agile and TDD projects from me, you can sign up for the mailing list:
