@@ -5,7 +5,7 @@ sidebar_position: 7
 
 # Next Steps
 
-You've completed this guide and gotten a taste of outside-in test-driven development on the frontend. I published this guide for free because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
+You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I published this guide for free because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
 
 This guide was just the beginning of your journey. Here are some more suggestions to take your learning further.
 
@@ -14,9 +14,8 @@ This guide was just the beginning of your journey. Here are some more suggestion
 ## A Community of Practice
 Doing agile development with other people provides accountability to stick with it and insights when it's not clear what to do. Here are some suggestions for how to find others to do agile development with:
 
-- An easy first step is to chat on the [Outside-In Frontend Dev Gitter](https://gitter.im/outsideindev/community). You can join there to discuss what we've learned and how to apply it with the author (me, Josh!) and other readers.
-- If you're on twitter, you can [tweet #outsideintdd](https://twitter.com/intent/tweet?button_hashtag=outsideintdd&ref_src=twsrc%5Etfw) to share your experiences and questions, or [search for #outsideintdd](https://twitter.com/search?lang=en&q=(%23outsideintdd)&src=typed_query) to see who else is thinking about this approach.
-- Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software craftsmanship" is a common term for such meetups.
+- An easy first step is to chat on the [#outside-in-dev channel](https://discord.gg/k8e8ZSuQr6) on my Discord server. You can join there to discuss what we've learned and how to apply it.
+- Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software crafters" or "software craftsmanship" are common terms for such meetups.
 - Attend a workshop on TDD or refactoring. Two instructors I would recommend are [James Shore](https://www.jamesshore.com/Calendar/) who focuses on JavaScript, and [Sandi Metz](https://www.sandimetz.com/courses) who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
 - The next time you are looking for a new job, look for one that prioritizes agile development practices. Just hearing them say "we do agile" or "we do testing" is not enough: ask them what their agile process is like, and see if they have a thorough understanding of small stories, refactoring, and evolutionary design.
 - Share this guide with someone you think would benefit from it, and talk together about your experiences with it.
@@ -27,10 +26,10 @@ Doing agile development with other people provides accountability to stick with 
 ## Testing Tool Docs
 Just like you learn your framework deeply, it's important to learn your testing tools deeply as well. This will show you what features you can draw from, give you ideas for how to test, and prevent buggy tests due to misunderstanding the test functionality. All of the tools we used have excellent guides, so I would recommend looking through them thoroughly:
 
-- [Cypress - Guides][cypress]
-- [Jest - Docs][jest]
-- [React Testing Library - Docs][rtl]
-- [Vue Test Utils - Guides][vue-test-utils]
+- [Cypress web site](https://www.cypress.io)
+- [Jest web site](https://jestjs.io)
+- [React Testing Library](https://testing-library.com/react)
+- [Vue Test Utils](https://v1.test-utils.vuejs.org)
 
 
 ## Outside-In TDD
@@ -101,8 +100,4 @@ And now you have a foundation and a taste of those practices. I hope you'll try 
 Thanks for reading, and keep in touch!
 
 
-[cypress]: https://docs.cypress.io/guides/overview/why-cypress.html
-[jest]: https://jestjs.io/docs/en/getting-started
 [old-solutions]: https://youtu.be/OwbgFbr83Jk
-[rtl]: https://testing-library.com/docs/react-testing-library/intro
-[vue-test-utils]: https://vue-test-utils.vuejs.org/guides/
