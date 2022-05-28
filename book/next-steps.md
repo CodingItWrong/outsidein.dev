@@ -40,7 +40,7 @@ Aside from learning in person, some of the best material for learning agile deve
 <div className="media">
   <img src="/images/growing-object-oriented-software.jpg" title="Growing Object-Oriented Software, Guided by Tests book cover" className="media-image" />
   <p className="media-description">
-    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.681793&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321503626"><em>Growing Object-Oriented Software, Guided by Tests</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.681793&type=2&subid=0" /> by Steve Freeman and Nat Pryce is the book that introduced outside-in test-driven development. It's written by the inventors of mock objects, and shows how mocking is intended to be used to isolate parts of your code, as we've done in our tutorial. This book has a more thorough description of the way outside-in TDD addresses change in software by producing code that has both high external and internal quality.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.681793&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321503626"><em>Growing Object-Oriented Software, Guided by Tests</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.681793&type=2&subid=0" /> by Steve Freeman and Nat Pryce is the book that introduced outside-in test-driven development. The authors are also the inventors of mock objects, and over the course of the book they illustrate how mocking is intended to be used to isolate parts of your code, as we've done in our exercise. This book will help you develop an even deeper undersatnding of the way outside-in TDD addresses change in software by guiding you to code that has a high degree of both external and internal quality.
   </p>
 </div>
 
@@ -94,7 +94,7 @@ This book has contained a brief introduction to agile development practices, but
 
 
 ## Epilogue
-We've reached the end of this guide. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And that's because they solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
+We've reached the end of this book. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And that's because they solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
 
 New languages and frameworks don't fix this problem, because you can make a mess in any language. More process doesn't fix the problem if the process doesn't account for change. Trying harder doesn't fix the problem, because we're human and have limited capacity.
 
