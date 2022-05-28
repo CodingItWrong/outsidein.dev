@@ -31,7 +31,11 @@ Just like you learn your framework deeply, it's important to learn your testing 
 - [React Testing Library web site](https://testing-library.com/react)
 - [Vue Test Utils 1.x web site](https://v1.test-utils.vuejs.org)
 
-## Outside-In TDD
+## Books
+
+Aside from learning in person, some of the best material for learning agile development is found in books. Here are some recommendations.
+
+### Outside-In TDD
 
 <div className="media">
   <img src="/images/growing-object-oriented-software.jpg" title="Growing Object-Oriented Software, Guided by Tests book cover" className="media-image" />
@@ -40,7 +44,7 @@ Just like you learn your framework deeply, it's important to learn your testing 
   </p>
 </div>
 
-## Test Patterns
+### Test Patterns
 
 <div className="media">
   <a href="https://www.informit.com/store/xunit-test-patterns-refactoring-test-code-9780131495050" target="_blank"><img src="/images/xunit-test-patterns.jpg" title="xUnit Test Patterns book cover" className="media-image" /></a>
@@ -52,7 +56,8 @@ Just like you learn your framework deeply, it's important to learn your testing 
 To get a preview of the book's test patterns and how they apply to JavaScript, check out a talk I gave at Assert(js) 2019, ["Old Solutions to New Testing Problems"][old-solutions].
 
 
-## Refactoring
+### Refactoring
+
 Over the course of this book we did a little refactoring, but by and large the functionality we wrote was pretty straightforward and there wasn't much need for refactoring. Real applications are different: the code gets complex as they grow and change, and it's essential to refactor to avoid getting bogged down in cluttered code. Here are two options for learning about refactoring.
 
 <div className="media">
@@ -69,7 +74,8 @@ Over the course of this book we did a little refactoring, but by and large the f
   </p>
 </div>
 
-## Agile Methodology
+### Agile Methodology
+
 This book has contained a brief introduction to agile development practices, but it hasn't gotten into the broader scope of doing agile as a team. There are many books on agile development; here are two I would recommend.
 
 <div className="media">
