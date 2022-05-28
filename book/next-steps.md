@@ -5,9 +5,9 @@ sidebar_position: 7
 
 # Next Steps
 
-You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I published this guide for free because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
+You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I wrote this book because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
 
-This guide was just the beginning of your journey. Here are some more suggestions to take your learning further.
+This book was just the beginning of your journey. Here are some more suggestions to take your learning further.
 
 *Some of the links to book below are affiliate links: if you purchase through them I make a little money without any cost to you. If you’d rather not use these links, feel free to search for these books at your preferred bookseller. I recommend InformIT and Pragmatic Programmers for DRM-free ebooks.*
 
@@ -18,7 +18,7 @@ Doing agile development with other people provides accountability to stick with 
 - Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software crafters" or "software craftsmanship" are common terms for such meetups.
 - Attend a workshop on TDD or refactoring. Two instructors I would recommend are [James Shore](https://www.jamesshore.com/Calendar/) who focuses on JavaScript, and [Sandi Metz](https://www.sandimetz.com/courses) who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
 - The next time you are looking for a new job, look for one that prioritizes agile development practices. Just hearing them say "we do agile" or "we do testing" is not enough: ask them what their agile process is like, and see if they have a thorough understanding of small stories, refactoring, and evolutionary design.
-- Share this guide with someone you think would benefit from it, and talk together about your experiences with it.
+- Share this book with someone you think would benefit from it, and talk together about your experiences with it.
 - Sign up to receive email updates from OutsideIn.dev and other agile and TDD projects from the author, Josh Justice:
 
 <iframe src="/mailchimp.html" width="100%" height="70" />
@@ -28,9 +28,8 @@ Just like you learn your framework deeply, it's important to learn your testing 
 
 - [Cypress web site](https://www.cypress.io)
 - [Jest web site](https://jestjs.io)
-- [React Testing Library](https://testing-library.com/react)
-- [Vue Test Utils](https://v1.test-utils.vuejs.org)
-
+- [React Testing Library web site](https://testing-library.com/react)
+- [Vue Test Utils 1.x web site](https://v1.test-utils.vuejs.org)
 
 ## Outside-In TDD
 
@@ -54,19 +53,19 @@ To get a preview of the book's test patterns and how they apply to JavaScript, c
 
 
 ## Refactoring
-The functionality we wrote in this guide was pretty straightforward, so there wasn't much need for refactoring. But as real applications grow and change, the code gets complex, and it's essential to refactor it to avoid getting bogged down in cluttered code. Here are two options for learning about refactoring.
+Over the course of this book we did a little refactoring, but by and large the functionality we wrote was pretty straightforward and there wasn't much need for refactoring. Real applications are different: the code gets complex as they grow and change, and it's essential to refactor to avoid getting bogged down in cluttered code. Here are two options for learning about refactoring.
 
 <div className="media">
   <a href="https://www.informit.com/store/refactoring-improving-the-design-of-existing-code-9780134757711" target="_blank"><img src="/images/refactoring.jpg" title="Refactoring book cover" className="media-image" /></a>
   <p className="media-description">
-    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.2754839&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780134757599"><em>Refactoring: Improving the Design of Existing Code</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.2754839&type=2&subid=0" /> by Martin Fowler is the original book that presented refactoring as a disciplined process. It includes a comprehensive reference of different kinds of refactorings that will equip you with options to consider and clear steps to take. The second edition of the book was rewritten in JavaScript, so it's extremely accessible to frontend developers.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.2754839&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780134757599"><em>Refactoring: Improving the Design of Existing Code</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.2754839&type=2&subid=0" /> by Martin Fowler is the original book that introduced the disciplined process of refactoring. It includes a comprehensive reference of different kinds of refactorings that will equip you with options to consider and clear steps to take. The second edition of the book was rewritten in JavaScript, so it's extremely accessible to frontend developers.
   </p>
 </div>
 
 <div className="media">
-  <a href="https://www.sandimetz.com/99bottles" target="_blank"><img src="/images/99-bottles-of-oop.jpg" title="99 Bottles of OOP book cover" className="media-image" /></a>
+  <a href="https://www.sandimetz.com/99bottles" target="_blank"><img src="/images/99-bottles-of-oop.jpg" title="99 Bottles of OOP JavaScript edition book cover" className="media-image" /></a>
   <p className="media-description">
-    <a href="https://www.sandimetz.com/99bottles" target="_blank"><em>99 Bottles of OOP</em></a>, by Sandi Metz and Katrina Owen, walks through one extended refactoring step-by-step, giving you the experience of what refactoring over time looks like. Don't let the "object-oriented programming" in the name fool you: even if you write your code in a functional-programming style, this book's principles of identifying code smells, listening to the code, and making small changes all apply just as well.
+    <a href="https://www.sandimetz.com/99bottles" target="_blank"><em>99 Bottles of OOP</em></a>, by Sandi Metz and Katrina Owen, walks through one extended refactoring step-by-step, giving you the experience of what refactoring over time looks like. It's available in JavaScript and several other programming languages. Don't let the "object-oriented programming" in the name fool you: even if you write your code in a functional-programming style, this book's principles of identifying code smells, listening to the code, and making small changes all apply just as well.
   </p>
 </div>
 
