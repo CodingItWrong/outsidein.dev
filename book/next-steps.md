@@ -5,26 +5,30 @@ sidebar_position: 7
 
 # Next Steps
 
-You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I wrote this book because I hope it helps people. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
+You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I wrote this book because I hope the principles that have helped me will help other developers. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
 
-This book was just the beginning of your journey. Here are some more suggestions to take your learning further.
+If you choose to continue on in outside-in TDD, then this book will be only the beginning of your journey. Here are some suggestions for ways to take your learning further.
 
 *Some of the links to book below are affiliate links: if you purchase through them I make a little money without any cost to you. If you’d rather not use these links, feel free to search for these books at your preferred bookseller. I recommend InformIT and Pragmatic Programmers for DRM-free ebooks.*
 
 ## A Community of Practice
-Doing agile development with other people provides accountability to stick with it and insights when it's not clear what to do. Here are some suggestions for how to find others to do agile development with:
 
-- An easy first step is to chat on the [#outside-in-dev channel](https://discord.gg/k8e8ZSuQr6) on my Discord server. You can join there to discuss what we've learned and how to apply it.
+Agile development really sank in for me once I started doing it alongside other people. Fellow agile developers provides accountability to stick with your principles and insights when it's not clear what to do.
+
+Here are some suggestions for how to find others to do agile development with:
+
+- An easy first step is to chat on the [#outside-in-dev channel](https://discord.gg/k8e8ZSuQr6) on my Discord server. You can join there to discuss what we've learned together and how we're applying it.
 - Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software crafters" or "software craftsmanship" are common terms for such meetups.
-- Attend a workshop on TDD or refactoring. Two instructors I would recommend are [James Shore](https://www.jamesshore.com/Calendar/) who focuses on JavaScript, and [Sandi Metz](https://www.sandimetz.com/courses) who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
-- The next time you are looking for a new job, look for one that prioritizes agile development practices. Just hearing them say "we do agile" or "we do testing" is not enough: ask them what their agile process is like, and see if they have a thorough understanding of small stories, refactoring, and evolutionary design.
+- Attend a workshop on TDD or refactoring. One instructor I would recommend is [Sandi Metz](https://www.sandimetz.com/courses), who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
+- The next time you are looking for a new job, look for one that prioritizes agile development practices. Just hearing them say "we do agile" or "we do testing" isn't enough: ask them what their agile process is like, and see if they have a thorough understanding of small stories, TDD, refactoring, and evolutionary design.
 - Share this book with someone you think would benefit from it, and talk together about your experiences with it.
 - Sign up to receive email updates from OutsideIn.dev and other agile and TDD projects from the author, Josh Justice:
 
 <iframe src="/mailchimp.html" width="100%" height="70" />
 
-## Testing Tool Docs
-Just like you learn your framework deeply, it's important to learn your testing tools deeply as well. This will show you what features you can draw from, give you ideas for how to test, and prevent buggy tests due to misunderstanding the test functionality. All of the tools we used have excellent guides, so I would recommend looking through them thoroughly:
+## Testing Tool Documentation
+
+In the same way that an experienced developer will learn their programming languages and frameworks deeply, it's important to learn testing tools deeply as well. This will show you what features you can utilize in your tests, give you ideas for how to test, and prevent buggy tests due to misunderstanding the functionality of the testing tool. All of the tools we used have excellent guides and I would recommend reviewing through them thoroughly:
 
 - [Cypress web site](https://www.cypress.io)
 - [Jest web site](https://jestjs.io)
@@ -33,14 +37,14 @@ Just like you learn your framework deeply, it's important to learn your testing 
 
 ## Books
 
-Aside from learning in person, some of the best material for learning agile development is found in books. Here are some recommendations.
+If you get the opportunity to work on a team with someone who has helped push agile practice forward, take it. Unfortunately, we won't all get the opportunity to do so, but many of them have recorded insights in books to share them with a broader audience. Here are some recommendations.
 
 ### Outside-In TDD
 
 <div className="media">
   <img src="/images/growing-object-oriented-software.jpg" title="Growing Object-Oriented Software, Guided by Tests book cover" className="media-image" />
   <p className="media-description">
-    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.681793&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321503626"><em>Growing Object-Oriented Software, Guided by Tests</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.681793&type=2&subid=0" /> by Steve Freeman and Nat Pryce is the book that introduced outside-in test-driven development. The authors are also the inventors of mock objects, and over the course of the book they illustrate how mocking is intended to be used to isolate parts of your code, as we've done in our exercise. This book will help you develop an even deeper undersatnding of the way outside-in TDD addresses change in software by guiding you to code that has a high degree of both external and internal quality.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.681793&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321503626"><em>Growing Object-Oriented Software, Guided by Tests</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.681793&type=2&subid=0" /> by Steve Freeman and Nat Pryce is the book that introduced outside-in test-driven development. The authors are also the inventors of mock objects, and over the course of the book they illustrate how mocking is intended to be used to isolate parts of your code, as we've done in our exercise. This book will help you develop an even deeper understanding of the way outside-in TDD addresses change in software by guiding you to code that has a high degree of both external and internal quality.
   </p>
 </div>
 
@@ -94,13 +98,13 @@ This book has contained a brief introduction to agile development practices, but
 
 
 ## Epilogue
-We've reached the end of this book. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And that's because they solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
+We've reached the end of this book. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And the reason I couldn't stop is that I've seen them solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
 
 New languages and frameworks don't fix this problem, because you can make a mess in any language. More process doesn't fix the problem if the process doesn't account for change. Trying harder doesn't fix the problem, because we're human and have limited capacity.
 
-The reason agile development practices work is that they are based on a realistic view of software development: a view that change is inevitable and people have limited capacities. They're the best way I've found to deliver value to my employers and to have a smooth and calm development experience.
+The reason agile development practices work is that they are based on a realistic view of the world in which software development occurs—a world in which change is inevitable and people have limited capacities. They're the best way I've found to deliver value to my employers and to have a smooth and calm development experience.
 
-And now you have a foundation and a taste of those practices. I hope you'll try putting them to use in your development work. I think you'll like the results.
+And now you have a foundation in those practices and a taste of the results. I hope you'll try putting them to use in your development work. I think you'll like the results.
 
 Thanks for reading, and keep in touch!
 
