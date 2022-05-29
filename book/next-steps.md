@@ -53,58 +53,58 @@ If you get the opportunity to work on a team with someone who has helped push ag
 <div className="media">
   <a href="https://www.informit.com/store/xunit-test-patterns-refactoring-test-code-9780131495050" target="_blank"><img src="/images/xunit-test-patterns.jpg" title="xUnit Test Patterns book cover" className="media-image" /></a>
   <p className="media-description">
-    As we went through the tutorial, we made a lot of decisions about how to organize our tests. Most of these decisions were informed by <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.1694771&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780132800051"><em>xUnit Test Patterns: Refactoring Test Code</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.1694771&type=2&subid=0" /> by Gerard Meszaros. This is a programming-language-agnostic guide to how to create high-quality tests, and the principles apply directly to frontend JavaScript tests. In addition to providing ideas for how to arrange your tests, the book also provides a <em>language</em> for talking about test patterns and their tradeoffs. This can be helpful when guiding others, or when making a case to a team for changing unhelpful patterns.
+    As we went through the exercise there were many moments where we had to make a decision about how to organize our tests. Most of these decisions were informed by <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.1694771&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780132800051"><em>xUnit Test Patterns: Refactoring Test Code</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.1694771&type=2&subid=0" /> by Gerard Meszaros. This book is a guide to creating high-quality tests in any programming language, and its principles apply as well to frontend JavaScript as anywhere else. This book also provides a <em>language</em> for talking about test patterns you may have seen, which can help make conversations about organizing tests more productive.
   </p>
 </div>
 
-To get a preview of the book's test patterns and how they apply to JavaScript, check out a talk I gave at Assert(js) 2019, ["Old Solutions to New Testing Problems"][old-solutions].
+To get a preview of a few of the book's test patterns and how they apply to JavaScript, check out a talk I gave based on it at Assert(js) 2019, ["Old Solutions to New Testing Problems"][old-solutions].
 
 
 ### Refactoring
 
-Over the course of this book we did a little refactoring, but by and large the functionality we wrote was pretty straightforward and there wasn't much need for refactoring. Real applications are different: the code gets complex as they grow and change, and it's essential to refactor to avoid getting bogged down in cluttered code. Here are two options for learning about refactoring.
+Over the course of this book we did a little refactoring, but not much: by and large the functionality we wrote was pretty straightforward. Real applications are different: as they grow and change, the code gets complex and it's essential to refactor to avoid getting bogged down. Here are two resources for learning about refactoring.
 
 <div className="media">
   <a href="https://www.informit.com/store/refactoring-improving-the-design-of-existing-code-9780134757711" target="_blank"><img src="/images/refactoring.jpg" title="Refactoring book cover" className="media-image" /></a>
   <p className="media-description">
-    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.2754839&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780134757599"><em>Refactoring: Improving the Design of Existing Code</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.2754839&type=2&subid=0" /> by Martin Fowler is the original book that introduced the disciplined process of refactoring. It includes a comprehensive reference of different kinds of refactorings that will equip you with options to consider and clear steps to take. The second edition of the book was rewritten in JavaScript, so it's extremely accessible to frontend developers.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.2754839&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780134757599"><em>Refactoring: Improving the Design of Existing Code</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.2754839&type=2&subid=0" /> by Martin Fowler is the original book that introduced refactoring as a disciplined process. It includes a comprehensive reference for different kinds of refactorings, helping you understand when you would want to apply them and how to do so. The second edition of the book has all of its examples written in JavaScript, so it's very easy for frontend developers to pick up.
   </p>
 </div>
 
 <div className="media">
   <a href="https://www.sandimetz.com/99bottles" target="_blank"><img src="/images/99-bottles-of-oop.jpg" title="99 Bottles of OOP JavaScript edition book cover" className="media-image" /></a>
   <p className="media-description">
-    <a href="https://www.sandimetz.com/99bottles" target="_blank"><em>99 Bottles of OOP</em></a>, by Sandi Metz and Katrina Owen, walks through one extended refactoring step-by-step, giving you the experience of what refactoring over time looks like. It's available in JavaScript and several other programming languages. Don't let the "object-oriented programming" in the name fool you: even if you write your code in a functional-programming style, this book's principles of identifying code smells, listening to the code, and making small changes all apply just as well.
+    <a href="https://www.sandimetz.com/99bottles" target="_blank"><em>99 Bottles of OOP</em></a> is by Sandi Metz, Katrina Owen, and TJ Stankus. It walks through one extended refactoring process step-by-step, giving you the experience of what refactoring over time looks like. It's available in JavaScript and several other programming languages. Don't let the "object-oriented" in the name fool you: even if you write your code in a functional-programming style, you'll be able to apply this book's principles of identifying code smells, listening to the code, and making small changes.
   </p>
 </div>
 
 ### Agile Methodology
 
-This book has contained a brief introduction to agile development practices, but it hasn't gotten into the broader scope of doing agile as a team. There are many books on agile development; here are two I would recommend.
+This book has briefly introduced agile development practices, but there is much more to consider about the broader scope of doing agile as a team. There are many books on agile development; here are two I would recommend.
 
 <div className="media">
   <a href="https://www.informit.com/store/extreme-programming-explained-embrace-change-9780321278654" target="_blank"><img src="/images/extreme-programming-explained.jpg" title="Extreme Programming Explained book cover" className="media-image" /></a>
   <p className="media-description">
-    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.173981&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321278654"><em>Extreme Programming Explained: Embrace Change</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.173981&type=2&subid=0" /> is by Kent Beck, the creator of Extreme Programming, one of the early agile methodologies. Beck is also the creator of test-driven development. Unlike some other agile methodologies, Extreme Programming is not agnostic about technical practices. This is important because you can't deliver reliable software on a regular basis without technical processes to keep the software reliable and development speed consistent. *Extreme Programming Explained* also gets into the big-picture values behind Extreme Programming, such as the fact that humans have limited capacities and we should design software practices that acknowledge and support that, rather than deny it.
+    <a href="https://click.linksynergy.com/link?id=9YtTAZ2g23E&offerid=145238.173981&type=2&murl=https%3A%2F%2Fwww.informit.com%2Ftitle%2F9780321278654"><em>Extreme Programming Explained: Embrace Change</em></a><img border={0} width={1} height={1} src="https://ad.linksynergy.com/fs-bin/show?id=9YtTAZ2g23E&bids=145238.173981&type=2&subid=0" /> is by Kent Beck, the creator of Extreme Programming, one of the early agile methodologies. Beck is also the creator of test-driven development. Unlike some other agile methodologies, Extreme Programming is not agnostic about technical practices, but rather makes very specific recommendations. This is important because you can't deliver reliable software on a regular basis without applying technical practices that keep the software reliable and development speed consistent. <em>Extreme Programming Explained</em> also gets into the big-picture values behind Extreme Programming, such as the fact that humans have limited capacities and we should design software practices that acknowledge and support that, rather than deny it.
   </p>
 </div>
 
 <div className="media">
   <a href="https://pragprog.com/book/rjnsd/the-nature-of-software-development" target="_blank"><img src="/images/nature-of-software-development.jpg" title="The Nature of Software Development book cover" className="media-image" /></a>
   <p className="media-description">
-    <a href="https://pragprog.com/book/rjnsd/the-nature-of-software-development" target="_blank"><em>The Nature of Software Development</em></a>, by Ron Jeffries, is a recent attempt to restate the values and priorities of agile development in a methodology-agnostic way. Rather than teaching a complex approach, it draws out common principles.
+    <a href="https://pragprog.com/titles/rjnsd/the-nature-of-software-development/" target="_blank"><em>The Nature of Software Development</em></a>, by Ron Jeffries, is a recent attempt to restate the values and priorities of agile development in a methodology-agnostic way. Rather than teaching a complex approach, it lays out principles common to agile methods and makes a case for them.
   </p>
 </div>
 
 
 ## Epilogue
-We've reached the end of this book. I wrote it because I couldn't stop thinking about, talking about, and advocating for outside-in test-driven development and the other agile development practices we've looked at. And the reason I couldn't stop is that I've seen them solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
+I decided to write this book because I found that I couldn't stop thinking about, talking about, and advocating for outside-in TDD and other agile development practices. And the reason I couldn't stop is that I've seen them solve a problem that I haven't seen solved any other way: the problem of development slowdown over time due to code that is hard to work with.
 
 New languages and frameworks don't fix this problem, because you can make a mess in any language. More process doesn't fix the problem if the process doesn't account for change. Trying harder doesn't fix the problem, because we're human and have limited capacity.
 
-The reason agile development practices work is that they are based on a realistic view of the world in which software development occurs—a world in which change is inevitable and people have limited capacities. They're the best way I've found to deliver value to my employers and to have a smooth and calm development experience.
+The reason agile development practices work is because they're based on a realistic view of the world in which software development occurs. Alternate approaches to development envision a world where requirements can be fully understood and perfectly executed. That world is appealing to programmers and businesspeople alike, but its call is a siren song, and if you follow it you'll suffer for it. Instead, agile development recognizes that in the world we live in change is inevitable and people have limited capacities. It provides practices that work with the forces of this world, not merely to weather them, but to thrive because of them.
 
-And now you have a foundation in those practices and a taste of the results. I hope you'll try putting them to use in your development work. I think you'll like the results.
+These practices are the best way I've found to deliver value to my employers and to have a smooth and calm development experience. It's no exaggeration to say that they've had a life-changing effect on me. And now you have a foundation in these practices and a taste of the results as well. I hope you'll try putting them to use in your development work. I think you'll like the results.
 
 Thanks for reading, and keep in touch!
 
