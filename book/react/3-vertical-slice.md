@@ -5,11 +5,11 @@ import Chat from '../_chat.mdx';
 
 # 3 - Vertical Slice
 
-In this chapter, we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple inner red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
+In this chapter we'll build our first application feature. We'll follow the practice of outside-in test driven development: write a failing end-to-end test, watch it fail, then build out the functionality with unit tests using multiple inner red-green-refactor cycles. We'll also see the principle of "write the code you wish you had" in action.
 
-Our next story in Trello is "List Restaurants"; drag it to "In Progress".
+In the last chapter we made it through a number of stories in Trello, each involving application setup. Our next story in Trello is the first one that involves building an application feature: "List Restaurants". Drag it to "In Progress".
 
-We chose this story as our first story because it allows us to build out a **vertical slice** of our application. It touches all layers of our code: it has a user interface aspect (the list screen), a data layer aspect (where the restaurants are loaded and stored), and an API client aspect (the HTTP request to load the restaurants). It also minimizes other work: we aren't building authentication now, and we aren't handling restaurant loading edge cases yet in this story. The point of a vertical slice is to get something in all layers of your application built out, to ensure they all work together.
+We chose this story as our first feature story because it allows us to build out a **vertical slice** of our application. It touches all layers of our code: it has a user interface aspect (the list screen), a data layer aspect (where the restaurants are loaded and stored), and an API client aspect (the HTTP request to load the restaurants). It also minimizes other work: we aren't building authentication now, and we aren't handling restaurant loading edge cases yet in this story. The point of a vertical slice is to get something built out that touches all the layers of your application. This ensures that all the layers work together, and it provides a framework for adding in future features.
 
 ## Setup
 
@@ -77,7 +77,7 @@ $ git commit -m "Delete sample content"
 
 ## Reviewing the Backend
 
-For this tutorial, our backend web service has already been built. Let's take a look at it and see how we can load our restaurant data from it. It's accessible at <https://outside-in-dev-api.herokuapp.com>. Rather than using username-and-password based authentication as we might do for a real system, for simplicity you'll just set up an API key instead. This will allow you to access your own personal data on the server, so you can edit it without stepping on other users' data.
+For this tutorial, we'll use a backend web service that has already been built. Let's take a look at it and see how we can load our restaurant data from it. It's accessible at <https://outside-in-dev-api.herokuapp.com>. Rather than using username-and-password based authentication as we might do for a real system, for simplicity you'll just set up an API key instead. This will allow you to access your own personal data on the server, so you can edit it without stepping on other users' data.
 
 Go to <https://outside-in-dev-api.herokuapp.com> in a browser. Click the "Create API Key" button. You'll be given a new API key that is a random sequence of letters and numbers. Copy it and save it someplace safe—you won't be able to get back to it again.
 
