@@ -9,9 +9,13 @@ import Chat from '../_chat.mdx';
 Gaining experience in any area of programming requires learning a variety of technical terms—and the area of testing is no different. Testing terms present a particular challenge: they have a tendency to be given many different definitions, often contradictory ones. To begin talking about testing more in depth, then, we need to lay out the terms we'll be using. We'll look at the variety of ways the terms are used in the industry, and we'll define how they will be used in this book.
 
 ## Assertions and Expectations
-One of the most foundational concepts of automated testing is an assertion: a check that something that *should* be the case really *is* the case. Many test frameworks have one or more `assert…()` functions that do just that.
+One of the most foundational concepts of automated testing is an assertion: a check that something that *should* be the case really *is* the case. Many test frameworks have one or more `assert…()` functions that do just that:
 
-Jest has a slightly different terminology: it uses an `expect()` function. It allows you to chain function calls together to check a condition, resulting in test code that (arguably, to some people) reads more like natural language:
+```js
+assert.equal(sum, 42);
+```
+
+The test runner we'll be using for unit tests, Jest, has a slightly different terminology. Jest uses an `expect()` function, which allows you to chain function calls together to check a condition, resulting in test code that (arguably, to some people) reads more like natural language:
 
 ```js
 expect(sum).toEqual(42);
@@ -19,7 +23,7 @@ expect(sum).toEqual(42);
 
 Checks that use an `expect()` function are often referred to as "expectations". In this book you'll see the terms "assertion" and "expectation" used interchangeably. There's no practical difference, other than that it reads a bit more naturally in a sentence to say that "In this test we *assert* that X is true".
 
-Cypress offers the ability to make a variety of assertions with the `.should()` method. But our Cypress tests are so simple that we won't need explicit `.should()` calls to make an assertion. Instead, we will call a method to look for an element on the page that `.contains()` a certain string. If that string is found somewhere on the page, the test will pass; otherwise, it will fail. This is effectively an assertion even though the method isn't named "assert, "expect," or "should."
+The end-to-end testing tool we'll be using, Cypress, offers the ability to make a variety of assertions with the `.should()` method. But our Cypress tests are so simple that we won't end up needing any explicit `.should()` calls. Instead, we will call a method to look for an element on the page that `.contains()` a certain string. If that string is found on the page, the test will proceed, but if it isn't found, the test will fail. This is effectively an assertion even though the method isn't named "assert, "expect," or "should."
 
 ## Unit Tests
 The term "unit test" refers to an automated test of a portion, or unit, of your code. The differences in how people use the term "unit test" involve what they consider a "unit" to be.
