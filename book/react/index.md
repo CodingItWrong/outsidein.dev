@@ -17,45 +17,45 @@ If you'd like to download the completed project, you can do so from the [Opinion
 ## Tech Stack
 Here's the stack of libraries we'll use for our React application:
 
-### **Build Tooling: [Create React App][create-react-app]**
+### Build Tooling: Create React App
 
-Create React App allows running our application locally and building it for production. Depending on your production needs you might or might not want a more flexible build tool, like a custom Webpack config or Parcel. This tutorial doesn't get into build configuration, though, so Create React App will work fine, and should be familiar to many readers.
+[Create React App][create-react-app] allows running our application locally and building it for production. Depending on your production needs you might or might not want a more flexible build tool, like a custom Webpack config or Parcel. This tutorial doesn't get into build configuration, though, so Create React App will work fine, and should be familiar to many readers.
 
-### **State Management: [Redux][redux]**
+### State Management: [Redux][redux]
 
-Redux has been criticized for being fairly verbose and indirect. I wouldn't necessarily reach for it first on personal projects. But it's familiar to a lot of React developers, and provides structure and a way to visualize the data in your app. Also, it works well to demonstrate separating data layer concerns from the UI.
+[Redux][redux] has been criticized for being fairly verbose and indirect. I wouldn't necessarily reach for it first on personal projects. But it's familiar to a lot of React developers, and provides structure and a way to visualize the data in your app. Also, it works well to demonstrate separating data layer concerns from the UI.
 
-### **State Management Asynchrony: [Redux Thunk][redux-thunk]**
+### State Management Asynchrony: Redux Thunk
 
-Redux Thunk is the recommended way to add asynchrony to a Redux data layer for most projects. It works directly with JavaScript's built-in Promises, so this makes it a natural fit for most JavaScript developers.
+[Redux Thunk][redux-thunk] is the recommended way to add asynchrony to a Redux data layer for most projects. It works directly with JavaScript's built-in Promises, so this makes it a natural fit for most JavaScript developers.
 
-### **HTTP Client: [Axios][axios]**
+### HTTP Client: Axios
 
-Axios provides a nice simple interface for making web service requests. The browser's built-in `fetch()` function is close, but Axios removes some repetitive parts and improves on the API.
+[Axios][axios] provides a nice simple interface for making web service requests. The browser's built-in `fetch()` function is close, but Axios removes some repetitive parts and improves on the API.
 
-### **UI Components: [MUI][mui]**
+### UI Components: MUI
 
-Agile development is all about minimizing unnecessary work. For side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with MUI, a popular React implementation of Google's Material Design.
+Agile development is all about minimizing unnecessary work. For side projects, internally-facing systems, and MVPs, unless visual design is your passion you may be better off using an off-the-shelf component library. Plus, with a thorough test suite like the one we'll write, you can always refactor to a new visual design with confidence that you haven't broken any functionality. For this tutorial we'll go with [MUI][mui], a popular React implementation of Google's Material Design.
 
-### **Test Runner: [Jest]**
+### Test Runner: Jest
 
-Jest has one of the most popular JavaScript test runners for a number of years, especially in the React ecosystem. It includes everything you need out of the box for testing plain JavaScript code, including the ability to create test doubles.
+[Jest] has one of the most popular JavaScript test runners for a number of years, especially in the React ecosystem. It includes everything you need out of the box for testing plain JavaScript code, including the ability to create test doubles.
 
-### **Component Tests: [React Testing Library][react-testing-library]**
+### Component Tests: React Testing Library
 
-React Testing Library (RTL) will help us write component tests. It's designed around testing the interface instead of the implementation, which aligns with the testing philosophy we'll take in this book: that way our tests are less likely to break as the application changes.
+[React Testing Library][react-testing-library] (RTL) will help us write component tests. It's designed around testing the interface instead of the implementation, which aligns with the testing philosophy we'll take in this book: that way our tests are less likely to break as the application changes.
 
-### **End-to-End Tests: [Cypress][cypress]**
+### End-to-End Tests: Cypress
 
-Cypress is an end-to-end testing tool that was written with test-driven development in mind. Because it runs in the same browser context as your frontend app, it has insight into the event loop and network requests, reducing flake and allowing easy request stubbing. If you've had a bad experience with other browser automation tools in the past, Cypress will convince you that E2E tests *can* be great.
+[Cypress][cypress] is an end-to-end testing tool that was written with test-driven development in mind. Because it runs in the same browser context as your frontend app, it has insight into the event loop and network requests, reducing flake and allowing easy request stubbing. If you've had a bad experience with other browser automation tools in the past, Cypress will convince you that E2E tests *can* be great.
 
-### **Continuous Integration: [GitHub Actions][github-actions]**
+### Continuous Integration: GitHub Actions
 
-GitHub is extremely popular for source control, and it has a CI service built in as well. There are other great CI options too, but the GitHub integration means that all we need to do is add an Actions config file and we're set to run our tests on every pull request.
+GitHub is extremely popular for source control, and it has a CI service built in as well: [GitHub Actions][github-actions]. There are other great CI options too, but the GitHub integration means that all we need to do is add an Actions config file and we're set to run our tests on every pull request.
 
-### **Deployment: [Netlify][netlify]**
+### Deployment: Netlify
 
-For deploying frontend applications there's no service simpler than Netlify. Just choose your repo and Netlify will automatically configure your build process, build your app, and deploy it. We'll only use the most basic Netlify features in this tutorial, but it also has features you'll need to take your app to production, such as adding a custom domain with an automatically-provisioned SSL certificate.
+For deploying frontend applications there's no service simpler than [Netlify]. Just choose your repo and Netlify will automatically configure your build process, build your app, and deploy it. We'll only use the most basic Netlify features in this tutorial, but it also has features you'll need to take your app to production, such as adding a custom domain with an automatically-provisioned SSL certificate.
 
 ## What's Next
 
