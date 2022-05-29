@@ -7,7 +7,7 @@ import Chat from './_chat.mdx';
 
 # Exercise
 
-To see outside-in test-driven development in action, let's walk through creating a few features in a simple frontend application. We'll build an app for rating dishes at restaurants, called Opinion Ate. We'll get to experience all parts of the outside-in process, but note that we'll only get the app started and won't get anywhere near finishing it.
+To see outside-in test-driven development in action, let's walk through creating a few features in a simple frontend application. We'll build an app for rating dishes at restaurants, called Opinion Ate. We'll get to experience all parts of the outside-in TDD process, but note that we'll only get the app started and won't get anywhere near finishing it.
 
 If you aren't used to test-driven development, the process can feel slow at first, and it can be tempting to give up. Stick with it through this guide! The value of TDD usually doesn't click until you've gotten a bit of practice. Anything new you learn is going to be slower while you're learning it. Once you've gotten some practice with TDD it'll be a tool in your toolbelt, and then you'll be in a better position to decide whether and how often to use it.
 
