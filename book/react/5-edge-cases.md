@@ -215,9 +215,9 @@ it('sets a loading flag', () => {
 
 Here's what's going on:
 
-- We define a stubbed API with a `loadRestaurants` method that returns a Promise. The function passed to the promise never calls its arguments, so the Promise never resolves or rejects. This is the best way to create the scenario we want for this test, because we want to test what happens *before* the Promise resolves.
+- We define a stubbed API with a `loadRestaurants` method that returns a promise. The function passed to the promise never calls its arguments, so the promise never resolves or rejects. This is the best way to create the scenario we want for this test, because we want to test what happens *before* the promise resolves.
 - We set up a store with the `restaurantsReducer` and our stubbed API.
-- We dispatch the `loadRestaurants` async action. This time we don't want to `await` it because we want to check the state of the store immediately upon the action returning, *before* it resolves. (And our Promise will ensure it never resolves, anyway.)
+- We dispatch the `loadRestaurants` async action. This time we don't want to `await` it because we want to check the state of the store immediately upon the action returning, *before* it resolves. (And our promise will ensure it never resolves, anyway.)
 - We check the store's `loading` flag to confirm that it's `true` after we initiate a load.
 
 Our test fails, as we expect:
@@ -338,7 +338,7 @@ Finally, we move the code that sets up the `api`, the `store`, and dispatches th
 
 A `beforeEach` block will automatically run before every test in the surrounding `describe`. As an alternative to the `beforeEach` block, another option would have been to create a helper function that we explicitly call inside each test, as we did with `renderComponent` in our component test. There are pros and cons of each approach. React Testing Library discourages rendering a component in a `beforeEach` block, so we used a helper function for that case. But our store test is just plain JavaScript and has no such discouragement. One benefit of a `beforeEach` block is that you don't have to remember to call the same helper function in each test. Another benefit is that the block communicates "this is the situation that we are testing across all the tests in this group." Feel free to try both helper methods and `beforeEach` blocks in your non-component unit tests and decide when you prefer each.
 
-Now that our setup code has been moved to a `beforeEach` block, we can simplify it a bit. Since the `beforeEach` function only has one Promise it `awaits` and that Promise is returned by the final statement, we can just return the Promise instead of `await`ing it. If we do, the function no longer needs to be an `async` function:
+Now that our setup code has been moved to a `beforeEach` block, we can simplify it a bit. Since the `beforeEach` function only has one promise it `awaits` and that promise is returned by the final statement, we can just return the promise instead of `await`ing it. If we do, the function no longer needs to be an `async` function:
 
 ```diff
 -beforeEach(async () => {

@@ -27,7 +27,7 @@ Here's the stack of libraries we'll use for our React application:
 
 ### State Management Asynchrony: Redux Thunk
 
-[Redux Thunk][redux-thunk] is the recommended way to add asynchrony to a Redux data layer for most projects. It works directly with JavaScript's built-in Promises, so this makes it a natural fit for most JavaScript developers.
+[Redux Thunk][redux-thunk] is the recommended way to add asynchrony to a Redux data layer for most projects. It works directly with JavaScript's built-in promises, so this makes it a natural fit for most JavaScript developers.
 
 ### HTTP Client: Axios
 

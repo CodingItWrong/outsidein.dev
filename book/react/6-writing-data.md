@@ -1040,7 +1040,7 @@ describe('when the store action rejects', () => {
 });
 ```
 
-This is almost the same as the successful submission case; the only difference is that the setup we call the `mockRejectedValue()` method of the Jest mock function `createRestaurant`. This means that when this function is called, it will return a Promise that rejects. In our case we don't actually care about what error it rejects with, so we don't have to pass an argument to `mockRejectedValue()`.
+This is almost the same as the successful submission case; the only difference is that the setup we call the `mockRejectedValue()` method of the Jest mock function `createRestaurant`. This means that when this function is called, it will return a promise that rejects. In our case we don't actually care about what error it rejects with, so we don't have to pass an argument to `mockRejectedValue()`.
 
 Save and, in addition to an assertion failure, we also get an additional error:
 
