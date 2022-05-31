@@ -492,11 +492,9 @@ describe('when loading fails', () => {
 });
 ```
 
-We decide we want to indicate the error state with a flag named `loadError`, so we set it up as a prop set to `true`.
-We check for a new error message on the page. Our test fails because the element is not found.
+We decide we want to indicate the error state with a flag named `loadError`, so we set it up as a prop set to `true`. We check for a new error message on the page. Our test fails because the element is not found.
 
-Fix it the simplest way possible by hard-coding the error message to show.
-MUI has an `Alert` component that will work well. Add it:
+Fix it the simplest way possible by hard-coding the error message to show. MUI has an `Alert` component that will work well. Add it:
 
 ```diff
  import {connect} from 'react-redux';
@@ -800,8 +798,7 @@ it('clears the error flag', () => {
 });
 ```
 
-Save the file and the new test should fail.
-Fix it by updating the `loadError` reducer to return `false` upon the `START_LOADING` action:
+Save the file and the new test should fail. Fix it by updating the `loadError` reducer to return `false` upon the `START_LOADING` action:
 
 ```diff
  function loadError(state = false, action) {

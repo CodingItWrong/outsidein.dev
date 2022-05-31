@@ -144,8 +144,7 @@ Finally, we confirm that the page contains both restaurant names. This will ensu
 
 After we've created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be "red") at first because we haven't yet implemented the functionality.
 
-To run our test, run the app with `yarn start` and leave it running, then, in another terminal, run `yarn cypress`.
-After a few seconds Cypress should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
+To run our test, run the app with `yarn start` and leave it running, then, in another terminal, run `yarn cypress`. After a few seconds Cypress should open. In Cypress, click `listing-restaurants.spec.js`. Chrome should open, and the test should run. It is able to visit the root of our app, but when it attempts to find "Sushi Place" on the page, it fails.
 
 ![Cypress test failing](./images/2-1-cypress-red.png)
 
@@ -234,8 +233,7 @@ But now that we have `RestaurantList`, we finally have a place where our *logic*
 
 Instead of adding this logic directly, let's **step down from the "outside" level of end-to-end tests to an "inside" component test.** This allows us to more precisely specify the behavior of each piece. This unit test will also be helpful in a future story as we add more edge cases to this component. If instead we tried to end-to-end testing every edge case, the tests would be slower to run and harder to understand.
 
-Let's get started on that unit test. In `src/components`, create a file named `RestaurantList.spec.js`.
-The first bit of functionality we need is to load the restaurants, so that's what we'll test first. We'll start with the structure of the test suite:
+Let's get started on that unit test. In `src/components`, create a file named `RestaurantList.spec.js`. The first bit of functionality we need is to load the restaurants, so that's what we'll test first. We'll start with the structure of the test suite:
 
 ```js
 describe('RestaurantList', () => {
@@ -745,8 +743,7 @@ As we said earlier, our app will consist of three layers:
 - The Redux store
 - The API client
 
-So we won't make an HTTP request directly in our Redux store.
-Instead, we'll delegate to an API client object that we pass in. Let's design the interface of that object now:
+So we won't make an HTTP request directly in our Redux store. Instead, we'll delegate to an API client object that we pass in. Let's design the interface of that object now:
 
 ```diff
  it('stores the restaurants', async () => {
@@ -994,9 +991,7 @@ Let's see what would happen if we *did* try to write a unit test for `api`. We w
 
 Instead, it's better to test your wrapper in integration with the third-party library. In our case, our E2E tests serve this function. Because Cypress stubs out the actual HTTP request, our E2E test will only pass if `api` and Axios work together correctly to send the right request and provide the response data to the rest of the app. No more testing of the `api` is needed than that.
 
-Now let's see our app working against the real backend.
-Go to your React app at `http://localhost:3000`.
-You should see the default "Pasta Place" and "Salad Place" records loaded from the API.
+Now let's see our app working against the real backend. Go to your React app at `http://localhost:3000`. You should see the default "Pasta Place" and "Salad Place" records loaded from the API.
 
 ![App with real API](./images/2-7-app-with-real-api.png)
 
