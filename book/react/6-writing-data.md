@@ -34,13 +34,13 @@ describe('Creating a Restaurant', () => {
 
     cy.intercept(
       'GET',
-      'https://outside-in-dev-api.herokuapp.com/*/restaurants',
+      'https://api.outsidein.dev/*/restaurants',
       [],
     );
 
     cy.intercept(
       'POST',
-      'https://outside-in-dev-api.herokuapp.com/*/restaurants',
+      'https://api.outsidein.dev/*/restaurants',
       {
         id: restaurantId,
         name: restaurantName,

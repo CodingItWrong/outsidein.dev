@@ -77,23 +77,21 @@ $ git commit -m "Delete sample content"
 
 ## Reviewing the Backend
 
-This exercise will focus exclusively on our frontend codebase, so we won't be building the corresponding backend; we'll use one that has already been built. Let's take a look at that backend and see how we can load our restaurant data from it. It's accessible at <https://outside-in-dev-api.herokuapp.com>. Rather than using username-and-password authentication as we might do for a real system, for simplicity we'll just use an API key instead. This will allow you to access your own personal data on the server, so you can edit it without seeing or modifying others' data.
+This exercise will focus exclusively on our frontend codebase, so we won't be building the corresponding backend; we'll use one that has already been built. Let's take a look at that backend and see how we can load our restaurant data from it. It's accessible at <https://api.outsidein.dev>. Rather than using username-and-password authentication as we might do for a real system, for simplicity we'll just use an API key instead. This will allow you to access your own personal data on the server, so you can edit it without seeing or modifying others' data.
 
-Go to <https://outside-in-dev-api.herokuapp.com> in a browser. Click the "Create API Key" button. You'll be given a new API key that is a random sequence of letters and numbers. Copy it and save it someplace safe—you won't be able to get back to it again.
+Go to <https://api.outsidein.dev> in a browser. Click the "Create API Key" button. You'll be given a new API key that is a random sequence of letters and numbers. Copy it and save it someplace safe—you won't be able to get back to it again.
 
-Next, go to `https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants` in a browser, filling in your API key in place of `YOUR-API-KEY`. You should see the following JSON data, including a few default restaurants that were created when your API key was created. It may be formatted differently depending on your browser and extensions, and of course the dates will differ:
+Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, filling in your API key in place of `YOUR-API-KEY`. You should see the following JSON data, including a few default restaurants that were created when your API key was created. It may be formatted differently depending on your browser and extensions, and of course the dates will differ:
 
 ```json
 [
   {
     "id": 1,
-    "name": "Pasta Place",
-    "created_at": "2020-03-30T23:54:52.000Z"
+    "name": "Pasta Place"
   },
   {
     "id": 2,
-    "name": "Salad Place",
-    "created_at": "2020-03-30T23:54:52.000Z"
+    "name": "Salad Place"
   }
 ]
 ```
@@ -116,13 +114,9 @@ describe('Listing Restaurants', () => {
     const sushiPlace = 'Sushi Place';
     const pizzaPlace = 'Pizza Place';
 
-    cy.intercept(
-      'GET',
-      'https://outside-in-dev-api.herokuapp.com/*/restaurants',
-      [
-        {id: 1, name: sushiPlace},
-        {id: 2, name: pizzaPlace},
-      ],
+    cy.intercept('GET', 'https://api.outsidein.dev/*/restaurants', [
+      {id: 1, name: sushiPlace},
+      {id: 2, name: pizzaPlace},
     );
 
     cy.visit('/');
@@ -134,7 +128,7 @@ describe('Listing Restaurants', () => {
 
 First, we create variables with a few restaurant names, because we'll use them several times.
 
-Next, we call `cy.intercept()` to stub a backend request to a URL—in this case, the `https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants` URL we just tested out. (Note that we don't hard-code your API key here; we use a `*` to match any value in the API key spot of the path.) When the app attempts to send a `GET` request to a matching URL, Cypress will intercept that request and return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call. Note that we don't need to include the `created_at` field, because our app won't be using them.
+Next, we call `cy.intercept()` to stub a backend request to a URL—in this case, the `https://api.outsidein.dev/YOUR-API-KEY/restaurants` URL we just tested out. (Note that we don't hard-code your API key here; we use a `*` to match any value in the API key spot of the path.) When the app attempts to send a `GET` request to a matching URL, Cypress will intercept that request and return the specified response. We pass the method an array of two restaurant objects. Cypress will convert that array of objects into a JSON string and return that from the stubbed network call.
 
 Why stub our backend request? This allows us to test our frontend application in isolation from the backend. Doing so means that even if the backend is slow, unreachable, or its data has changed, our frontend E2E test will continue to pass, confirming that our frontend app behaves as expected. In particular, isolating our frontend from our backend is important to prevent flaky test failures on CI that would prevent merging our pull requests.
 
@@ -956,7 +950,7 @@ Next, use Axios to make an HTTP request to the correct endpoint:
 +import axios from 'axios';
 +
 +const client = axios.create({
-+  baseURL: 'https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY',
++  baseURL: 'https://api.outsidein.dev/YOUR-API-KEY',
 +});
 +
  const api = {

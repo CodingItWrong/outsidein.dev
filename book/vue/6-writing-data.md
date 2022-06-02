@@ -31,15 +31,13 @@ describe('Creating a Restaurant', () => {
 
     cy.route({
       method: 'GET',
-      url:
-        'https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants',
+      url: 'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
       response: [],
     });
 
     cy.route({
       method: 'POST',
-      url:
-        'https://outside-in-dev-api.herokuapp.com/YOUR-API-KEY/restaurants',
+      url: 'https://api.outsidein.dev/YOUR-API-KEY/restaurants',
       response: {
         id: restaurantId,
         name: restaurantName,
