@@ -15,7 +15,7 @@ Agile development really sank in for me once I started doing it alongside other 
 
 Here are some suggestions for how to find others to do agile development with:
 
-- An easy first step is to join the [#outside-in-dev channel](https://discord.gg/k8e8ZSuQr6) on my Discord server. You can chat about what we've learned together and how we're applying it.
+- An easy first step is to join [the book's online chat](https://link.outsidein.dev). You can discuss about what we've learned together and how we're applying it.
 - Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software crafters" or "software craftsmanship" are common terms for such meetups.
 - Attend a workshop on TDD or refactoring. One instructor I would recommend is [Sandi Metz](https://www.sandimetz.com/courses), who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
 - Share this book with someone you think would benefit from it, and talk together about your experiences with it.

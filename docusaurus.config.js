@@ -64,7 +64,7 @@ const config = {
           },
           {
             label: 'Chat',
-            href: 'https://discord.gg/k8e8ZSuQr6',
+            href: 'https://link.outsidein.dev/chat',
             position: 'right',
           },
         ],
@@ -86,7 +86,7 @@ const config = {
             items: [
               {
                 label: 'Chat',
-                href: 'https://discord.gg/k8e8ZSuQr6',
+                href: 'https://link.outsidein.dev/chat',
                 position: 'right',
               },
             ],
