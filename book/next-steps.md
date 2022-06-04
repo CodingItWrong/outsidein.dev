@@ -5,11 +5,9 @@ sidebar_position: 7
 
 # Next Steps
 
-You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I wrote this book because I hope the principles that have helped me will help other developers. If you've benefited from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
+You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I wrote this book because I hope the principles that have helped me will help other developers. If you've benefited from it and/or have feedback, I would love to hear from you—please [get in touch](/connect)!
 
 If you choose to continue on in outside-in TDD, then this book will be only the beginning of your journey. Here are some suggestions for ways to take your learning further.
-
-*Some of the links to book below are affiliate links: if you purchase through them I make a little money without any cost to you. If you’d rather not use these links, feel free to search for these books at your preferred bookseller. I recommend InformIT and Pragmatic Programmers for DRM-free ebooks.*
 
 ## A Community of Practice
 
@@ -17,14 +15,13 @@ Agile development really sank in for me once I started doing it alongside other 
 
 Here are some suggestions for how to find others to do agile development with:
 
-- An easy first step is to chat on the [#outside-in-dev channel](https://discord.gg/k8e8ZSuQr6) on my Discord server. You can join there to discuss what we've learned together and how we're applying it.
+- An easy first step is to join the [#outside-in-dev channel](https://discord.gg/k8e8ZSuQr6) on my Discord server. You can chat about what we've learned together and how we're applying it.
 - Find a local [meetup](https://www.meetup.com/) focused on agile development practices. "Software crafters" or "software craftsmanship" are common terms for such meetups.
 - Attend a workshop on TDD or refactoring. One instructor I would recommend is [Sandi Metz](https://www.sandimetz.com/courses), who is so amazing that it is *absolutely* worth learning a little Ruby programming to take her course.
+- Share this book with someone you think would benefit from it, and talk together about your experiences with it.
+- Start a book club with your coworkers to read through this book and work through the exercise together.
 - The next time you are looking for a new job, look for one that prioritizes agile development practices. Just hearing them say "we do agile" or "we do testing" isn't enough: ask them what their agile process is like, and see if they have a thorough understanding of small stories, TDD, refactoring, and evolutionary design.
 - Share this book with someone you think would benefit from it, and talk together about your experiences with it.
-- Sign up to receive email updates from OutsideIn.dev and other agile and TDD projects from the author, Josh Justice:
-
-<iframe src="/mailchimp.html" width="100%" height="70" />
 
 ## Testing Tool Documentation
 
@@ -38,6 +35,8 @@ In the same way that an experienced developer will learn their programming langu
 ## Books
 
 If you get the opportunity to work on a team with someone who has helped push agile practice forward, take it. Unfortunately, we won't all get the opportunity to do so, but many of them have recorded insights in books to share them with a broader audience. Here are some recommendations.
+
+*Some of the links below are affiliate links: if you purchase through them I make a little money without any cost to you. If you’d rather not use these links, feel free to search for these books at your preferred bookseller. I recommend InformIT and Pragmatic Programmers for DRM-free ebooks.*
 
 ### Outside-In TDD
 

@@ -58,8 +58,8 @@ const config = {
             label: 'Book',
           },
           {
-            label: 'Contact',
-            href: '/contact',
+            label: 'Connect',
+            href: '/connect',
             position: 'right',
           },
           {
@@ -95,8 +95,8 @@ const config = {
             title: 'More',
             items: [
               {
-                label: 'Contact',
-                to: '/contact',
+                label: 'Connect',
+                to: '/connect',
               },
             ],
           },
