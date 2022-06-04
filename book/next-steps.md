@@ -5,7 +5,7 @@ sidebar_position: 7
 
 # Next Steps
 
-You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I wrote this book because I hope the principles that have helped me will help other developers. If you've benefitted from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
+You've finished this book and gotten a taste of outside-in test-driven development on the frontend. I wrote this book because I hope the principles that have helped me will help other developers. If you've benefited from it and/or have feedback, I would love to hear from you—please [get in touch](/contact)!
 
 If you choose to continue on in outside-in TDD, then this book will be only the beginning of your journey. Here are some suggestions for ways to take your learning further.
 

@@ -60,7 +60,7 @@ Node's "LTS" (long-term support) version is recommended for most users. As of th
 ### Yarn
 [Yarn 1.x](https://classic.yarnpkg.com/en/docs/install) is a client for `npm`, the Node package manager service. `npm` has its own client, but I find Yarn to be faster, more predictable, and more reliable. I would recommend Yarn for any JavaScript project.
 
-The lastest major version of Yarn is 2.x. It is a significant architectural change, and many Node ecosystem tools don't yet support it. This exercise uses the previous major version instead, Yarn 1.x. If you install Yarn via the instructions linked above, Yarn 1.x is what you'll have available. The latest version as of time of writing is 1.22.18. You can run `yarn -v` to check what version you have installed.
+The latest major version of Yarn is 2.x. It is a significant architectural change, and many Node ecosystem tools don't yet support it. This exercise uses the previous major version instead, Yarn 1.x. If you install Yarn via the instructions linked above, Yarn 1.x is what you'll have available. The latest version as of time of writing is 1.22.18. You can run `yarn -v` to check what version you have installed.
 
 If you'd prefer to use `npm`, you can still follow this exercise, you'll just need to replace any `yarn` commands with the equivalent `npm` commands.
 

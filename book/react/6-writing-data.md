@@ -157,7 +157,7 @@ So now we need to send the request is our backend service. This is missing logic
 
 ### Unit Testing the Component
 
-Starting from the outside as usual, we'll start with the `NewRestaurantForm` component. We want to reproduce the E2E tests's failure at the unit level. We should specify that when you click the send button a function prop is called—a function which in production will be wired to an action in our store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that, too.
+Starting from the outside as usual, we'll start with the `NewRestaurantForm` component. We want to reproduce the E2E test's failure at the unit level. We should specify that when you click the send button a function prop is called—a function which in production will be wired to an action in our store. Now, the E2E test failure didn't tell us that we need to send along the restaurant name entered in the form, but we can go ahead and specify that, too.
 
 Create the file `src/components/NewRestaurantForm.spec.js` and start out by setting up the component and a mock function in a `renderComponent` helper function:
 

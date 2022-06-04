@@ -81,7 +81,7 @@ This exercise will focus exclusively on our frontend codebase, so we won't be bu
 
 Go to <https://api.outsidein.dev> in a browser. Click the "Create API Key" button. You'll be given a new API key that is a random sequence of letters and numbers. Copy it and save it someplace safe—you won't be able to get back to it again.
 
-Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, filling in your API key in place of `YOUR-API-KEY`. You should see the following JSON data, including a few default restaurants that were created when your API key was created. It may be formatted differently depending on your browser and extensions, and of course the dates will differ:
+Next, go to `https://api.outsidein.dev/YOUR-API-KEY/restaurants` in a browser, filling in your API key in place of `YOUR-API-KEY`. You should see the following JSON data, including a few default restaurants that were created when your API key was created. It may be formatted differently depending on your browser and extensions, and the IDs will differ:
 
 ```json
 [
@@ -134,7 +134,7 @@ Why stub our backend request? This allows us to test our frontend application in
 
 Next, we call `cy.visit()` to load our application in the browser. In the previous chapter we configured the `baseUrl` to `http://localhost:3000`, so we don't need to pass in the full URL, just the path on the server. We pass a path of `/` to load the root of our app.
 
-Finally, we confirm that the page contains both restaurant names. This will ensurre that the app successfully retrieved them from the backend and displayed them on the page.
+Finally, we confirm that the page contains both restaurant names. This will ensure that the app successfully retrieved them from the backend and displayed them on the page.
 
 After we've created our test, the next step in TDD is to **run the test and watch it fail.** This test will fail (be "red") at first because we haven't yet implemented the functionality.
 
