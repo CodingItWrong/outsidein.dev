@@ -16,11 +16,18 @@ function HomepageHeader() {
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
           <Link
-            className="button button--secondary button--lg"
+            className="button button--secondary button--lg margin-horiz--md"
             to="/about-this-book"
           >
-            Get Started
+            Read Online
           </Link>
+
+          <a
+            className="button button--secondary button--lg margin-horiz--md"
+            href="https://leanpub.com/outside-in-react-development"
+          >
+            Buy Ebook
+          </a>
         </div>
       </div>
     </header>
