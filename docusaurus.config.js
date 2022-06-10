@@ -47,7 +47,7 @@ const config = {
       navbar: {
         title: 'Outside-In Frontend Development',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Outside-In Frontend Development',
           src: 'logo-36@3x.gif',
         },
         items: [
