@@ -6,6 +6,12 @@ import Chat from '../_chat.mdx';
 
 # Outside-In React Development
 
+:::tip
+
+An updated version of this React exercise is [available as an ebook!](https://leanpub.com/outside-in-react-development) It's updated for Cypress 10 and includes more screenshots and two advanced chapters.
+
+:::
+
 This is the beginning of a six-chapter exercise building a React application using outside-in test-driven development (TDD) and other agile development practices.
 
 If you've been linked directly to this part of the book, and you'd like to learn about the concepts behind outside-in TDD and agile development, you can go to [About This Book](../about-this-book.md), start from there, and continue with this exercise when you get back to it. Or, you can jump right in to the exercise, then go back to learn more about the concepts when you're done.
