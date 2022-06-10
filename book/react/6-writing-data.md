@@ -1374,6 +1374,13 @@ If you have any uncommitted changes, commit them to git. Push up your branch to 
 
 ## What's Next
 
-With this we've completed our second feature. We've also reached the end of this exercise! In the next chapter we'll look back at what we did over the course of the exercise and the benefits the outside-in test-driven development process gave us.
+With this we've completed our second feature. We've also reached the end of this exercise!
 
-<Chat />
+
+:::tip Two More Chapters!
+
+There are two additional chapters in [the ebook version of this book.](https://leanpub.com/outside-in-react-development) See how to test the API client layer directly with integration tests. Dig into the challenges of asynchronous testing in React Testing Library and how to address them.
+
+:::
+
+In the next chapter we'll look back at what we did over the course of the exercise and the benefits the outside-in test-driven development process gave us.
