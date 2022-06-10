@@ -37,7 +37,15 @@ The first part, **Concepts**, lays out big-picture ideas related to outside-in T
 - *Why TDD?* goes into detail about the agile development practice that this book focuses on: test-driven development. It will explain the surprising benefits of writing tests before you write production code, including regression safety, test robustness, and speed of development.
 - *Outside-In TDD* describes the variant of TDD this book will follow, known as outside-in TDD. It explains how, in this approach, end-to-end tests and unit tests work together to confirm both the external and internal quality of your software.
 
-The second part, **Exercise**, walks you through putting outside-in TDD into practice by building the first few features of a real application. There are two versions of this part: one using React and the other using Vue.js. This part consists of the following chapters:
+The second part, **Exercise**, walks you through putting outside-in TDD into practice by building the first few features of a real application. There are two versions of this part: one using React and the other using Vue.js.
+
+:::tip
+
+An updated version of the React exercise is [available as an ebook!](https://leanpub.com/outside-in-react-development) It's updated for Cypress 10 and includes more screenshots and two advanced chapters.
+
+:::
+
+This part consists of the following chapters:
 
 - *Exercise Intro* describes the exercise in general and presents the option of choosing either the React or Vue version.
 - *About This Exercise* introduces the tech stack you'll be using for your chosen version of the exercise.
