@@ -81,8 +81,12 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Book',
+                label: 'Read Online',
                 to: '/about-this-book',
+              },
+              {
+                label: 'Buy Ebook',
+                href: 'https://leanpub.com/outside-in-react-development',
               },
             ],
           },
