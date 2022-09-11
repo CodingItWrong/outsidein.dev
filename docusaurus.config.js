@@ -48,7 +48,7 @@ const config = {
         title: 'Outside-In Frontend Development',
         logo: {
           alt: 'Outside-In Frontend Development',
-          src: 'logo-36@3x.gif',
+          src: 'logo-36@3x.png',
         },
         items: [
           {
