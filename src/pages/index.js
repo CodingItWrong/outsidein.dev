@@ -25,9 +25,9 @@ function HomepageHeader() {
 
           <a
             className="button button--secondary button--lg margin-horiz--md"
-            href="https://leanpub.com/outside-in-react-development"
+            href="/book"
           >
-            Buy Ebook
+            Buy Ebook or Paperback
           </a>
         </div>
       </div>

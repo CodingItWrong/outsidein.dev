@@ -58,8 +58,8 @@ const config = {
             label: 'Read Online',
           },
           {
-            label: 'Buy Ebook',
-            href: 'https://leanpub.com/outside-in-react-development',
+            label: 'Buy Ebook or Paperback',
+            href: '/book',
             position: 'left',
           },
           {
@@ -85,8 +85,8 @@ const config = {
                 to: '/about-this-book',
               },
               {
-                label: 'Buy Ebook',
-                href: 'https://leanpub.com/outside-in-react-development',
+                label: 'Buy Ebook or Paperback',
+                href: '/book',
               },
             ],
           },
