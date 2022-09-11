@@ -5,7 +5,7 @@
  */
 
 /* You can override the default Infima variables here. */
-/* Generator:  ;https://docusaurus.io/docs/styling-layout#styling-your-site-with-infima */
+/* Generator:  https://docusaurus.io/docs/styling-layout#styling-your-site-with-infima */
 :root {
   --ifm-color-primary: #0d86dd;
   --ifm-color-primary-dark: #0c79c7;
@@ -19,13 +19,13 @@
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
+  --ifm-color-primary: #6cbdc1;
+  --ifm-color-primary-dark: #57b3b8;
+  --ifm-color-primary-darker: #4cafb4;
+  --ifm-color-primary-darkest: #3f9094;
+  --ifm-color-primary-light: #81c7ca;
+  --ifm-color-primary-lighter: #8ccbce;
+  --ifm-color-primary-lightest: #acdadc;
 }
 
 .docusaurus-highlight-code-line {
@@ -79,4 +79,13 @@ img.author {
 
 .hero img {
   max-height:  280px;
+}
+
+.hero__title {
+  color: white;
+}
+
+
+.hero__subtitle {
+  color: white;
 }
