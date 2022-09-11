@@ -17,14 +17,14 @@ function HomepageHeader() {
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
           <Link
-            className="button button--secondary button--lg margin-horiz--md"
+            className="button button--secondary button--lg margin-horiz--md margin-vert--md"
             to="/about-this-book"
           >
             Read Online
           </Link>
 
           <a
-            className="button button--secondary button--lg margin-horiz--md"
+            className="button button--secondary button--lg margin-horiz--md margin-vert--md"
             href="/book"
           >
             Buy Ebook or Paperback
