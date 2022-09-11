@@ -22,14 +22,10 @@ function HomepageHeader() {
           >
             Buy Ebook or Paperback
           </a>
-
-          <Link
-            className="button button--secondary button--lg margin-horiz--md margin-vert--md"
-            to="/about-this-book"
-          >
-            Read Online
-          </Link>
         </div>
+        <Link to="/about-this-book" className={styles.heroLink}>
+          Or, read an older version online
+        </Link>
       </div>
     </header>
   );

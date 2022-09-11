@@ -52,12 +52,6 @@ const config = {
         },
         items: [
           {
-            type: 'doc',
-            docId: 'about-this-book',
-            position: 'left',
-            label: 'Read Online',
-          },
-          {
             label: 'Buy Ebook or Paperback',
             href: '/book',
             position: 'left',
@@ -81,12 +75,12 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Read Online',
-                to: '/about-this-book',
-              },
-              {
                 label: 'Buy Ebook or Paperback',
                 href: '/book',
+              },
+              {
+                label: 'Read Online',
+                to: '/about-this-book',
               },
             ],
           },
