@@ -1,0 +1,40 @@
+.overview--row {
+  display: flex;
+  flex-direction: column;
+}
+
+.overview--column-image {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.overview--column-text {
+}
+
+.cover-image {
+  margin-right: 20px;
+}
+
+.buy-button-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.buy-button-list li {
+  margin-top: 10px;
+}
+
+.buy-button-list li a {
+  display: block;
+}
+
+@media only screen and (min-width: 650px) {
+  .overview--row {
+    flex-direction: row;
+    margin-bottom: 10px;
+  }
+
+  .buy-button-list li a {
+    display: inline-block;
+  }
+}
