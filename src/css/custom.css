@@ -83,6 +83,7 @@ img.author {
 
 .hero__title {
   color: white;
+  overflow-wrap: normal;
 }
 
 
