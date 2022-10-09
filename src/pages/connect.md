@@ -19,7 +19,7 @@ Here are the current ways you can connect:
 - Join [the book's online chat](https://link.outsidein.dev/chat)
 - Follow me on social media:
   - [LinkedIn](https://www.linkedin.com/in/jjustice/)
-  - Mastodon, an open-source social network, at [@codingitwrong@mastodon.technology](https://mastodon.technology/@codingitwrong)
+  - Mastodon, an open-source social network, at [@CodingItWrong@tdd.social](https://tdd.social/@CodingItWrong)
 - Read my blog at [CodingItWrong.com](https://codingitwrong.com)
 - Email me at josh[at]outsidein[dot]dev
 
