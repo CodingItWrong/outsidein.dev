@@ -101,6 +101,11 @@ const config = {
                 label: 'Connect',
                 to: '/connect',
               },
+              {
+                label: 'Mastodon',
+                href: 'https://tdd.social/@codingitwrong',
+                rel: 'me',
+              },
             ],
           },
         ],
