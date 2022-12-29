@@ -109,7 +109,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © 2020-${new Date().getFullYear()} Josh Justice. Down arrow icon by Mega Agustina from the Noun Project.`,
+        copyright: `Copyright © 2020-${new Date().getFullYear()} Josh Justice.`,
       },
       prism: {
         theme: lightCodeTheme,
