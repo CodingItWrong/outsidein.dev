@@ -18,7 +18,7 @@ Here are the current ways you can connect:
 
 - Follow me on social media:
   - [LinkedIn](https://www.linkedin.com/in/jjustice/)
-  - Mastodon, an open-source social network, at [@CodingItWrong@tdd.social](https://tdd.social/@CodingItWrong)
+  - Mastodon at [@CodingItWrong@tdd.social](https://tdd.social/@CodingItWrong)
 - Read my blog at [CodingItWrong.com](https://codingitwrong.com)
 - Email me at josh[at]outsidein[dot]dev
 
