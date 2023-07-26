@@ -61,11 +61,6 @@ const config = {
             href: '/connect',
             position: 'right',
           },
-          {
-            label: 'Chat',
-            href: 'https://link.outsidein.dev/chat',
-            position: 'right',
-          },
         ],
       },
       footer: {
@@ -81,16 +76,6 @@ const config = {
               {
                 label: 'Read Online',
                 to: '/about-this-book',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Chat',
-                href: 'https://link.outsidein.dev/chat',
-                position: 'right',
               },
             ],
           },
