@@ -22,8 +22,7 @@ Here are the current ways you can connect:
 - Read my blog at [CodingItWrong.com](https://codingitwrong.com)
 - Email me at josh[at]outsidein[dot]dev
 
-If you'd like to receive occasional updates on OutsideIn.dev and other agile and TDD projec
-ts from me, you can sign up for the mailing list:
+If you'd like to receive occasional updates on OutsideIn.dev and other agile and TDD projects from me, you can sign up for the mailing list:
 
 <iframe src="/mailchimp.html" width="100%" height="70" />
 
