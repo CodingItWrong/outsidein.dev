@@ -16,7 +16,6 @@ I'd love to invite you to connect with me and other readers online so you can:
 
 Here are the current ways you can connect:
 
-- Join [the book's online chat](https://link.outsidein.dev/chat)
 - Follow me on social media:
   - [LinkedIn](https://www.linkedin.com/in/jjustice/)
   - Mastodon, an open-source social network, at [@CodingItWrong@tdd.social](https://tdd.social/@CodingItWrong)
