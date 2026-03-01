@@ -88,7 +88,7 @@ const config = {
               },
               {
                 label: 'Mastodon',
-                href: 'https://tdd.social/@codingitwrong',
+                href: 'https://oldbytes.space/@codingitwrong',
                 rel: 'me',
               },
             ],
